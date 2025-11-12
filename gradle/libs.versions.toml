@@ -1,0 +1,148 @@
+[versions]
+agp = "8.8.0"
+android-compileSdk = "36"
+android-minSdk = "24"
+android-targetSdk = "36"
+androidx-activity = "1.10.1"
+androidx-appcompat = "1.7.1"
+androidx-core = "1.17.0"
+androidx-espresso = "3.7.0"
+androidx-lifecycle = "2.9.3"
+androidx-paging = "3.4.0-alpha03"
+androidx-testExt = "1.3.0"
+composeHotReload = "1.0.0-beta06"
+composeMultiplatform = "1.8.2"
+junit = "4.13.2"
+kotlin = "2.2.10"
+kotlinx-coroutines = "1.10.2"
+postgresql = "42.7.3"
+coil = "3.1.0"
+koin = "4.1.0"
+navigation-compose = "2.9.0"
+ktor = "3.3.1"
+lumberjack = "9.0.0"
+kotlinStdlib = "2.2.10"
+runner = "1.7.0"
+core = "1.7.0"
+buildConfig = "5.7.1"
+multiplatformSettings = "1.3.0"
+coreSplashscreen = "1.0.1"
+datastore = "1.1.7"
+desugar = "2.1.5"
+compass = "2.4.0"
+camera = "1.5.1"
+moko = "0.20.1"
+
+
+[libraries]
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+junit = { module = "junit:junit", version.ref = "junit" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
+androidx-testExt-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-testExt" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-espresso" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
+androidx-lifecycle-viewmodelCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+compose-navigation = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
+ui-backhandler = { group = "org.jetbrains.compose.ui", name = "ui-backhandler", version.ref = "composeMultiplatform" }
+
+#camera
+androidx-camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "camera" }
+androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camera" }
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camera" }
+androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camera" }
+
+
+#coil
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil-network = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
+
+#ktor
+ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+ktor-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor" }
+ktor-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor" }
+ktor-java = { group = "io.ktor", name = "ktor-client-java", version.ref = "ktor" }
+ktor-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+ktor-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+
+#paging
+androidx-paging-runtime-ktx = {group = "androidx.paging", name ="paging-runtime-ktx", version.ref = "androidx-paging"}
+androidx-paging-common = {group = "androidx.paging", name ="paging-common", version.ref = "androidx-paging"}
+androidx-paging-compose = {group = "androidx.paging", name ="paging-compose", version.ref = "androidx-paging"}
+
+#koin
+koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+koin-core-viewmodel = { group = "io.insert-koin", name = "koin-core-viewmodel", version.ref = "koin" }
+koin-compose = { group = "io.insert-koin", name = "koin-compose", version.ref = "koin" }
+koin-compose-viewmodel = { group = "io.insert-koin", name = "koin-compose-viewmodel", version.ref = "koin" }
+koin-ktor = { group = "io.insert-koin", name = "koin-ktor", version.ref = "koin" }
+koin-logger = { group = "io.insert-koin", name = "koin-logger-slf4j", version.ref = "koin" }
+koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
+
+#permission
+permission-compose = { group = "dev.icerock.moko", name = "permissions-compose", version.ref = "moko" }
+permission-test = { group = "dev.icerock.moko", name = "permissions-test", version.ref = "moko" }
+permission-gallery = {group = "dev.icerock.moko", name = "permissions-gallery", version.ref = "moko"}
+permission-location = {group = "dev.icerock.moko", name = "permissions-location", version.ref = "moko"}
+permission-camera = {group = "dev.icerock.moko", name = "permissions-camera", version.ref = "moko"}
+
+
+#lumberjack
+lumberjack-core = { module = "io.github.mflisar.lumberjack:core", version.ref = "lumberjack" }
+implementation-lumberjack = { module = "io.github.mflisar.lumberjack:implementation-lumberjack", version.ref = "lumberjack" }
+logger-console = { module = "io.github.mflisar.lumberjack:logger-console", version.ref = "lumberjack" }
+lumberjack-android = { module = "io.github.mflisar.lumberjack:implementation-lumberjack-android", version.ref = "lumberjack" }
+
+
+
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
+androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
+androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
+
+#api-service
+rollin-up-api-service = { group = "com.rolinup", name = "rollin-up-api-service" }
+
+#multiplatform settings
+multiplatform-settings = { group = "com.russhwolf", name = "multiplatform-settings", version.ref = "multiplatformSettings" }
+multiplatform-settings-coroutines = { group = "com.russhwolf", name = "multiplatform-settings-coroutines", version.ref = "multiplatformSettings" }
+multiplatform-settings-datastore = { group = "com.russhwolf", name = "multiplatform-settings-datastore", version.ref = "multiplatformSettings" }
+
+#android splashscree
+core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
+
+#datastore
+datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore" }
+
+#desugar jdk
+desugar-jdk = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar" }
+
+#compass
+compass-geocoder = { module = "dev.jordond.compass:geocoder", version.ref = "compass" }
+compass-geocoder-mobile = { module = "dev.jordond.compass:geocoder-mobile", version.ref = "compass" }
+compass-geolocation = { module = "dev.jordond.compass:geolocation", version.ref = "compass" }
+compass-geolocation-mobile = { module = "dev.jordond.compass:geolocation-mobile", version.ref = "compass" }
+
+
+[plugins]
+androidApplication = { id = "com.android.application", version.ref = "agp" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
+composeHotReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "composeHotReload" }
+composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
+composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+androidKotlinMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+androidLint = { id = "com.android.lint", version.ref = "agp" }
+
+#Serialization
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+#BUildconfig
+#Buld config
+build-config = { id = "com.github.gmazzo.buildconfig", version.ref = "buildConfig" }
