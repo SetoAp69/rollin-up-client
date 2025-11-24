@@ -1,7 +1,10 @@
 package com.rollinup.apiservice.data.source.network.model.request.attendance
 
+import com.rollinup.apiservice.Utils.toJsonString
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
 import com.rollinup.apiservice.model.common.MultiPlatformFile
+import com.rollinup.apiservice.model.permit.ApprovalStatus
+import com.rollinup.apiservice.model.permit.PermitType
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.http.ContentType
@@ -15,6 +18,15 @@ data class CreateEditAttendanceBody(
     val attachment: MultiPlatformFile? = null,
     val status: AttendanceStatus? = null,
     val checkedInAt: Long? = null,
+
+    val reason: String? = null,
+    val duration: List<Long> = emptyList(),
+    val type: PermitType? = null,
+    val note: String? = null,
+    val approvalStatus: ApprovalStatus? = null,
+    val approvedBy: String? = null,
+    val approvedAt: Long? = null,
+    val approvalNote: String? = null,
 ) {
     fun toMultiPartData(): MultiPartFormDataContent {
         return MultiPartFormDataContent(
@@ -73,21 +85,52 @@ data class CreateEditAttendanceBody(
                         }
                     )
                 }
+                reason?.let {
+                    append(
+                        key = "reason",
+                        value = it
+                    )
+                }
+                duration.let {
+                    if (it.isNotEmpty()) {
+                        append(
+                            key = "duration",
+                            value = it.toJsonString()
+                        )
+                    }
+                }
+                type?.let {
+                    append(
+                        key = "type",
+                        value = it.name
+                    )
+                }
+                note?.let {
+                    append(
+                        key = "note",
+                        value = it
+                    )
+                }
+                approvalStatus?.let {
+                    append(
+                        key = "approvalStatus",
+                        value = it.name
+                    )
+                }
+                approvedAt?.let {
+                    append(
+                        key = "approvedAt",
+                        value = it.toString()
+                    )
+                }
+                approvalNote?.let {
+                    append(
+                        key = "approvalNote",
+                        value = it
+                    )
+                }
             },
             contentType = ContentType.MultiPart.FormData
         )
     }
 }
-
-
-//studentUserId?.let { id->
-//    add(
-//        PartData.FormItem(
-//            value = id,
-//            dispose = {},
-//            partHeaders = Headers.build {
-//                append(HttpHeaders.ContentType, ContentType.Text.Plain.contentType)
-//            }
-//        )
-//    )
-//}

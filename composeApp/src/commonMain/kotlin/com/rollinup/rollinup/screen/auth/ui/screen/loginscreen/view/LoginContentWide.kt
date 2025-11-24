@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.button.ButtonType
-import com.rollinup.rollinup.component.model.Severity
+import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.textfield.PasswordTextField
 import com.rollinup.rollinup.component.textfield.TextField
 import com.rollinup.rollinup.component.theme.Style
@@ -107,7 +107,7 @@ fun RowScope.LoginForm(
                 )
 
             },
-            placeHolder = "Enter your email/username",
+            placeholder = "Enter your email/username",
             isError = formData.emailError != null,
             errorMsg = formData.emailError,
         )

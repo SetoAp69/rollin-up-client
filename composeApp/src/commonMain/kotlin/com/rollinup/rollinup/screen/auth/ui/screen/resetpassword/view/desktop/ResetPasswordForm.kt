@@ -92,7 +92,7 @@ private fun SubmitEmailForm(
                 emailError = null
 
             },
-            placeHolder = "Enter your email or username",
+            placeholder = "Enter your email or username",
             title = "Email or username",
             isError = emailError != null,
             errorMsg = emailError,

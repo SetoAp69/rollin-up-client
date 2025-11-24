@@ -6,6 +6,7 @@ import com.rollinup.apiservice.utils.JSON_TYPE
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.call.body
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
@@ -37,7 +38,6 @@ object ClientModule {
 }
 
 private fun getSSEClient(localDataStore: LocalDataStore) = HttpClient {
-
     expectSuccess = true
     defaultRequest {
         url {
@@ -105,11 +105,16 @@ private fun getSSEClient(localDataStore: LocalDataStore) = HttpClient {
 
 private fun getClient(localDataStore: LocalDataStore) = HttpClient {
     expectSuccess = true
+
     defaultRequest {
         url {
             protocol = URLProtocol.HTTP //TODO:Changes this to HTTPS on productions
             host = "192.168.137.1:8089"
         }
+    }
+
+    install(HttpTimeout){
+        requestTimeoutMillis = 2000
     }
 
     install(ContentNegotiation) {

@@ -35,4 +35,3 @@ class SubmitResetOtpUseCase(private val repository: UserRepository) {
 class SubmitResetPasswordUseCase(private val repository: UserRepository) {
     operator fun invoke(body: SubmitResetPasswordBody) = repository.submitResetPassword(body)
 }
-

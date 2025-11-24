@@ -1,10 +1,16 @@
 package com.rollinup.rollinup.component.scaffold
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -42,6 +48,40 @@ fun Scaffold(
                 .fillMaxSize()
         ) {
             content()
+        }
+        LoadingOverlay(show = showLoadingOverlay)
+    }
+}
+
+@Composable
+fun Scaffold(
+    topBar: @Composable () -> Unit = {},
+    navigationRail: @Composable () -> Unit,
+    showNavigation: Boolean = true,
+    fabPosition: FabPosition = FabPosition.End,
+    fab: @Composable () -> Unit = {},
+    snackBarHost: @Composable () -> Unit = {},
+    showLoadingOverlay: Boolean = false,
+    content: @Composable () -> Unit,
+) {
+    Scaffold(
+        snackbarHost = snackBarHost,
+        floatingActionButton = fab,
+        floatingActionButtonPosition = fabPosition,
+    ) {paddingValues ->
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            if (showNavigation) {
+                navigationRail()
+            }
+            Column(modifier = Modifier.padding(paddingValues)){
+                if(showNavigation){
+                    topBar()
+                }
+                content()
+            }
         }
         LoadingOverlay(show = showLoadingOverlay)
     }

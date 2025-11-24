@@ -9,9 +9,10 @@ data class AttendanceDetailEntity(
     val checkedInAt: String? = null,
     val updatedAt: String = "",
     val createdAt: String = "",
+    val longitude: Double? = null,
+    val latitude: Double? = null,
     val permit: Permit? = null,
-
-    ) {
+) {
     data class User(
         val id: String = "",
         val studentId: String? = null,

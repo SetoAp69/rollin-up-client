@@ -32,6 +32,10 @@ desugar = "2.1.5"
 compass = "2.4.0"
 camera = "1.5.1"
 moko = "0.20.1"
+calendar = "2.8.0"
+kotlinx-datetime ="0.7.1"
+skiko = "0.9.30"
+wheelPicker = "1.1.0-alpha05-compose1.8"
 
 
 [libraries]
@@ -49,12 +53,20 @@ kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-s
 compose-navigation = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
 ui-backhandler = { group = "org.jetbrains.compose.ui", name = "ui-backhandler", version.ref = "composeMultiplatform" }
 
+#datetime
+kotlinx-datetime={group = "org.jetbrains.kotlinx", name="kotlinx-datetime", version.ref="kotlinx-datetime"}
+
 #camera
 androidx-camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "camera" }
 androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camera" }
 androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camera" }
 androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camera" }
 
+#datetime-wheel-picker
+datetime-wheel-picker = {group = "io.github.darkokoa", name ="datetime-wheel-picker", version.ref = "wheelPicker"}
+
+#skiko
+skiko-awt-runtime-windows-x64 = {group = "org.jetbrains.skiko", name = "skiko-awt-runtime-windows-x64", version.ref = "skiko"}
 
 #coil
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
@@ -72,9 +84,9 @@ ktor-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor"
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 #paging
-androidx-paging-runtime-ktx = {group = "androidx.paging", name ="paging-runtime-ktx", version.ref = "androidx-paging"}
-androidx-paging-common = {group = "androidx.paging", name ="paging-common", version.ref = "androidx-paging"}
-androidx-paging-compose = {group = "androidx.paging", name ="paging-compose", version.ref = "androidx-paging"}
+androidx-paging-runtime-ktx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "androidx-paging" }
+androidx-paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "androidx-paging" }
+androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "androidx-paging" }
 
 #koin
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
@@ -85,12 +97,15 @@ koin-ktor = { group = "io.insert-koin", name = "koin-ktor", version.ref = "koin"
 koin-logger = { group = "io.insert-koin", name = "koin-logger-slf4j", version.ref = "koin" }
 koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
 
+#calendar
+kizitonwose-calendar = { group = "com.kizitonwose.calendar", name = "compose-multiplatform", version.ref = "calendar" }
+
 #permission
 permission-compose = { group = "dev.icerock.moko", name = "permissions-compose", version.ref = "moko" }
 permission-test = { group = "dev.icerock.moko", name = "permissions-test", version.ref = "moko" }
-permission-gallery = {group = "dev.icerock.moko", name = "permissions-gallery", version.ref = "moko"}
-permission-location = {group = "dev.icerock.moko", name = "permissions-location", version.ref = "moko"}
-permission-camera = {group = "dev.icerock.moko", name = "permissions-camera", version.ref = "moko"}
+permission-gallery = { group = "dev.icerock.moko", name = "permissions-gallery", version.ref = "moko" }
+permission-location = { group = "dev.icerock.moko", name = "permissions-location", version.ref = "moko" }
+permission-camera = { group = "dev.icerock.moko", name = "permissions-camera", version.ref = "moko" }
 
 
 #lumberjack

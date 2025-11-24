@@ -36,7 +36,7 @@ class SplashScreenViewmodel(
                 return@launch
             }
 
-            val jobs = withTimeoutOrNull(700) {
+            val jobs = withTimeoutOrNull(1500) {
                 loginJWTUseCase(accessToken).collectLatest { result ->
                     when (result) {
                         is Result.Error -> {

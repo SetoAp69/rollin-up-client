@@ -1,8 +1,8 @@
 package com.rollinup.apiservice.model.permit
 
-enum class PermitType(val value: String) {
-    DISPENSATION("DISPENSATION"),
-    ABSENT("ABSENT")
+enum class PermitType(val value: String, val label:String) {
+    DISPENSATION("DISPENSATION", "Dispensation"),
+    ABSENT("ABSENT","Absent")
     ;
 
     companion object {

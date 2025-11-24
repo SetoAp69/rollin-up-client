@@ -10,7 +10,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-val BASE_URL = getProperties("local.properties")[""] as String? ?: ""
 
 kotlin {
 
@@ -87,7 +86,9 @@ kotlin {
 
                 //Paging
                 implementation(libs.androidx.paging.common)
-                
+
+                //Kotlinx-datetime
+                implementation(libs.kotlinx.datetime)
 
                 // Add KMP dependencies here
                 //Lumberjack
@@ -98,6 +99,8 @@ kotlin {
                 //Datastore
                 api(libs.datastore.preferences)
                 api(libs.datastore)
+
+                implementation(project(":common"))
             }
         }
 

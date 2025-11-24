@@ -1,12 +1,14 @@
 package com.rollinup.apiservice.model.attendance
 
-enum class AttendanceStatus(val value: String) {
-    CHECKED_IN("checked_in"),
-    LATE("late"),
-    ABSENT("absent"),
-    EXCUSED("excused"),
-    APPROVAL_PENDING("approval_pending"),
-    NO_DATA("no_data")
+import com.rollinup.common.model.Severity
+
+enum class AttendanceStatus(val value: String, val label: String, val severity: Severity) {
+    CHECKED_IN("checked_in", "Checked In", Severity.SUCCESS),
+    LATE("late", "Late", Severity.WARNING),
+    ABSENT("absent", "Absent", Severity.DANGER),
+    EXCUSED("excused", "Excused", Severity.WARNING),
+    APPROVAL_PENDING("approval_pending", "Approval Pending", Severity.WARNING),
+    NO_DATA("no_data", "No Data", Severity.DISABLED)
     ;
 
     companion object {

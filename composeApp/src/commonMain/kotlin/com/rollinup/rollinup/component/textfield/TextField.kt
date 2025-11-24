@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -46,12 +47,13 @@ import org.jetbrains.compose.resources.painterResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_eye_close_line_24
 import rollin_up.composeapp.generated.resources.ic_eye_open_line_24
+import rollin_up.composeapp.generated.resources.ic_search_line_24
 
 
 @Composable
 fun TextFieldTitle(
     text: String,
-    textStyle: TextStyle,
+    textStyle: TextStyle = Style.body,
     isRequired: Boolean = false,
     color: Color = theme.bodyText,
     content: @Composable () -> Unit,
@@ -159,6 +161,49 @@ fun NumberTextField(
 }
 
 @Composable
+fun SearchTextField(
+    title: String = "",
+    onValueChange: (String) -> Unit,
+    value: String,
+    placeholder: String = "Enter keyword",
+    onSearch: (String) -> Unit,
+) {
+    var searchQuery by remember { mutableStateOf(value) }
+    val keyboardOptions = KeyboardOptions(
+        imeAction = ImeAction.Search,
+    )
+    val keyboardAction = KeyboardActions(
+        onSearch = { onSearch(searchQuery) },
+        onDone = { onSearch(searchQuery) }
+    )
+
+    LaunchedEffect(value) {
+        if (searchQuery != value) {
+            searchQuery = value
+        }
+    }
+
+    TextField(
+        title = title,
+        leadingIcon =
+            if (searchQuery.isBlank()) {
+                Res.drawable.ic_search_line_24
+            } else {
+                null
+            },
+        value = searchQuery,
+        onValueChange = {
+            searchQuery = it
+            onValueChange(it)
+        },
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardAction,
+        placeholder = placeholder
+    )
+
+}
+
+@Composable
 fun PasswordTextField(
     value: String,
     onValueChange: (String) -> Unit,
@@ -169,7 +214,6 @@ fun PasswordTextField(
     isError: Boolean = false,
     errorMsg: String? = null,
 ) {
-    var show by remember { mutableStateOf(0) }
     var showPassword by remember { mutableStateOf(false) }
     val interactionSource = remember { MutableInteractionSource() }
     val visualTransformation =
@@ -245,7 +289,7 @@ fun PasswordTextField(
 fun TextField(
     value: String,
     onValueChange: (String) -> Unit,
-    placeHolder: String,
+    placeholder: String,
     isRequired: Boolean = false,
     maxChar: Int = Int.MAX_VALUE,
     title: String = "",
@@ -307,7 +351,7 @@ fun TextField(
             BaseTextField(
                 value = value,
                 onValueChange = onValueChange,
-                placeholder = placeHolder,
+                placeholder = placeholder,
                 modifier = modifier,
                 height = height,
                 isError = isError,

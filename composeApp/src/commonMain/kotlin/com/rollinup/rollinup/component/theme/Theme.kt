@@ -27,7 +27,7 @@ class Theme(
     val textFieldPlaceHolder get() = if (isDark) Color(0xFF5C3C5A) else Color(0xFFC5C3C3)
     val lineStroke get() = if (isDark) Color(0xFF896BA9) else Color(0xFF9A80B8)
     val popUpStroke get() = if (isDark) Color(0xFF3C2545) else Color(0xFFF9EAFF)
-    val popUpBgSelected get() = if (isDark) Color(0xFF492B55) else Color(0xFFFAEFFF)
+    val popUpBgSelected get() = if (isDark) Color(0xFF492B55) else Color(0xFFf4e1fc)
     val popUpBg get() = if (isDark) Color(0xFF150E1D) else Color(0xFFFFFFFF)
     val background get() = if (isDark) Color(0xFF34244A) else Color(0xFFF9EAFF)
 
@@ -42,7 +42,7 @@ class Theme(
     val chipWarningContent get() = if (isDark) Color(0xFFBF6600) else Color(0xFFDD7600)
     val chipDangerContent get() = Color(0xFFFFE9E9)
     val chipDangerBg get() = if (isDark) Color(0xFFB20434) else Color(0xFFE4686A)
-    val chipDisabledBg get() = if (isDark) Color(0xFF1F1F1F) else Color(0xFF1F1F1F)
+    val chipDisabledContent get() = if (isDark) Color(0xFF1F1F1F) else Color(0xFF1F1F1F)
 
     val btnDisabled get() = if (isDark) Color(0xFF271B34) else Color(0xFF908E93)
     val btnDisabledContent get() = if (isDark) Color(0xFF372445) else Color(0xFFC5C3C3)
@@ -55,7 +55,7 @@ class Theme(
     val textError get() = if (isDark) Color(0xFFEE1E28) else Color(0xFFE4686A)
 
     // --- Properties with one value (same for light/dark) ---
-    val chipDisabledContent get() = Color(0xFF5C5757)
+    val chipDisabledBg get() = Color(0xFF5C5757)
     val textSubtitle get() = Color(0xFF6C6870)
     val textBtnPrimary get() = Color(0xFFFFFFFF)
     val textBtnSecondary get() = Color(0xFF8B6FAC)

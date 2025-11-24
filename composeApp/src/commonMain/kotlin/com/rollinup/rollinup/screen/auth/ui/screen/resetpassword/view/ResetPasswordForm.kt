@@ -21,11 +21,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.button.ButtonType
-import com.rollinup.rollinup.component.model.Severity
+import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
-import com.rollinup.rollinup.component.spacer.screenPadding
+import com.rollinup.rollinup.component.spacer.screenPaddingValues
 import com.rollinup.rollinup.component.textfield.PasswordTextField
 import com.rollinup.rollinup.component.textfield.TextField
 import com.rollinup.rollinup.component.theme.Style
@@ -91,7 +91,7 @@ fun NewPasswordForm(
 
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.padding(screenPadding)
+        modifier = Modifier.padding(screenPaddingValues)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -249,7 +249,7 @@ fun SubmitEmailForm(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(screenPadding)
+            .padding(screenPaddingValues)
     ) {
         Column(
             modifier = Modifier
@@ -279,7 +279,7 @@ fun SubmitEmailForm(
                         }
                         emailError = null
                     },
-                    placeHolder = "Enter your email or username",
+                    placeholder = "Enter your email or username",
                     isError = emailError != null,
                     errorMsg = emailError,
                     leadingIcon = Res.drawable.ic_mail_line_24,

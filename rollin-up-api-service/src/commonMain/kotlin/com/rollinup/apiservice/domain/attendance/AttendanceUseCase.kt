@@ -50,3 +50,7 @@ class EditAttendanceDataUseCase(private val repository: AttendanceRepository) {
     operator fun invoke(id: String, body: CreateEditAttendanceBody) =
         repository.editAttendanceData(id, body)
 }
+
+class GetDashboardDataUseCase(private val repository: AttendanceRepository) {
+    operator fun invoke(id: String) = repository.getDashboardData(id)
+}

@@ -23,7 +23,7 @@ import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
-import com.rollinup.rollinup.component.spacer.screenPadding
+import com.rollinup.rollinup.component.spacer.screenPaddingValues
 import com.rollinup.rollinup.component.textfield.PasswordTextField
 import com.rollinup.rollinup.component.textfield.TextField
 import com.rollinup.rollinup.component.theme.Style
@@ -86,7 +86,7 @@ fun SubmitEmailForm(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(screenPadding)
+            .padding(screenPaddingValues)
 
 
     ) {
@@ -110,7 +110,7 @@ fun SubmitEmailForm(
                     }
                     emailError = null
                 },
-                placeHolder = "Enter your email or username",
+                placeholder = "Enter your email or username",
                 isError = emailError != null,
                 errorMsg = emailError,
                 leadingIcon = Res.drawable.ic_mail_line_24,
@@ -165,7 +165,7 @@ private fun NewPasswordForm(
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
-            .padding(screenPadding)
+            .padding(screenPaddingValues)
             .height(256.dp)
     ) {
         Column(

@@ -12,6 +12,12 @@ data class LoginEntity(
     val lastName: String = "",
     val role: Role = Role.UNKNOWN,
     val gender: Gender = Gender.MALE,
-    val accessToken:String = "",
-    val refreshToken:String = ""
-)
+    val accessToken: String = "",
+    val refreshToken: String = "",
+    val classX:String? = null,
+    val classId:String? = null,
+    val classKey:Int? = null
+) {
+    val fullName
+        get() = "$firstName $lastName"
+}

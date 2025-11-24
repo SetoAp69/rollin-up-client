@@ -7,6 +7,7 @@ import com.rollinup.apiservice.data.source.network.model.request.attendance.GetA
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.model.attendance.AttendanceByStudentEntity
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
+import com.rollinup.apiservice.model.attendance.DashboardDataEntity
 import com.rollinup.apiservice.model.common.NetworkError
 import com.rollinup.apiservice.model.common.Result
 import kotlinx.coroutines.flow.Flow
@@ -42,6 +43,10 @@ interface AttendanceRepository {
         id: String,
         body: CreateEditAttendanceBody,
     ): Flow<Result<Unit, NetworkError>>
+
+    fun getDashboardData(
+        id: String,
+    ): Flow<Result<DashboardDataEntity, NetworkError>>
 
 
 }

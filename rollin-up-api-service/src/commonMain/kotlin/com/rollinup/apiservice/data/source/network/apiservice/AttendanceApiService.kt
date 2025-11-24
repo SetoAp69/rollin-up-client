@@ -5,6 +5,7 @@ import com.rollinup.apiservice.data.source.network.model.response.ApiResponse
 import com.rollinup.apiservice.data.source.network.model.response.attendance.GetAttendanceByIdResponse
 import com.rollinup.apiservice.data.source.network.model.response.attendance.GetAttendanceListByClassResponse
 import com.rollinup.apiservice.data.source.network.model.response.attendance.GetAttendanceListByStudentResponse
+import com.rollinup.apiservice.data.source.network.model.response.attendance.GetDashboardDataResponse
 
 interface AttendanceApiService {
 
@@ -23,6 +24,10 @@ interface AttendanceApiService {
     suspend fun createAttendanceData(
         body: CreateEditAttendanceBody,
     ): ApiResponse<Unit>
+
+    suspend fun getDashboardData(
+        id:String
+    ):ApiResponse<GetDashboardDataResponse>
 
     suspend fun editAttendance(
         id: String,

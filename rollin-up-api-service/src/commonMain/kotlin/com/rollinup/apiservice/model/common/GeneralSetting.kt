@@ -1,5 +1,7 @@
 package com.rollinup.apiservice.model.common
 
+import com.rollinup.common.utils.Utils.toLocalTime
+import kotlinx.datetime.LocalTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -15,16 +17,16 @@ data class GeneralSetting(
     val updatedAt: String = "",
 
     @SerialName("school_period_start")
-    val schoolPeriodStart: String = "",
+    private val _schoolPeriodStart: String = "07:00",
 
     @SerialName("school_period_end")
-    val schoolPeriodEnd: String = "",
+    private val _schoolPeriodEnd: String = "15:00",
 
     @SerialName("checkin_period_start")
-    val checkInPeriodStart: String = "",
+    private val _checkInPeriodStart: String = "",
 
     @SerialName("checkin_period_end")
-    val checkInPeriodEnd: String = "",
+    private val _checkInPeriodEnd: String = "",
 
     @SerialName("latitude")
     val latitude: Double = 0.0,
@@ -34,4 +36,16 @@ data class GeneralSetting(
 
     @SerialName("radius")
     val radius: Double = 0.0,
-)
+) {
+    val schoolPeriodStart
+        get() = _schoolPeriodStart.toLocalTime()
+
+    val schoolPeriodEnd
+        get() = _schoolPeriodEnd.toLocalTime()
+
+    val checkInPeriodStart
+        get() = _checkInPeriodEnd.toLocalTime()
+
+    val checkInPeriodEnd
+        get() = _checkInPeriodEnd.toLocalTime()
+}

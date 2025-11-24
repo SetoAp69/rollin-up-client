@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.michaelflisar.lumberjack.core.L
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.screen.auth.navigation.AuthNavigationRoute
@@ -22,11 +21,11 @@ fun LoginScreen(
     val cb = viewModel.getCallback()
 
     DisposableEffect(uiState.loginState) {
-        L.wtf { "Disposable Effect triggerred loginstate : ${uiState.loginState} " }
         uiState.loginState?.let {
             if (it) {
-                onUpdateLoginData(uiState.loginData!!)
-                navController.navigate(com.rollinup.rollinup.navigation.NavigationRoute.TestRoute.route) {
+                val loginData = uiState.loginData!!
+                onUpdateLoginData(loginData)
+                navController.navigate(com.rollinup.rollinup.navigation.NavigationRoute.MainRoute.navigate(loginData.role)) {
                     popUpTo(AuthNavigationRoute.Login.route) {
                         inclusive = true
                     }

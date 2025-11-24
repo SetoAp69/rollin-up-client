@@ -1,14 +1,17 @@
 package com.rollinup.rollinup.component.dialog
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -22,16 +25,73 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.button.ButtonType
-import com.rollinup.rollinup.component.model.Severity
+import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap8
+import com.rollinup.rollinup.component.spacer.screenPadding
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.component.utils.getScreenWidth
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.ic_close_line_24
+
+@Composable
+fun Dialog(
+    showDialog: Boolean,
+    onDismissRequest: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    content: @Composable () -> Unit,
+) {
+    val properties = DialogProperties(
+        dismissOnBackPress = true,
+        dismissOnClickOutside = true,
+        usePlatformDefaultWidth = false
+    )
+
+    if (showDialog) {
+        Dialog(
+            onDismissRequest = { onDismissRequest(false) },
+            properties = properties,
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .background(
+                        color = theme.popUpBg,
+                        shape = RoundedCornerShape(screenPadding)
+                    )
+                    .padding(contentPadding)
+                    .then(modifier)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .clickable {
+                                onDismissRequest(false)
+                            }
+                            .size(32.dp),
+                        tint = theme.lineStroke,
+                        painter = painterResource(Res.drawable.ic_close_line_24),
+                        contentDescription = null
+                    )
+                }
+                content()
+            }
+        }
+    }
+
+}
 
 @Composable
 fun AlertDialog(
@@ -134,7 +194,7 @@ fun AlertDialog(
         dismissOnClickOutside = true,
         usePlatformDefaultWidth = true
     )
-    val dialogWidth = getScreenWidth() * 0.75f
+    val dialogWidth = if (getPlatform().isMobile()) getScreenWidth() * 0.75f else 400.dp
 
     if (isShowDialog) {
         Dialog(

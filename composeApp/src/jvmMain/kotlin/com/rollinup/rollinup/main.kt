@@ -7,7 +7,6 @@ import com.michaelflisar.lumberjack.implementation.LumberjackLogger
 import com.michaelflisar.lumberjack.implementation.plant
 import com.michaelflisar.lumberjack.loggers.console.ConsoleLogger
 import com.rollinup.apiservice.di.JVMDataModule
-import com.rollinup.apiservice.di.NetworkModule
 import com.rollinup.rollinup.di.AppModule
 import org.koin.core.context.startKoin
 
@@ -17,7 +16,7 @@ fun main() = application {
 
     startKoin {
         modules(
-            JVMDataModule()+AppModule()
+            JVMDataModule() + AppModule()
         )
     }
     Window(

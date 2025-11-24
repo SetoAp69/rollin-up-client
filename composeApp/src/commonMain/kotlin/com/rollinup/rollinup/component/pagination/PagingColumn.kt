@@ -17,7 +17,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.rollinup.rollinup.component.pullrefresh.PullRefresh
 import com.rollinup.rollinup.component.spacer.itemGap4
-import com.rollinup.rollinup.component.spacer.screenPadding
+import com.rollinup.rollinup.component.spacer.screenPaddingValues
 import com.rollinup.rollinup.component.theme.theme
 
 @Composable
@@ -26,7 +26,7 @@ fun <T : Any> PagingColumn(
     itemContent: @Composable (T) -> Unit,
     loadingContent: @Composable () -> Unit,
     onRefresh: () -> Unit,
-    contentPadding: PaddingValues = screenPadding,
+    contentPadding: PaddingValues = screenPaddingValues,
     contentArrangement: Arrangement.Vertical = Arrangement.spacedBy(itemGap4),
 ) {
     PullRefresh(

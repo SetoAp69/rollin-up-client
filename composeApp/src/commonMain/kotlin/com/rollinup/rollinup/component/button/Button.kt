@@ -19,15 +19,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.rollinup.rollinup.component.model.Severity
+import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
@@ -37,7 +35,6 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun Button(
-    onClick: () -> Unit,
     text: String? = null,
     severity: Severity = Severity.PRIMARY,
     modifier: Modifier = Modifier,
@@ -49,6 +46,7 @@ fun Button(
     buttonColors: ButtonColors? = null,
     leadingIcon: DrawableResource? = null,
     trailingIcon: DrawableResource? = null,
+    onClick: () -> Unit,
 ) {
     val buttonColor = buttonColors ?: getButtonColor(severity, type)
     val borderWidth = if (isCompact) (2.5).dp else (4.5).dp
@@ -227,7 +225,7 @@ object ButtonDefault {
     val contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp)
     val shape = RoundedCornerShape(12.dp)
     val height
-        @Composable get() = if (isCompact) 42.dp else 56.dp
+        @Composable get() = 42.dp
 
     val textStyle
         @Composable get() = Style.popupTitle

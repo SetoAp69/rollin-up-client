@@ -6,6 +6,7 @@ import com.rollinup.apiservice.data.source.network.model.response.ApiResponse
 import com.rollinup.apiservice.data.source.network.model.response.attendance.GetAttendanceByIdResponse
 import com.rollinup.apiservice.data.source.network.model.response.attendance.GetAttendanceListByClassResponse
 import com.rollinup.apiservice.data.source.network.model.response.attendance.GetAttendanceListByStudentResponse
+import com.rollinup.apiservice.data.source.network.model.response.attendance.GetDashboardDataResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -72,6 +73,16 @@ class AttendanceApiDataSource(
                 setBody(body.toMultiPartData())
             }
             ApiResponse.Success(data = Unit, statusCode = response.status)
+        } catch (e: Exception) {
+            ApiResponse.Error(e)
+        }
+    }
+
+    override suspend fun getDashboardData(id: String): ApiResponse<GetDashboardDataResponse> {
+        return try {
+            val response = httpClient.get("$baseUrl/dashboard/$id")
+            val body = response.body<GetDashboardDataResponse>()
+            ApiResponse.Success(data = body, statusCode = response.status)
         } catch (e: Exception) {
             ApiResponse.Error(e)
         }

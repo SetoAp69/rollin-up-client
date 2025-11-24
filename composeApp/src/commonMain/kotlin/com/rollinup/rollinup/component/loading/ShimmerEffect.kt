@@ -15,11 +15,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.rollinup.rollinup.component.theme.theme
 
 
 @Composable
@@ -27,13 +26,16 @@ fun ShimmerEffect(
     width: Dp = 60.dp,
     height: Dp = 14.dp,
     cornerRad: Dp = 8.dp,
-    durationMillis: Int = 1000,
+    durationMillis: Int = 500,
+    modifier: Modifier = Modifier,
 ) {
     ShimmerEffect(
         modifier = Modifier
             .clip(RoundedCornerShape(cornerRad))
             .width(width)
-            .height(height),
+            .height(height)
+            .then(modifier)
+        ,
         durationMillis = durationMillis
     )
 }
@@ -41,39 +43,38 @@ fun ShimmerEffect(
 @Composable
 fun ShimmerEffect(
     modifier: Modifier,
-    durationMillis: Int = 1000,
+    durationMillis: Int = 500,
 ) {
-    val shimmerColors = listOf(
-        Color.LightGray.copy(alpha = 0.3f),
-        Color.LightGray.copy(alpha = 0.5f),
-        Color.LightGray.copy(alpha = 1.6f),
-        Color.LightGray.copy(alpha = 0.5f),
-        Color.LightGray.copy(alpha = 0.3f),
-    )
 
     val transition = rememberInfiniteTransition(label = "shimmerColor")
 
     val translateAnimation = transition.animateFloat(
         initialValue = 0f,
-        targetValue = (durationMillis + 500).toFloat(),
+        targetValue = (durationMillis).toFloat(),
         animationSpec = infiniteRepeatable(
             animation = tween(
                 durationMillis = durationMillis,
-                easing = LinearEasing
+                easing = LinearEasing,
             ),
-            repeatMode = RepeatMode.Restart
+            repeatMode = RepeatMode.Reverse
         ),
         label = "shimmerColor"
     )
 
-    val brush = Brush.linearGradient(
-        colors = shimmerColors,
-        start = Offset(x = translateAnimation.value - 500, y = 0.0F),
-        end = Offset(x = translateAnimation.value, y = 0.0F)
+//    val brush = Brush.linearGradient(
+//        colors = shimmerColors,
+//        start = Offset(x = translateAnimation.value - 500, y = 0.0F),
+//        end = Offset(x = translateAnimation.value, y = 0.0F)
+//    )
+
+    val brush = SolidColor(
+        value = theme.textFieldBackGround.copy(alpha = (translateAnimation.value / 1000) + 0.2f)
     )
 
     Box(
-        modifier = modifier,
+        modifier = Modifier
+            .clip(RoundedCornerShape(8.dp))
+            .then(modifier),
     ) {
         Spacer(
             modifier = Modifier

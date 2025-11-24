@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -45,8 +46,8 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.michaelflisar.lumberjack.core.L
-import com.rollinup.rollinup.component.model.AndroidFile
 import com.rollinup.apiservice.model.common.MultiPlatformFile
+import com.rollinup.rollinup.component.model.AndroidFile
 import dev.icerock.moko.permissions.DeniedAlwaysException
 import dev.icerock.moko.permissions.DeniedException
 import dev.icerock.moko.permissions.PermissionState
@@ -159,7 +160,6 @@ actual fun CameraPermissionHandler(
     onDismissRequest: (Boolean) -> Unit,
 ) {
 
-    //Permission Handler
     var permissionState by remember { mutableStateOf(PermissionState.NotDetermined) }
     var showDialog by remember { mutableStateOf(false) }
 
@@ -168,7 +168,13 @@ actual fun CameraPermissionHandler(
         permissionFactory.createPermissionsController()
     }
 
-    BindEffect(permissionController)
+    val activity = LocalActivity.current as ComponentActivity
+
+    CompositionLocalProvider(
+        LocalContext provides activity
+    ) {
+        BindEffect(permissionController)
+    }
 
     LaunchedEffect(Unit) {
         permissionState = permissionController.checkPermission()

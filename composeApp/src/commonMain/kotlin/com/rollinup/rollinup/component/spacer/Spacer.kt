@@ -26,18 +26,21 @@ val itemGap8
     @Composable get() = if (isCompact) 8.dp else 12.dp
 
 val itemGap4
-    @Composable get() = if (isCompact) 4.dp else 8.dp
+    @Composable get() = if (isCompact) 4.dp else 6.dp
 
 
 //Padding Size
 val textFieldPadding
     @Composable get() =
         if (isCompact)
-            PaddingValues(vertical = 12.dp, horizontal = 20.dp)
+            PaddingValues(vertical = 8.dp, horizontal = 20.dp)
         else
-            PaddingValues(vertical = 12.dp, horizontal = 20.dp)
+            PaddingValues(vertical = 8.dp, horizontal = 20.dp)
 
 val screenPadding
+    @Composable get() = if (isCompact) 12.dp else 16.dp
+
+val screenPaddingValues
     @Composable get() =
         if (isCompact)
             PaddingValues(vertical = 12.dp, horizontal = 12.dp)

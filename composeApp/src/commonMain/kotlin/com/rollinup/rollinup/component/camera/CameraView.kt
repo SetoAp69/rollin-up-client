@@ -28,9 +28,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.rollinup.rollinup.component.dialog.AlertDialog
 import com.rollinup.apiservice.model.common.MultiPlatformFile
-import com.rollinup.rollinup.component.model.Severity
+import com.rollinup.common.model.Severity
+import com.rollinup.rollinup.component.dialog.AlertDialog
 import com.rollinup.rollinup.component.theme.theme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -49,40 +49,34 @@ expect fun CameraHandler(
 expect fun CameraPermissionHandler(
     onGranted: () -> Unit,
     onDenied: () -> Unit,
-    onDismissRequest: (Boolean) -> Unit
+    onDismissRequest: (Boolean) -> Unit,
 )
 
 @Composable
 fun CameraView(
     onDismissRequest: (Boolean) -> Unit,
     onCapture: (MultiPlatformFile) -> Unit,
-    onError: () -> Unit,
     notification: @Composable (() -> Unit)?,
     isShowCamera: Boolean,
+    onError: () -> Unit = {},
     successMsg: String? = null,
     errorMsg: String? = null,
     snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     var isGranted: Boolean? by remember { mutableStateOf(null) }
 
-    if(isShowCamera){
+    if (isShowCamera) {
         CameraPermissionHandler(
             onGranted = {
                 isGranted = true
             },
             onDenied = {
                 isGranted = false
+                onDismissRequest(false)
             },
             onDismissRequest = onDismissRequest
         )
     }
-//    CameraPermissionDeniedDialog(
-//        onDismissRequest = {
-//            showDeniedDialog = it
-//            onDismissRequest(it)
-//        },
-//        isShowDialog = showDeniedDialog
-//    )
 
     CameraViewDialog(
         isShowDialog = isShowCamera && isGranted == true,
@@ -101,8 +95,8 @@ fun CameraView(
 internal fun CameraPermissionDeniedDialog(
     onDismissRequest: (Boolean) -> Unit,
     isShowDialog: Boolean,
-    onClickConfirm:()->Unit,
-    onCancel:()->Unit,
+    onClickConfirm: () -> Unit,
+    onCancel: () -> Unit,
 ) {
     AlertDialog(
         isShowDialog = isShowDialog,

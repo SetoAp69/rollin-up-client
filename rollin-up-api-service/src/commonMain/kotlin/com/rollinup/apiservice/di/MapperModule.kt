@@ -1,7 +1,9 @@
 package com.rollinup.apiservice.di
 
+import com.rollinup.apiservice.data.mapper.AttendanceMapper
 import com.rollinup.apiservice.data.mapper.GeneralSettingMapper
 import com.rollinup.apiservice.data.mapper.LoginMapper
+import com.rollinup.apiservice.data.mapper.PermitMapper
 import com.rollinup.apiservice.data.mapper.UserMapper
 import org.koin.dsl.module
 
@@ -10,5 +12,7 @@ object MapperModule {
         single<UserMapper> { UserMapper() }
         single<LoginMapper> { LoginMapper() }
         single<GeneralSettingMapper> { GeneralSettingMapper() }
+        single<AttendanceMapper> { AttendanceMapper() }
+        single<PermitMapper> { PermitMapper() }
     }
 }

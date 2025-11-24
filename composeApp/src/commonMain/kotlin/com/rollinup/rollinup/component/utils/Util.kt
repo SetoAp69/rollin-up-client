@@ -2,6 +2,7 @@ package com.rollinup.rollinup.component.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.AnnotatedString
@@ -27,8 +28,20 @@ fun getScreenWidth(): Dp {
     }
 }
 
-expect fun getPlatform(): Platform
+@Composable
+fun getScreenHeight(): Dp {
+    val currentWindowHeight = LocalWindowInfo.current.containerSize.height
+    val density = LocalDensity.current
 
+    return with(density) {
+        currentWindowHeight.toDp()
+    }
+}
+
+@Composable
+fun getScreenSize(): Pair<Dp, Dp> = getScreenWidth() to getScreenHeight()
+
+expect fun getPlatform(): Platform
 
 @Composable
 fun String.toAnnotatedString(): AnnotatedString {
@@ -75,14 +88,9 @@ fun Modifier.applyIf(
 ): Modifier {
     return this.then(
         if (condition) {
-            modifier()
+            composed() {
+                this.modifier()
+            }
         } else Modifier
     )
 }
-
-/*
-*
-* 0,1,2,[3,4,5,6],7,8,9,10,[11,12],13,14
-*
-*
-* */

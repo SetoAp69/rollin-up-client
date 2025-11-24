@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,9 +25,9 @@ import org.jetbrains.compose.resources.painterResource
 fun ActionButton(
     label: String,
     icon: DrawableResource? = null,
-    onClick: () -> Unit,
     textColor: Color = theme.bodyText,
     iconTint: Color = theme.primary,
+    onClick: () -> Unit,
 ) {
     val gap = if (isCompact) 12.dp else 16.dp
 
@@ -45,6 +46,7 @@ fun ActionButton(
         ) {
             icon?.let {
                 Icon(
+                    modifier = Modifier.size(24.dp),
                     painter = painterResource(it),
                     tint = iconTint,
                     contentDescription = null

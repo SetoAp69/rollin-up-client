@@ -1,6 +1,7 @@
 package com.rollinup.apiservice.model.attendance
 
 import com.rollinup.apiservice.model.permit.PermitType
+import com.rollinup.common.utils.Utils.toLocalDateTime
 
 data class AttendanceByStudentEntity(
     val id: String = "",
@@ -16,4 +17,7 @@ data class AttendanceByStudentEntity(
         val start: String = "",
         val end: String = "",
     )
+
+    val localDate
+        get() = date.toLocalDateTime().date
 }

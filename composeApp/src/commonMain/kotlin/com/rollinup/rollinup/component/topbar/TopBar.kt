@@ -67,6 +67,7 @@ fun TopBar(
     title: String = "",
     modifier: Modifier = Modifier,
     color: TopAppBarColors? = null,
+    showNavigateUp: Boolean = true,
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
     var showSearch by remember { mutableStateOf(false) }
@@ -120,7 +121,7 @@ fun TopBar(
             }
         },
         modifier = modifier,
-        showNavigateUp = true,
+        showNavigateUp = showNavigateUp,
         onNavigateUp = navigateUp,
         color = color,
         scrollBehavior = scrollBehavior

@@ -6,8 +6,8 @@ data class GetAttendanceListByClassQueryParams(
     val sortBy: String? = null,
     val order: String? = null,
     val search: String? = null,
-    val status: List<String>? = null,
-    val date: Long? = null,
+    val status: String? = null,
+    val date: String? = null,
 ) {
     fun toQueryMap(): Map<String, String?> {
         return mapOf(

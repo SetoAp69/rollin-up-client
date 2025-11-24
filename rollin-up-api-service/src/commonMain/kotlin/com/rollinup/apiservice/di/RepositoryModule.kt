@@ -1,11 +1,15 @@
 package com.rollinup.apiservice.di
 
+import com.rollinup.apiservice.data.repository.attendance.AttendanceRepository
+import com.rollinup.apiservice.data.repository.attendance.AttendanceRepositoryImpl
 import com.rollinup.apiservice.data.repository.auth.AuthRepository
 import com.rollinup.apiservice.data.repository.auth.AuthRepositoryImpl
 import com.rollinup.apiservice.data.repository.generalsetting.GeneralSettingRepository
 import com.rollinup.apiservice.data.repository.generalsetting.GeneralSettingRepositoryImpl
 import com.rollinup.apiservice.data.repository.pagging.PagingDummyRepository
 import com.rollinup.apiservice.data.repository.pagging.PagingDummyRepositoryImpl
+import com.rollinup.apiservice.data.repository.permit.PermitRepository
+import com.rollinup.apiservice.data.repository.permit.PermitRepositoryImpl
 import com.rollinup.apiservice.data.repository.user.UserRepository
 import com.rollinup.apiservice.data.repository.user.UserRepositoryImpl
 import org.koin.dsl.module
@@ -42,5 +46,20 @@ object RepositoryModule {
             )
         }
 
+        single<PermitRepository> {
+            PermitRepositoryImpl(
+                dataSource = get(),
+                mapper = get(),
+                ioDispatcher = get()
+            )
+        }
+
+        single<AttendanceRepository> {
+            AttendanceRepositoryImpl(
+                datasource = get(),
+                mapper = get(),
+                ioDispatcher = get()
+            )
+        }
     }
 }

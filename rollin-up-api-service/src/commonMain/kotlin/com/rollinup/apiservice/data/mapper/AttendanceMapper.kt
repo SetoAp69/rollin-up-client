@@ -3,10 +3,13 @@ package com.rollinup.apiservice.data.mapper
 import com.rollinup.apiservice.data.source.network.model.response.attendance.GetAttendanceByIdResponse
 import com.rollinup.apiservice.data.source.network.model.response.attendance.GetAttendanceListByClassResponse
 import com.rollinup.apiservice.data.source.network.model.response.attendance.GetAttendanceListByStudentResponse
+import com.rollinup.apiservice.data.source.network.model.response.attendance.GetDashboardDataResponse
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.model.attendance.AttendanceByStudentEntity
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
+import com.rollinup.apiservice.model.attendance.AttendanceSummaryEntity
+import com.rollinup.apiservice.model.attendance.DashboardDataEntity
 import com.rollinup.apiservice.model.permit.PermitType
 
 class AttendanceMapper {
@@ -28,6 +31,23 @@ class AttendanceMapper {
                 }
             )
         }
+    }
+
+    fun mapDashboardData(data: GetDashboardDataResponse.Data): DashboardDataEntity {
+        return DashboardDataEntity(
+            attendanceStatus = AttendanceStatus.fromValue(data.status),
+            summary = with(data.summary) {
+                AttendanceSummaryEntity(
+                    checkedIn = checkedIn,
+                    late = late,
+                    excused = excused,
+                    approvalPending = approvalPending,
+                    absent = absent,
+                    sick = sick,
+                    other = other
+                )
+            }
+        )
     }
 
     fun mapAttendanceListByClass(data: List<GetAttendanceListByClassResponse.Data.Data>): List<AttendanceByClassEntity> {

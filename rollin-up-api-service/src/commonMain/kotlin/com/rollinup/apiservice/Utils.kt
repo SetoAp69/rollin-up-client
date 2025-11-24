@@ -14,7 +14,7 @@ object Utils {
         }
     }
 
-    fun <T> List<T>.toJsonString(): String {
+    inline fun < reified T> List<T>.toJsonString(): String {
         return Json.encodeToString(this)
     }
 

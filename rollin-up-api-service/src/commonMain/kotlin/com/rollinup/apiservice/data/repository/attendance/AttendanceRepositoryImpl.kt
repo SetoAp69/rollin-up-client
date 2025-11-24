@@ -15,6 +15,7 @@ import com.rollinup.apiservice.data.source.network.model.response.ApiResponse
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.model.attendance.AttendanceByStudentEntity
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
+import com.rollinup.apiservice.model.attendance.DashboardDataEntity
 import com.rollinup.apiservice.model.common.NetworkError
 import com.rollinup.apiservice.model.common.Result
 import kotlinx.coroutines.CoroutineDispatcher
@@ -119,6 +120,20 @@ class AttendanceRepositoryImpl(
             when (response) {
                 is ApiResponse.Error -> emit(Utils.handleApiError(response.e))
                 is ApiResponse.Success -> emit(Result.Success(Unit))
+            }
+        }.catch {
+            emit(Utils.handleApiError(it as Exception))
+        }.flowOn(ioDispatcher)
+
+    override fun getDashboardData(id: String): Flow<Result<DashboardDataEntity, NetworkError>> =
+        flow {
+            val response = datasource.getDashboardData(id)
+            when (response) {
+                is ApiResponse.Error -> emit(Utils.handleApiError(response.e))
+                is ApiResponse.Success -> {
+                    val data = mapper.mapDashboardData(response.data.data)
+                    emit(Result.Success(data))
+                }
             }
         }.catch {
             emit(Utils.handleApiError(it as Exception))

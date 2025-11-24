@@ -6,6 +6,8 @@ import rollin_up.composeapp.generated.resources.ic_arrow_left_line_24
 import rollin_up.composeapp.generated.resources.ic_filter_line_24
 import rollin_up.composeapp.generated.resources.ic_print_line_24
 import rollin_up.composeapp.generated.resources.ic_search_line_24
+import rollin_up.composeapp.generated.resources.ic_select_all_line_24
+import rollin_up.composeapp.generated.resources.ic_unselect_all_fill_24
 
 enum class Menu(val title: String, val icon: DrawableResource) {
     SEARCH(
@@ -23,5 +25,13 @@ enum class Menu(val title: String, val icon: DrawableResource) {
     BACK(
         title = "Back",
         icon = Res.drawable.ic_arrow_left_line_24
+    ),
+    SELECT_ALL(
+        title = "Select All",
+        icon = Res.drawable.ic_select_all_line_24
+    ),
+    UNSELECT_ALL(
+        title = "Unselect All",
+        icon = Res.drawable.ic_unselect_all_fill_24
     )
 }

@@ -1,12 +1,16 @@
 package com.rollinup.apiservice.di
 
 import com.rollinup.apiservice.Constant
+import com.rollinup.apiservice.data.source.network.apiservice.AttendanceApiService
 import com.rollinup.apiservice.data.source.network.apiservice.AuthApiService
 import com.rollinup.apiservice.data.source.network.apiservice.GeneralSettingApiService
 import com.rollinup.apiservice.data.source.network.apiservice.PagingDummyApi
+import com.rollinup.apiservice.data.source.network.apiservice.PermitApiService
 import com.rollinup.apiservice.data.source.network.apiservice.UserApiService
+import com.rollinup.apiservice.data.source.network.datasource.attendance.AttendanceApiDataSource
 import com.rollinup.apiservice.data.source.network.datasource.auth.AuthApiDataSource
 import com.rollinup.apiservice.data.source.network.datasource.paging.PagingDummyDataSource
+import com.rollinup.apiservice.data.source.network.datasource.permit.PermitApiDataSource
 import com.rollinup.apiservice.data.source.network.datasource.user.UserApiDataSource
 import com.rollinup.apiservice.data.source.network.generalsetting.GeneralSettingApiServiceDataSource
 import org.koin.core.qualifier.named
@@ -24,6 +28,16 @@ object DatasourceModule {
         }
         single<PagingDummyApi> {
             PagingDummyDataSource(
+                httpClient = get(named(Constant.HTTP_CLIENT))
+            )
+        }
+        single<AttendanceApiService> {
+            AttendanceApiDataSource(
+                httpClient = get(named(Constant.HTTP_CLIENT))
+            )
+        }
+        single<PermitApiService> {
+            PermitApiDataSource(
                 httpClient = get(named(Constant.HTTP_CLIENT))
             )
         }

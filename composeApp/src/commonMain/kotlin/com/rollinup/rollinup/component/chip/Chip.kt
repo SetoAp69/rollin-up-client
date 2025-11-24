@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import com.rollinup.rollinup.component.model.Severity
+import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.ripple.CustomRipple
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
@@ -180,7 +180,7 @@ private fun generateChipColor(
 
         Severity.DISABLED -> {
             containerColor = theme.chipDisabledBg
-            contentColor = theme.chipDisabledContent
+            contentColor = theme.textBtnPrimary
 
         }
     }

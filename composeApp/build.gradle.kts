@@ -12,6 +12,8 @@ plugins {
 kotlin {
     sourceSets.all {
         languageSettings.optIn("androidx.compose.material3.ExperimentalMaterial3Api")
+        languageSettings.optIn("kotlin.time.ExperimentalTime")
+
     }
 
     androidTarget {
@@ -84,6 +86,12 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.network)
 
+            //Kotlinx-datetime
+            implementation(libs.kotlinx.datetime)
+
+            //wheel picker
+            implementation(libs.datetime.wheel.picker)
+
             //UI Backhandler
             implementation(libs.ui.backhandler)
 
@@ -94,6 +102,7 @@ kotlin {
 
             //Api service
             implementation(project(":rollin-up-api-service"))
+            implementation(project(":common"))
 
             //multiplatform settings
             implementation(libs.multiplatform.settings)
@@ -109,6 +118,9 @@ kotlin {
             api(libs.datastore.preferences)
             api(libs.datastore)
 
+            //Calendar
+            implementation(libs.kizitonwose.calendar)
+
             //Compass
             implementation(libs.compass.geocoder)
             implementation(libs.compass.geolocation)
@@ -117,14 +129,16 @@ kotlin {
             implementation(libs.kotlin.test)
 
         }
-        iosTest.dependencies{
+        iosTest.dependencies {
             implementation(libs.permission.test)
         }
-        androidUnitTest.dependencies{
+        androidUnitTest.dependencies {
             implementation(libs.permission.test)
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
+//            implementation(libs.skiko.awt.runtime.windows.x64)
+//            implementation(compose.desktop.windows_arm64)
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.ktor.java)
         }
