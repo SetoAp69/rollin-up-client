@@ -156,7 +156,7 @@ private fun ProfileInfoSection(
         ProfileInfoField(
             title = "Role",
             icon = Res.drawable.ic_user_board_line_24,
-            value = userDetail.role
+            value = userDetail.role.name
         )
         ProfileInfoField(
             title = "Address",

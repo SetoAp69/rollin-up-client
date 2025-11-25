@@ -72,7 +72,7 @@ fun <T> MultiDropDownSelector(
     backgroundColor: Color = theme.secondary,
     placeHolder: String = "-",
     options: List<OptionData<T>>,
-    modifier:Modifier,
+    modifier:Modifier = Modifier,
     onValueChange: (List<T>) -> Unit,
 ) {
     var showSelector by remember { mutableStateOf(false) }
