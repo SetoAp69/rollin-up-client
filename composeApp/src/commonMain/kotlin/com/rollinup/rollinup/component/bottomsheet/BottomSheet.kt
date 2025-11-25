@@ -107,7 +107,6 @@ fun BottomSheet(
             Spacer(itemGap8)
             Button(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
                     .fillMaxWidth(),
                 text = btnConfirmText,
                 onClick = {

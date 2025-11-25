@@ -18,6 +18,7 @@ import com.rollinup.rollinup.component.card.Card
 import com.rollinup.rollinup.component.chip.Chip
 import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.spacer.Spacer
+import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
@@ -39,13 +40,15 @@ fun AttendanceListItem(
     Card(
         showAction = !isSelecting,
         onClick = { if (isSelecting) cb.onUpdateSelection(item) },
-        onLongClick = { if (isSelecting.not()) cb.onUpdateSelection(item) },
+        onLongClick = { if (!isSelecting) cb.onUpdateSelection(item) },
         onClickAction = {
             onClickAction(item)
         },
         backgroundColor = if (uiState.itemSelected.contains(item)) theme.popUpBgSelected else theme.popUpBg
     ) {
-        Column {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(itemGap4)
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,

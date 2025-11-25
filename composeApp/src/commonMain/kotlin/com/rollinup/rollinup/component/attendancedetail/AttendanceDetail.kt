@@ -24,6 +24,7 @@ import com.rollinup.apiservice.model.permit.PermitType
 import com.rollinup.common.utils.Utils.toLocalDateTime
 import com.rollinup.rollinup.component.dialog.Dialog
 import com.rollinup.rollinup.component.loading.ShimmerEffect
+import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.record.RecordField
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
@@ -31,7 +32,9 @@ import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.spacer.screenPadding
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.component.utils.getScreenHeight
+import com.rollinup.rollinup.component.utils.getScreenWidth
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import rollin_up.composeapp.generated.resources.Res
@@ -46,7 +49,7 @@ fun AttendanceDetailDialog(
     isLoading: Boolean,
     detail: AttendanceDetailEntity,
 ) {
-    val maxWidth = 400.dp
+    val maxWidth = if (getPlatform().isMobile()) getScreenWidth() * 0.75f else 400.dp
     val maxHeight = getScreenHeight() * 0.5f
 
     Dialog(

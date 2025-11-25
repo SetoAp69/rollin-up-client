@@ -20,5 +20,5 @@ data class TeacherDashboardCallback(
     val onValidateEditForm: (EditAttendanceFormData, AttendanceStatus) -> Boolean = { _, _ -> false },
     val onValidateApproval: (TeacherDashboardApprovalFormData) -> Boolean = { false },
     val onSubmitEditAttendance: (AttendanceDetailEntity, EditAttendanceFormData) -> Unit = { _, _ -> },
-
-    )
+    val onResetSelection: () -> Unit = {},
+)

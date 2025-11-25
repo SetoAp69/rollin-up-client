@@ -8,12 +8,13 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
+import com.rollinup.rollinup.component.theme.localUser
 import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardContentMobile
-import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.viwmodel.TeacherDashboardViewModel
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardStateHandler
+import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.viwmodel.TeacherDashboardViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -25,9 +26,10 @@ fun TeacherDashboardScreen(
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val pagingData = viewModel.pagingData.collectAsLazyPagingItems()
     val cb = viewModel.getCallback()
+    val user = localUser
 
     LaunchedEffect(Unit) {
-        viewModel.init()
+        viewModel.init(user)
     }
 
     TeacherDashboardContent(

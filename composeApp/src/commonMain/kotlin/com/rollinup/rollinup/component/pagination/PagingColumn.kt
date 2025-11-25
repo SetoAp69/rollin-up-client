@@ -26,7 +26,7 @@ fun <T : Any> PagingColumn(
     itemContent: @Composable (T) -> Unit,
     loadingContent: @Composable () -> Unit,
     onRefresh: () -> Unit,
-    contentPadding: PaddingValues = screenPaddingValues,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
     contentArrangement: Arrangement.Vertical = Arrangement.spacedBy(itemGap4),
 ) {
     PullRefresh(

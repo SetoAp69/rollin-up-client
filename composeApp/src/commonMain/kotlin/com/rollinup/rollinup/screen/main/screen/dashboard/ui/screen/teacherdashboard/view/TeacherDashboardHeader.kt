@@ -90,17 +90,17 @@ fun TeacherDashboardHeaderContent(
             Text(
                 text = "Hello",
                 style = Style.body,
-                color = theme.chipDisabledBg
+                color = theme.bodyText
             )
             Text(
                 text = user.fullName,
                 style = Style.popupTitle,
-                color = theme.chipDisabledBg
+                color = theme.bodyText
             )
             Text(
                 text = user.classX ?: "-",
                 style = Style.body,
-                color = theme.chipDisabledBg
+                color = theme.bodyText
             )
         }
     }

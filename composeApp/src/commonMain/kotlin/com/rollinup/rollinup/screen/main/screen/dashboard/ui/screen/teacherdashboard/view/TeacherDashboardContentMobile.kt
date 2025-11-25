@@ -1,5 +1,6 @@
 package com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -8,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.rollinup.component.scaffold.Scaffold
@@ -31,11 +33,12 @@ fun TeacherDashboardContentMobile(
 
     Scaffold {
         Column(
-            modifier = Modifier.padding(screenPaddingValues)
+            modifier = Modifier.padding(screenPaddingValues),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             TeacherDashboardHeader(
                 isLoading = uiState.isLoadingHeader,
-                userLoginEntity = uiState.user!!
+                userLoginEntity = uiState.user
             )
             TeacherDashboardQuickAccess(
                 onPermit = { onNavigateTo },

@@ -27,8 +27,7 @@ fun TeacherDashboardQuickAccess(
     ) {
         FlowRow(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(screenPaddingValues),
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(itemGap8),
             horizontalArrangement = Arrangement.spacedBy(itemGap8),
             itemVerticalAlignment = Alignment.CenterVertically,

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -68,6 +69,7 @@ fun TopBar(
     modifier: Modifier = Modifier,
     color: TopAppBarColors? = null,
     showNavigateUp: Boolean = true,
+    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
     var showSearch by remember { mutableStateOf(false) }
@@ -93,7 +95,7 @@ fun TopBar(
         actionContent = {
             if (showSearch) {
                 Box(modifier = Modifier.weight(1f)) {
-                    SearchField(
+                    TopBarSearchField(
                         onNavigateUp = {
                             showSearch = false
                             searchQuery = ""
@@ -122,6 +124,7 @@ fun TopBar(
         },
         modifier = modifier,
         showNavigateUp = showNavigateUp,
+        windowInsets = windowInsets,
         onNavigateUp = navigateUp,
         color = color,
         scrollBehavior = scrollBehavior
@@ -168,6 +171,7 @@ fun BaseTopBar(
     showNavigateUp: Boolean = true,
     onNavigateUp: () -> Unit = {},
     color: TopAppBarColors? = null,
+    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
     val color = color ?: TopAppBarDefaults.topAppBarColors
@@ -186,6 +190,7 @@ fun BaseTopBar(
             )
         },
         colors = color,
+        windowInsets = windowInsets,
         scrollBehavior = scrollBehavior
     )
 }
@@ -200,6 +205,9 @@ object TopAppBarDefaults {
             actionIconContentColor = theme.textPrimary
         )
 
+    val windowInsets
+        @Composable
+        get() = androidx.compose.material3.TopAppBarDefaults.windowInsets
 }
 
 @Composable
@@ -211,9 +219,7 @@ internal fun TopBarContent(
 ) {
     Row(
         modifier = Modifier
-            .padding(
-                horizontal = itemGap8+itemGap4
-            ),
+            .padding(horizontal = itemGap8 + itemGap4),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -249,7 +255,7 @@ internal fun TopBarContent(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-internal fun SearchField(
+private fun TopBarSearchField(
     onNavigateUp: () -> Unit,
     searchQuery: String,
     onUpdateValue: (String) -> Unit,

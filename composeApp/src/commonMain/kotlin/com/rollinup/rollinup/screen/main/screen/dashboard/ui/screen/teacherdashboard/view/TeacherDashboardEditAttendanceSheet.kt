@@ -32,6 +32,7 @@ import com.rollinup.rollinup.component.permitform.view.PermitFormContent
 import com.rollinup.rollinup.component.selector.SingleSelector
 import com.rollinup.rollinup.component.spacer.screenPadding
 import com.rollinup.rollinup.component.textfield.TextFieldDefaults
+import com.rollinup.rollinup.component.theme.LocalGeneralSetting
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.time.TimePickerTextField
@@ -42,6 +43,7 @@ import com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view.Su
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.EditAttendanceFormData
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
+import dev.jordond.compass.Coordinates
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_edit_line_24
 
@@ -55,7 +57,8 @@ fun TeacherDashboardEditAttendance(
     if (getPlatform().isMobile()) {
         BottomSheet(
             isShowSheet = isShowForm,
-            onDismissRequest = onDismissRequest
+            onDismissRequest = onDismissRequest,
+            modifier = Modifier.padding(horizontal = screenPadding)
         ) {
             TeacherDashboardEditAttendanceContent(
                 uiState = uiState,
@@ -93,13 +96,38 @@ fun TeacherDashboardEditAttendanceContent(
     val initialStatus = detail.status
     val formData = uiState.editAttendanceFormData
     var showDialog by remember { mutableStateOf(false) }
+    val generalSetting = LocalGeneralSetting.current
 
     LaunchedEffect(uiState.attendanceDetail) {
         cb.onUpdateEditForm(uiState.fetchEditAttendanceForm())
     }
+
     LaunchedEffect(uiState.editAttendanceFormData.status) {
         if (uiState.editAttendanceFormData.status == initialStatus) {
             cb.onUpdateEditForm(uiState.fetchEditAttendanceForm())
+        }
+
+        when (uiState.editAttendanceFormData.status) {
+            initialStatus -> {
+                cb.onUpdateEditForm(uiState.fetchEditAttendanceForm())
+            }
+
+            in listOf(
+                AttendanceStatus.CHECKED_IN,
+                AttendanceStatus.CHECKED_IN
+            ),
+                -> {
+                cb.onUpdateEditForm(
+                    uiState.editAttendanceFormData.copy(
+                        location = Coordinates(
+                            latitude = generalSetting.latitude,
+                            longitude = generalSetting.longitude
+                        )
+                    )
+                )
+            }
+
+            else -> {}
         }
     }
 

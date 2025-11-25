@@ -19,6 +19,7 @@ import com.rollinup.apiservice.domain.permit.DoApprovalUseCase
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
+import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.Result
 import com.rollinup.apiservice.model.permit.ApprovalStatus
 import com.rollinup.apiservice.model.permit.PermitType
@@ -58,7 +59,13 @@ class TeacherDashboardViewModel(
         MutableStateFlow<PagingData<AttendanceByClassEntity>>(PagingData.empty())
     val pagingData = _pagingData.asStateFlow()
 
-    fun init() {
+    fun init(
+        user: LoginEntity? = null,
+    ) {
+        if (user == null) return
+        _uiState.update {
+            it.copy(user = user)
+        }
         if (platform.isMobile()) {
             getPagingData()
         } else {
@@ -122,9 +129,10 @@ class TeacherDashboardViewModel(
     }
 
     private fun getPagingData() {
-        val classKey = uiState.value.user?.classKey ?: 0
+        val classKey = uiState.value.user.classKey ?: 0
 
         viewModelScope.launch {
+            _uiState.update { it.copy(itemSelected = emptyList()) }
             _pagingData.value = PagingData.from(
                 data = getAttendanceByClassDummy(),
                 sourceLoadStates = LoadStates(
@@ -133,6 +141,7 @@ class TeacherDashboardViewModel(
                     append = LoadState.NotLoading(endOfPaginationReached = true)
                 )
             )
+            if (true) return@launch
 
             getAttendanceByClassPagingUseCase(
                 classKey = classKey,
@@ -201,6 +210,7 @@ class TeacherDashboardViewModel(
         )
 
     private fun refresh() {
+        resetSelection()
         if (platform.isMobile()) {
             getPagingData()
         } else {
@@ -428,8 +438,8 @@ class TeacherDashboardViewModel(
     ) {
         val body = CreateEditAttendanceBody(
             studentUserId = formData.studentUserId,
-            latitude = formData.location!!.latitude,
-            longitude = formData.location.longitude,
+            latitude = formData.location?.latitude,
+            longitude = formData.location?.longitude,
             checkedInAt = formData.checkInTime
         )
 
@@ -448,13 +458,14 @@ class TeacherDashboardViewModel(
 
     //Selection
     private fun updateSelection(data: AttendanceByClassEntity) {
-        val newData = _uiState.value.itemSelected.apply {
-            if (contains(data)) {
-                plus(data)
-            } else {
-                minus(data)
-            }
+        val newData = _uiState.value.itemSelected.toMutableList()
+
+        if(newData.contains(data)){
+            newData.remove(data)
+        } else {
+            newData.add(data)
         }
+
         _uiState.update {
             it.copy(itemSelected = newData)
         }
@@ -464,19 +475,32 @@ class TeacherDashboardViewModel(
         if (_uiState.value.isAllSelected) {
             _uiState.update {
                 it.copy(
+                    isAllSelected = false,
                     itemSelected = emptyList()
                 )
             }
         } else {
             viewModelScope.launch {
+                _uiState.update { it.copy(isLoadingOverlay = true) }
+                delay(1000)
+                if(true){
+                    _uiState.update {
+                        it.copy(
+                            isAllSelected = true,
+                            itemSelected = getAttendanceByClassDummy()
+                        )
+                    }
+                    return@launch
+                }
                 val queryParams = _uiState.value.filterData.toQueryParams()
-                val classKey = _uiState.value.user?.classKey ?: return@launch
+                val classKey = _uiState.value.user.classKey ?: return@launch
                 getAttendanceByClassListUseCase(classKey, queryParams).collectLatest { result ->
                     _uiState.update { it.copy(isLoadingOverlay = true) }
                     when (result) {
                         is Result.Success -> {
                             _uiState.update {
                                 it.copy(
+                                    isAllSelected = true,
                                     isLoadingOverlay = false,
                                     itemSelected = result.data
                                 )
@@ -494,6 +518,15 @@ class TeacherDashboardViewModel(
 
                 }
             }
+        }
+    }
+
+    private fun resetSelection(){
+        _uiState.update {
+            it.copy(
+                itemSelected = emptyList(),
+                isAllSelected = false
+            )
         }
     }
 
