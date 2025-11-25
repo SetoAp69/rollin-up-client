@@ -19,6 +19,7 @@ data class GetUserQueryParams(
     val gender: String? = null,
     @SerialName("role")
     val role: String? = null,
+    val classX: String? = null,
 ) {
     fun toQueryMap(): Map<String, String?> {
         return hashMapOf(
@@ -29,6 +30,7 @@ data class GetUserQueryParams(
             "sortOrder" to sortOrder,
             "gender" to gender,
             "role" to role,
+            "class" to classX
         ).filterValues({ it != null })
     }
 }

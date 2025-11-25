@@ -88,6 +88,7 @@ fun DatePickerField(
     maxSelection: Int = 3,
     color: DatePickerColor = DatePickerDefault.color,
     isError: Boolean = false,
+    isAllSelectable: Boolean = false,
     errorText: String? = null,
     enabled: Boolean = true,
     isDisablePastSelection: Boolean = true,
@@ -164,7 +165,8 @@ fun DatePickerField(
                 },
                 isDisabledPastSelection = isDisablePastSelection,
                 maxSelection = maxSelection,
-                color = color
+                color = color,
+                isAllSelectable = isAllSelectable
             )
         }
 
@@ -181,6 +183,7 @@ fun DatePickerField(
                 },
                 isDisabledPastSelection = isDisablePastSelection,
                 maxSelection = maxSelection,
+                isAllSelectable = isAllSelectable,
                 color = color
             )
         }
@@ -193,6 +196,7 @@ fun DatePickerDialog(
     onDismissRequest: (Boolean) -> Unit,
     value: List<LocalDate>,
     onValueChange: (List<LocalDate>) -> Unit,
+    isAllSelectable: Boolean = false,
     isDisabledPastSelection: Boolean = true,
     maxSelection: Int = Int.MAX_VALUE,
     color: DatePickerColor = DatePickerDefault.color,
@@ -256,7 +260,8 @@ fun DatePickerDialog(
                     },
                     isDisabledPastSelection = isDisabledPastSelection,
                     maxSelection = maxSelection,
-                    color = color
+                    color = color,
+                    isAllSelectable = isAllSelectable
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Row(
@@ -291,6 +296,7 @@ fun DatePickerBottomSheet(
     value: List<LocalDate>,
     onValueChange: (List<LocalDate>) -> Unit,
     isDisabledPastSelection: Boolean = true,
+    isAllSelectable: Boolean = false,
     maxSelection: Int = Int.MAX_VALUE,
     color: DatePickerColor = DatePickerDefault.color,
 ) {
@@ -320,7 +326,8 @@ fun DatePickerBottomSheet(
                 },
                 maxSelection = maxSelection,
                 isDisabledPastSelection = isDisabledPastSelection,
-                color = color
+                color = color,
+                isAllSelectable = isAllSelectable
             )
             Spacer(modifier = Modifier.weight(1f))
             Row {
@@ -351,6 +358,7 @@ fun DatePickerCalendar(
     value: List<LocalDate> = emptyList(),
     onValueChange: (List<LocalDate>) -> Unit,
     isDisabledPastSelection: Boolean = true,
+    isAllSelectable: Boolean,
     maxSelection: Int = Int.MAX_VALUE,
     color: DatePickerColor = DatePickerDefault.color,
 ) {
@@ -410,6 +418,7 @@ fun DatePickerCalendar(
                     },
                     color = color,
                     holidayList = holidayList,
+                    isAllSelectable = isAllSelectable
                 )
             }
         )
@@ -421,6 +430,7 @@ fun DayContent(
     selectedDate: List<LocalDate>,
     day: CalendarDay,
     isDisablePastSelection: Boolean,
+    isAllSelectable: Boolean,
     onUpdateSelection: (LocalDate) -> Unit,
     holidayList: List<LocalDate>,
     color: DatePickerColor,
@@ -450,7 +460,7 @@ fun DayContent(
                 .clickable(
                     interactionSource = MutableInteractionSource(),
                     indication = null,
-                    enabled = filterActiveDate(
+                    enabled = isAllSelectable || filterActiveDate(
                         date = day.date,
                         isDisabledPastSelection = isDisablePastSelection,
                         holidayList = holidayList

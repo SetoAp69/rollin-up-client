@@ -72,6 +72,7 @@ fun <T> MultiDropDownSelector(
     backgroundColor: Color = theme.secondary,
     placeHolder: String = "-",
     options: List<OptionData<T>>,
+    modifier:Modifier,
     onValueChange: (List<T>) -> Unit,
 ) {
     var showSelector by remember { mutableStateOf(false) }
@@ -95,7 +96,9 @@ fun <T> MultiDropDownSelector(
                     }
                     .background(color = backgroundColor, shape = RoundedCornerShape(8.dp))
                     .padding(itemGap4)
-                    .width(100.dp),
+                    .width(100.dp)
+                    .then(modifier)
+                ,
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(itemGap4),
             ) {
@@ -135,6 +138,7 @@ fun <T> SingleDropDownSelector(
     contentColor: Color = theme.textPrimary,
     backgroundColor: Color = theme.secondary,
     placeHolder: String = "-",
+    modifier:Modifier = Modifier,
     options: List<OptionData<T>>,
     onValueChange: (T) -> Unit,
 ) {
@@ -155,7 +159,9 @@ fun <T> SingleDropDownSelector(
                 }
                 .background(color = backgroundColor, shape = RoundedCornerShape(8.dp))
                 .width(100.dp)
-                .padding(itemGap4),
+                .padding(itemGap4)
+                .then(modifier)
+            ,
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(itemGap4),
         ) {

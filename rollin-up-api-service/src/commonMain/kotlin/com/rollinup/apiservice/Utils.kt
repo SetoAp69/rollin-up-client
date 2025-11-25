@@ -14,8 +14,8 @@ object Utils {
         }
     }
 
-    inline fun < reified T> List<T>.toJsonString(): String {
-        return Json.encodeToString(this)
+    inline fun < reified T> List<T>.toJsonString(): String? {
+        return if(this.isEmpty()) null else Json.encodeToString(this)
     }
 
 //    fun <T>handleError(code:Int): Result<T, NetworkError>{

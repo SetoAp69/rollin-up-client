@@ -15,7 +15,7 @@ data class UserDetailEntity(
     val gender: Gender = Gender.MALE,
     val phoneNumber:String = "",
     val birthDay:String = "",
-    val role:String = ""
+    val role:Data = Data()
 ) {
     data class Data(
         val id: String = "",

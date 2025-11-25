@@ -10,5 +10,6 @@ data class UserEntity(
     val fullName:String = "",
     val studentId:String = "",
     val address:String = "",
-    val gender: Gender = Gender.MALE
+    val gender: Gender = Gender.MALE,
+    val role:String = "",
 )

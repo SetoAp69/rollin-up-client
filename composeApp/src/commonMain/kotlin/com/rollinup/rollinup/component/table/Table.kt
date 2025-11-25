@@ -60,8 +60,11 @@ fun <T> Table(
     modifier: Modifier = Modifier,
     horizontalPadding: Dp = 12.dp,
     verticalPadding: Dp = 4.dp,
-    showSelection: Boolean = false,
-    showActionMenu: Boolean = false,
+    showSelection: Boolean = true,
+    showActionMenu: Boolean = true,
+    onSelectItem: ((T) -> Unit) = {},
+    itemSelected: List<T> = emptyList(),
+    onToggleSelectAll: () -> Unit = {},
     tableState: TableState<T> = rememberTableState(),
     dropDownMenu: @Composable (DropDownState<T>) -> Unit,
 ) {
@@ -100,14 +103,8 @@ fun <T> Table(
                             colors = CheckBoxDefaults.colors.copy(
                                 uncheckedBoxColor = theme.popUpBg
                             ),
-                            checked = tableState.selectedItem.size == items.size && items.isNotEmpty(),
-                            onCheckedChange = {
-                                if (it) {
-                                    tableState.toggleSelectAll(items)
-                                } else {
-                                    tableState.toggleSelectAll(emptyList())
-                                }
-                            }
+                            checked = items.size == itemSelected.size,
+                            onCheckedChange = { onToggleSelectAll() }
                         )
                     }
                     columns.fastForEach { col ->
@@ -123,8 +120,8 @@ fun <T> Table(
                     }
                     if (showActionMenu) {
                         TableActionButton(
-                            showButton = tableState.selectedItem.isNotEmpty(),
-                            items = tableState.selectedItem,
+                            showButton = itemSelected.isNotEmpty(),
+                            items = itemSelected,
                             dropDownMenu = dropDownMenu,
                             color = theme.textBtnPrimary
                         )
@@ -134,17 +131,20 @@ fun <T> Table(
 
             if (!isLoading) {
                 items(tableState.getPagedData(items)) { item ->
-                    val isSelected = item in tableState.selectedItem
+                    val isSelected = item in itemSelected
                     TableRow(
                         item = item,
                         columns = columns,
                         showSelection = showSelection,
                         showActionMenu = showActionMenu,
                         isSelected = isSelected,
-                        tableState = tableState,
                         horizontalPadding = horizontalPadding,
                         verticalPadding = verticalPadding,
-                        dropDownMenu = dropDownMenu
+                        dropDownMenu = dropDownMenu,
+                        isSelecting = itemSelected.isNotEmpty(),
+                        onSelect = {
+                            onSelectItem(item)
+                        },
                     )
                 }
             } else {
@@ -218,7 +218,8 @@ fun <T> TableRow(
     showSelection: Boolean,
     showActionMenu: Boolean,
     isSelected: Boolean,
-    tableState: TableState<T>,
+    onSelect: (T) -> Unit,
+    isSelecting: Boolean = false,
     horizontalPadding: Dp = 12.dp,
     verticalPadding: Dp = 4.dp,
     dropDownMenu: (@Composable (DropDownState<T>) -> Unit),
@@ -234,7 +235,7 @@ fun <T> TableRow(
                 CheckBox(
                     checked = isSelected,
                     onCheckedChange = {
-                        tableState.toggleSelection(item)
+                        onSelect(item)
                     }
                 )
             }
@@ -257,7 +258,7 @@ fun <T> TableRow(
                     items = listOf(item),
                     dropDownMenu = dropDownMenu,
                     color = theme.primary,
-                    showButton = tableState.selectedItem.isEmpty()
+                    showButton = !isSelecting
                 )
             }
         }
@@ -319,140 +320,140 @@ fun <T> TableActionButton(
         }
     }
 }
-
-@Composable
-fun <T> Table(
-    items: List<T>,
-    columns: List<TableColumn<T>>,
-    headerContent: (@Composable RowScope.() -> Unit)? = null,
-    modifier: Modifier = Modifier,
-    showSelection: Boolean = false,
-    showActionMenu: Boolean = false,
-    itemSelected: List<T> = emptyList(),
-    onUpdateSelection: (T) -> Unit = {},
-    onToggleSelectAll: (List<T>) -> Unit = {},
-    pageSizeOptions: List<Int> = listOf(5, 10, 25, 50),
-    dropDownMenu: @Composable (List<T>, Boolean, (Boolean) -> Unit) -> Unit,
-    onClickAction: () -> Unit,
-) {
-    var currentPage by remember { mutableStateOf(0) }
-    var pageSize by remember { mutableStateOf(pageSizeOptions.first()) }
-
-    val pagedData = items.drop(currentPage * pageSize).take(pageSize)
-
-    Column(
-        modifier = modifier
-            .background(
-                color = theme.popUpBg,
-                shape = RoundedCornerShape(12.dp)
-            )
-            .fillMaxSize()
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Row(modifier = Modifier.weight(1f)) {
-                headerContent?.invoke(this)
-                Spacer(itemGap8)
-                RowsPerPage(
-                    options = pageSizeOptions,
-                    selected = pageSize,
-                    onSelected = {
-                        pageSize = it
-                    }
-                )
-                Spacer(itemGap8)
-                Pagination(
-                    totalPage = items.size - 1,
-                    currentPage = currentPage,
-                    onPageChange = { currentPage = it }
-                )
-            }
-        }
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(itemGap4),
-        ) {
-            stickyHeader {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .background(
-                            color = theme.primary,
-                            shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
-                        )
-                        .fillMaxWidth()
-                        .padding(12.dp),
-
-                    ) {
-                    if (showSelection) {
-                        CheckBox(
-                            checked = itemSelected.size == items.size,
-                            onCheckedChange = {
-                                if (it) {
-                                    onToggleSelectAll(items)
-                                } else {
-                                    onToggleSelectAll(emptyList())
-                                }
-                            }
-                        )
-                    }
-                    columns.fastForEach { col ->
-                        Text(
-                            text = col.title,
-                            modifier = Modifier
-                                .weight(col.weight)
-                                .padding(horizontal = itemGap8),
-                            style = Style.title,
-                            color = theme.textBtnPrimary
-                        )
-                    }
-                    if (itemSelected.isNotEmpty() && showActionMenu) {
-                        Box {
-                            var showDropDown by remember { mutableStateOf(false) }
-                            ActionButton(
-                                onClickAction = onClickAction,
-                                color = theme.textBtnPrimary,
-                            )
-                            dropDownMenu(itemSelected, showDropDown, { showDropDown = it })
-                        }
-                    }
-                }
-            }
-
-            items(pagedData) { item ->
-                val isSelected = item in itemSelected
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    if (showSelection) {
-                        CheckBox(
-                            checked = isSelected,
-                            onCheckedChange = {
-                                onUpdateSelection(item)
-                            }
-                        )
-                    }
-
-                    columns.fastForEach { col ->
-                        col.content(item)
-                    }
-
-                    if (itemSelected.isEmpty() && showActionMenu) {
-                        Box {
-                            var showDropDown by remember { mutableStateOf(false) }
-                            ActionButton(
-                                onClickAction = onClickAction,
-                                color = theme.textBtnPrimary,
-                            )
-                            dropDownMenu(itemSelected, showDropDown, { showDropDown = it })
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+//
+//@Composable
+//fun <T> Table(
+//    items: List<T>,
+//    columns: List<TableColumn<T>>,
+//    headerContent: (@Composable RowScope.() -> Unit)? = null,
+//    modifier: Modifier = Modifier,
+//    showSelection: Boolean = false,
+//    showActionMenu: Boolean = false,
+//    itemSelected: List<T> = emptyList(),
+//    onUpdateSelection: (T) -> Unit = {},
+//    onToggleSelectAll: (List<T>) -> Unit = {},
+//    pageSizeOptions: List<Int> = listOf(5, 10, 25, 50),
+//    dropDownMenu: @Composable (List<T>, Boolean, (Boolean) -> Unit) -> Unit,
+//    onClickAction: () -> Unit,
+//) {
+//    var currentPage by remember { mutableStateOf(0) }
+//    var pageSize by remember { mutableStateOf(pageSizeOptions.first()) }
+//
+//    val pagedData = items.drop(currentPage * pageSize).take(pageSize)
+//
+//    Column(
+//        modifier = modifier
+//            .background(
+//                color = theme.popUpBg,
+//                shape = RoundedCornerShape(12.dp)
+//            )
+//            .fillMaxSize()
+//    ) {
+//        Row(
+//            modifier = Modifier.fillMaxWidth()
+//        ) {
+//            Row(modifier = Modifier.weight(1f)) {
+//                headerContent?.invoke(this)
+//                Spacer(itemGap8)
+//                RowsPerPage(
+//                    options = pageSizeOptions,
+//                    selected = pageSize,
+//                    onSelected = {
+//                        pageSize = it
+//                    }
+//                )
+//                Spacer(itemGap8)
+//                Pagination(
+//                    totalPage = items.size - 1,
+//                    currentPage = currentPage,
+//                    onPageChange = { currentPage = it }
+//                )
+//            }
+//        }
+//        LazyColumn(
+//            modifier = Modifier.fillMaxWidth(),
+//            verticalArrangement = Arrangement.spacedBy(itemGap4),
+//        ) {
+//            stickyHeader {
+//                Row(
+//                    verticalAlignment = Alignment.CenterVertically,
+//                    modifier = Modifier
+//                        .background(
+//                            color = theme.primary,
+//                            shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
+//                        )
+//                        .fillMaxWidth()
+//                        .padding(12.dp),
+//
+//                    ) {
+//                    if (showSelection) {
+//                        CheckBox(
+//                            checked = itemSelected.size == items.size,
+//                            onCheckedChange = {
+//                                if (it) {
+//                                    onToggleSelectAll(items)
+//                                } else {
+//                                    onToggleSelectAll(emptyList())
+//                                }
+//                            }
+//                        )
+//                    }
+//                    columns.fastForEach { col ->
+//                        Text(
+//                            text = col.title,
+//                            modifier = Modifier
+//                                .weight(col.weight)
+//                                .padding(horizontal = itemGap8),
+//                            style = Style.title,
+//                            color = theme.textBtnPrimary
+//                        )
+//                    }
+//                    if (itemSelected.isNotEmpty() && showActionMenu) {
+//                        Box {
+//                            var showDropDown by remember { mutableStateOf(false) }
+//                            ActionButton(
+//                                onClickAction = onClickAction,
+//                                color = theme.textBtnPrimary,
+//                            )
+//                            dropDownMenu(itemSelected, showDropDown, { showDropDown = it })
+//                        }
+//                    }
+//                }
+//            }
+//
+//            items(pagedData) { item ->
+//                val isSelected = item in itemSelected
+//                Row(
+//                    modifier = Modifier.fillMaxWidth()
+//                ) {
+//                    if (showSelection) {
+//                        CheckBox(
+//                            checked = isSelected,
+//                            onCheckedChange = {
+//                                onUpdateSelection(item)
+//                            }
+//                        )
+//                    }
+//
+//                    columns.fastForEach { col ->
+//                        col.content(item)
+//                    }
+//
+//                    if (itemSelected.isEmpty() && showActionMenu) {
+//                        Box {
+//                            var showDropDown by remember { mutableStateOf(false) }
+//                            ActionButton(
+//                                onClickAction = onClickAction,
+//                                color = theme.textBtnPrimary,
+//                            )
+//                            dropDownMenu(itemSelected, showDropDown, { showDropDown = it })
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 private fun RowsPerPage(

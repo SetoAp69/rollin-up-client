@@ -47,8 +47,78 @@ import org.jetbrains.compose.resources.painterResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_eye_close_line_24
 import rollin_up.composeapp.generated.resources.ic_eye_open_line_24
+import rollin_up.composeapp.generated.resources.ic_phone_line_24
 import rollin_up.composeapp.generated.resources.ic_search_line_24
 
+
+@Composable
+fun PhoneNumberTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String = "08xxxxxxxxxx",
+    modifier: Modifier = Modifier,
+    title: String = "",
+    titleStyle: TextStyle = Style.body,
+    isError: Boolean = false,
+    errorMsg: String? = null,
+    isRequired: Boolean = false,
+    isEnabled: Boolean = true,
+    isReadOnly: Boolean = false,
+    maxChar: Int = 15, // Normal phone number limit
+    keyboardActions: KeyboardActions? = null,
+) {
+    val iconColor = when {
+        isError -> theme.textError
+        !isEnabled -> theme.textFieldStrokeDisabled
+        else -> theme.textFieldText
+    }
+
+    fun sanitize(input: String): String {
+        return input.filter { it.isDigit() }.take(maxChar)
+    }
+
+    TextFieldTitle(
+        text = title,
+        isRequired = isRequired,
+        textStyle = titleStyle,
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(itemGap4)
+        ) {
+            BaseTextField(
+                value = value,
+                onValueChange = { onValueChange(sanitize(it)) },
+                placeholder = placeholder,
+                modifier = modifier,
+                isError = isError,
+                isEnabled = isEnabled,
+                isReadOnly = isReadOnly,
+                maxChar = maxChar,
+                maxLines = 1,
+                minLines = 1,
+                isSingleLine = true,
+                leadingContent = {
+                    Icon(
+                        modifier = Modifier.size(24.dp),
+                        painter = painterResource(Res.drawable.ic_phone_line_24), // <-- change to your icon
+                        contentDescription = null,
+                        tint = iconColor
+                    )
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Phone,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = keyboardActions,
+            )
+
+            TextError(
+                text = errorMsg ?: "",
+                isError = isError
+            )
+        }
+    }
+}
 
 @Composable
 fun TextFieldTitle(

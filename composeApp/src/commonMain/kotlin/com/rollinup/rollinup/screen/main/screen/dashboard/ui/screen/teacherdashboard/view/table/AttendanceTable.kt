@@ -18,10 +18,10 @@ import com.rollinup.rollinup.component.table.rememberTableState
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.dashboard.model.teacherdashboard.TeacherDashboardAction
+import com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardApprovalSheet
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardActionDropDown
-import com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardApprovalSheet
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardEditAttendance
 
 @Composable
@@ -29,20 +29,21 @@ fun AttendanceTable(
     uiState: TeacherDashboardUiState,
     cb: TeacherDashboardCallback,
 ) {
-    val state = rememberTableState<AttendanceByClassEntity>()
     var showEdit by remember { mutableStateOf(false) }
     var showApproval by remember { mutableStateOf(false) }
     var showDetail by remember { mutableStateOf(false) }
 
     Table(
-        tableState = state,
         items = uiState.attendanceList,
         isLoading = uiState.isLoadingList,
         columns = getTableColumn(),
-        headerContent = {},
-        modifier = Modifier,
-        showSelection = true,
-        showActionMenu = true,
+        itemSelected = uiState.itemSelected,
+        onSelectItem = {
+            cb.onGetDetail(it)
+        },
+        onToggleSelectAll = {
+            cb.onSelectAll()
+        },
         dropDownMenu = { state ->
             TeacherDashboardActionDropDown(
                 showDropDown = state.expanded,
@@ -123,7 +124,7 @@ private fun getTableColumn(): List<TableColumn<AttendanceByClassEntity>> {
                 color = theme.bodyText
             )
         },
-        TableColumn("Status",1f) {
+        TableColumn("Status", 1f) {
             val status = it.attendance?.status ?: AttendanceStatus.NO_DATA
             Chip(
                 text = status.label,
