@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import com.rollinup.apiservice.model.common.MultiPlatformFile
+import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.modifier.dashedBorder
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
@@ -37,6 +38,7 @@ import com.rollinup.rollinup.component.textfield.TextFieldTitle
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.utils.applyIf
+import com.rollinup.rollinup.component.utils.getPlatform
 import org.jetbrains.compose.resources.painterResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_delete_line_24
@@ -161,7 +163,7 @@ fun FilePicker(
         }
     }
 
-    if (showCameraOption) {
+    if (showCameraOption && getPlatform().isMobile()) {
         FilePickerBottomSheet(
             isShowSheet = showHandler,
             onDismissRequest = {
