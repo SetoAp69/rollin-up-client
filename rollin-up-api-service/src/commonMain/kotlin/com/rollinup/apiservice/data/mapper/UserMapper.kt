@@ -42,7 +42,11 @@ class UserMapper {
             gender = Gender.fromValue(data.gender),
             phoneNumber = data.phoneNumber?:"",
             birthDay = data.birthday,
-            role = data.role
+            role = UserDetailEntity.Data(
+                id = data.role.id,
+                name = data.role.name,
+                key = data.role.key
+            )
         )
     }
 }

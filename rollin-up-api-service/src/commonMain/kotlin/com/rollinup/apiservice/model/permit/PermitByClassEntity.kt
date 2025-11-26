@@ -6,7 +6,7 @@ data class PermitByClassEntity(
     val date: String = "",
     val startTime: String = "",
     val reason: String? = null,
-    val approvalStatus: String = "",
+    val approvalStatus: ApprovalStatus = ApprovalStatus.APPROVAL_PENDING,
     val type: String = "",
     val endTime: String = "",
     val student: User = User(),

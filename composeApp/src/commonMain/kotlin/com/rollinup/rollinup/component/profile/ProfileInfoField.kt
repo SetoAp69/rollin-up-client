@@ -24,7 +24,7 @@ fun ProfileInfoField(
     value: String,
 ) {
     TextFieldTitle(
-        text = title
+        title = title
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(

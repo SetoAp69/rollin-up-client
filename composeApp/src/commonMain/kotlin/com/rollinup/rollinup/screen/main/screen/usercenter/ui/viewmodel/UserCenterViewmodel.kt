@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.rollinup.apiservice.domain.user.GetUserListUseCase
 import com.rollinup.apiservice.model.common.Result
 import com.rollinup.apiservice.model.user.UserEntity
+import com.rollinup.rollinup.screen.dashboard.getDummyUsers
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.UserCenterCallback
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.UserCenterFilterData
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.uistate.UserCenterUiState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -43,6 +45,11 @@ class UserCenterViewmodel(
         _uiState.update { it.copy(isLoadingList = true) }
 
         viewModelScope.launch {
+            delay(1000)
+            if (true) {
+                _uiState.update { it.copy(isLoadingList = false, itemList = getDummyUsers(36)) }
+                return@launch
+            }
             getUserListUseCase(queryParams).collectLatest { result ->
                 when (result) {
                     is Result.Success -> {

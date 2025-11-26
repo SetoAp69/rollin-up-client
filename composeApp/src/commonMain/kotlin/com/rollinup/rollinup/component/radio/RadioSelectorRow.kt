@@ -37,7 +37,7 @@ fun <T> RadioSelectorRow(
     maxLines: Int = Int.MAX_VALUE,
 ) {
     TextFieldTitle(
-        text = title
+        title = title
     ) {
         FlowRow(
             modifier = modifier,

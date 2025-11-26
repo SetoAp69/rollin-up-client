@@ -1,5 +1,6 @@
 package com.rollinup.rollinup.component.dialog
 
+import SnackBarHost
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,8 +15,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +35,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.button.ButtonType
+import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap8
@@ -36,6 +44,7 @@ import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.component.utils.getScreenWidth
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import rollin_up.composeapp.generated.resources.Res
@@ -47,50 +56,70 @@ fun Dialog(
     onDismissRequest: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
-    content: @Composable () -> Unit,
+    content: @Composable (OnShowSnackBar) -> Unit,
 ) {
     val properties = DialogProperties(
         dismissOnBackPress = true,
         dismissOnClickOutside = true,
         usePlatformDefaultWidth = false
     )
+    val snackBarHostSate = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    var isSuccess by remember { mutableStateOf(false) }
+
+    fun showSnackBar(message: String, success: Boolean) {
+        isSuccess = success
+        scope.launch {
+            snackBarHostSate.showSnackbar(message = message)
+        }
+
+    }
 
     if (showDialog) {
         Dialog(
             onDismissRequest = { onDismissRequest(false) },
             properties = properties,
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .background(
-                        color = theme.popUpBg,
-                        shape = RoundedCornerShape(screenPadding)
-                    )
-                    .padding(contentPadding)
-                    .then(modifier)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
+            Box(contentAlignment = Alignment.Center) {
+                SnackBarHost(
+                    snackBarHostState = snackBarHostSate,
+                    isSuccess = isSuccess,
+                )
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .background(
+                            color = theme.popUpBg,
+                            shape = RoundedCornerShape(screenPadding)
+                        )
+                        .padding(contentPadding)
+                        .then(modifier)
                 ) {
-                    Icon(
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .clickable {
-                                onDismissRequest(false)
-                            }
-                            .size(32.dp),
-                        tint = theme.lineStroke,
-                        painter = painterResource(Res.drawable.ic_close_line_24),
-                        contentDescription = null
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Icon(
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .clickable {
+                                    onDismissRequest(false)
+                                }
+                                .size(32.dp),
+                            tint = theme.lineStroke,
+                            painter = painterResource(Res.drawable.ic_close_line_24),
+                            contentDescription = null
+                        )
+                    }
+
+                    content { message, success ->
+                        showSnackBar(message, success)
+                    }
                 }
-                content()
             }
         }
-    }
 
+    }
 }
 
 @Composable

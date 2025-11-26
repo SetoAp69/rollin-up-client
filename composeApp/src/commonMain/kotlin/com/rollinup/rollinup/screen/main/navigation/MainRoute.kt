@@ -59,10 +59,6 @@ sealed class MainRoute(
                 Role.ADMIN -> listOf(
                     DashBoardRoute,
                     SettingRoute,
-                    ProfileRoute,
-                    StudentCenterRoute,
-                    PermitRoute,
-                    AttendanceRoute
                 )
 
                 Role.TEACHER -> listOf(

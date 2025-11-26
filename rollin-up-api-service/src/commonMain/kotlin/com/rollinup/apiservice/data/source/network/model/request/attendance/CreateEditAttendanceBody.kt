@@ -91,11 +91,11 @@ data class CreateEditAttendanceBody(
                         value = it
                     )
                 }
-                duration.let {
+                duration.toJsonString()?.let {
                     if (it.isNotEmpty()) {
                         append(
                             key = "duration",
-                            value = it.toJsonString()
+                            value = it
                         )
                     }
                 }

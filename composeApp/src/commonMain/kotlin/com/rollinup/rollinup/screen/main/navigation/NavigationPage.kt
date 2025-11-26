@@ -11,6 +11,8 @@ import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.screen.dashboard.ui.screen.studentdashboard.view.StudentDashboardScreen
 import com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardScreen
+import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.view.TeacherPermitScreen
+import com.rollinup.rollinup.screen.main.screen.usercenter.ui.view.UserCenterScreen
 
 fun NavGraphBuilder.mainGraph(
     onNavigateTo: (String) -> Unit,
@@ -33,10 +35,7 @@ fun NavGraphBuilder.mainGraph(
         }
         when (role) {
             Role.ADMIN -> {
-                StudentDashboardScreen(
-                    onShowSnackBar = onShowSnackBar,
-                    onNavigateTo = onNavigateTo
-                )
+                UserCenterScreen()
             }
 
             Role.STUDENT -> {
@@ -107,7 +106,18 @@ fun NavGraphBuilder.mainGraph(
             Role.fromValue(it.toString())
         }
 
-        Scaffold { }
+        when (role) {
+            Role.STUDENT -> {}
+            Role.ADMIN -> {
+                Scaffold { }
+            }
+
+            Role.TEACHER -> {
+                TeacherPermitScreen { onNavigateUp() }
+            }
+
+            Role.UNKNOWN -> {}
+        }
     }
 
     composable(

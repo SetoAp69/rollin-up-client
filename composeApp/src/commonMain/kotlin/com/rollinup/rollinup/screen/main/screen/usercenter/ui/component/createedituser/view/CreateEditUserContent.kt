@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -137,13 +138,14 @@ private fun UserFormFooter(
     Column {
         if (uiState.isEdit) {
             Row(
-                modifier = Modifier.clickable { cb.onToggleStay(!uiState.isStay) }
+                modifier = Modifier.clickable { cb.onToggleStay(!uiState.isStay) },
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 CheckBox(
                     checked = uiState.isStay,
                     onCheckedChange = cb.onToggleStay
                 )
-                Spacer(itemGap8)
+//                Spacer(itemGap8)
                 Text(
                     text = "Stay in form",
                     style = Style.body,
@@ -164,7 +166,7 @@ private fun UserFormFooter(
 }
 
 @Composable
-fun UserNameSection(
+fun ColumnScope.UserNameSection(
     isEdit: Boolean,
     formData: CreateEditUserFormData,
     onUpdateForm: (CreateEditUserFormData) -> Unit,
@@ -198,6 +200,7 @@ fun UserNameSection(
         isError = formData.userNameError != null,
         errorMsg = formData.userNameError
     )
+    Spacer(12.dp)
 }
 
 @Composable
@@ -273,7 +276,7 @@ private fun SelectorSection(
                     )
                 )
             },
-            modifier = Modifier.weight(1f)
+//            modifier = Modifier.weight(1f)
         )
         DatePicker(
             title = "Birth day",
@@ -299,7 +302,7 @@ private fun SelectorSection(
                     )
                 )
             },
-            modifier = Modifier.weight(1f)
+//            modifier = Modifier.weight(1f)
         )
         SingleDropDownSelector(
             title = "Class",
@@ -313,7 +316,7 @@ private fun SelectorSection(
                     )
                 )
             },
-            modifier = Modifier.weight(1f)
+//            modifier = Modifier.weight(1f)
         )
     }
 }
@@ -407,7 +410,7 @@ private fun AdditionalInfoSection(
             }
         },
         placeholder = "Enter email",
-        isError = formData.email != null,
+        isError = formData.emailError != null,
         errorMsg = formData.emailError
     )
 }
@@ -430,7 +433,7 @@ private fun DatePicker(
     val dateValue = value?.toLocalDateTime()?.date
 
     TextFieldTitle(
-        text = title,
+        title = title,
     ) {
         Row(
             modifier = Modifier
@@ -438,7 +441,7 @@ private fun DatePicker(
                     showSelector = true
                 }
                 .background(color = backgroundColor, shape = RoundedCornerShape(8.dp))
-                .width(100.dp)
+                .width(150.dp)
                 .padding(itemGap4)
                 .then(modifier),
             verticalAlignment = Alignment.CenterVertically,
@@ -461,7 +464,7 @@ private fun DatePicker(
     }
     DatePickerDialog(
         isShowDialog = showSelector,
-        onDismissRequest = { showSelector },
+        onDismissRequest = { showSelector = it },
         value = dateValue?.let {
             listOf(it, it)
         } ?: emptyList(),
@@ -473,3 +476,5 @@ private fun DatePicker(
         }
     )
 }
+
+

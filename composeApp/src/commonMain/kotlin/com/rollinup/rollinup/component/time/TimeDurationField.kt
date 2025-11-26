@@ -61,7 +61,7 @@ fun TimeDurationTextField(
     titleStyle: TextStyle = Style.body,
 ) {
     TextFieldTitle(
-        text = title,
+        title = title,
         textStyle = titleStyle,
         isRequired = isRequired,
         color = theme.bodyText,

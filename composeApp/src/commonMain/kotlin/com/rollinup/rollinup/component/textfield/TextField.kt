@@ -78,7 +78,7 @@ fun PhoneNumberTextField(
     }
 
     TextFieldTitle(
-        text = title,
+        title = title,
         isRequired = isRequired,
         textStyle = titleStyle,
     ) {
@@ -122,7 +122,7 @@ fun PhoneNumberTextField(
 
 @Composable
 fun TextFieldTitle(
-    text: String,
+    title: String,
     textStyle: TextStyle = Style.body,
     isRequired: Boolean = false,
     color: Color = theme.bodyText,
@@ -133,10 +133,10 @@ fun TextFieldTitle(
         verticalArrangement = Arrangement.spacedBy(itemGap4),
         horizontalAlignment = Alignment.Start
     ) {
-        if (text.isNotBlank()) {
+        if (title.isNotBlank()) {
             Row(verticalAlignment = Alignment.Top) {
                 Text(
-                    text = text,
+                    text = title,
                     style = textStyle,
                     color = color
                 )
@@ -190,7 +190,7 @@ fun NumberTextField(
     keyboardActions: KeyboardActions? = null,
 ) {
     TextFieldTitle(
-        text = title,
+        title = title,
         isRequired = isRequired,
         textStyle = titleStyle,
     ) {
@@ -306,7 +306,7 @@ fun PasswordTextField(
     }
 
     TextFieldTitle(
-        text = title,
+        title = title,
         textStyle = titleStyle,
         isRequired = false,
     ) {
@@ -411,7 +411,7 @@ fun TextField(
 
 
     TextFieldTitle(
-        text = title,
+        title = title,
         isRequired = isRequired,
         textStyle = titleStyle,
     ) {

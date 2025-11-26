@@ -38,7 +38,6 @@ import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
-import com.rollinup.rollinup.component.spacer.screenPaddingValues
 import com.rollinup.rollinup.component.textfield.TextFieldTitle
 import com.rollinup.rollinup.component.theme.LocalHolidayProvider
 import com.rollinup.rollinup.component.theme.Style
@@ -71,7 +70,7 @@ fun DashboardCalendar(
     )
 
     TextFieldTitle(
-        text = title,
+        title = title,
         textStyle = Style.label
     ) {
         BoxWithConstraints(

@@ -27,7 +27,7 @@ data class GetUserByIdResponse(
         @SerialName("phoneNumber")
         val phoneNumber: String? = null,
         @SerialName("role")
-        val role: String = "",
+        val role: Role = Role(),
         @SerialName("class")
         val classX: Class? = null,
         @SerialName("address")
@@ -39,6 +39,16 @@ data class GetUserByIdResponse(
         @SerialName("birthday")
         val birthday: String = "",
     ) {
+        @Serializable
+        data class Role(
+            @SerialName("id")
+            val id: String = "",
+            @SerialName("name")
+            val name: String = "",
+            @SerialName("key")
+            val key: Int = 0,
+        )
+
         @Serializable
         data class Class(
             @SerialName("id")

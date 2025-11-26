@@ -2,6 +2,7 @@
 
 package com.rollinup.rollinup.component.date
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -33,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
@@ -81,6 +83,78 @@ import rollin_up.composeapp.generated.resources.ic_drop_down_arrow_line_right_24
 import kotlin.time.ExperimentalTime
 
 @Composable
+fun FilterDatePicker(
+    title: String,
+    value: List<Long>,
+    enabled: Boolean,
+    placeHolder: String = "Date",
+    onValueChange: (List<Long>) -> Unit,
+) {
+    var showDateSelector by remember { mutableStateOf(false) }
+    val rotationValue by animateFloatAsState(if (showDateSelector) 90f else 0f)
+
+    val dateValue = value.map { it.toLocalDate() }
+    val label = when {
+        dateValue.size == 1 -> dateValue.first().toFormattedString()
+        dateValue.isEmpty() -> placeHolder
+        else -> {
+            val from = dateValue.first().month.name.take(3) + " " + dateValue.first().day.toString()
+            val to = dateValue.last().month.name.take(3) + " " + dateValue.last().day.toString()
+
+            "$from - $to"
+        }
+    }
+
+    TextFieldTitle(
+        title = title,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start,
+            modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .clickable(enabled) {
+                    showDateSelector = true
+                }
+                .background(
+                    color = theme.secondary,
+                    shape = RoundedCornerShape(8.dp),
+                )
+                .fillMaxWidth()
+                .padding(itemGap4)
+        ) {
+            if (enabled) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_drop_down_arrow_line_right_24),
+                    tint = theme.primary,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(16.dp)
+                        .rotate(rotationValue)
+                )
+                Spacer(itemGap4)
+            }
+            Text(
+                text = label,
+                color = theme.primary,
+                style = Style.body
+            )
+        }
+    }
+    DatePickerDialog(
+        isShowDialog = showDateSelector,
+        onDismissRequest = { showDateSelector = it },
+        value = dateValue,
+        maxSelection = Int.MAX_VALUE,
+        isDisabledPastSelection = false,
+        isAllSelectable = true,
+        onValueChange = {
+            onValueChange(it.map { it.toEpochMilli() })
+        }
+    )
+}
+
+@Composable
 fun DatePickerField(
     title: String,
     placeholder: String,
@@ -118,7 +192,7 @@ fun DatePickerField(
     val interactionSource = remember { MutableInteractionSource() }
 
     TextFieldTitle(
-        text = title,
+        title = title,
         isRequired = isRequired
     ) {
         Column {

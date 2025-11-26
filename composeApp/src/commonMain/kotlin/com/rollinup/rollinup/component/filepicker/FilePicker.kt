@@ -65,7 +65,7 @@ fun FilePicker(
     errorMsg: String? = null,
 ) {
     TextFieldTitle(
-        text = title,
+        title = title,
         isRequired = isRequired
     ) {
         Column {

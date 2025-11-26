@@ -37,10 +37,10 @@ data class CreateEditPermitBody(
                         value = it
                     )
                 }
-                duration?.let {
+                duration?.toJsonString()?.let {
                     append(
                         key = "duration",
-                        value = it.toJsonString()
+                        value = it
                     )
                 }
                 type?.let {

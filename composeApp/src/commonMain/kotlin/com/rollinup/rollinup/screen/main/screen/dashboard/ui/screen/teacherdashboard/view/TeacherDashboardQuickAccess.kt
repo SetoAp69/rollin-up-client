@@ -3,12 +3,10 @@ package com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.rollinup.rollinup.component.spacer.itemGap8
-import com.rollinup.rollinup.component.spacer.screenPaddingValues
 import com.rollinup.rollinup.component.textfield.TextFieldTitle
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.screen.dashboard.ui.component.DashBoardButton
@@ -22,7 +20,7 @@ fun TeacherDashboardQuickAccess(
     onStudent: () -> Unit,
 ) {
     TextFieldTitle(
-        text = "Quick Acceess",
+        title = "Quick Acceess",
         textStyle = Style.label
     ) {
         FlowRow(

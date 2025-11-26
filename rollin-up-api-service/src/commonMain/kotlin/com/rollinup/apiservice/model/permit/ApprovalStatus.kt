@@ -1,9 +1,12 @@
 package com.rollinup.apiservice.model.permit
 
-enum class ApprovalStatus(val value: String) {
-    APPROVED("approved"),
-    APPROVAL_PENDING("approval_pending"),
-    REJECTED("rejected")
+import com.rollinup.common.model.Severity
+
+enum class ApprovalStatus(val value: String, val label: String, val severity: Severity) {
+    APPROVED("approved", "Approved", Severity.SUCCESS),
+    APPROVAL_PENDING("approval_pending", "Approval Pending", Severity.WARNING),
+    DECLINED("declined", "Declined", Severity.DANGER),
+    CANCELED("canceled", "Canceled", Severity.DANGER),
     ;
 
     companion object {

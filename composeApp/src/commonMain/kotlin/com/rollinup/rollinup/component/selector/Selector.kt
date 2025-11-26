@@ -72,7 +72,7 @@ fun <T> MultiDropDownSelector(
     backgroundColor: Color = theme.secondary,
     placeHolder: String = "-",
     options: List<OptionData<T>>,
-    modifier:Modifier = Modifier,
+    modifier: Modifier = Modifier,
     onValueChange: (List<T>) -> Unit,
 ) {
     var showSelector by remember { mutableStateOf(false) }
@@ -86,7 +86,7 @@ fun <T> MultiDropDownSelector(
 
     Box {
         TextFieldTitle(
-            text = title,
+            title = title,
         ) {
 
             Row(
@@ -97,8 +97,7 @@ fun <T> MultiDropDownSelector(
                     .background(color = backgroundColor, shape = RoundedCornerShape(8.dp))
                     .padding(itemGap4)
                     .width(100.dp)
-                    .then(modifier)
-                ,
+                    .then(modifier),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(itemGap4),
             ) {
@@ -138,12 +137,12 @@ fun <T> SingleDropDownSelector(
     contentColor: Color = theme.textPrimary,
     backgroundColor: Color = theme.secondary,
     placeHolder: String = "-",
-    modifier:Modifier = Modifier,
+    modifier: Modifier = Modifier,
     options: List<OptionData<T>>,
     onValueChange: (T) -> Unit,
 ) {
     TextFieldTitle(
-        text = title,
+        title = title,
     ) {
         var showSelector by remember { mutableStateOf(false) }
         val rotationState by animateFloatAsState(targetValue = if (showSelector) 90f else 0F)
@@ -159,20 +158,20 @@ fun <T> SingleDropDownSelector(
                 }
                 .background(color = backgroundColor, shape = RoundedCornerShape(8.dp))
                 .width(100.dp)
-                .padding(itemGap4)
-                .then(modifier)
-            ,
+                .padding(itemGap4),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(itemGap4),
         ) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_drop_down_arrow_line_right_24),
-                tint = contentColor,
-                modifier = Modifier
-                    .size(16.dp)
-                    .rotate(rotationState),
-                contentDescription = null
-            )
+            if (enable) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_drop_down_arrow_line_right_24),
+                    tint = contentColor,
+                    modifier = Modifier
+                        .size(16.dp)
+                        .rotate(rotationState),
+                    contentDescription = null
+                )
+            }
             Text(
                 text = sValue,
                 style = Style.title,

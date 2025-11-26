@@ -13,7 +13,7 @@ data class PermitDetailEntity(
     val reason: String? = null,
     val createdAt: String = "",
     val updatedAt: String = "",
-    val approvalStatus: String = "",
+    val approvalStatus: ApprovalStatus = ApprovalStatus.APPROVAL_PENDING,
     val approvalNote: String? = null,
     val approvedBy: User? = null,
     val approvedAt: String? = null,

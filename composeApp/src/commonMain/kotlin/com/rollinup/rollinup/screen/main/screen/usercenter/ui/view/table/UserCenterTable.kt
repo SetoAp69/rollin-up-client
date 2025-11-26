@@ -3,16 +3,23 @@ package com.rollinup.rollinup.screen.main.screen.usercenter.ui.view.table
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import com.rollinup.apiservice.model.user.UserEntity
 import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.chip.Chip
+import com.rollinup.rollinup.component.spacer.Spacer
+import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.table.Table
 import com.rollinup.rollinup.component.table.TableColumn
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.UserCenterAction
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.UserCenterCallback
+import com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.DeleteAlertDialog
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.uistate.UserCenterUiState
 
 @Composable
@@ -22,6 +29,9 @@ fun UserCenterTable(
     onShowEdit: (String) -> Unit,
     onShowDetail: (String) -> Unit,
 ) {
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var itemSelected by remember { mutableStateOf(emptyList<UserEntity>()) }
+
     Table(
         items = uiState.itemList,
         headerContent = {
@@ -48,12 +58,28 @@ fun UserCenterTable(
                     }
 
                     UserCenterAction.DELETE -> {
-                        cb.onDeleteUser(dropDownState.selectedItem.map { it.id })
+                        showDeleteDialog = true
+                        itemSelected = dropDownState.selectedItem
                     }
                 }
             }
         )
     }
+
+    DeleteAlertDialog(
+        items = itemSelected.map { it.userName },
+        isShowDialog = showDeleteDialog,
+        name = "user",
+        onConfirm = {
+            cb.onDeleteUser(itemSelected.map { it.id })
+            itemSelected = emptyList()
+        },
+        onCancel = {
+            showDeleteDialog = false
+            itemSelected = emptyList()
+        },
+        onDismissRequest = { showDeleteDialog = it },
+    )
 }
 
 @Composable
@@ -66,6 +92,7 @@ private fun TableHeaderContent(itemSelected: Int) {
             color = theme.bodyText,
             style = Style.title
         )
+        Spacer(itemGap8)
         if (itemSelected > 0) {
             Chip(
                 text = itemSelected.toString(),

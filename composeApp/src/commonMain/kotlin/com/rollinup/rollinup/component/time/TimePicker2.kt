@@ -105,7 +105,7 @@ fun TimePickerTextField(
     }
 
     TextFieldTitle(
-        text = title,
+        title = title,
         isRequired = isRequired
     ) {
         Column {

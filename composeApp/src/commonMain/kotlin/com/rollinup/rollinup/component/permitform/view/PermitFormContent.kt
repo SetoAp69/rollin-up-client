@@ -169,7 +169,7 @@ fun PermitReasonSection(
     )
 
     TextFieldTitle(
-        text = "Reason",
+        title = "Reason",
         isRequired = true,
     ) {
         RadioSelectorRow(
@@ -351,7 +351,7 @@ fun PermitLoadingContent(
             "Note"
         ).forEach {
             TextFieldTitle(
-                text = it
+                title = it
             ) {
                 ShimmerEffect(
                     modifier = Modifier

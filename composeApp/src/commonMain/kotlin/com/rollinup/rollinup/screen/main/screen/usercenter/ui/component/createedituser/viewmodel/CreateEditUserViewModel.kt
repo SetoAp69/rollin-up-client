@@ -10,6 +10,7 @@ import com.rollinup.apiservice.model.common.Result
 import com.rollinup.apiservice.model.user.UserDetailEntity
 import com.rollinup.common.utils.Utils.toEpochMillis
 import com.rollinup.common.utils.Utils.toLocalDateTime
+import com.rollinup.rollinup.screen.dashboard.generateDummyUserDetail
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.CreateEditUserCallback
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.CreateEditUserFormData
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.createedituser.uistate.CreateEditUserUiState
@@ -32,7 +33,16 @@ class CreateEditUserViewModel(
         _uiState.value = _uiState.value.copy(isEdit = id != null)
         id?.let {
             viewModelScope.launch {
-                _uiState.update { it.copy(isLoading = false) }
+                if (true) {
+                    delay(1000)
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            formData = fetchFormFromDetail(generateDummyUserDetail())
+                        )
+                    }
+                    return@launch
+                }
                 getUserByIdUseCase(id).collectLatest { result ->
                     if (result is Result.Success) {
                         _uiState.update { it.copy(formData = fetchFormFromDetail(result.data)) }
@@ -158,6 +168,7 @@ class CreateEditUserViewModel(
         return CreateEditUserFormData(
             id = data.id,
             firstName = data.firstName,
+            userName = data.userName,
             lastName = data.lastName,
             gender = data.gender.value,
             birthDay = data.birthDay.toLocalDateTime().toEpochMillis(),

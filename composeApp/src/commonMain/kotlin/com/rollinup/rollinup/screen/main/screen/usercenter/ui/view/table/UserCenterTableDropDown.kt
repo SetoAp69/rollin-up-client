@@ -38,9 +38,9 @@ fun UserCenterTableDropDown(
                     textColor = color.second,
                 ) {
                     onClickAction(action)
+                    onDismissRequest(false)
                 }
             }
-            onDismissRequest(false)
         }
     }
 }

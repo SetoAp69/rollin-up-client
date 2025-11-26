@@ -1,5 +1,6 @@
 package com.rollinup.rollinup.component.bottomsheet
 
+import SnackBarHost
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,16 +14,24 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalBottomSheetProperties
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.rollinup.rollinup.component.button.Button
+import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.theme.theme
+import kotlinx.coroutines.launch
 
 @Composable
 fun BottomSheet(
@@ -32,7 +41,7 @@ fun BottomSheet(
     skipPartialExpanded: Boolean = true,
     containerColor: Color = theme.popUpBg,
     dragHandleColor: Color = theme.textFieldBackGround,
-    content: @Composable ColumnScope.() -> Unit,
+    content: @Composable ColumnScope.(OnShowSnackBar) -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = skipPartialExpanded,
@@ -40,41 +49,56 @@ fun BottomSheet(
             true
         },
     )
-
     val shape = BottomSheetDefaults.ExpandedShape
-    val properties = ModalBottomSheetProperties(
-        shouldDismissOnBackPress = true
-    )
+    val properties = ModalBottomSheetProperties(shouldDismissOnBackPress = true)
+    val scope = rememberCoroutineScope()
+    val snackBarHostState = remember { SnackbarHostState() }
+    var isSuccess by remember { mutableStateOf(false) }
+
+    fun showSnackBar(message: String, success: Boolean) {
+        isSuccess = success
+        scope.launch {
+            snackBarHostState.showSnackbar(message = message)
+        }
+    }
 
     if (isShowSheet) {
-        ModalBottomSheet(
-            onDismissRequest = {
-                onDismissRequest(
-                    false
-                )
-            },
-            sheetState = sheetState,
-            shape = shape,
-            containerColor = containerColor,
-            contentColor = theme.bodyText,
-            tonalElevation = 0.dp,
-            contentWindowInsets = { BottomSheetDefaults.windowInsets },
-            properties = properties,
-            content = {
-                Column(
-                    modifier = modifier
-                        .padding(
-                            bottom = 12.dp
-                        )
-                ) {
-                    content()
-                }
-            },
-            dragHandle = {
-                BottomSheetDragHandle(color = dragHandleColor)
-            },
-            scrimColor = BottomSheetDefaults.ScrimColor.copy(alpha = 0.7f)
-        )
+        Box(contentAlignment = Alignment.Center) {
+            ModalBottomSheet(
+                onDismissRequest = {
+                    onDismissRequest(
+                        false
+                    )
+                },
+                sheetState = sheetState,
+                shape = shape,
+                containerColor = containerColor,
+                contentColor = theme.bodyText,
+                tonalElevation = 0.dp,
+                contentWindowInsets = { BottomSheetDefaults.windowInsets },
+                properties = properties,
+                content = {
+                    Column(
+                        modifier = modifier
+                            .padding(
+                                bottom = 12.dp
+                            )
+                    ) {
+                        content { message, success ->
+                            showSnackBar(message, success)
+                        }
+                    }
+                },
+                dragHandle = {
+                    BottomSheetDragHandle(color = dragHandleColor)
+                },
+                scrimColor = BottomSheetDefaults.ScrimColor.copy(alpha = 0.7f)
+            )
+            SnackBarHost(
+                snackBarHostState = snackBarHostState,
+                isSuccess = isSuccess,
+            )
+        }
     }
 }
 

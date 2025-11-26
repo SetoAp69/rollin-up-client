@@ -4,13 +4,67 @@ import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.model.attendance.AttendanceByStudentEntity
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
+import com.rollinup.apiservice.model.common.Gender
 import com.rollinup.apiservice.model.permit.PermitType
+import com.rollinup.apiservice.model.user.UserDetailEntity
+import com.rollinup.apiservice.model.user.UserEntity
 import com.rollinup.common.utils.Utils.now
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.atTime
 import kotlinx.datetime.plus
+
+fun getDummyUsers(total: Int): List<UserEntity> {
+    val genders = listOf(Gender.MALE, Gender.FEMALE)
+    return List(total) { index ->
+        UserEntity(
+            id = "user-${index + 1}",
+            userName = "user${index + 1}",
+            classX = "Class ${(1..12).random()}",
+            email = "user${index + 1}@example.com",
+            fullName = "User Fullname ${index + 1}",
+            studentId = "SID${1000 + index}",
+            address = "Street No. ${(1..200).random()} City",
+            gender = genders.random(),
+            role = listOf("admin", "teacher", "student").random()
+        )
+    }
+}
+
+fun generateDummyUserDetail(): UserDetailEntity {
+    val id = "user-${(1..9999).random()}"
+    val firstName = listOf("Nana", "Riko", "Sena", "Hana", "Mika", "Ando").random()
+    val lastName = listOf("Putra", "Sato", "Wijaya", "Tanaka", "Saputra").random()
+
+    return UserDetailEntity(
+        id = id,
+        userName = "${firstName.lowercase()}.${lastName.lowercase()}",
+        firstName = firstName,
+        lastName = lastName,
+        classX = UserDetailEntity.Data(
+            id = "class-${(1..12).random()}",
+            name = "Class ${(1..12).random()}",
+            key = (1..12).random()
+        ),
+        email = "$firstName.$lastName@example.com".lowercase(),
+        fullName = "$firstName $lastName",
+        studentId = "SID${(1000..9999).random()}",
+        address = "Street No. ${(1..200).random()} City",
+        gender = listOf(Gender.MALE, Gender.FEMALE).random(),
+        phoneNumber = "08${(100000000..999999999).random()}",
+        birthDay = "${(1995..2012).random()}-${(1..12).random().toString().padStart(2, '0')}-${(1..28).random().toString().padStart(2, '0')}",
+        role = UserDetailEntity.Data(
+            id = listOf("admin", "teacher", "student").random(),
+            name = listOf("Administrator", "Teacher", "Student").random(),
+            key = (1..3).random()
+        )
+    )
+}
+
+
+
+
 
 fun getAttendanceListDummy(): List<AttendanceByStudentEntity> {
     val today = LocalDateTime.now()

@@ -23,7 +23,7 @@ fun StudentDashboardQuickAccess(
     cb: StudentDashboardQuickAccessCallback,
 ) {
     TextFieldTitle(
-        text = "Quick Access",
+        title = "Quick Access",
         textStyle = Style.label
     ) {
         FlowRow(

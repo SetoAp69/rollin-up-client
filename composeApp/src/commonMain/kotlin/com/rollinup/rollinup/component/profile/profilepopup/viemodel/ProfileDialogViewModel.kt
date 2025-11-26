@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.rollinup.apiservice.domain.user.GetUserByIdUseCase
 import com.rollinup.apiservice.model.common.Result
 import com.rollinup.rollinup.component.profile.profilepopup.uistate.ProfileDialogUiState
+import com.rollinup.rollinup.screen.dashboard.generateDummyUserDetail
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -20,6 +22,16 @@ class ProfileDialogViewModel(
     fun init(id: String) {
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
+            if (true) {
+                delay(1000)
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        userDetail = generateDummyUserDetail()
+                    )
+                }
+                return@launch
+            }
             getUserByIdUseCase(id).collectLatest { result ->
                 if (result is Result.Success) {
                     _uiState.update { it.copy(userDetail = result.data) }

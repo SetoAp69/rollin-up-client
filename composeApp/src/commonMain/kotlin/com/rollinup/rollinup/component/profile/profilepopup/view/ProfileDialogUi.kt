@@ -2,11 +2,14 @@ package com.rollinup.rollinup.component.profile.profilepopup.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +32,8 @@ import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.spacer.screenPaddingValues
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import com.rollinup.rollinup.component.utils.getScreenHeight
+import com.rollinup.rollinup.component.utils.getScreenWidth
 import org.koin.compose.viewmodel.koinViewModel
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_calendar_fill_24
@@ -50,17 +55,20 @@ fun ProfileDialog(
     val viewModel: ProfileDialogViewModel = koinViewModel()
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
-    DisposableEffect(Unit) {
-        viewModel.init(id)
-        onDispose {
-            viewModel.reset()
-        }
-    }
+    val maxHeight = getScreenHeight() * 0.8f
+    val maxWidth = getScreenWidth() * 0.3f
     Dialog(
         showDialog = isShowDialog,
         onDismissRequest = onDismissRequest,
-        contentPadding = screenPaddingValues
+        contentPadding = screenPaddingValues,
+        modifier = Modifier.sizeIn(maxWidth = maxWidth, maxHeight = maxHeight)
     ) {
+        DisposableEffect(Unit) {
+            viewModel.init(id)
+            onDispose {
+                viewModel.reset()
+            }
+        }
         ProfileDialogContent(uiState)
     }
 }
@@ -121,59 +129,78 @@ private fun ProfileInfoSection(
     FlowRow(
         itemVerticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        maxItemsInEachRow = 2
     ) {
-        ProfileInfoField(
-            title = "Full Name",
-            icon = Res.drawable.ic_user_line_24,
-            value = userDetail.fullName
-        )
-        ProfileInfoField(
-            title = "Birth Day",
-            icon = Res.drawable.ic_calendar_fill_24,
-            value = userDetail.birthDay
-        )
-        ProfileInfoField(
-            title = "ID",
-            icon = Res.drawable.ic_id_card_line_24,
-            value = userDetail.id
-        )
-        ProfileInfoField(
-            title = "Gender",
-            icon = genderIcon,
-            value = userDetail.gender.label
-        )
-        ProfileInfoField(
-            title = "Class",
-            icon = Res.drawable.ic_user_board_line_24,
-            value = userDetail.classX?.name ?: "-"
-        )
-        ProfileInfoField(
-            title = "Phone",
-            icon = Res.drawable.ic_phone_line_24,
-            value = userDetail.phoneNumber
-        )
-        ProfileInfoField(
-            title = "Role",
-            icon = Res.drawable.ic_user_board_line_24,
-            value = userDetail.role.name
-        )
-        ProfileInfoField(
-            title = "Address",
-            icon = Res.drawable.ic_home_line_24,
-            value = userDetail.address
-        )
-        ProfileInfoField(
-            title = "Email",
-            icon = Res.drawable.ic_mail_user_line_24,
-            value = userDetail.email
-        )
+        Box(modifier = Modifier.weight(1f)) {
+            ProfileInfoField(
+                title = "Full Name",
+                icon = Res.drawable.ic_user_line_24,
+                value = userDetail.fullName
+            )
+        }
+        Box(modifier = Modifier.weight(1f)) {
+            ProfileInfoField(
+                title = "Birth Day",
+                icon = Res.drawable.ic_calendar_fill_24,
+                value = userDetail.birthDay
+            )
+        }
+        Box(modifier = Modifier.weight(1f)) {
+            ProfileInfoField(
+                title = "ID",
+                icon = Res.drawable.ic_id_card_line_24,
+                value = userDetail.id
+            )
+        }
+        Box(modifier = Modifier.weight(1f)) {
+            ProfileInfoField(
+                title = "Gender",
+                icon = genderIcon,
+                value = userDetail.gender.label
+            )
+        }
+        Box(modifier = Modifier.weight(1f)) {
+            ProfileInfoField(
+                title = "Class",
+                icon = Res.drawable.ic_user_board_line_24,
+                value = userDetail.classX?.name ?: "-"
+            )
+        }
+        Box(modifier = Modifier.weight(1f)) {
+            ProfileInfoField(
+                title = "Phone",
+                icon = Res.drawable.ic_phone_line_24,
+                value = userDetail.phoneNumber
+            )
+        }
+        Box(modifier = Modifier.weight(1f)) {
+            ProfileInfoField(
+                title = "Role",
+                icon = Res.drawable.ic_user_board_line_24,
+                value = userDetail.role.name
+            )
+        }
+        Box(modifier = Modifier.weight(1f)) {
+            ProfileInfoField(
+                title = "Address",
+                icon = Res.drawable.ic_home_line_24,
+                value = userDetail.address
+            )
+        }
+        Box(modifier = Modifier.weight(1f)) {
+            ProfileInfoField(
+                title = "Email",
+                icon = Res.drawable.ic_mail_user_line_24,
+                value = userDetail.email
+            )
+        }
     }
 }
 
 @Composable
 private fun ProfileLoading() {
-    Column {
+    Column(modifier = Modifier.fillMaxWidth()) {
         Row(verticalAlignment = Alignment.Top) {
             ShimmerEffect(
                 modifier = Modifier
@@ -195,8 +222,9 @@ private fun ProfileLoading() {
         ) {
             repeat(9) {
                 ShimmerEffect(
-                    height = 24.dp,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .height(24.dp)
+                        .fillMaxWidth()
                 )
             }
         }

@@ -10,7 +10,9 @@ data class PermitApprovalBody(
     fun toHashMap(): HashMap<String, String> {
         val hashMap = hashMapOf<String, String>()
 
-        hashMap["listId"] = listId.toJsonString()
+        listId.toJsonString()?.let {
+            hashMap["listId"] = it
+        }
         hashMap["approvalNote"] = approvalNote
         hashMap["isApproved"] = isApproved.toString()
 

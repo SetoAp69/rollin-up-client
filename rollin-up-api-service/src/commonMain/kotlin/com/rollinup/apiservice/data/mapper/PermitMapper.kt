@@ -35,7 +35,7 @@ class PermitMapper {
                 date = d.date,
                 startTime = d.startTime,
                 reason = d.reason,
-                approvalStatus = d.approvalStatus,
+                approvalStatus = d.approvalStatus.let { ApprovalStatus.fromValue(it) },
                 type = d.type,
                 endTime = d.endTime,
                 student = PermitByClassEntity.User(
@@ -69,7 +69,7 @@ class PermitMapper {
             reason = data.reason,
             createdAt = data.createdAt,
             updatedAt = data.updatedAt,
-            approvalStatus = data.approvalStatus,
+            approvalStatus = ApprovalStatus.fromValue(data.approvalStatus),
             approvalNote = data.approvalNote,
             approvedBy = data.approvedBy?.let { ap ->
                 PermitDetailEntity.User(
