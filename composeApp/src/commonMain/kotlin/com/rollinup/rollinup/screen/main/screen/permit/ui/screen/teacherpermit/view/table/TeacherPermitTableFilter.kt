@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,20 +36,28 @@ fun TeacherPermitTableFilter(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                color = theme.popUpBg
+                color = theme.popUpBg,
+                shape = RoundedCornerShape(12.dp)
             )
             .padding(horizontal = 24.dp, vertical = 16.dp),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.Bottom,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        SearchTextField(
-            title = "Search",
-            onValueChange = {},
-            value = uiState.searchQuery,
-            onSearch = cb.onSearch,
-        )
+        Box(modifier = Modifier.width(320.dp)) {
+            SearchTextField(
+                title = "Search",
+                onValueChange = {},
+                value = uiState.searchQuery,
+                onSearch = cb.onSearch,
+            )
+        }
         Spacer(modifier = Modifier.weight(1f))
-        Box(modifier = Modifier.width(120.dp)) {
+        IconButton(
+            icon = Res.drawable.ic_print_line_24,
+        ) {
+            //TODO:SHOW PRINT DIALOG
+        }
+        Box(modifier = Modifier.width(145.dp)) {
             FilterDatePicker(
                 title = "Date",
                 value = filterData.dateRange,
@@ -61,11 +70,6 @@ fun TeacherPermitTableFilter(
                     )
                 }
             )
-        }
-        IconButton(
-            icon = Res.drawable.ic_print_line_24,
-        ) {
-            //TODO:SHOW PRINT DIALOG
         }
         SingleDropDownSelector(
             title = "Class",

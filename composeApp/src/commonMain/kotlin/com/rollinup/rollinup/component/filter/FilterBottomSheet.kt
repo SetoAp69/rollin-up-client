@@ -76,7 +76,7 @@ fun FilterSelectorBottomSheet(
 }
 
 @Composable
-fun FilterBottomSheetHeader(
+private fun FilterBottomSheetHeader(
     showReset: Boolean,
     onReset: () -> Unit,
 ) {

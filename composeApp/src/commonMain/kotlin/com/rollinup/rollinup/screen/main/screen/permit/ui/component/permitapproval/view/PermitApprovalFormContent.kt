@@ -15,9 +15,9 @@ import androidx.compose.ui.unit.dp
 import com.rollinup.apiservice.model.permit.PermitDetailEntity
 import com.rollinup.apiservice.model.permit.PermitType
 import com.rollinup.common.utils.Utils.toLocalDateTime
-import com.rollinup.rollinup.component.button.ActionButton
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.handlestate.HandleState
+import com.rollinup.rollinup.component.loading.LoadingOverlay
 import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.model.OptionData
@@ -32,23 +32,21 @@ import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.main.screen.permit.model.permitapproval.PermitApprovalCallback
 import com.rollinup.rollinup.screen.main.screen.permit.model.permitapproval.PermitApprovalFormData
 import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitapproval.uistate.PermitApprovalUiState
-import rollin_up.composeapp.generated.resources.Res
-import rollin_up.composeapp.generated.resources.ic_check_line_24
-import rollin_up.composeapp.generated.resources.ic_close_line_24
 
 @Composable
 fun PermitApprovalFormContent(
     uiState: PermitApprovalUiState,
     cb: PermitApprovalCallback,
-    onDismissRequest:(Boolean) ->Unit,
-    onShowSnackBar: OnShowSnackBar
+    onDismissRequest: (Boolean) -> Unit,
+    onShowSnackBar: OnShowSnackBar,
 ) {
+    LoadingOverlay(uiState.isLoadingOverlay)
     HandleState(
         state = uiState.submitState,
         successMsg = "Success, permit approval successfully submitted",
         errorMsg = "Error, failed to submit permit approval please try again",
         onDispose = cb.onResetMessageState,
-        onSuccess = {onDismissRequest(false)} ,
+        onSuccess = { onDismissRequest(false) },
         onShowSnackBar = onShowSnackBar
     )
 
@@ -74,13 +72,12 @@ private fun PermitApprovalFormContent(
         )
         if (uiState.isSingle) {
             if (uiState.isLoading) {
-                DetailSection(uiState.detail)
-            } else {
                 DetailLoading()
+            } else {
+                DetailSection(uiState.detail)
             }
         }
         FormContent(
-            isBulk = !uiState.isSingle,
             onUpdateForm = cb.onUpdateFormData,
             formData = uiState.formData
         )
@@ -88,7 +85,7 @@ private fun PermitApprovalFormContent(
             modifier = Modifier.fillMaxWidth(),
             text = "Submit"
         ) {
-            if (cb.onValidate(uiState.formData)) return@Button
+            if (!cb.onValidate(uiState.formData)) return@Button
             cb.onSubmit(uiState.formData)
         }
     }
@@ -96,75 +93,55 @@ private fun PermitApprovalFormContent(
 
 @Composable
 private fun FormContent(
-    isBulk: Boolean,
     onUpdateForm: (PermitApprovalFormData) -> Unit,
     formData: PermitApprovalFormData,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        if (isBulk) {
-            ActionButton(
-                label = "Approve",
-                icon = Res.drawable.ic_check_line_24,
-                iconTint = theme.success
-            ) {
-                onUpdateForm(
-                    formData.copy(
-                        isApproved = true
-                    )
-                )
-            }
-            ActionButton(
-                label = "Decline",
-                icon = Res.drawable.ic_close_line_24,
-                iconTint = theme.danger
-            ) {
-                onUpdateForm(
-                    formData.copy(
-                        isApproved = false
-                    )
-                )
-            }
-        } else {
-            RadioSelectorRow(
-                title = "Approval",
-                value = formData.isApproved,
-                onValueChange = {
-                    onUpdateForm(
-                        formData.copy(
-                            isApproved = it
-                        )
-                    )
-                },
-                options =
-                    listOf(
-                        OptionData(
-                            label = "Approve",
-                            value = true
-                        ),
-                        OptionData(
-                            label = "Decline",
-                            value = false
-                        )
-                    ),
-            )
-        }
-        TextField(
-            value = formData.approvalNote,
+        RadioSelectorRow(
+            title = "Approval",
+            value = formData.isApproved,
             onValueChange = {
                 onUpdateForm(
                     formData.copy(
-                        approvalNote = it
+                        isApproved = it
                     )
                 )
             },
-            title = "Note",
-            placeholder = "Enter approval note"
+            options =
+                listOf(
+                    OptionData(
+                        label = "Approve",
+                        value = true
+                    ),
+                    OptionData(
+                        label = "Decline",
+                        value = false
+                    )
+                ),
+        )
+        TextField(
+            title = "Approval note",
+            value = formData.approvalNote,
+            placeholder = "Enter approval note",
+            maxChar = 120,
+            onValueChange = {
+                val errorMessage =
+                    if (it.length > 120) "Approval note must be less than 120 characters" else null
+                onUpdateForm(
+                    formData.copy(
+                        approvalNote = it,
+                        approvalNoteError = errorMessage
+                    )
+                )
+            },
+            isError = formData.approvalNoteError != null,
+            errorMsg = formData.approvalNoteError
+
         )
     }
 }
-
 
 @Composable
 fun DetailSection(

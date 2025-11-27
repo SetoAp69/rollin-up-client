@@ -6,9 +6,11 @@ import com.rollinup.apiservice.data.source.network.model.request.permit.PermitAp
 import com.rollinup.apiservice.domain.permit.DoApprovalUseCase
 import com.rollinup.apiservice.domain.permit.GetPermitByIdUseCase
 import com.rollinup.apiservice.model.common.Result
+import com.rollinup.rollinup.screen.dashboard.generateDummyPermitDetail
 import com.rollinup.rollinup.screen.main.screen.permit.model.permitapproval.PermitApprovalCallback
 import com.rollinup.rollinup.screen.main.screen.permit.model.permitapproval.PermitApprovalFormData
 import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitapproval.uistate.PermitApprovalUiState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -41,6 +43,15 @@ class PermitApprovalViewModel(
     private fun getInitialData(id: String) {
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
+            if(true){
+                delay(1000)
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        detail = generateDummyPermitDetail()
+                    )
+                }
+            }
             getPermitByIdUseCase(id).collectLatest { result ->
                 when (result) {
                     is Result.Success -> {

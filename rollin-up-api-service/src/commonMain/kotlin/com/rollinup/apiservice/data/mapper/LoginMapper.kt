@@ -17,7 +17,10 @@ class LoginMapper {
             role = Role.fromValue(data.data.role),
             gender = Gender.fromValue(data.data.gender),
             refreshToken = data.refreshToken,
-            accessToken = data.accessToken
+            accessToken = data.accessToken,
+            classX = data.data.classX,
+            classId = data.data.classId,
+            classKey = data.data.classKey,
         )
     }
 }

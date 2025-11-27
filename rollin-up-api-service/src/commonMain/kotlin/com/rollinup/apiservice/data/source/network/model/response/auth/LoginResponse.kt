@@ -39,6 +39,12 @@ data class LoginResponse(
             val role: String = "",
             @SerialName("gender")
             val gender: String = "",
+            @SerialName("class")
+            val classX: String? = null,
+            @SerialName("classId")
+            val classId: String? = null,
+            @SerialName("classKey")
+            val classKey: Int? = null,
         )
     }
 

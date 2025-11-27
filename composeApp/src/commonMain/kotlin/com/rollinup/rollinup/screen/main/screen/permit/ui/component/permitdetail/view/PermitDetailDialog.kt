@@ -1,5 +1,6 @@
 package com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitdetail.view
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -8,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rollinup.rollinup.component.dialog.Dialog
 import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
+import com.rollinup.rollinup.component.spacer.screenPadding
 import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.component.utils.getScreenHeight
 import com.rollinup.rollinup.component.utils.getScreenWidth
@@ -28,7 +30,9 @@ fun PermitDetailDialog(
     Dialog(
         showDialog = showDialog,
         onDismissRequest = onDismissRequest,
-        modifier = Modifier.sizeIn(maxWidth = maxWidth, maxHeight = maxHeight)
+        modifier = Modifier
+            .sizeIn(maxWidth = maxWidth, maxHeight = maxHeight)
+            .padding(screenPadding * 2)
     ) {
         DisposableEffect(showDialog) {
             if (showDialog) viewModel.init(id)

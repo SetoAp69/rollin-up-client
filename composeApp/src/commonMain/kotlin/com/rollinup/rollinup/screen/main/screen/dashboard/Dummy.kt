@@ -5,6 +5,10 @@ import com.rollinup.apiservice.model.attendance.AttendanceByStudentEntity
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
 import com.rollinup.apiservice.model.common.Gender
+import com.rollinup.apiservice.model.permit.ApprovalStatus
+import com.rollinup.apiservice.model.permit.PermitByClassEntity
+import com.rollinup.apiservice.model.permit.PermitByStudentEntity
+import com.rollinup.apiservice.model.permit.PermitDetailEntity
 import com.rollinup.apiservice.model.permit.PermitType
 import com.rollinup.apiservice.model.user.UserDetailEntity
 import com.rollinup.apiservice.model.user.UserEntity
@@ -53,7 +57,9 @@ fun generateDummyUserDetail(): UserDetailEntity {
         address = "Street No. ${(1..200).random()} City",
         gender = listOf(Gender.MALE, Gender.FEMALE).random(),
         phoneNumber = "08${(100000000..999999999).random()}",
-        birthDay = "${(1995..2012).random()}-${(1..12).random().toString().padStart(2, '0')}-${(1..28).random().toString().padStart(2, '0')}",
+        birthDay = "${(1995..2012).random()}-${
+            (1..12).random().toString().padStart(2, '0')
+        }-${(1..28).random().toString().padStart(2, '0')}",
         role = UserDetailEntity.Data(
             id = listOf("admin", "teacher", "student").random(),
             name = listOf("Administrator", "Teacher", "Student").random(),
@@ -61,9 +67,6 @@ fun generateDummyUserDetail(): UserDetailEntity {
         )
     )
 }
-
-
-
 
 
 fun getAttendanceListDummy(): List<AttendanceByStudentEntity> {
@@ -164,3 +167,94 @@ fun getAttendanceDetailDummy(): AttendanceDetailEntity {
         )
     )
 }
+
+fun generateDummyPermitByStudentList(total: Int): List<PermitByStudentEntity> {
+    return List(total) { index ->
+        PermitByStudentEntity(
+            id = "permit-student-$index",
+            studentId = "SID${1000 + index}",
+            name = "Student ${index + 1}",
+            date = "2025-${(1..12).random().toString().padStart(2, '0')}-${
+                (1..28).random().toString().padStart(2, '0')
+            }",
+            startTime = "${(7..10).random()}:00",
+            endTime = "${(11..14).random()}:00",
+            reason = listOf("Sick", "Competition", "Family Event", null).random(),
+            approvalStatus = ApprovalStatus.entries.random(),
+            type = PermitType.entries.random(),
+            createdAt = "2025-${(1..12).random().toString().padStart(2, '0')}-${
+                (1..28).random().toString().padStart(2, '0')
+            }T07:30:00"
+        )
+    }
+}
+
+fun generateDummyPermitByClassList(total: Int): List<PermitByClassEntity> {
+    val types = listOf("DISPENSATION", "ABSENT")
+
+    return List(total) { index ->
+        val studentId = "student-${1000 + index}"
+        val studentName = "Student ${index + 1}"
+
+        PermitByClassEntity(
+            id = "permit-class-$index",
+            name = studentName,
+            date = "2025-${(1..12).random().toString().padStart(2, '0')}-${
+                (1..28).random().toString().padStart(2, '0')
+            }",
+            startTime = "${(7..10).random()}:00",
+            endTime = "${(11..14).random()}:00",
+            reason = listOf("Sick", "Family Event", "Competition", null).random(),
+            approvalStatus = ApprovalStatus.entries.random(),
+            type = types.random(),
+            student = PermitByClassEntity.User(
+                id = studentId,
+                name = studentName,
+                xClass = "X-${(1..12).random()}"
+            ),
+            createdAt = "2025-${(1..12).random().toString().padStart(2, '0')}-${
+                (1..28).random().toString().padStart(2, '0')
+            }T08:00:00"
+        )
+    }
+}
+
+fun generateDummyPermitDetail(): PermitDetailEntity {
+    val studentId = "SID${(1000..9999).random()}"
+    val studentName = listOf("Aiko", "Rafi", "Sora", "Luna", "Nata").random()
+
+    return PermitDetailEntity(
+        id = "permit-detail-${(1..999).random()}",
+        date = "2025-${(1..12).random().toString().padStart(2, '0')}-${(1..28).random().toString().padStart(2, '0')}",
+        name = studentName,
+        type = PermitType.entries.random(),
+        startTime = "${(7..10).random()}:00",
+        endTime = "${(11..14).random()}:00",
+        attachment = "https://example.com/image${(1..10).random()}.jpg",
+        note = listOf("Please approve ASAP", "Sent via app", null).random(),
+        reason = listOf("Sick", "Competition", "Family Emergency", null).random(),
+        createdAt = "2025-01-${(1..28).random().toString().padStart(2, '0')}T08:12:00",
+        updatedAt = "2025-01-${(1..28).random().toString().padStart(2, '0')}T09:00:00",
+        approvalStatus = ApprovalStatus.entries.random(),
+        approvalNote = listOf("Approved", "Check details again", null).random(),
+        approvedAt = if ((0..1).random() == 1) "2025-01-15T10:00:00" else null,
+        approvedBy = if ((0..1).random() == 1) {
+            PermitDetailEntity.User(
+                id = "teacher-${(1..50).random()}",
+                name = "Teacher ${(1..50).random()}",
+                username = "teacher${(1..50).random()}",
+                studentId = null,
+                xClass = null
+            )
+        } else null,
+        student = PermitDetailEntity.User(
+            id = studentId,
+            name = studentName,
+            username = studentName.lowercase(),
+            studentId = studentId,
+            xClass = "X-${(1..12).random()}"
+        )
+    )
+}
+
+

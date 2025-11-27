@@ -86,8 +86,8 @@ fun Card(
 fun Card(
     shadowColor: Color = theme.primary,
     lineStroke: Color? = theme.popUpStroke,
-    onClick: () -> Unit,
-    onLongClick: () -> Unit,
+    onClick: () -> Unit = {},
+    onLongClick: () -> Unit = {},
     showAction: Boolean,
     onClickAction: () -> Unit,
     backgroundColor: Color = theme.popUpBg,

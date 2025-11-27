@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rollinup.apiservice.domain.permit.GetPermitByIdUseCase
 import com.rollinup.apiservice.model.common.Result
+import com.rollinup.rollinup.screen.dashboard.generateDummyPermitDetail
 import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitdetail.uistate.PermitDetailUiState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -30,6 +32,15 @@ class PermitDetailViewModel(
     private fun getDetail(id: String) {
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
+            if(true){
+                delay(1000)
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        detail = generateDummyPermitDetail()
+                    )
+                }
+            }
             getPermitByIdUseCase(id).collectLatest { result ->
                 when (result) {
                     is Result.Success -> {

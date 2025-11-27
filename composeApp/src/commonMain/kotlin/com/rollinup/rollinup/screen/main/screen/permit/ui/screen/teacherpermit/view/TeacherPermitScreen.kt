@@ -20,7 +20,7 @@ fun TeacherPermitScreen(
     val cb = viewModel.getCallback()
     val localUser = localUser
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(localUser) {
         viewModel.init(localUser)
     }
 

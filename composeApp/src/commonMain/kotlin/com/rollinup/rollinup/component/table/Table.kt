@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -95,7 +96,10 @@ fun <T> Table(
                             shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
                         )
                         .fillMaxWidth()
-                        .padding(horizontal = horizontalPadding, vertical = verticalPadding),
+                        .padding(horizontal = horizontalPadding, vertical = verticalPadding)
+                        .height(36.dp)
+                    ,
+
 
                     ) {
                     if (showSelection) {
@@ -112,6 +116,7 @@ fun <T> Table(
                             text = col.title,
                             modifier = Modifier
                                 .weight(col.weight)
+                                .height( 24.dp)
                                 .padding(horizontal = itemGap8),
                             style = Style.title,
                             textAlign = TextAlign.Center,
@@ -174,6 +179,7 @@ fun <T> TableRowLoading(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .heightIn(min=48.dp)
                 .padding(horizontal = horizontalPadding, vertical = verticalPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -228,6 +234,7 @@ fun <T> TableRow(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .heightIn(min=48.dp)
                 .padding(horizontal = horizontalPadding, vertical = verticalPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -241,16 +248,12 @@ fun <T> TableRow(
             }
 
             columns.fastForEach { col ->
-
                 Box(
                     modifier = Modifier.weight(col.weight),
                     contentAlignment = Alignment.Center
                 ) {
-
                     col.content(item)
-
                 }
-
             }
 
             if (showActionMenu) {

@@ -10,7 +10,8 @@ import com.rollinup.apiservice.model.permit.PermitByClassEntity
 import com.rollinup.common.model.Severity
 import com.rollinup.common.utils.Utils.toLocalDateTime
 import com.rollinup.rollinup.component.chip.Chip
-import com.rollinup.rollinup.component.tab.TabList
+import com.rollinup.rollinup.component.date.DateText
+import com.rollinup.rollinup.component.tab.TabRow
 import com.rollinup.rollinup.component.table.Table
 import com.rollinup.rollinup.component.table.TableColumn
 import com.rollinup.rollinup.component.theme.Style
@@ -62,11 +63,13 @@ fun TeacherPermitTableContent(
         }
     )
 
-    PermitDetailDialog(
-        id = idSelected.first(),
-        showDialog = showDetail,
-        onDismissRequest = { showDetail = it }
-    )
+    idSelected.firstOrNull()?.let {
+        PermitDetailDialog(
+            id = it,
+            showDialog = showDetail,
+            onDismissRequest = { showDetail = it }
+        )
+    }
 
     PermitApprovalFormDialog(
         showDialog = showApproval,
@@ -80,7 +83,7 @@ private fun TeacherPermitTableHeader(
     uiState: TeacherPermitUiState,
     onTabChange: (Int) -> Unit,
 ) {
-    TabList(
+    TabRow(
         tabList = uiState.tabList,
         currentIndex = uiState.currentTabIndex,
         onTabChange = onTabChange
@@ -97,7 +100,7 @@ private fun getColumn(): List<TableColumn<PermitByClassEntity>> {
                 color = theme.bodyText
             )
         },
-        TableColumn("Class") {
+        TableColumn("Class",0.5f) {
             Text(
                 text = it.student.xClass,
                 style = Style.body,
@@ -110,7 +113,7 @@ private fun getColumn(): List<TableColumn<PermitByClassEntity>> {
                 severity = Severity.SECONDARY
             )
         },
-        TableColumn("Status", 0.1f) {
+        TableColumn("Status", 0.8f) {
             Chip(
                 text = it.approvalStatus.label,
                 severity = it.approvalStatus.severity
@@ -125,24 +128,18 @@ private fun getColumn(): List<TableColumn<PermitByClassEntity>> {
         },
 
         TableColumn("Start") {
-            Text(
-                text = it.startTime.toLocalDateTime().toString(),
-                style = Style.body,
-                color = theme.bodyText
+            DateText(
+                dateString = it.startTime.toLocalDateTime().toString(),
             )
         },
         TableColumn("End") {
-            Text(
-                text = it.endTime.toLocalDateTime().toString(),
-                style = Style.body,
-                color = theme.bodyText
+            DateText(
+                dateString = it.endTime.toLocalDateTime().toString(),
             )
         },
         TableColumn("Requested at") {
-            Text(
-                text = it.createdAt.toLocalDateTime().toString(),
-                style = Style.body,
-                color = theme.bodyText
+            DateText(
+                dateString = it.createdAt.toLocalDateTime().toString(),
             )
         }
     )
