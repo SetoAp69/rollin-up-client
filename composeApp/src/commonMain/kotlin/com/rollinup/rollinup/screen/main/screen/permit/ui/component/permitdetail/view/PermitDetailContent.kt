@@ -56,8 +56,8 @@ fun PermitDetailLoading() {
         ) {
             ShimmerEffect(150.dp, 24.dp)
             ShimmerEffect(60.dp, 24.dp)
-            Spacer(itemGap8)
         }
+        Spacer(itemGap8)
         Column() {
             repeat(5) {
                 ShimmerEffect(

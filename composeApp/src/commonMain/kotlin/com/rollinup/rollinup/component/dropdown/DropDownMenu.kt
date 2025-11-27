@@ -1,12 +1,9 @@
 package com.rollinup.rollinup.component.dropdown
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -18,8 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.rollinup.rollinup.component.checkbox.CheckBox
@@ -28,7 +23,6 @@ import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
-import com.rollinup.rollinup.component.utils.getScreenHeight
 import com.rollinup.rollinup.component.utils.isCompact
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
@@ -37,10 +31,11 @@ import org.jetbrains.compose.resources.painterResource
 fun DropDownMenu(
     isShowDropDown: Boolean,
     onDismissRequest: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     DropdownMenu(
-
+        modifier = modifier,
         expanded = isShowDropDown,
         onDismissRequest = { onDismissRequest(false) },
         shape = RoundedCornerShape(12.dp),
@@ -52,8 +47,8 @@ fun DropDownMenu(
 }
 
 data class DropDownState<T>(
-    val selectedItem:List<T>,
-    val expanded:Boolean,
+    val selectedItem: List<T>,
+    val expanded: Boolean,
     val onDismissRequest: (Boolean) -> Unit,
 )
 
@@ -61,7 +56,7 @@ data class DropDownState<T>(
 fun DropDownMenuMultiSelectItem(
     label: String,
     textColor: Color = theme.bodyText,
-    isSelected:Boolean,
+    isSelected: Boolean,
     onClick: () -> Unit,
 ) {
     CustomRipple {
@@ -80,7 +75,7 @@ fun DropDownMenuMultiSelectItem(
             CheckBox(
                 modifier = Modifier.size(16.dp),
                 checked = isSelected,
-                onCheckedChange = {onClick()},
+                onCheckedChange = { onClick() },
             )
             Text(
                 text = label,
@@ -97,6 +92,7 @@ fun DropDownMenuItem(
     icon: DrawableResource? = null,
     textColor: Color = theme.bodyText,
     iconTint: Color = theme.primary,
+    backgroundColor: Color = Color.Transparent,
     onClick: () -> Unit,
 ) {
     val gap = if (isCompact) 8.dp else 12.dp
@@ -107,11 +103,12 @@ fun DropDownMenuItem(
                 .clickable {
                     onClick()
                 }
+                .background(color = backgroundColor)
                 .padding(
                     vertical = itemGap8,
                     horizontal = 16.dp
                 )
-                .width( 150.dp),
+                .width(150.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             icon?.let {
@@ -119,7 +116,7 @@ fun DropDownMenuItem(
                     painter = painterResource(it),
                     tint = iconTint,
                     contentDescription = null,
-                    modifier   = Modifier.size(16.dp)
+                    modifier = Modifier.size(16.dp)
                 )
                 Spacer(gap)
             }

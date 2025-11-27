@@ -29,7 +29,7 @@ fun TeacherPermitDesktopContent(
             Text(
                 text = "Teacher Permit",
                 style = Style.headerBold,
-                color = theme.bodyText
+                color = theme.primary
             )
             TeacherPermitTableFilter(
                 uiState = uiState,

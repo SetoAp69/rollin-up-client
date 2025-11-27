@@ -16,7 +16,7 @@ enum class UserCenterAction(
 ) {
     EDIT_DATA(
         show = { selected -> selected.size == 1 },
-        label = "Eedit data",
+        label = "Edit data",
         icon = Res.drawable.ic_edit_line_24
     ),
     DETAIL(

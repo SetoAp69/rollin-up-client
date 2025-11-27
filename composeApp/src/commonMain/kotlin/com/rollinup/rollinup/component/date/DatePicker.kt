@@ -19,6 +19,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
@@ -29,6 +32,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,6 +64,8 @@ import com.rollinup.common.utils.Utils.toLocalDate
 import com.rollinup.rollinup.component.bottomsheet.BottomSheet
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.button.ButtonType
+import com.rollinup.rollinup.component.dropdown.DropDownMenu
+import com.rollinup.rollinup.component.dropdown.DropDownMenuItem
 import com.rollinup.rollinup.component.model.Platform
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
@@ -74,6 +80,7 @@ import com.rollinup.rollinup.component.utils.getScreenWidth
 import com.rollinup.rollinup.component.utils.isCompact
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
 import kotlinx.datetime.YearMonth
 import org.jetbrains.compose.resources.painterResource
 import rollin_up.composeapp.generated.resources.Res
@@ -463,7 +470,13 @@ fun DatePickerCalendar(
                     onPreviousMonth = {
                         currentMonth = currentMonth.minusMonths(1)
                     },
-                    dayOfWeeks = dayOfWeeks
+                    dayOfWeeks = dayOfWeeks,
+                    onYearSelected = {
+                        currentMonth = YearMonth(it, month.yearMonth.month)
+                    },
+                    onMonthSelected = {
+                        currentMonth = YearMonth(month.yearMonth.year, it)
+                    }
                 )
             },
             modifier = Modifier.width(maxWidth),
@@ -563,54 +576,136 @@ fun DayContent(
 
 }
 
+//@Composable
+//fun DatePickerMonthHeader(
+//    month: CalendarMonth,
+//    onNextMonth: () -> Unit,
+//    onPreviousMonth: () -> Unit,
+//    dayOfWeeks: List<DayOfWeek>,
+//) {
+//    Column(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(bottom = itemGap4),
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//    ) {
+//        Row(
+//            modifier = Modifier.fillMaxWidth(),
+//            horizontalArrangement = Arrangement.SpaceBetween,
+//            verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            Icon(
+//                painter = painterResource(Res.drawable.ic_drop_down_arrow_line_left_24),
+//                tint = theme.bodyText,
+//                contentDescription = null,
+//                modifier = Modifier
+//                    .clip(CircleShape)
+//                    .clickable {
+//                        onPreviousMonth()
+//                    }
+//            )
+//            Text(
+//                text = month.yearMonth.month.name + " " + month.yearMonth.year,
+//                style = Style.title,
+//                color = theme.bodyText
+//            )
+//            Icon(
+//                painter = painterResource(Res.drawable.ic_drop_down_arrow_line_right_24),
+//                tint = theme.bodyText,
+//                contentDescription = null,
+//                modifier = Modifier
+//                    .clip(CircleShape)
+//                    .clickable {
+//                        onNextMonth()
+//                    }
+//            )
+//        }
+//        Spacer(itemGap8)
+//        Row(
+//            modifier = Modifier.fillMaxWidth(),
+//        ) {
+//            for (day in dayOfWeeks) {
+//                Text(
+//                    text = day.name.take(3),
+//                    style = Style.title,
+//                    color = theme.bodyText,
+//                    modifier = Modifier.weight(1f),
+//                    textAlign = TextAlign.Center
+//                )
+//            }
+//        }
+//    }
+//}
+
 @Composable
 fun DatePickerMonthHeader(
     month: CalendarMonth,
     onNextMonth: () -> Unit,
     onPreviousMonth: () -> Unit,
     dayOfWeeks: List<DayOfWeek>,
+    onYearSelected: (Int) -> Unit = {},
+    onMonthSelected: (Month) -> Unit = {},
 ) {
+    val currentYear = month.yearMonth.year
+    val yearRange = (currentYear - 50)..(currentYear + 10) // customize
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = itemGap4),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+
             Icon(
                 painter = painterResource(Res.drawable.ic_drop_down_arrow_line_left_24),
                 tint = theme.bodyText,
                 contentDescription = null,
                 modifier = Modifier
                     .clip(CircleShape)
-                    .clickable {
-                        onPreviousMonth()
-                    }
+                    .clickable { onPreviousMonth() }
             )
-            Text(
-                text = month.yearMonth.month.name + " " + month.yearMonth.year,
-                style = Style.title,
-                color = theme.bodyText
-            )
+
+            Box(
+                contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                ) {
+                    MonthPicker(
+                        currentMonth = month.yearMonth.month,
+                        onValueChange = onMonthSelected
+                    )
+                    Spacer(itemGap4)
+                    YearPicker(
+                        currentYear = month.yearMonth.year,
+                        yearRange = yearRange.toList(),
+                        onValueChange = onYearSelected
+                    )
+                }
+            }
+
             Icon(
                 painter = painterResource(Res.drawable.ic_drop_down_arrow_line_right_24),
                 tint = theme.bodyText,
                 contentDescription = null,
                 modifier = Modifier
                     .clip(CircleShape)
-                    .clickable {
-                        onNextMonth()
-                    }
+                    .clickable { onNextMonth() }
             )
         }
+
         Spacer(itemGap8)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-        ) {
+
+        Row(modifier = Modifier.fillMaxWidth()) {
             for (day in dayOfWeeks) {
                 Text(
                     text = day.name.take(3),
@@ -619,6 +714,109 @@ fun DatePickerMonthHeader(
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.Center
                 )
+            }
+        }
+    }
+}
+
+@Composable
+private fun YearPicker(
+    currentYear: Int,
+    yearRange: List<Int>,
+    onValueChange: (Int) -> Unit,
+) {
+    var showDropdown by remember { mutableStateOf(false) }
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(showDropdown) {
+        if (showDropdown) {
+            listState.scrollToItem(yearRange.indexOf(currentYear))
+        }
+    }
+
+    Box {
+        Text(
+            text = "$currentYear",
+            style = Style.title,
+            color = theme.bodyText,
+            modifier = Modifier
+                .clickable {
+                    showDropdown = true
+                }
+        )
+        DropDownMenu(
+            isShowDropDown = showDropdown,
+            onDismissRequest = { showDropdown = false },
+            modifier = Modifier.height(250.dp)
+        ) {
+            Box(modifier = Modifier.size(height = 250.dp, width = 60.dp)) {
+                LazyColumn(
+                    modifier = Modifier.height(250.dp),
+                    state = listState
+                ) {
+                    items(yearRange.toList()) { year ->
+                        DropDownMenuItem(
+                            label = "$year",
+                            backgroundColor = if (year == currentYear) theme.popUpBgSelected else Color.Transparent,
+                            onClick = {
+                                showDropdown = false
+                                onValueChange(year)
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MonthPicker(
+    currentMonth: Month,
+    onValueChange: (Month) -> Unit,
+) {
+    var showDropdown by remember { mutableStateOf(false) }
+    val listState = rememberLazyListState()
+
+    val monthList = Month.entries.toList()
+
+    LaunchedEffect(showDropdown) {
+        if (showDropdown) {
+            listState.scrollToItem(monthList.indexOf(currentMonth))
+        }
+    }
+
+    Box {
+        Text(
+            text = currentMonth.name,
+            style = Style.title,
+            color = theme.bodyText,
+            modifier = Modifier
+                .clickable {
+                    showDropdown = true
+                }
+        )
+        DropDownMenu(
+            isShowDropDown = showDropdown,
+            onDismissRequest = { showDropdown = false },
+            modifier = Modifier.height(250.dp)
+        ) {
+            Box(modifier = Modifier.size(height = 250.dp, width = 60.dp)) {
+                LazyColumn(
+                    modifier = Modifier.height(250.dp),
+                    state = listState
+                ) {
+                    items(monthList.toList()) { month ->
+                        DropDownMenuItem(
+                            label = "$month",
+                            backgroundColor = if (month == currentMonth) theme.popUpBgSelected else Color.Transparent,
+                            onClick = {
+                                showDropdown = false
+                                onValueChange(month)
+                            }
+                        )
+                    }
+                }
             }
         }
     }

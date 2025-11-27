@@ -31,7 +31,8 @@ class CreateEditUserViewModel(
 
     fun init(id: String?) {
         _uiState.value = _uiState.value.copy(isEdit = id != null)
-        id?.let {
+        id?.let{
+            _uiState.value = _uiState.value.copy(isLoading = true)
             viewModelScope.launch {
                 if (true) {
                     delay(1000)

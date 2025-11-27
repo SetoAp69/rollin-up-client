@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -35,6 +36,8 @@ import com.rollinup.common.utils.Utils.toLocalDateTime
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.checkbox.CheckBox
 import com.rollinup.rollinup.component.date.DatePickerDialog
+import com.rollinup.rollinup.component.loading.LoadingOverlay
+import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.selector.SingleDropDownSelector
 import com.rollinup.rollinup.component.spacer.Spacer
@@ -85,6 +88,7 @@ fun CreateEditUserContent(
         uiState = uiState,
         cb = cb
     )
+    LoadingOverlay(uiState.isLoadingOverlay)
 }
 
 @Composable
@@ -93,34 +97,38 @@ fun CreateEditUserForm(
     cb: CreateEditUserCallback,
 ) {
     Column {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-        ) {
-            UserNameSection(
-                isEdit = uiState.isEdit,
-                formData = uiState.formData,
-                onUpdateForm = cb.onUpdateForm,
-                onCheckUserName = cb.onCheckUserName
-            )
-            NameSection(
-                isEdit = uiState.isEdit,
-                formData = uiState.formData,
-                onUpdateForm = cb.onUpdateForm
-            )
-            SelectorSection(
-                options = uiState.formOptions,
-                formData = uiState.formData,
-                onUpdateForm = cb.onUpdateForm
-            )
-            AdditionalInfoSection(
-                isEdit = uiState.isEdit,
-                isStudent = uiState.isStudentRole,
-                formData = uiState.formData,
-                onUpdateForm = cb.onUpdateForm,
-                onCheckEmail = cb.onCheckEmail
-            )
+        if (!uiState.isLoading) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                UserNameSection(
+                    isEdit = uiState.isEdit,
+                    formData = uiState.formData,
+                    onUpdateForm = cb.onUpdateForm,
+                    onCheckUserName = cb.onCheckUserName
+                )
+                NameSection(
+                    isEdit = uiState.isEdit,
+                    formData = uiState.formData,
+                    onUpdateForm = cb.onUpdateForm
+                )
+                SelectorSection(
+                    options = uiState.formOptions,
+                    formData = uiState.formData,
+                    onUpdateForm = cb.onUpdateForm
+                )
+                AdditionalInfoSection(
+                    isEdit = uiState.isEdit,
+                    formData = uiState.formData,
+                    onUpdateForm = cb.onUpdateForm,
+                    onCheckEmail = cb.onCheckEmail
+                )
+            }
+        } else {
+            CreateEditUserFormLoading()
         }
         UserFormFooter(
             uiState = uiState,
@@ -136,7 +144,7 @@ private fun UserFormFooter(
     cb: CreateEditUserCallback,
 ) {
     Column {
-        if (uiState.isEdit) {
+        if (!uiState.isEdit) {
             Row(
                 modifier = Modifier.clickable { cb.onToggleStay(!uiState.isStay) },
                 verticalAlignment = Alignment.CenterVertically
@@ -145,7 +153,6 @@ private fun UserFormFooter(
                     checked = uiState.isStay,
                     onCheckedChange = cb.onToggleStay
                 )
-//                Spacer(itemGap8)
                 Text(
                     text = "Stay in form",
                     style = Style.body,
@@ -166,7 +173,7 @@ private fun UserFormFooter(
 }
 
 @Composable
-fun ColumnScope.UserNameSection(
+fun UserNameSection(
     isEdit: Boolean,
     formData: CreateEditUserFormData,
     onUpdateForm: (CreateEditUserFormData) -> Unit,
@@ -200,7 +207,6 @@ fun ColumnScope.UserNameSection(
         isError = formData.userNameError != null,
         errorMsg = formData.userNameError
     )
-    Spacer(12.dp)
 }
 
 @Composable
@@ -276,7 +282,6 @@ private fun SelectorSection(
                     )
                 )
             },
-//            modifier = Modifier.weight(1f)
         )
         DatePicker(
             title = "Birth day",
@@ -302,7 +307,6 @@ private fun SelectorSection(
                     )
                 )
             },
-//            modifier = Modifier.weight(1f)
         )
         SingleDropDownSelector(
             title = "Class",
@@ -316,7 +320,6 @@ private fun SelectorSection(
                     )
                 )
             },
-//            modifier = Modifier.weight(1f)
         )
     }
 }
@@ -324,36 +327,35 @@ private fun SelectorSection(
 @Composable
 private fun AdditionalInfoSection(
     isEdit: Boolean,
-    isStudent: Boolean,
     formData: CreateEditUserFormData,
     onUpdateForm: (CreateEditUserFormData) -> Unit,
     onCheckEmail: (String) -> Unit,
 ) {
-    if (isStudent) {
-        TextField(
-            isRequired = !isEdit,
-            onValueChange = { newValue ->
-                val errorMessage: String?
-                if (newValue.contains(" ")) {
-                    errorMessage = "Student Id can't contain spaces"
-                } else {
-                    errorMessage = null
-                }
 
-                onUpdateForm(
-                    formData.copy(
-                        studentId = newValue.ifBlank { null },
-                        studentIdError = errorMessage
-                    )
+    TextField(
+        isRequired = !isEdit,
+        onValueChange = { newValue ->
+            val errorMessage: String?
+            if (newValue.contains(" ")) {
+                errorMessage = "Student Id can't contain spaces"
+            } else {
+                errorMessage = null
+            }
+
+            onUpdateForm(
+                formData.copy(
+                    studentId = newValue.ifBlank { null },
+                    studentIdError = errorMessage
                 )
-            },
-            value = formData.studentId ?: "",
-            placeholder = "Enter student id",
-            title = "Student Id",
-            isError = formData.studentIdError != null,
-            errorMsg = formData.studentIdError
-        )
-    }
+            )
+        },
+        value = formData.studentId ?: "",
+        placeholder = "Enter student id",
+        title = "Student Id",
+        isError = formData.studentIdError != null,
+        errorMsg = formData.studentIdError
+    )
+
     TextField(
         title = "Address",
         maxChar = 120,
@@ -415,6 +417,20 @@ private fun AdditionalInfoSection(
     )
 }
 
+@Composable
+fun CreateEditUserFormLoading() {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        repeat(6) {
+            ShimmerEffect(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(24.dp)
+            )
+        }
+    }
+}
 
 @Composable
 private fun DatePicker(

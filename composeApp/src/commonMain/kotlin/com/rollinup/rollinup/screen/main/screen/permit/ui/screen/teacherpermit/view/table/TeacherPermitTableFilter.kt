@@ -92,5 +92,18 @@ fun TeacherPermitTableFilter(
                 }
             )
         }
+        MultiDropDownSelector(
+            title = "Type",
+            value = uiState.filterData.type,
+            options = uiState.typeOptions,
+            onValueChange = {
+                cb.onFilter(
+                    filterData.copy(
+                        type = it
+                    )
+                )
+            },
+            enable = false
+        )
     }
 }

@@ -40,7 +40,7 @@ fun AttendanceTableHeader(
     Column {
         Text(
             text = "Student Attendance",
-            color = theme.bodyText,
+            color = theme.primary,
             style = Style.headerBold
         )
         Spacer(12.dp)

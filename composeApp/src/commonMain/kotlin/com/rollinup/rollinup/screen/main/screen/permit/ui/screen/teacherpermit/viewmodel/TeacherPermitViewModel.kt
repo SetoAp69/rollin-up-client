@@ -150,7 +150,7 @@ class TeacherPermitViewModel(
     }
 
     private fun selectAll() {
-        if (!isMobile) {
+        if (isMobile) {
             pagingSelectAll()
         } else {
             listSelectAll()
