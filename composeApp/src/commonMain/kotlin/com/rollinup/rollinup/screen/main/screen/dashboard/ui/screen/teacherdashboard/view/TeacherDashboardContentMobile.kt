@@ -12,13 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
+import com.rollinup.apiservice.model.common.Role
 import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.spacer.screenPaddingValues
 import com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardHeader
-import com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardQuickAccess
+import com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view.list.AttendancePaging
+import com.rollinup.rollinup.screen.main.navigation.MainRoute
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
-import com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view.list.AttendancePaging
 
 @Composable
 fun TeacherDashboardContentMobile(
@@ -41,8 +42,9 @@ fun TeacherDashboardContentMobile(
                 userLoginEntity = uiState.user
             )
             TeacherDashboardQuickAccess(
-                onPermit = { onNavigateTo },
-                onStudent = { onNavigateTo }
+                onPermit = { onNavigateTo(MainRoute.PermitRoute.withRole(Role.TEACHER)) },
+                onStudent = { onNavigateTo(MainRoute.StudentCenterRoute.route) },
+                onStudentAttendance = { onNavigateTo },
             )
             AttendancePaging(
                 pagingData = pagingData,

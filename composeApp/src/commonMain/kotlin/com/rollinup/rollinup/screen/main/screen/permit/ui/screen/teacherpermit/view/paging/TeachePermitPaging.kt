@@ -9,6 +9,7 @@ import androidx.paging.compose.LazyPagingItems
 import com.rollinup.apiservice.model.permit.PermitByClassEntity
 import com.rollinup.rollinup.component.pagination.PagingColumn
 import com.rollinup.rollinup.component.spacer.screenPaddingValues
+import com.rollinup.rollinup.screen.main.screen.permit.model.PermitTab
 import com.rollinup.rollinup.screen.main.screen.permit.model.teacherpermit.TeacherPermitCallback
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.uistate.TeacherPermitUiState
 
@@ -40,4 +41,13 @@ fun TeacherPermitPaging(
         onRefresh = cb.onRefresh,
         contentPadding = screenPaddingValues,
     )
+
+    selectedItem?.let {
+        TeacherPermitPagingActionSheet(
+            showSheet = showActionSheet,
+            isActive = uiState.currentTab == PermitTab.ACTIVE,
+            onDismissRequest = { showActionSheet = it },
+            items = listOf(it)
+        )
+    }
 }

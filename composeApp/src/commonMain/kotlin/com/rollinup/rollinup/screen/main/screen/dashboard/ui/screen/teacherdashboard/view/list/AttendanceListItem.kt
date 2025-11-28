@@ -16,6 +16,7 @@ import com.rollinup.apiservice.model.attendance.AttendanceStatus
 import com.rollinup.common.utils.Utils.toLocalDateTime
 import com.rollinup.rollinup.component.card.Card
 import com.rollinup.rollinup.component.chip.Chip
+import com.rollinup.rollinup.component.date.DateText
 import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
@@ -83,10 +84,10 @@ fun AttendanceListItem(
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(2.dp)
-                        Text(
-                            text = it.toLocalDateTime().time.toString(),
-                            color = theme.textPrimary,
-                            style = Style.body
+                        DateText(
+                            dateString = it,
+                            style = Style.body,
+                            color = theme.textPrimary
                         )
                     }
                 }

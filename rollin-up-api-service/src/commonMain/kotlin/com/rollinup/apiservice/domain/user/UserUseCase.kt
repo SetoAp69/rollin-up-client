@@ -11,6 +11,10 @@ class GetUserListUseCase(private val repository: UserRepository) {
     operator fun invoke(queryParams: GetUserQueryParams) = repository.getUserList(queryParams)
 }
 
+class GetUserPagingUseCase(private val repository: UserRepository) {
+    operator fun invoke(queryParams: GetUserQueryParams) = repository.getUserPaging(queryParams)
+}
+
 class GetUserByIdUseCase(private val repository: UserRepository) {
     operator fun invoke(id: String) = repository.getUserById(id)
 }

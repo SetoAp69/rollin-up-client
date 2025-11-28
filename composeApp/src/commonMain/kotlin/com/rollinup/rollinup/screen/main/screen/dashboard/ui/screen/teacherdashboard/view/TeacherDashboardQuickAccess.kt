@@ -1,4 +1,4 @@
-package com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view
+package com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.FlowRow
@@ -12,15 +12,17 @@ import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.screen.dashboard.ui.component.DashBoardButton
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_mail_line_24
+import rollin_up.composeapp.generated.resources.ic_user_check_line_24
 import rollin_up.composeapp.generated.resources.ic_user_line_24
 
 @Composable
 fun TeacherDashboardQuickAccess(
     onPermit: () -> Unit,
     onStudent: () -> Unit,
+    onStudentAttendance:()->Unit
 ) {
     TextFieldTitle(
-        title = "Quick Acceess",
+        title = "Quick Access",
         textStyle = Style.label
     ) {
         FlowRow(
@@ -36,7 +38,12 @@ fun TeacherDashboardQuickAccess(
                 onClick = onPermit,
             )
             DashBoardButton(
-                text = "Student History",
+                text = "Student Attendance",
+                icon = Res.drawable.ic_user_check_line_24,
+                onClick = onStudentAttendance
+            )
+            DashBoardButton(
+                text = "Student Center",
                 icon = Res.drawable.ic_user_line_24,
                 onClick = onStudent
             )

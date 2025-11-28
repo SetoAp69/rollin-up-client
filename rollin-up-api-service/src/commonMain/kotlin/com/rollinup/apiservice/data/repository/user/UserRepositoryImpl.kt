@@ -1,11 +1,11 @@
 package com.rollinup.apiservice.data.repository.user
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.rollinup.apiservice.Utils
 import com.rollinup.apiservice.data.mapper.UserMapper
-import com.rollinup.apiservice.model.common.NetworkError
-import com.rollinup.apiservice.model.common.Result
-import com.rollinup.apiservice.model.user.UserDetailEntity
-import com.rollinup.apiservice.model.user.UserEntity
+import com.rollinup.apiservice.data.repository.user.pagingsource.GetUserPagingSource
 import com.rollinup.apiservice.data.source.network.apiservice.UserApiService
 import com.rollinup.apiservice.data.source.network.model.request.user.CreateEditUserBody
 import com.rollinup.apiservice.data.source.network.model.request.user.CreateResetPasswordRequestBody
@@ -13,6 +13,10 @@ import com.rollinup.apiservice.data.source.network.model.request.user.GetUserQue
 import com.rollinup.apiservice.data.source.network.model.request.user.SubmitOTPBody
 import com.rollinup.apiservice.data.source.network.model.request.user.SubmitResetPasswordBody
 import com.rollinup.apiservice.data.source.network.model.response.ApiResponse
+import com.rollinup.apiservice.model.common.NetworkError
+import com.rollinup.apiservice.model.common.Result
+import com.rollinup.apiservice.model.user.UserDetailEntity
+import com.rollinup.apiservice.model.user.UserEntity
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -44,9 +48,21 @@ class UserRepositoryImpl(
                     emit(Utils.handleApiError(response.e))
                 }
             }
-
-
         }.catch { emit(Utils.handleApiError(it as Exception)) }.flowOn(ioDispatcher)
+
+    override fun getUserPaging(queryParams: GetUserQueryParams): Flow<PagingData<UserEntity>> =
+        Pager(
+            config = PagingConfig(
+                pageSize = 10,
+                initialLoadSize = 10,
+            ),
+        ) {
+            GetUserPagingSource(
+                dataSource = userApiService,
+                query = queryParams,
+                mapper = mapper
+            )
+        }.flow
 
     override fun getUserById(id: String): Flow<Result<UserDetailEntity, NetworkError>> =
         flow {

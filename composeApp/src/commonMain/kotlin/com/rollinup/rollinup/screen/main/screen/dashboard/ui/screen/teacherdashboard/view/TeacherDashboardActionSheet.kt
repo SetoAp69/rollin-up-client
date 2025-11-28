@@ -13,7 +13,7 @@ import com.rollinup.rollinup.component.button.ActionButton
 import com.rollinup.rollinup.component.dropdown.DropDownMenu
 import com.rollinup.rollinup.component.dropdown.DropDownMenuItem
 import com.rollinup.rollinup.component.theme.theme
-import com.rollinup.rollinup.screen.dashboard.model.teacherdashboard.TeacherDashboardAction
+import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardAction
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
 

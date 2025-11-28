@@ -40,6 +40,9 @@ val textFieldPadding
 val screenPadding
     @Composable get() = if (isCompact) 12.dp else 16.dp
 
+val popupPadding
+    get() = PaddingValues(vertical = 16.dp, horizontal = 24.dp)
+
 val screenPaddingValues
     @Composable get() =
         if (isCompact)

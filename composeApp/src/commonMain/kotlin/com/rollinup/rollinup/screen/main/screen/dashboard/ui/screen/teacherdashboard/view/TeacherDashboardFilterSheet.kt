@@ -8,7 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.rollinup.rollinup.component.filter.FilterSelector
 import com.rollinup.rollinup.component.filter.FilterSelectorBottomSheet
-import com.rollinup.rollinup.screen.dashboard.model.teacherdashboard.TeacherDashboardFilterData
+import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardFilterData
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
 
 @Composable

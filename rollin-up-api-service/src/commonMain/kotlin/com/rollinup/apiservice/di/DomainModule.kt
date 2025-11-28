@@ -24,6 +24,7 @@ import com.rollinup.apiservice.domain.user.CreateResetPasswordRequestUseCase
 import com.rollinup.apiservice.domain.user.EditUserUseCase
 import com.rollinup.apiservice.domain.user.GetUserByIdUseCase
 import com.rollinup.apiservice.domain.user.GetUserListUseCase
+import com.rollinup.apiservice.domain.user.GetUserPagingUseCase
 import com.rollinup.apiservice.domain.user.RegisterUserUseCase
 import com.rollinup.apiservice.domain.user.SubmitResetOtpUseCase
 import com.rollinup.apiservice.domain.user.SubmitResetPasswordUseCase
@@ -52,6 +53,7 @@ object DomainModule {
 
     private fun Module.userDomain() {
         singleOf(::GetUserListUseCase)
+        singleOf(::GetUserPagingUseCase)
         singleOf(::GetUserByIdUseCase)
         singleOf(::RegisterUserUseCase)
         singleOf(::EditUserUseCase)
@@ -75,7 +77,7 @@ object DomainModule {
         singleOf(::EditPermitUseCase)
     }
 
-    private fun Module.attendanceDomain(){
+    private fun Module.attendanceDomain() {
         singleOf(::GetAttendanceByStudentPagingUseCase)
         singleOf(::GetAttendanceByClassPagingUseCase)
         singleOf(::GetAttendanceByClassListUseCase)

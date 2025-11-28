@@ -6,7 +6,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
 import com.rollinup.common.utils.Utils.toLocalDateTime
@@ -14,10 +13,9 @@ import com.rollinup.rollinup.component.attendancedetail.AttendanceDetailDialog
 import com.rollinup.rollinup.component.chip.Chip
 import com.rollinup.rollinup.component.table.Table
 import com.rollinup.rollinup.component.table.TableColumn
-import com.rollinup.rollinup.component.table.rememberTableState
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
-import com.rollinup.rollinup.screen.dashboard.model.teacherdashboard.TeacherDashboardAction
+import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardAction
 import com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardApprovalSheet
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState

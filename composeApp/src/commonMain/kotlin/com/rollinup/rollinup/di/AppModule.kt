@@ -4,6 +4,7 @@ import com.rollinup.rollinup.component.di.ComponentModule
 import com.rollinup.rollinup.screen.auth.di.AuthModule
 import com.rollinup.rollinup.screen.dashboard.di.DashboardModule
 import com.rollinup.rollinup.screen.main.screen.permit.di.PermitModule
+import com.rollinup.rollinup.screen.main.screen.studentcenter.di.StudentCenterModule
 import com.rollinup.rollinup.screen.main.screen.usercenter.di.UserCenterModule
 import com.rollinup.rollinup.screen.test.di.TestModule
 
@@ -14,7 +15,7 @@ object AppModule {
         DashboardModule(),
         ComponentModule(),
         UserCenterModule(),
-        PermitModule()
-
+        PermitModule(),
+        StudentCenterModule
     )
 }

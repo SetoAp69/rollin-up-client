@@ -749,7 +749,7 @@ private fun YearPicker(
             onDismissRequest = { showDropdown = false },
             modifier = Modifier.height(250.dp)
         ) {
-            Box(modifier = Modifier.size(height = 250.dp, width = 60.dp)) {
+            Box(modifier = Modifier.size(height = 250.dp, width = 100.dp)) {
                 LazyColumn(
                     modifier = Modifier.height(250.dp),
                     state = listState
@@ -801,7 +801,7 @@ private fun MonthPicker(
             onDismissRequest = { showDropdown = false },
             modifier = Modifier.height(250.dp)
         ) {
-            Box(modifier = Modifier.size(height = 250.dp, width = 60.dp)) {
+            Box(modifier = Modifier.size(height = 250.dp, width = 100.dp)) {
                 LazyColumn(
                     modifier = Modifier.height(250.dp),
                     state = listState

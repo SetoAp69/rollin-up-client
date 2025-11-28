@@ -144,18 +144,7 @@ fun NavGraphBuilder.mainGraph(
 
     composable(
         route = MainRoute.StudentCenterRoute.route,
-        arguments = listOf(
-            navArgument(
-                name = "role",
-                builder = {
-                    type = NavType.StringType
-                }
-            )
-        )
     ) { navBackStackEntry ->
-        val role = navBackStackEntry.savedStateHandle.get<String>("role").let {
-            Role.fromValue(it.toString())
-        }
 
         Scaffold { }
     }

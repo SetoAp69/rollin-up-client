@@ -3,8 +3,6 @@ package com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboar
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
-import com.rollinup.rollinup.screen.dashboard.model.teacherdashboard.TeacherDashboardApprovalFormData
-import com.rollinup.rollinup.screen.dashboard.model.teacherdashboard.TeacherDashboardFilterData
 
 data class TeacherDashboardCallback(
     val onRefresh: () -> Unit = {},

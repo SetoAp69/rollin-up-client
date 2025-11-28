@@ -1,4 +1,4 @@
-package com.rollinup.rollinup.screen.dashboard.model.teacherdashboard
+package com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard
 
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
 import org.jetbrains.compose.resources.DrawableResource

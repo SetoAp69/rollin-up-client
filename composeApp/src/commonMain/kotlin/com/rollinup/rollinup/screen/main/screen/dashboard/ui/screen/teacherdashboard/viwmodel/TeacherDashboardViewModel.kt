@@ -29,8 +29,8 @@ import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.screen.dashboard.getAttendanceByClassDummy
 import com.rollinup.rollinup.screen.dashboard.getAttendanceDetailDummy
-import com.rollinup.rollinup.screen.dashboard.model.teacherdashboard.TeacherDashboardApprovalFormData
-import com.rollinup.rollinup.screen.dashboard.model.teacherdashboard.TeacherDashboardFilterData
+import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardApprovalFormData
+import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardFilterData
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.EditAttendanceFormData
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState

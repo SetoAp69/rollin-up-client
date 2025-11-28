@@ -8,8 +8,8 @@ import com.rollinup.common.utils.Utils.toEpochMillis
 import com.rollinup.common.utils.Utils.toLocalDateTime
 import com.rollinup.rollinup.component.model.OptionData
 import com.rollinup.rollinup.component.permitform.model.PermitFormData
-import com.rollinup.rollinup.screen.dashboard.model.teacherdashboard.TeacherDashboardApprovalFormData
-import com.rollinup.rollinup.screen.dashboard.model.teacherdashboard.TeacherDashboardFilterData
+import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardApprovalFormData
+import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardFilterData
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.EditAttendanceFormData
 import dev.jordond.compass.Coordinates
 

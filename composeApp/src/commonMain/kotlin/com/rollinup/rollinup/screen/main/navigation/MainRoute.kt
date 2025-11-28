@@ -36,7 +36,7 @@ sealed class MainRoute(
     )
 
     object StudentCenterRoute : MainRoute(
-        route = "student-center/{role}",
+        route = "student-center",
         icon = Res.drawable.ic_user_board_line_24,
         title = "Student Center"
     )

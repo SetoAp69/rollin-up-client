@@ -63,7 +63,7 @@ fun BottomSheet(
     }
 
     if (isShowSheet) {
-        Box(contentAlignment = Alignment.Center) {
+        Box(contentAlignment = Alignment.BottomCenter) {
             ModalBottomSheet(
                 onDismissRequest = {
                     onDismissRequest(
@@ -78,14 +78,16 @@ fun BottomSheet(
                 contentWindowInsets = { BottomSheetDefaults.windowInsets },
                 properties = properties,
                 content = {
-                    Column(
-                        modifier = modifier
-                            .padding(
-                                bottom = 12.dp
-                            )
-                    ) {
-                        content { message, success ->
-                            showSnackBar(message, success)
+                    Box(contentAlignment = Alignment.BottomCenter){
+                        Column(
+                            modifier = modifier
+                                .padding(
+                                    bottom = 12.dp
+                                )
+                        ) {
+                            content { message, success ->
+                                showSnackBar(message, success)
+                            }
                         }
                     }
                 },
@@ -99,6 +101,7 @@ fun BottomSheet(
                 isSuccess = isSuccess,
             )
         }
+
     }
 }
 

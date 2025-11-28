@@ -1,9 +1,12 @@
 package com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitapproval.view
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rollinup.rollinup.component.bottomsheet.BottomSheet
+import com.rollinup.rollinup.component.spacer.screenPadding
 import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitapproval.viewmodel.PermitApprovalViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -19,7 +22,8 @@ fun PermitApprovalFormBottomSheet(
 
     BottomSheet(
         isShowSheet = showDialog,
-        onDismissRequest = onDismissRequest
+        onDismissRequest = onDismissRequest,
+        modifier = Modifier.padding(screenPadding)
     ) { showSnackBar ->
         DisposableEffect(showDialog) {
             viewModel.init(selectedId)

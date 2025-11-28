@@ -12,6 +12,7 @@ import com.rollinup.apiservice.model.permit.PermitByClassEntity
 import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.spacer.screenPadding
 import com.rollinup.rollinup.component.tab.TabList
+import com.rollinup.rollinup.component.tab.TabRow
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitTab
 import com.rollinup.rollinup.screen.main.screen.permit.model.teacherpermit.TeacherPermitCallback
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.uistate.TeacherPermitUiState
@@ -60,7 +61,7 @@ fun TeacherPermitMobileContent(
         Column(
             modifier = Modifier.padding(screenPadding)
         ) {
-            TabList(
+            TabRow(
                 tabList = uiState.tabList,
                 currentIndex = uiState.currentTabIndex,
                 onTabChange = cb.onTabChange

@@ -122,7 +122,8 @@ fun <T> FilterSelector(
     var isExpanded by remember { mutableStateOf(false) }
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier = Modifier.padding(top = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         if (isLoading) {
             FilterHeaderLoading()

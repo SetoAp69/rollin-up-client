@@ -34,7 +34,7 @@ import com.rollinup.rollinup.component.textfield.TextField
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.utils.getPlatform
-import com.rollinup.rollinup.screen.dashboard.model.teacherdashboard.TeacherDashboardApprovalFormData
+import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardApprovalFormData
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
 import rollin_up.composeapp.generated.resources.Res

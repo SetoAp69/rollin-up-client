@@ -1,4 +1,4 @@
-package com.rollinup.rollinup.screen.dashboard.model.teacherdashboard
+package com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard
 
 data class TeacherDashboardApprovalFormData(
     val id: List<String> = emptyList(),

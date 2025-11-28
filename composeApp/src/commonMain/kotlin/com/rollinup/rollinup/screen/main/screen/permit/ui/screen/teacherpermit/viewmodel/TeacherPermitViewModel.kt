@@ -107,6 +107,7 @@ class TeacherPermitViewModel(
         val queryParams = _uiState.value.queryParams
 
         viewModelScope.launch {
+            delay(1000)
             if(true){
                 _pagingData.value = PagingData.from(
                     data=generateDummyPermitByClassList(88),
@@ -116,6 +117,7 @@ class TeacherPermitViewModel(
                         append = LoadState.NotLoading(true)
                     )
                 )
+                return@launch
             }
             getPermitByClassPagingUseCase(classKey, queryParams).collectLatest { result ->
                 _pagingData.value = result

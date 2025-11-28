@@ -61,9 +61,11 @@ fun TeacherPermitPagingActionSheet(
         selectedId = items.map { it.id },
         onDismissRequest = { showApproval = false },
     )
-    PermitDetailDialog(
-        id = items.first().id,
-        showDialog = showDetail,
-        onDismissRequest = {showDetail = false}
-    )
+    items.firstOrNull()?.id?.let {
+        PermitDetailDialog(
+            id =it,
+            showDialog = showDetail,
+            onDismissRequest = { showDetail = false }
+        )
+    }
 }
