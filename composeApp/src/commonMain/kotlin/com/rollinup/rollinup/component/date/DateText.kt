@@ -11,29 +11,37 @@ import com.rollinup.rollinup.component.theme.theme
 @Composable
 fun DateText(
     dateString: String,
-    showTime: Boolean = true,
+    format: DateTextFormat = DateTextFormat.DATE_TIME,
     color: Color = theme.bodyText,
     style: TextStyle = Style.body,
 ) {
     Text(
-        text = formatDate(dateString, showTime),
+        text = formatDate(dateString, format),
         color = color,
         style = style
     )
 }
 
-fun formatDate(dateString: String, showTime: Boolean): String {
+fun formatDate(dateString: String, format: DateTextFormat): String {
     val dateTime = dateString.toLocalDateTime()
     val day = dateTime.dayOfWeek.name.take(3)
     val date = dateTime.day.toString()
     val month = dateTime.month.name.take(3)
     val year = dateTime.year.toString()
+    val hour = dateTime.hour.toString()
+    val minute = dateTime.minute.toString()
 
-    if (!showTime) {
-        return "$day, $date $month $year"
-    } else {
-        val hour = dateTime.hour.toString()
-        val minute = dateTime.minute.toString()
-        return "$day, $date $month $year $hour:$minute"
+    return when (format) {
+        DateTextFormat.DATE -> {
+            "$day, $date $month $year"
+        }
+
+        DateTextFormat.DATE_TIME -> {
+            "$day, $date $month $year $hour:$minute"
+        }
+
+        DateTextFormat.TIME -> {
+            "$hour:$minute"
+        }
     }
 }

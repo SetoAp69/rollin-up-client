@@ -4,6 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import com.rollinup.apiservice.model.common.Role
 import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.platformwarning.PlatformWarning
@@ -11,8 +12,13 @@ import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.screen.dashboard.ui.screen.studentdashboard.view.StudentDashboardScreen
 import com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardScreen
+import com.rollinup.rollinup.screen.main.screen.attendance.ui.navigation.AttendanceRoute
+import com.rollinup.rollinup.screen.main.screen.attendance.ui.navigation.attendanceGraph
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.studentpermit.view.StudentPermitScreen
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.view.TeacherPermitScreen
+import com.rollinup.rollinup.screen.main.screen.profile.ui.screen.view.ProfileScreen
+import com.rollinup.rollinup.screen.main.screen.studentcenter.navigation.StudentCenterRoute
+import com.rollinup.rollinup.screen.main.screen.studentcenter.navigation.studentCenterGraph
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.view.UserCenterScreen
 
 fun NavGraphBuilder.mainGraph(
@@ -75,7 +81,7 @@ fun NavGraphBuilder.mainGraph(
             )
         )
     ) {
-        Scaffold { }
+        ProfileScreen()
     }
 
     composable(
@@ -124,29 +130,43 @@ fun NavGraphBuilder.mainGraph(
         }
     }
 
-    composable(
-        route = MainRoute.AttendanceRoute.route,
-        arguments = listOf(
-            navArgument(
-                name = "role",
-                builder = {
-                    type = NavType.StringType
-                }
-            )
-        )
-    ) { navBackStackEntry ->
-        val role = navBackStackEntry.savedStateHandle.get<String>("role").let {
-            Role.fromValue(it.toString())
-        }
+//    composable(
+//        route = MainRoute.AttendanceRoute.route,
+//        arguments = listOf(
+//            navArgument(
+//                name = "role",
+//                builder = {
+//                    type = NavType.StringType
+//                }
+//            )
+//        )
+//    ) { navBackStackEntry ->
+//        val role = navBackStackEntry.savedStateHandle.get<String>("role").let {
+//            Role.fromValue(it.toString())
+//        }
+//
+//        Scaffold { }
+//    }
 
-        Scaffold { }
+    navigation(
+        route = MainRoute.AttendanceRoute.route,
+        startDestination = AttendanceRoute.AttendanceHomeRoute.route
+    ) {
+        attendanceGraph(
+            onNavigateTo = onNavigateTo,
+            onNavigateUp = onNavigateUp
+        )
     }
 
-    composable(
-        route = MainRoute.StudentCenterRoute.route,
-    ) { navBackStackEntry ->
 
-        Scaffold { }
+    navigation(
+        route = MainRoute.StudentCenterRoute.route,
+        startDestination = StudentCenterRoute.StudentCenterHomeRoute.route
+    ) {
+        studentCenterGraph(
+            onNavigateTo = onNavigateTo,
+            onNavigateUp = onNavigateUp
+        )
     }
 
 }

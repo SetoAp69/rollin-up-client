@@ -18,6 +18,7 @@ import com.rollinup.rollinup.component.spacer.screenPaddingValues
 import com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardHeader
 import com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view.list.AttendancePaging
 import com.rollinup.rollinup.screen.main.navigation.MainRoute
+import com.rollinup.rollinup.screen.main.screen.attendance.ui.navigation.AttendanceRoute
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
 
@@ -44,7 +45,9 @@ fun TeacherDashboardContentMobile(
             TeacherDashboardQuickAccess(
                 onPermit = { onNavigateTo(MainRoute.PermitRoute.withRole(Role.TEACHER)) },
                 onStudent = { onNavigateTo(MainRoute.StudentCenterRoute.route) },
-                onStudentAttendance = { onNavigateTo },
+                onStudentAttendance = {
+                    onNavigateTo(MainRoute.AttendanceRoute.route)
+                },
             )
             AttendancePaging(
                 pagingData = pagingData,

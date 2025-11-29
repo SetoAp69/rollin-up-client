@@ -113,7 +113,7 @@ private fun getClient(localDataStore: LocalDataStore) = HttpClient {
         }
     }
 
-    install(HttpTimeout){
+    install(HttpTimeout) {
         requestTimeoutMillis = 2000
     }
 

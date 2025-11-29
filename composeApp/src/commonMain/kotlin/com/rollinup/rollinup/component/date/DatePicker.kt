@@ -32,7 +32,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -61,12 +61,14 @@ import com.kizitonwose.calendar.core.plusMonths
 import com.rollinup.common.utils.Utils.toEpochMilli
 import com.rollinup.common.utils.Utils.toFormattedString
 import com.rollinup.common.utils.Utils.toLocalDate
+import com.rollinup.common.utils.Utils.toLocalDateTime
 import com.rollinup.rollinup.component.bottomsheet.BottomSheet
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.button.ButtonType
 import com.rollinup.rollinup.component.dropdown.DropDownMenu
 import com.rollinup.rollinup.component.dropdown.DropDownMenuItem
 import com.rollinup.rollinup.component.model.Platform
+import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
@@ -75,6 +77,7 @@ import com.rollinup.rollinup.component.textfield.TextFieldTitle
 import com.rollinup.rollinup.component.theme.LocalHolidayProvider
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.component.utils.getScreenHeight
 import com.rollinup.rollinup.component.utils.getScreenWidth
 import com.rollinup.rollinup.component.utils.isCompact
@@ -88,6 +91,78 @@ import rollin_up.composeapp.generated.resources.ic_close_line_24
 import rollin_up.composeapp.generated.resources.ic_drop_down_arrow_line_left_24
 import rollin_up.composeapp.generated.resources.ic_drop_down_arrow_line_right_24
 import kotlin.time.ExperimentalTime
+
+@Composable
+fun SingleDatePicker(
+    title: String,
+    value: Long?,
+    enable: Boolean = true,
+    contentColor: Color = theme.textPrimary,
+    backgroundColor: Color = theme.secondary,
+    placeHolder: String = "-",
+    width: Dp? = 150.dp,
+    isError: Boolean = false,
+    textError: String? = null,
+    onValueChange: (Long?) -> Unit,
+    isDisablePastSelection: Boolean = false,
+    isAllSelectable: Boolean = false,
+    color: DatePickerColor = DatePickerDefault.color,
+    ) {
+    var showPicker by remember { mutableStateOf(false) }
+    val rotationState by animateFloatAsState(targetValue = if (showPicker) 90f else 0F)
+    val sValue = value?.toLocalDateTime()?.date?.toString() ?: placeHolder
+
+    val modifier = width?.let {
+        Modifier.width(it)
+    } ?: Modifier.fillMaxWidth()
+
+    val contentColor = if (isError) theme.danger else contentColor
+    val backgroundColor = if (isError) theme.textFieldBgError else backgroundColor
+
+    TextFieldTitle(
+        title = title,
+    ) {
+        Row(
+            modifier = Modifier
+                .clickable(enable) {
+                    showPicker = true
+                }
+                .background(color = backgroundColor, shape = RoundedCornerShape(8.dp))
+                .then(modifier)
+                .padding(itemGap4),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(itemGap4),
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_drop_down_arrow_line_right_24),
+                tint = contentColor,
+                modifier = Modifier
+                    .size(16.dp)
+                    .rotate(rotationState),
+                contentDescription = null
+            )
+            Text(
+                text = sValue,
+                style = Style.title,
+                color = contentColor
+            )
+        }
+        TextError(
+            text = textError ?: "",
+            isError = isError
+        )
+    }
+    DatePicker(
+        isShowDatePicker = showPicker,
+        onDismissRequest = { showPicker = false },
+        value = value?.let { listOf(it) } ?: emptyList(),
+        onValueChange = { value -> onValueChange(value.firstOrNull()) },
+        isDisablePastSelection = isDisablePastSelection,
+        isAllSelectable = isAllSelectable,
+        maxSelection = 1,
+        color = color
+    )
+}
 
 @Composable
 fun FilterDatePicker(
@@ -157,6 +232,39 @@ fun FilterDatePicker(
         isAllSelectable = true,
         onValueChange = {
             onValueChange(it.map { it.toEpochMilli() })
+        }
+    )
+}
+
+@Composable
+fun SingleDatePickerField(
+    title: String,
+    placeholder: String,
+    value: Long?,
+    color: DatePickerColor = DatePickerDefault.color,
+    isError: Boolean = false,
+    isAllSelectable: Boolean = false,
+    errorText: String? = null,
+    enabled: Boolean = true,
+    isDisablePastSelection: Boolean = true,
+    isRequired: Boolean = false,
+    onValueChange: (Long?) -> Unit,
+) {
+    DatePickerField(
+        title = title,
+        placeholder = placeholder,
+        value = value?.let { listOf(it) } ?: emptyList(),
+        maxSelection = 1,
+        color = color,
+        isError = isError,
+        isAllSelectable = isAllSelectable,
+        errorText = errorText,
+        enabled = enabled,
+        isDisablePastSelection = isDisablePastSelection,
+        platform = getPlatform(),
+        isRequired = isRequired,
+        onValueChange = {
+            onValueChange(it.firstOrNull())
         }
     )
 }
@@ -367,6 +475,48 @@ fun DatePickerDialog(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun DatePicker(
+    isShowDatePicker: Boolean,
+    onDismissRequest: (Boolean) -> Unit,
+    value: List<Long>,
+    onValueChange: (List<Long>) -> Unit,
+    isDisablePastSelection: Boolean,
+    isAllSelectable: Boolean,
+    maxSelection: Int,
+    color: DatePickerColor,
+) {
+    val dateSelected = value.map { it.toLocalDate() }
+
+    fun valueChange(value: List<LocalDate>) {
+        onValueChange(value.map { it.toEpochMilli() })
+    }
+
+    if (getPlatform().isMobile()) {
+        DatePickerBottomSheet(
+            isShowSheet = isShowDatePicker,
+            onDismissRequest = onDismissRequest,
+            value = dateSelected,
+            onValueChange = ::valueChange,
+            isDisabledPastSelection = isDisablePastSelection,
+            isAllSelectable = isAllSelectable,
+            maxSelection = maxSelection,
+            color = color
+        )
+    } else {
+        DatePickerDialog(
+            onDismissRequest = onDismissRequest,
+            value = dateSelected,
+            onValueChange = ::valueChange,
+            isAllSelectable = isAllSelectable,
+            maxSelection = maxSelection,
+            color = color,
+            isShowDialog = isShowDatePicker,
+            isDisabledPastSelection = isDisablePastSelection,
+        )
     }
 }
 

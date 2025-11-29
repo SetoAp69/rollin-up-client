@@ -113,10 +113,10 @@ private fun FilterBottomSheetHeader(
 
 @Composable
 fun <T> FilterSelector(
-    isLoading: Boolean,
     title: String,
     options: List<OptionData<T>>,
     value: List<T>,
+    isLoading: Boolean = false,
     onValueChange: (List<T>) -> Unit,
 ) {
     var isExpanded by remember { mutableStateOf(false) }

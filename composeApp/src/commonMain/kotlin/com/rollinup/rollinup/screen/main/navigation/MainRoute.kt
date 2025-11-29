@@ -18,37 +18,37 @@ sealed class MainRoute(
     title: String,
 ) : NavigationMenu(route, icon, title) {
     object DashBoardRoute : MainRoute(
-        route = "dashboard/{role}",
+        route = "main/dashboard/{role}",
         icon = Res.drawable.ic_home_line_24,
         title = "Dashboard"
     )
 
     object SettingRoute : MainRoute(
-        route = "setting/{role}",
+        route = "main/setting/{role}",
         icon = Res.drawable.ic_gear_line_24,
         title = "Setting"
     )
 
     object ProfileRoute : MainRoute(
-        route = "profile/{role}",
+        route = "main/profile/{role}",
         icon = Res.drawable.ic_user_line_24,
         title = "Profile"
     )
 
     object StudentCenterRoute : MainRoute(
-        route = "student-center",
+        route = "main/student-center/",
         icon = Res.drawable.ic_user_board_line_24,
         title = "Student Center"
     )
 
     object PermitRoute : MainRoute(
-        route = "permit/{role}",
+        route = "main/permit/{role}",
         icon = Res.drawable.ic_mail_open_line_24,
         title = "Permit"
     )
 
     object AttendanceRoute : MainRoute(
-        route = "attendance/{role}",
+        route = "main/attendance/",
         icon = Res.drawable.ic_user_check_line_24,
         title = "Attendance"
     )
@@ -63,7 +63,7 @@ sealed class MainRoute(
 
                 Role.TEACHER -> listOf(
                     DashBoardRoute, AttendanceRoute, PermitRoute,
-                    StudentCenterRoute, ProfileRoute, SettingRoute
+                    StudentCenterRoute
                 )
 
                 else -> listOf()

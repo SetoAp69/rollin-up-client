@@ -12,7 +12,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.kizitonwose.calendar.core.now
 import com.rollinup.rollinup.component.model.Platform
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 
 
 val isCompact
@@ -93,4 +97,11 @@ fun Modifier.applyIf(
             }
         } else Modifier
     )
+}
+
+fun getCurrentDateAsList(): List<LocalDateTime> {
+    val date = LocalDate.now()
+    val from = LocalDateTime(date, LocalTime(0, 0, 0))
+    val to = LocalDateTime(date, LocalTime(23, 59, 59))
+    return listOf(from, to)
 }

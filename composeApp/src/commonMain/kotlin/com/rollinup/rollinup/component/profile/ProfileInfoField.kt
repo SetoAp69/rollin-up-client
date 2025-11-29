@@ -22,6 +22,7 @@ fun ProfileInfoField(
     title: String,
     icon: DrawableResource,
     value: String,
+    enabled: Boolean = true,
 ) {
     TextFieldTitle(
         title = title
@@ -29,18 +30,21 @@ fun ProfileInfoField(
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(icon),
-                tint = theme.primary,
+                tint = if (enabled) theme.primary else theme.textFieldBackGround,
                 contentDescription = null,
                 modifier = Modifier.size(16.dp)
             )
             Spacer(itemGap8)
             Text(
                 text = value,
-                color = theme.bodyText,
+                color = if (enabled) theme.bodyText else theme.textFieldBackGround,
                 style = Style.body
             )
 
         }
-        HorizontalDivider(thickness = 1.dp, color = theme.lineStroke)
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = if (enabled) theme.lineStroke else theme.textFieldBackGround
+        )
     }
 }

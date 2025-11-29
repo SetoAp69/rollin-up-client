@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.rollinup.apiservice.domain.user.GetUserListUseCase
 import com.rollinup.apiservice.model.common.Result
 import com.rollinup.apiservice.model.user.UserEntity
-import com.rollinup.rollinup.screen.dashboard.getDummyUsers
+import com.rollinup.rollinup.getDummyUsers
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.UserCenterCallback
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.UserCenterFilterData
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.uistate.UserCenterUiState

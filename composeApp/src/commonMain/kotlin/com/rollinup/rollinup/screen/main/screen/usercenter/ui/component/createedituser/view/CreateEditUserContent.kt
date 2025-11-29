@@ -1,41 +1,25 @@
 package com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.createedituser.view
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.rollinup.common.utils.Utils.toEpochMilli
-import com.rollinup.common.utils.Utils.toLocalDateTime
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.checkbox.CheckBox
-import com.rollinup.rollinup.component.date.DatePickerDialog
+import com.rollinup.rollinup.component.date.SingleDatePicker
 import com.rollinup.rollinup.component.loading.LoadingOverlay
 import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.model.OnShowSnackBar
@@ -45,7 +29,6 @@ import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.textfield.PhoneNumberTextField
 import com.rollinup.rollinup.component.textfield.TextField
-import com.rollinup.rollinup.component.textfield.TextFieldTitle
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.CreateEditUserCallback
@@ -53,10 +36,7 @@ import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.CreateEditUserFormOption
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.createedituser.uistate.CreateEditUserUiState
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.createedituser.viewmodel.CreateEditUserViewModel
-import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
-import rollin_up.composeapp.generated.resources.Res
-import rollin_up.composeapp.generated.resources.ic_drop_down_arrow_line_right_24
 
 @Composable
 fun CreateEditUserContent(
@@ -283,7 +263,7 @@ private fun SelectorSection(
                 )
             },
         )
-        DatePicker(
+        SingleDatePicker(
             title = "Birth day",
             value = formData.birthDay,
             onValueChange = {
@@ -432,65 +412,6 @@ fun CreateEditUserFormLoading() {
     }
 }
 
-@Composable
-private fun DatePicker(
-    title: String,
-    value: Long?,
-    enable: Boolean = true,
-    contentColor: Color = theme.textPrimary,
-    backgroundColor: Color = theme.secondary,
-    placeHolder: String = "-",
-    modifier: Modifier = Modifier,
-    onValueChange: (Long) -> Unit,
-) {
-    var showSelector by remember { mutableStateOf(false) }
-    val rotationState by animateFloatAsState(targetValue = if (showSelector) 90f else 0F)
-    val sValue = value?.toString()?.toLocalDateTime()?.date?.toString() ?: placeHolder
-    val dateValue = value?.toLocalDateTime()?.date
 
-    TextFieldTitle(
-        title = title,
-    ) {
-        Row(
-            modifier = Modifier
-                .clickable(enable) {
-                    showSelector = true
-                }
-                .background(color = backgroundColor, shape = RoundedCornerShape(8.dp))
-                .width(150.dp)
-                .padding(itemGap4)
-                .then(modifier),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(itemGap4),
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_drop_down_arrow_line_right_24),
-                tint = contentColor,
-                modifier = Modifier
-                    .size(16.dp)
-                    .rotate(rotationState),
-                contentDescription = null
-            )
-            Text(
-                text = sValue,
-                style = Style.title,
-                color = contentColor
-            )
-        }
-    }
-    DatePickerDialog(
-        isShowDialog = showSelector,
-        onDismissRequest = { showSelector = it },
-        value = dateValue?.let {
-            listOf(it, it)
-        } ?: emptyList(),
-        maxSelection = 1,
-        isDisabledPastSelection = false,
-        isAllSelectable = true,
-        onValueChange = {
-            onValueChange(it.first().toEpochMilli())
-        }
-    )
-}
 
 

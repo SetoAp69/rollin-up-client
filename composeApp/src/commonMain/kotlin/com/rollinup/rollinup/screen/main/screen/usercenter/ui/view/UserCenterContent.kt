@@ -10,7 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.rollinup.rollinup.component.profile.profilepopup.view.ProfileDialog
+import com.rollinup.rollinup.component.profile.profilepopup.view.dialog.ProfileDialog
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme

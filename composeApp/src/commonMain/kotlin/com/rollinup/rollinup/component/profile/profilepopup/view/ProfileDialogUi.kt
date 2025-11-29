@@ -46,187 +46,190 @@ import rollin_up.composeapp.generated.resources.ic_phone_line_24
 import rollin_up.composeapp.generated.resources.ic_user_board_line_24
 import rollin_up.composeapp.generated.resources.ic_user_line_24
 
-@Composable
-fun ProfileDialog(
-    id: String,
-    isShowDialog: Boolean,
-    onDismissRequest: (Boolean) -> Unit,
-) {
-    val viewModel: ProfileDialogViewModel = koinViewModel()
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
-
-    val maxHeight = getScreenHeight() * 0.8f
-    val maxWidth = getScreenWidth() * 0.3f
-    Dialog(
-        showDialog = isShowDialog,
-        onDismissRequest = onDismissRequest,
-        contentPadding = screenPaddingValues,
-        modifier = Modifier.sizeIn(maxWidth = maxWidth, maxHeight = maxHeight)
-    ) {
-        DisposableEffect(Unit) {
-            viewModel.init(id)
-            onDispose {
-                viewModel.reset()
-            }
-        }
-        ProfileDialogContent(uiState)
-    }
-}
-
-@Composable
-fun ProfileDialogContent(
-    uiState: ProfileDialogUiState,
-) {
-    if (uiState.isLoading) {
-        ProfileLoading()
-    } else {
-        Column {
-            ProfileDialogHeader(uiState.userDetail)
-            Spacer(24.dp)
-            ProfileInfoSection(uiState.userDetail)
-        }
-    }
-}
-
-@Composable
-private fun ProfileDialogHeader(
-    userDetail: UserDetailEntity,
-) {
-    Row(verticalAlignment = Alignment.Top) {
-        Text(
-            modifier = Modifier
-                .background(color = theme.primary, shape = CircleShape)
-                .size(44.dp),
-            text = userDetail.fullName.take(1),
-            style = Style.title,
-            color = theme.textBtnPrimary
-        )
-        Spacer(itemGap8)
-        Column {
-            Text(
-                text = userDetail.fullName,
-                style = Style.title,
-                color = theme.bodyText
-            )
-            Spacer(itemGap4)
-            Text(
-                text = userDetail.userName,
-                style = Style.body,
-                color = theme.bodyText
-            )
-        }
-    }
-}
-
-@Composable
-private fun ProfileInfoSection(
-    userDetail: UserDetailEntity,
-) {
-    val genderIcon = when (userDetail.gender) {
-        Gender.MALE -> Res.drawable.ic_male_line_24
-        Gender.FEMALE -> Res.drawable.ic_female_line_24
-    }
-    FlowRow(
-        itemVerticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        maxItemsInEachRow = 2
-    ) {
-        Box(modifier = Modifier.weight(1f)) {
-            ProfileInfoField(
-                title = "Full Name",
-                icon = Res.drawable.ic_user_line_24,
-                value = userDetail.fullName
-            )
-        }
-        Box(modifier = Modifier.weight(1f)) {
-            ProfileInfoField(
-                title = "Birth Day",
-                icon = Res.drawable.ic_calendar_fill_24,
-                value = userDetail.birthDay
-            )
-        }
-        Box(modifier = Modifier.weight(1f)) {
-            ProfileInfoField(
-                title = "ID",
-                icon = Res.drawable.ic_id_card_line_24,
-                value = userDetail.id
-            )
-        }
-        Box(modifier = Modifier.weight(1f)) {
-            ProfileInfoField(
-                title = "Gender",
-                icon = genderIcon,
-                value = userDetail.gender.label
-            )
-        }
-        Box(modifier = Modifier.weight(1f)) {
-            ProfileInfoField(
-                title = "Class",
-                icon = Res.drawable.ic_user_board_line_24,
-                value = userDetail.classX?.name ?: "-"
-            )
-        }
-        Box(modifier = Modifier.weight(1f)) {
-            ProfileInfoField(
-                title = "Phone",
-                icon = Res.drawable.ic_phone_line_24,
-                value = userDetail.phoneNumber
-            )
-        }
-        Box(modifier = Modifier.weight(1f)) {
-            ProfileInfoField(
-                title = "Role",
-                icon = Res.drawable.ic_user_board_line_24,
-                value = userDetail.role.name
-            )
-        }
-        Box(modifier = Modifier.weight(1f)) {
-            ProfileInfoField(
-                title = "Address",
-                icon = Res.drawable.ic_home_line_24,
-                value = userDetail.address
-            )
-        }
-        Box(modifier = Modifier.weight(1f)) {
-            ProfileInfoField(
-                title = "Email",
-                icon = Res.drawable.ic_mail_user_line_24,
-                value = userDetail.email
-            )
-        }
-    }
-}
-
-@Composable
-private fun ProfileLoading() {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Row(verticalAlignment = Alignment.Top) {
-            ShimmerEffect(
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(44.dp),
-            )
-            Spacer(itemGap8)
-            Column {
-                ShimmerEffect(120.dp)
-                Spacer(itemGap4)
-                ShimmerEffect(80.dp)
-            }
-        }
-        Spacer(24.dp)
-        FlowRow(
-            itemVerticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            repeat(9) {
-                ShimmerEffect(
-                    modifier = Modifier
-                        .height(24.dp)
-                        .fillMaxWidth()
-                )
-            }
-        }
-    }
-}
+//@Composable
+//fun ProfileDialog(
+//    id: String,
+//    showEdit: Boolean = false,
+//    isShowDialog: Boolean,
+//    onDismissRequest: (Boolean) -> Unit,
+//) {
+//    val viewModel: ProfileDialogViewModel = koinViewModel()
+//    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
+//
+//    val maxHeight = getScreenHeight() * 0.8f
+//    val maxWidth = getScreenWidth() * 0.3f
+//    Dialog(
+//        showDialog = isShowDialog,
+//        onDismissRequest = onDismissRequest,
+//        contentPadding = screenPaddingValues,
+//        modifier = Modifier.sizeIn(maxWidth = maxWidth, maxHeight = maxHeight)
+//    ) {
+//        DisposableEffect(Unit) {
+//            viewModel.init(id, showEdit)
+//            onDispose {
+//                viewModel.reset()
+//            }
+//        }
+//        ProfileDialogContent(uiState)
+//    }
+//}
+//
+//@Composable
+//fun ProfileDialogContent(
+//    uiState: ProfileDialogUiState,
+//) {
+//    if (uiState.isLoading) {
+//        ProfileLoading()
+//    } else {
+//        Column {
+//            ProfileDialogHeader(uiState.userDetail, uiState.showEdit)
+//            Spacer(24.dp)
+//            ProfileInfoSection(uiState.userDetail)
+//        }
+//    }
+//}
+//
+//@Composable
+//private fun ProfileDialogHeader(
+//    userDetail: UserDetailEntity,
+//    showEdit: Boolean,
+//) {
+//    Row(verticalAlignment = Alignment.Top) {
+//        Text(
+//            modifier = Modifier
+//                .background(color = theme.primary, shape = CircleShape)
+//                .size(44.dp),
+//            text = userDetail.fullName.take(1),
+//            style = Style.title,
+//            color = theme.textBtnPrimary
+//        )
+//        Spacer(itemGap8)
+//        Column {
+//            Text(
+//                text = userDetail.fullName,
+//                style = Style.title,
+//                color = theme.bodyText
+//            )
+//            Spacer(itemGap4)
+//            Text(
+//                text = userDetail.userName,
+//                style = Style.body,
+//                color = theme.bodyText
+//            )
+//        }
+//    }
+//}
+//
+//@Composable
+//private fun ProfileInfoSection(
+//    userDetail: UserDetailEntity,
+//) {
+//    val genderIcon = when (userDetail.gender) {
+//        Gender.MALE -> Res.drawable.ic_male_line_24
+//        Gender.FEMALE -> Res.drawable.ic_female_line_24
+//    }
+//    FlowRow(
+//        itemVerticalAlignment = Alignment.CenterVertically,
+//        horizontalArrangement = Arrangement.spacedBy(16.dp),
+//        verticalArrangement = Arrangement.spacedBy(12.dp),
+//        maxItemsInEachRow = 2
+//    ) {
+//        Box(modifier = Modifier.weight(1f)) {
+//            ProfileInfoField(
+//                title = "Full Name",
+//                icon = Res.drawable.ic_user_line_24,
+//                value = userDetail.fullName
+//            )
+//        }
+//        Box(modifier = Modifier.weight(1f)) {
+//            ProfileInfoField(
+//                title = "Birth Day",
+//                icon = Res.drawable.ic_calendar_fill_24,
+//                value = userDetail.birthDay
+//            )
+//        }
+//        Box(modifier = Modifier.weight(1f)) {
+//            ProfileInfoField(
+//                title = "ID",
+//                icon = Res.drawable.ic_id_card_line_24,
+//                value = userDetail.id
+//            )
+//        }
+//        Box(modifier = Modifier.weight(1f)) {
+//            ProfileInfoField(
+//                title = "Gender",
+//                icon = genderIcon,
+//                value = userDetail.gender.label
+//            )
+//        }
+//        Box(modifier = Modifier.weight(1f)) {
+//            ProfileInfoField(
+//                title = "Class",
+//                icon = Res.drawable.ic_user_board_line_24,
+//                value = userDetail.classX?.name ?: "-"
+//            )
+//        }
+//        Box(modifier = Modifier.weight(1f)) {
+//            ProfileInfoField(
+//                title = "Phone",
+//                icon = Res.drawable.ic_phone_line_24,
+//                value = userDetail.phoneNumber
+//            )
+//        }
+//        Box(modifier = Modifier.weight(1f)) {
+//            ProfileInfoField(
+//                title = "Role",
+//                icon = Res.drawable.ic_user_board_line_24,
+//                value = userDetail.role.name
+//            )
+//        }
+//        Box(modifier = Modifier.weight(1f)) {
+//            ProfileInfoField(
+//                title = "Address",
+//                icon = Res.drawable.ic_home_line_24,
+//                value = userDetail.address
+//            )
+//        }
+//        Box(modifier = Modifier.weight(1f)) {
+//            ProfileInfoField(
+//                title = "Email",
+//                icon = Res.drawable.ic_mail_user_line_24,
+//                value = userDetail.email
+//            )
+//        }
+//    }
+//}
+//
+//@Composable
+//private fun ProfileLoading() {
+//    Column(modifier = Modifier.fillMaxWidth()) {
+//        Row(verticalAlignment = Alignment.Top) {
+//            ShimmerEffect(
+//                modifier = Modifier
+//                    .clip(CircleShape)
+//                    .size(44.dp),
+//            )
+//            Spacer(itemGap8)
+//            Column {
+//                ShimmerEffect(120.dp)
+//                Spacer(itemGap4)
+//                ShimmerEffect(80.dp)
+//            }
+//        }
+//        Spacer(24.dp)
+//        FlowRow(
+//            itemVerticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.spacedBy(16.dp),
+//            verticalArrangement = Arrangement.spacedBy(12.dp)
+//        ) {
+//            repeat(9) {
+//                ShimmerEffect(
+//                    modifier = Modifier
+//                        .height(24.dp)
+//                        .fillMaxWidth()
+//                        .weight(1f)
+//                )
+//            }
+//        }
+//    }
+//}

@@ -47,6 +47,7 @@ import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.spacer.screenPadding
+import com.rollinup.rollinup.component.textfield.TextError
 import com.rollinup.rollinup.component.textfield.TextFieldTitle
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
@@ -64,6 +65,77 @@ import rollin_up.composeapp.generated.resources.ic_radio_selected_line_24
 import rollin_up.composeapp.generated.resources.ic_radio_unselect_line_24
 
 @Composable
+fun <T> SingleSelectorField(
+    title: String,
+    value: T?,
+    options: List<OptionData<T>>,
+    isError: Boolean = false,
+    isEnabled: Boolean = true,
+    textError: String? = null,
+    onValueChange: (T) -> Unit,
+    placeHolder: String = "Select",
+) {
+    var showSelector by remember { mutableStateOf(false) }
+    val rotationState by animateFloatAsState(if (showSelector) 90F else 0F)
+    val sValue = options.find { it.value == value }?.label ?: placeHolder
+    val backgroundColor: Color
+    val contentColor: Color
+
+    if (isError) {
+        backgroundColor = theme.textFieldBgError
+        contentColor = theme.danger
+    } else {
+        backgroundColor = theme.secondary
+        contentColor = theme.textPrimary
+    }
+
+    TextFieldTitle(
+        title = title,
+    ) {
+        Row(
+            modifier = Modifier
+                .clickable(isEnabled) {
+                    showSelector = true
+                }
+                .fillMaxWidth()
+                .background(color = backgroundColor, shape = RoundedCornerShape(8.dp))
+                .padding(itemGap4),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(itemGap4),
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_drop_down_arrow_line_right_24),
+                tint = contentColor,
+                modifier = Modifier
+                    .size(16.dp)
+                    .rotate(rotationState),
+                contentDescription = null
+            )
+            Text(
+                text = sValue,
+                style = Style.title,
+                color = contentColor
+            )
+        }
+        TextError(
+            text = textError ?: "",
+            isError = isError
+        )
+    }
+
+    SingleSelector(
+        isShowSelector = showSelector,
+        onDismissRequest = { showSelector = it },
+        title = title,
+        value = value,
+        options = options,
+        onValueChange = onValueChange
+    )
+
+
+}
+
+@Composable
 fun <T> MultiDropDownSelector(
     title: String,
     value: List<T>,
@@ -72,7 +144,7 @@ fun <T> MultiDropDownSelector(
     backgroundColor: Color = theme.secondary,
     placeHolder: String = "-",
     options: List<OptionData<T>>,
-    modifier: Modifier = Modifier,
+    width: Dp? = 100.dp,
     onValueChange: (List<T>) -> Unit,
 ) {
     var showSelector by remember { mutableStateOf(false) }
@@ -84,6 +156,10 @@ fun <T> MultiDropDownSelector(
         else -> value.size.toString() + " selected"
     }
 
+    val modifier = width?.let {
+        Modifier.width(it)
+    } ?: Modifier.fillMaxWidth()
+
     Box {
         TextFieldTitle(
             title = title,
@@ -94,10 +170,9 @@ fun <T> MultiDropDownSelector(
                     .clickable(enable) {
                         showSelector = true
                     }
+                    .then(modifier)
                     .background(color = backgroundColor, shape = RoundedCornerShape(8.dp))
-                    .padding(itemGap4)
-                    .width(100.dp)
-                    .then(modifier),
+                    .padding(itemGap4),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(itemGap4),
             ) {
@@ -126,7 +201,6 @@ fun <T> MultiDropDownSelector(
             onDismissRequest = { showSelector = it }
         )
     }
-
 }
 
 @Composable
@@ -137,7 +211,7 @@ fun <T> SingleDropDownSelector(
     contentColor: Color = theme.textPrimary,
     backgroundColor: Color = theme.secondary,
     placeHolder: String = "-",
-    modifier: Modifier = Modifier,
+    width: Dp? = 100.dp,
     options: List<OptionData<T>>,
     onValueChange: (T) -> Unit,
 ) {
@@ -151,13 +225,17 @@ fun <T> SingleDropDownSelector(
             if (it.length > 10) "${it.take(7)}..." else it
         } ?: placeHolder
 
+        val modifier = width?.let {
+            Modifier.width(it)
+        } ?: Modifier.fillMaxWidth()
+
         Row(
             modifier = Modifier
                 .clickable(enable) {
                     showSelector = true
                 }
+                .then(modifier)
                 .background(color = backgroundColor, shape = RoundedCornerShape(8.dp))
-                .width(100.dp)
                 .padding(itemGap4),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(itemGap4),
@@ -187,27 +265,6 @@ fun <T> SingleDropDownSelector(
             onDismissRequest = { showSelector = it },
             isShowSelector = showSelector,
         )
-
-//        DropDownMenu(
-//            isShowDropDown = showSelector,
-//            onDismissRequest = { showSelector = it },
-//            content = {
-//                Column(
-//                    modifier = Modifier
-//                        .heightIn(max = getScreenHeight() * 0.5f)
-//                        .verticalScroll(rememberScrollState()),
-//                ) {
-//                    options.fastForEach { option ->
-//                        DropDownMenuItem(
-//                            label = option.label,
-//                            onClick = {
-//                                onValueChange(option.value)
-//                            }
-//                        )
-//                    }
-//                }
-//            }
-//        )
     }
 }
 
