@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rollinup.apiservice.data.source.network.model.request.auth.LoginBody
 import com.rollinup.apiservice.domain.auth.LoginUseCase
+import com.rollinup.apiservice.domain.auth.ClearClientTokenUseCase
 import com.rollinup.apiservice.model.common.Result
 import com.rollinup.rollinup.screen.auth.model.login.LoginCallback
 import com.rollinup.rollinup.screen.auth.model.login.LoginFormData
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.update
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
+    private val logoutUseCase: ClearClientTokenUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState = _uiState.asStateFlow()
@@ -23,8 +25,11 @@ class LoginViewModel(
     fun getCallback() = LoginCallback(
         onUpdateForm = ::updateForm,
         onLogin = ::login,
-        onGenerateDeviceId = ::generateDeviceId
     )
+
+    fun reset() {
+        _uiState.value = LoginUiState()
+    }
 
 
     private fun updateForm(formData: LoginFormData) {
@@ -60,7 +65,10 @@ class LoginViewModel(
         if (!validateLoginFormData(formData = loginFormData)) return
 
         _uiState.update {
-            it.copy(isLoadingOverlay = true)
+            it.copy(
+                isLoadingOverlay = true,
+                loginState = null
+            )
         }
 
         val body = LoginBody(
@@ -69,6 +77,7 @@ class LoginViewModel(
         )
 
         loginUseCase(body).onEach { result ->
+            _uiState.update { it.copy(loginState = null) }
             val isSuccess = result is Result.Success
 
             when (result) {
@@ -82,6 +91,7 @@ class LoginViewModel(
                 }
 
                 is Result.Success -> {
+                    logoutUseCase()
                     val loginData = result.data
                     _uiState.update {
                         it.copy(
@@ -103,7 +113,4 @@ class LoginViewModel(
         }.launchIn(viewModelScope)
     }
 
-    private fun generateDeviceId() {
-
-    }
 }

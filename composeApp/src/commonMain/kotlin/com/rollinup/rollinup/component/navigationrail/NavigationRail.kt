@@ -1,5 +1,6 @@
 package com.rollinup.rollinup.component.navigationrail
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -49,16 +50,17 @@ fun NavigationRail(
     itemGap: Dp = itemGap8,
     verticalArrangement: Arrangement.Vertical = Arrangement.Center,
 ) {
+    val animateState = animateDpAsState(state.getMaxWidth())
+
     val horizontalAlignment = if (state.isExpanded) {
         Alignment.Start
     } else {
         Alignment.CenterHorizontally
-
     }
 
     NavigationRail(
         modifier = Modifier
-            .widthIn(max = state.getMaxWidth())
+            .widthIn(max = animateState.value)
             .fillMaxHeight(),
         containerColor = theme.popUpBg,
         contentColor = theme.secondary50,

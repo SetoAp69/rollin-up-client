@@ -2,34 +2,40 @@ package com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendance
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.LoadState
-import androidx.paging.LoadStates
 import androidx.paging.PagingData
+import com.rollinup.apiservice.data.source.network.model.request.attendance.GetExportAttendanceDataQueryParams
 import com.rollinup.apiservice.domain.attendance.GetAttendanceByClassListUseCase
 import com.rollinup.apiservice.domain.attendance.GetAttendanceByClassPagingUseCase
+import com.rollinup.apiservice.domain.attendance.GetAttendanceByClassSummaryUseCase
 import com.rollinup.apiservice.domain.attendance.GetAttendanceByIdUseCase
+import com.rollinup.apiservice.domain.attendance.GetExportAttendanceDataUseCase
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
+import com.rollinup.apiservice.model.attendance.ExportAttendanceDataEntity
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.Result
+import com.rollinup.apiservice.utils.Utils.toJsonString
+import com.rollinup.rollinup.component.export.FileWriter
 import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.utils.getPlatform
-import com.rollinup.rollinup.getDummyAttendanceByClass
 import com.rollinup.rollinup.screen.main.screen.attendance.model.attendancehome.AttendanceCallback
 import com.rollinup.rollinup.screen.main.screen.attendance.model.attendancehome.AttendanceFilterData
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancehome.uistate.AttendanceUiState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 
 class AttendanceViewModel(
     private val getAttendanceByClassListUseCase: GetAttendanceByClassListUseCase,
     private val getAttendanceByIdUseCase: GetAttendanceByIdUseCase,
+    private val getAttendanceByClassSummaryUseCase: GetAttendanceByClassSummaryUseCase,
     private val getAttendanceByClassPagingUseCase: GetAttendanceByClassPagingUseCase,
+    private val getExportAttendanceDataUseCase: GetExportAttendanceDataUseCase,
+    private val fileWriter: FileWriter,
 ) : ViewModel() {
     private val isMobile = getPlatform().isMobile()
 
@@ -43,12 +49,12 @@ class AttendanceViewModel(
     fun init(localUser: LoginEntity?) {
         if (localUser == null) return
         _uiState.update { it.copy(user = localUser) }
-        if(isMobile){
+        if (isMobile) {
             getPagingData()
-        }else{
+        } else {
             getAttendanceList()
         }
-
+        getSummary()
     }
 
     fun getCallback() = AttendanceCallback(
@@ -56,6 +62,9 @@ class AttendanceViewModel(
         onSearch = ::search,
         onFilter = ::filter,
         onGetDetail = ::getDetail,
+        onExportFile = ::exportFile,
+        onUpdateExportDateRange = ::updateExportDateRange,
+        onResetMessageState = ::resetMessageState
     )
 
     private fun getAttendanceList() {
@@ -64,11 +73,6 @@ class AttendanceViewModel(
 
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            if (true) {
-                delay(1000)
-                _uiState.update { it.copy(isLoading = false, attendanceList = getDummyAttendanceByClass(20)) }
-                return@launch
-            }
             getAttendanceByClassListUseCase(
                 classKey = key,
                 queryParams = queryParams
@@ -95,56 +99,102 @@ class AttendanceViewModel(
         val queryParams = _uiState.value.queryParams
         val key = _uiState.value.user.classKey ?: return
         viewModelScope.launch {
-            if (true) {
-                delay(1000)
-                _pagingData.value = PagingData.from(
-                    getDummyAttendanceByClass(20),
-                    sourceLoadStates = LoadStates(
-                        refresh = LoadState.NotLoading(endOfPaginationReached = true),
-                        append = LoadState.NotLoading(endOfPaginationReached = true),
-                        prepend = LoadState.NotLoading(endOfPaginationReached = true)
-                    )
-                )
-                return@launch
-            }
             getAttendanceByClassPagingUseCase(key, queryParams).collectLatest {
                 _pagingData.value = it
             }
         }
     }
 
+    private fun exportFile(fileName: String) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoadingOverlay = true, exportState = null) }
+            val classKey = _uiState.value.user.classKey
+            val dateRange = _uiState.value.exportDateRanges
+            val query = GetExportAttendanceDataQueryParams(classKey, dateRange.toJsonString())
+            getExportAttendanceDataUseCase(query).collectLatest { result ->
+                when (result) {
+                    is Result.Success -> {
+                        viewModelScope.launch {
+                            val data = fetchExportData(result.data)
+                            fileWriter.writeExcel(fileName, data)
+                            _uiState.update {
+                                it.copy(
+                                    isLoadingOverlay = false,
+                                    exportState = true
+                                )
+                            }
+                        }
+                    }
+
+                    is Result.Error -> {
+                        _uiState.update {
+                            it.copy(
+                                isLoadingOverlay = false,
+                                exportState = true
+                            )
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
     private fun getSummary() {
         _uiState.update { it.copy(isLoadingSummary = true) }
+        val date = _uiState.value.filterData.date
+        val classKey = _uiState.value.user.classKey ?: 0
+
         viewModelScope.launch {
-            if (true) {
-                delay(500)
-                _uiState.update { it.copy(isLoadingSummary = false) }
-                return@launch
+            getAttendanceByClassSummaryUseCase(classKey, date).collectLatest { result ->
+                when (result) {
+                    is Result.Success -> {
+                        _uiState.update {
+                            it.copy(
+                                isLoadingSummary = false,
+                                summary = result.data
+                            )
+                        }
+                    }
+
+                    is Result.Error -> {
+                        _uiState.update {
+                            it.copy(
+                                isLoadingSummary = false
+                            )
+                        }
+                    }
+                }
             }
         }
     }
 
     private fun getDetail(data: AttendanceByClassEntity) {
-        if (data.attendance?.status == AttendanceStatus.NO_DATA) {
+        if (data.attendance?.id == null) {
             _uiState.update { it.copy(attendanceDetail = generateBlankDetail(data)) }
             return
         }
-
-        _uiState.update { it.copy(isLoadingDetail = true) }
         viewModelScope.launch {
+            _uiState.update { it.copy(isLoadingDetail = true) }
             getAttendanceByIdUseCase(data.attendance!!.id).collectLatest { result ->
                 when (result) {
                     is Result.Success -> {
                         _uiState.update {
                             it.copy(
                                 isLoadingDetail = false,
-                                attendanceDetail = result.data
+                                attendanceDetail = result.data,
+                                exportDateRanges = emptyList()
                             )
                         }
                     }
 
                     is Result.Error -> {
-                        _uiState.update { it.copy(isLoadingDetail = false) }
+                        _uiState.update {
+                            it.copy(
+                                isLoadingDetail = false,
+                                exportDateRanges = emptyList()
+                            )
+                        }
                     }
                 }
             }
@@ -180,4 +230,46 @@ class AttendanceViewModel(
             ),
             status = AttendanceStatus.NO_DATA,
         )
+
+    private fun updateExportDateRange(dateRange: List<LocalDate>) {
+        _uiState.update {
+            it.copy(
+                exportDateRanges = dateRange
+            )
+        }
+    }
+
+    private fun fetchExportData(data: ExportAttendanceDataEntity): List<Pair<String, List<*>>> {
+        val mappedData = listOf(
+            "Id" to data.data.map { it.studentId },
+            "Name" to data.data.map { it.fullName },
+            "Class" to data.data.map { it.classX }
+        )
+        val attendancePerDate = mapAttendanceDataByDate(data)
+
+        return mappedData + attendancePerDate
+    }
+
+    private fun mapAttendanceDataByDate(data: ExportAttendanceDataEntity): List<Pair<String, List<String>>> {
+        val dateRange = data.dateRange
+        if (dateRange.isEmpty()) return emptyList()
+
+        val studentAttendanceMap =
+            data.data.associate { student ->
+                student.studentId to student.dataPerDate.associate {
+                    it.date to it.status
+                }
+            }
+
+        return (dateRange.first()..dateRange.last()).map { date ->
+            val statusPerDate = data.data.map { student ->
+                studentAttendanceMap[student.studentId]?.get(date) ?: "-"
+            }
+            date.toString() to statusPerDate
+        }
+    }
+
+    private fun resetMessageState() {
+        _uiState.update { it.copy(exportState = null) }
+    }
 }

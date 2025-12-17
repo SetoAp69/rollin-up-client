@@ -18,6 +18,8 @@ fun PlatformWarning(
     platform: Platform,
 ) {
     val auth = LocalAuthViewmodel.current
+
+
     Scaffold {
         AlertDialog(
             isShowDialog = true,
@@ -28,11 +30,12 @@ fun PlatformWarning(
             content = "Account with **$role** role have no access on **$platform** platform, please login using another type of platform".toAnnotatedString(),
             btnCancelText = "Close",
             severity = Severity.DANGER,
+            isSingleButton = true,
+            showCancelButton = true,
             onClickCancel = {
                 auth.logout()
             },
             onClickConfirm = {},
-            showCancelButton = true,
         )
     }
 

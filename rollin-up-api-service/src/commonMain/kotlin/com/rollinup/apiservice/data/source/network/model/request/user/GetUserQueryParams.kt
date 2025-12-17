@@ -1,23 +1,13 @@
 package com.rollinup.apiservice.data.source.network.model.request.user
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 
-@Serializable
 data class GetUserQueryParams(
-    @SerialName("search")
     val search: String? = null,
-    @SerialName("page")
     val page: Int? = null,
-    @SerialName("limit")
     val limit: Int? = null,
-    @SerialName("sortBy")
     val sortBy: String? = null,
-    @SerialName("sortOrder")
     val sortOrder: String? = null,
-    @SerialName("gender")
     val gender: String? = null,
-    @SerialName("role")
     val role: String? = null,
     val classX: String? = null,
 ) {

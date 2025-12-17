@@ -1,15 +1,11 @@
 package com.rollinup.rollinup.component.permitform.view
 
-import SnackBarHost
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rollinup.rollinup.component.bottomsheet.BottomSheet
@@ -19,10 +15,10 @@ import com.rollinup.rollinup.component.permitform.model.PermitFormCallback
 import com.rollinup.rollinup.component.permitform.uistate.PermitFormUiState
 import com.rollinup.rollinup.component.permitform.viewmodel.PermitFormViewModel
 import com.rollinup.rollinup.component.spacer.screenPaddingValues
+import com.rollinup.rollinup.component.theme.localUser
 import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.component.utils.getScreenHeight
 import com.rollinup.rollinup.component.utils.getScreenWidth
-import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -36,46 +32,15 @@ fun PermitForm(
     val viewModel: PermitFormViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val cb = viewModel.getCallback()
-    val snackBarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
-
+    val user = localUser
 
     DisposableEffect(showPermitForm) {
         if (showPermitForm) {
-            viewModel.init(id)
+            viewModel.init(id, user)
         }
         onDispose {
             viewModel.reset()
         }
-    }
-
-    SnackBarHost(
-        snackBarHostState = snackBarHostState,
-        isSuccess = uiState.submitState == true
-    )
-
-    DisposableEffect(uiState.submitState) {
-        uiState.submitState?.let {
-            val message =
-                if (it)
-                    "Success, permit data successfully submitted"
-                else
-                    "Error, failed to submit permit data"
-
-            if (it) {
-                onSuccess()
-                onDismissRequest(false)
-            } else {
-                onError()
-            }
-
-            scope.launch {
-                snackBarHostState.showSnackbar(
-                    message = message
-                )
-            }
-        }
-        onDispose { cb.onResetMessageState() }
     }
 
     when (getPlatform()) {
@@ -98,7 +63,6 @@ fun PermitForm(
             onSuccess = onSuccess,
             onError = onError
         )
-
     }
 }
 
@@ -120,13 +84,14 @@ private fun PermitFormDialog(
         modifier = Modifier
             .heightIn(max = height)
             .width(width)
-    ) {
+    ) { onShowSnackbar ->
         if (!uiState.isLoading) {
             PermitFormContent(
                 uiState = uiState,
                 cb = cb,
                 onSuccess = onSuccess,
-                onError = onError
+                onError = onError,
+                onShowSnackbar = onShowSnackbar
             )
         } else {
             PermitLoadingContent(uiState.isEdit)
@@ -147,13 +112,14 @@ private fun PermitFormBottomSheet(
         isShowSheet = showSheet,
         onDismissRequest = onDismissRequest,
         modifier = Modifier.padding(screenPaddingValues)
-    ) {
+    ) { onShowSnackBar ->
         if (!uiState.isLoading) {
             PermitFormContent(
                 uiState = uiState,
                 cb = cb,
                 onSuccess = onSuccess,
-                onError = onError
+                onError = onError,
+                onShowSnackbar = onShowSnackBar
             )
         } else {
             PermitLoadingContent(uiState.isEdit)

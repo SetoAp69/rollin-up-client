@@ -14,9 +14,11 @@ import com.rollinup.rollinup.screen.dashboard.ui.screen.studentdashboard.view.St
 import com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardScreen
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.navigation.AttendanceRoute
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.navigation.attendanceGraph
+import com.rollinup.rollinup.screen.main.screen.globalsetting.ui.screen.view.GlobalSettingScreen
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.studentpermit.view.StudentPermitScreen
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.view.TeacherPermitScreen
 import com.rollinup.rollinup.screen.main.screen.profile.ui.screen.view.ProfileScreen
+import com.rollinup.rollinup.screen.main.screen.setting.ui.view.SettingScreen
 import com.rollinup.rollinup.screen.main.screen.studentcenter.navigation.StudentCenterRoute
 import com.rollinup.rollinup.screen.main.screen.studentcenter.navigation.studentCenterGraph
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.view.UserCenterScreen
@@ -42,7 +44,7 @@ fun NavGraphBuilder.mainGraph(
         }
         when (role) {
             Role.ADMIN -> {
-                UserCenterScreen()
+                UserCenterScreen(onShowSnackBar)
             }
 
             Role.STUDENT -> {
@@ -81,21 +83,13 @@ fun NavGraphBuilder.mainGraph(
             )
         )
     ) {
-        ProfileScreen()
+        ProfileScreen(onShowSnackBar)
     }
 
     composable(
         route = MainRoute.SettingRoute.route,
-        arguments = listOf(
-            navArgument(
-                name = "role",
-                builder = {
-                    type = NavType.StringType
-                }
-            )
-        )
     ) {
-        Scaffold {}
+        SettingScreen()
     }
 
     composable(
@@ -123,30 +117,21 @@ fun NavGraphBuilder.mainGraph(
             }
 
             Role.TEACHER -> {
-                TeacherPermitScreen { onNavigateUp() }
+                TeacherPermitScreen(
+                    onNavigateUp = onNavigateUp,
+                    onShowSnackBar = onShowSnackBar
+                )
             }
 
             Role.UNKNOWN -> {}
         }
     }
 
-//    composable(
-//        route = MainRoute.AttendanceRoute.route,
-//        arguments = listOf(
-//            navArgument(
-//                name = "role",
-//                builder = {
-//                    type = NavType.StringType
-//                }
-//            )
-//        )
-//    ) { navBackStackEntry ->
-//        val role = navBackStackEntry.savedStateHandle.get<String>("role").let {
-//            Role.fromValue(it.toString())
-//        }
-//
-//        Scaffold { }
-//    }
+    composable(
+        route = MainRoute.GlobalSettingRoute.route
+    ) {
+        GlobalSettingScreen()
+    }
 
     navigation(
         route = MainRoute.AttendanceRoute.route,
@@ -154,10 +139,10 @@ fun NavGraphBuilder.mainGraph(
     ) {
         attendanceGraph(
             onNavigateTo = onNavigateTo,
-            onNavigateUp = onNavigateUp
+            onNavigateUp = onNavigateUp,
+            onShowSnackBar = onShowSnackBar
         )
     }
-
 
     navigation(
         route = MainRoute.StudentCenterRoute.route,
@@ -165,7 +150,8 @@ fun NavGraphBuilder.mainGraph(
     ) {
         studentCenterGraph(
             onNavigateTo = onNavigateTo,
-            onNavigateUp = onNavigateUp
+            onNavigateUp = onNavigateUp,
+            onShowSnackBar = onShowSnackBar
         )
     }
 

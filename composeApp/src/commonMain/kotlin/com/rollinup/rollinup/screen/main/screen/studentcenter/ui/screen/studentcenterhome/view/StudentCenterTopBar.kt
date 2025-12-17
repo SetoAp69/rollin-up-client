@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.rollinup.rollinup.component.export.ExportAlertDialog
 import com.rollinup.rollinup.component.model.Menu
 import com.rollinup.rollinup.component.topbar.TopBar
 import com.rollinup.rollinup.screen.main.screen.studentcenter.model.StudentCenterCallback
@@ -17,6 +18,7 @@ fun StudentCenterTopBar(
     cb: StudentCenterCallback,
 ) {
     var showFilter by remember { mutableStateOf(false) }
+    var showExportDialog by remember { mutableStateOf(false) }
     TopBar(
         onClickMenu = { menu ->
             when (menu) {
@@ -24,10 +26,15 @@ fun StudentCenterTopBar(
                     showFilter = true
                 }
 
+                Menu.PRINT -> {
+                    showExportDialog = true
+                }
+
                 else -> {}
             }
         },
-        menu = listOf(Menu.FILTER),
+        onSearch = cb.onSearch,
+        menu = listOf(Menu.PRINT, Menu.FILTER),
         title = "Student Center",
         onNavigateUp = onNavigateUp
     )
@@ -37,5 +44,12 @@ fun StudentCenterTopBar(
         onDismissRequest = { showFilter = it },
         onApply = cb.onFilter,
         uiState = uiState
+    )
+
+    ExportAlertDialog(
+        isShowDialog = showExportDialog,
+        fileName = "Student",
+        onDismissRequest = { showExportDialog = it },
+        onConfirm = cb.onExportFile
     )
 }

@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.rollinup.rollinup.component.export.ExportAlertDialog
 import com.rollinup.rollinup.component.model.Menu
 import com.rollinup.rollinup.component.topbar.TopBar
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitTab
@@ -20,6 +21,7 @@ fun TeacherPermitTopAppBar(
 ) {
     var showFilter by remember { mutableStateOf(false) }
     var showAction by remember { mutableStateOf(false) }
+    var showExportDialog by remember { mutableStateOf(false) }
 
     TopBar(
         onSearch = cb.onSearch,
@@ -31,8 +33,8 @@ fun TeacherPermitTopAppBar(
                 }
 
                 Menu.ACTION -> showAction = true
-                Menu.PRINT -> {/*TODO:ADD PRINT*/
-                }
+                Menu.PRINT -> showExportDialog = true
+
 
                 else -> {}
             }
@@ -51,7 +53,14 @@ fun TeacherPermitTopAppBar(
         showSheet = showAction,
         isActive = uiState.currentTab == PermitTab.ACTIVE,
         onDismissRequest = { showAction = it },
-        items = uiState.itemSelected
+        items = uiState.itemSelected,
+        cb = cb
+    )
+    ExportAlertDialog(
+        isShowDialog = showExportDialog,
+        fileName = "Permit",
+        onDismissRequest = { showExportDialog = it },
+        onConfirm = cb.onExportFile
     )
 }
 

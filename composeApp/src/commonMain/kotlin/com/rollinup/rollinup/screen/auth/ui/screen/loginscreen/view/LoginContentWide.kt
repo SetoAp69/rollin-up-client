@@ -19,13 +19,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.button.ButtonType
-import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.textfield.PasswordTextField
 import com.rollinup.rollinup.component.textfield.TextField
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import com.rollinup.rollinup.navigation.NavigationRoute
 import com.rollinup.rollinup.screen.auth.model.login.LoginCallback
 import com.rollinup.rollinup.screen.auth.model.login.LoginFormData
 import com.rollinup.rollinup.screen.auth.navigation.AuthNavigationRoute
@@ -65,7 +66,15 @@ fun LoginContentWide(
                         .fillMaxSize()
                         .background(color = theme.primary)
                 ) {
+                    Text(
+                        text = "To Test Screen",
+                        color = theme.bodyText,
+                        style = Style.title,
+                        modifier = Modifier.clickable() {
+                            onNavigateTo(NavigationRoute.TestRoute.route)
+                        }
 
+                    )
                 }
             }
         }

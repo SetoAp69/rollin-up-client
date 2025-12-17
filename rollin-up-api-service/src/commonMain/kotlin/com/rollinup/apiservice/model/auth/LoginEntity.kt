@@ -5,7 +5,7 @@ import com.rollinup.apiservice.model.common.Role
 
 data class LoginEntity(
     val id: String = "",
-    val deviceId: String? = null,
+    val deviceId: String = "",
     val userName: String = "",
     val email: String = "",
     val firstName: String = "",
@@ -16,7 +16,8 @@ data class LoginEntity(
     val refreshToken: String = "",
     val classX:String? = null,
     val classId:String? = null,
-    val classKey:Int? = null
+    val classKey:Int? = null,
+    val isVerified:Boolean = false,
 ) {
     val fullName
         get() = "$firstName $lastName"

@@ -160,12 +160,73 @@ fun TextError(
     isError: Boolean,
     style: TextStyle = Style.body,
 ) {
-    if (isError) {
+    if (isError && text.isNotBlank()) {
         Text(
             text = text,
             style = style,
             color = theme.textError
         )
+    }
+}
+
+@Composable
+fun DecimalNumberTextField(
+    value: Double,
+    onValueChange: (Double) -> Unit,
+    maxValue: Double = Double.MAX_VALUE,
+    minValue: Double = Double.MIN_VALUE,
+    placeHolder: String,
+    height: Dp? = null,
+    isEnabled: Boolean = true,
+    title: String = "",
+    titleStyle: TextStyle = Style.body,
+    isError: Boolean = false,
+    errorMsg: String? = null,
+    isReadOnly: Boolean = false,
+    modifier: Modifier = Modifier,
+    isRequired: Boolean = false,
+    leadingContent: @Composable (() -> Unit)? = null,
+    trailingContent: @Composable (() -> Unit)? = null,
+    keyboardActions: KeyboardActions? = null,
+) {
+    TextFieldTitle(
+        title = title,
+        isRequired = isRequired,
+        textStyle = titleStyle,
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(itemGap4)
+        ) {
+            BaseTextField(
+                value = value.toString(),
+                onValueChange = { value ->
+                    val intValue = value.toDoubleOrNull() ?: 0.0
+                    val value =
+                        if (intValue > maxValue) maxValue else if (intValue < minValue) minValue else intValue
+
+                    onValueChange(value)
+                },
+                placeholder = placeHolder,
+                modifier = modifier,
+                height = height,
+                isError = isError,
+                isEnabled = isEnabled,
+                isReadOnly = isReadOnly,
+                maxLines = 1,
+                minLines = 1,
+                leadingContent = leadingContent,
+                trailingContent = trailingContent,
+                isSingleLine = true,
+                keyboardActions = keyboardActions,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Number
+                ),
+            )
+            TextError(
+                text = errorMsg ?: "",
+                isError = isError,
+            )
+        }
     }
 }
 
@@ -301,7 +362,7 @@ fun PasswordTextField(
     val iconColor = if (isError) theme.textError else theme.textFieldText
 
     LaunchedEffect(showPassword) {
-        delay(500)
+        delay(5000)
         if (showPassword) showPassword = false
     }
 
@@ -545,6 +606,7 @@ fun BaseTextField(
                                 color = backGroundColor
                             )
                     ) {
+
                     }
                 }
             )
@@ -558,7 +620,7 @@ object TextFieldDefaults {
         @Composable get() =
             if (isCompact) RoundedCornerShape(12.dp) else RoundedCornerShape(12.dp)
     val height
-        @Composable get() = if (isCompact) 50.dp else 50.dp //TODO : Changes if it looks sucks
+        @Composable get() = if (isCompact) 50.dp else 50.dp
     val colors
         @Composable get() = androidx.compose.material3.TextFieldDefaults.colors().copy(
             focusedTextColor = theme.textFieldText,

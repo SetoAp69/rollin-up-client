@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancebystudent.viewmodel.AttendanceByStudentViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -11,6 +12,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun AttendanceByStudentScreen(
     id: String?,
     onNavigateUp: () -> Unit,
+    onShowSnackBar: OnShowSnackBar,
 ) {
     val viewModel: AttendanceByStudentViewModel = koinViewModel()
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -27,6 +29,7 @@ fun AttendanceByStudentScreen(
         onNavigateUp = onNavigateUp,
         uiState = uiState,
         pagingData = pagingData,
-        cb = cb
+        cb = cb,
+        onShowSnackBar = onShowSnackBar
     )
 }

@@ -2,7 +2,7 @@ package com.rollinup.rollinup.screen.main.screen.permit.ui.screen.studentpermit.
 
 import androidx.compose.runtime.Composable
 import com.rollinup.apiservice.model.permit.PermitByStudentEntity
-import com.rollinup.common.utils.Utils.toLocalDateTime
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.rollinup.component.dialog.AlertDialog
 import com.rollinup.rollinup.component.utils.toAnnotatedString
 
@@ -34,8 +34,8 @@ fun CancelPermitAlertDialog(
 }
 
 private fun generateDuration(from: String, to: String): String {
-    val dateTimeFrom = from.toLocalDateTime()
-    val dateTimeTo = to.toLocalDateTime()
+    val dateTimeFrom = from.parseToLocalDateTime()
+    val dateTimeTo = to.parseToLocalDateTime()
 
     return when {
         dateTimeFrom == dateTimeTo -> {

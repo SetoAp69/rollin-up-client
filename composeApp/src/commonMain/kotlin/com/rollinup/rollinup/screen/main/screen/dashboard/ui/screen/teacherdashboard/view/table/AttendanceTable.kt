@@ -8,19 +8,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
-import com.rollinup.common.utils.Utils.toLocalDateTime
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.rollinup.component.attendancedetail.AttendanceDetailDialog
 import com.rollinup.rollinup.component.chip.Chip
+import com.rollinup.rollinup.component.date.DateText
+import com.rollinup.rollinup.component.date.DateTextFormat
 import com.rollinup.rollinup.component.table.Table
 import com.rollinup.rollinup.component.table.TableColumn
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardAction
-import com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardApprovalSheet
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardActionDropDown
+import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardApprovalSheet
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardEditAttendance
+import kotlinx.datetime.TimeZone
 
 @Composable
 fun AttendanceTable(
@@ -35,13 +38,21 @@ fun AttendanceTable(
         items = uiState.attendanceList,
         isLoading = uiState.isLoadingList,
         columns = getTableColumn(),
+        headerContent = {
+            Text(
+                text = "Today's Attendance",
+                color = theme.textPrimary,
+                style = Style.popupTitle
+            )
+        },
         itemSelected = uiState.itemSelected,
         onSelectItem = {
-            cb.onGetDetail(it)
+            cb.onUpdateSelection(it)
         },
         onToggleSelectAll = {
             cb.onSelectAll()
         },
+        onRefresh = cb.onRefresh,
         dropDownMenu = { state ->
             TeacherDashboardActionDropDown(
                 showDropDown = state.expanded,
@@ -89,6 +100,7 @@ fun AttendanceTable(
         isShowForm = showEdit,
         onDismissRequest = {
             showEdit = it
+            cb.onResetEditForm()
         },
         uiState = uiState,
         cb = cb
@@ -115,13 +127,6 @@ private fun getTableColumn(): List<TableColumn<AttendanceByClassEntity>> {
                 color = theme.bodyText
             )
         },
-        TableColumn("Class") {
-            Text(
-                text = it.student.studentId,
-                style = Style.body,
-                color = theme.bodyText
-            )
-        },
         TableColumn("Status", 1f) {
             val status = it.attendance?.status ?: AttendanceStatus.NO_DATA
             Chip(
@@ -129,9 +134,14 @@ private fun getTableColumn(): List<TableColumn<AttendanceByClassEntity>> {
                 severity = status.severity
             )
         },
-        TableColumn("Check in time", 0.5f) {
-            Text(
-                text = it.attendance?.checkedInAt?.toLocalDateTime()?.date?.toString() ?: "-",
+        TableColumn("Check in time", 0.7f) {
+            it.attendance?.checkedInAt?.let { dt ->
+                DateText(
+                    dateTime = dt.parseToLocalDateTime(TimeZone.UTC),
+                    format = DateTextFormat.DATE_TIME,
+                )
+            } ?: Text(
+                text = "-",
                 style = Style.body,
                 color = theme.bodyText
             )

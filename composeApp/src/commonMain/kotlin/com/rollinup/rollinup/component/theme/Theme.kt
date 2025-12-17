@@ -5,6 +5,8 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.rollinup.common.model.UiMode
 
 
 class Theme(
@@ -26,7 +28,7 @@ class Theme(
     val textFieldStrokeDisabled get() = if (isDark) Color(0xFF715E70) else Color(0xFF8E8C8C)
     val textFieldPlaceHolder get() = if (isDark) Color(0xFF5C3C5A) else Color(0xFFC5C3C3)
     val lineStroke get() = if (isDark) Color(0xFF896BA9) else Color(0xFF9A80B8)
-    val popUpStroke get() = if (isDark) Color(0xFF3C2545) else Color(0xFFF9EAFF)
+    val popUpStroke get() = if (isDark) Color(0xFF3C2545) else Color(0xFFB898EE)
     val popUpBgSelected get() = if (isDark) Color(0xFF492B55) else Color(0xFFf4e1fc)
     val popUpBg get() = if (isDark) Color(0xFF150E1D) else Color(0xFFFFFFFF)
     val background get() = if (isDark) Color(0xFF34244A) else Color(0xFFF9EAFF)
@@ -60,11 +62,18 @@ class Theme(
     val textBtnPrimary get() = Color(0xFFFFFFFF)
     val textBtnSecondary get() = Color(0xFF8B6FAC)
 
-
-    val shadow get() = if (isDark) Color(0xFF703887)/*.copy(alpha = 0.75f)*/ else Color(0xFFF9EAFF)/*.copy(alpha = 0.75f)*/
+    val shadow get() = if (isDark) Color(0xFF703887)/*.copy(alpha = 0.75f)*/ else Color(0xFF564670)/*.copy(alpha = 0.75f)*/
 }
 
-val isDark @Composable get() = isSystemInDarkTheme()
+private val uiMode @Composable get() = LocalUiModeViewModel.current.uiMode.collectAsStateWithLifecycle().value
+
+val isDark
+    @Composable get() = when (uiMode) {
+        UiMode.DARK -> true
+        UiMode.AUTO -> isSystemInDarkTheme()
+        UiMode.LIGHT -> false
+    }
+
 
 val theme @Composable get() = LocalTheme.current
 

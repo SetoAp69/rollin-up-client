@@ -45,6 +45,8 @@ data class LoginResponse(
             val classId: String? = null,
             @SerialName("classKey")
             val classKey: Int? = null,
+            @SerialName("isVerified")
+            val isVerified: Boolean = false,
         )
     }
 

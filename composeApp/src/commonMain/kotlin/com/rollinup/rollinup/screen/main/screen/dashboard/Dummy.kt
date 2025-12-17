@@ -206,7 +206,7 @@ fun generateDummyPermitByClassList(total: Int): List<PermitByClassEntity> {
             endTime = "${(11..14).random()}:00",
             reason = listOf("Sick", "Family Event", "Competition", null).random(),
             approvalStatus = ApprovalStatus.entries.random(),
-            type = types.random(),
+            type = PermitType.entries.random(),
             student = PermitByClassEntity.User(
                 id = studentId,
                 name = studentName,

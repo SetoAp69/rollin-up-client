@@ -2,14 +2,16 @@ package com.rollinup.rollinup.screen.main.screen.usercenter.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.michaelflisar.lumberjack.core.L
+import com.rollinup.apiservice.data.source.network.model.request.user.DeleteUserBody
+import com.rollinup.apiservice.domain.user.DeleteUserUseCase
 import com.rollinup.apiservice.domain.user.GetUserListUseCase
+import com.rollinup.apiservice.domain.user.GetUserOptionsUseCase
 import com.rollinup.apiservice.model.common.Result
 import com.rollinup.apiservice.model.user.UserEntity
-import com.rollinup.rollinup.getDummyUsers
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.UserCenterCallback
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.UserCenterFilterData
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.uistate.UserCenterUiState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -18,38 +20,59 @@ import kotlinx.coroutines.launch
 
 class UserCenterViewmodel(
     private val getUserListUseCase: GetUserListUseCase,
-    /* TODO: private val getUserListOptionUseCase: GetUserListOptionUseCase,
-     private val deleteeUserUseCase: DeleteUserUseCase,*/
+    private val getUserOptionsUseCase: GetUserOptionsUseCase,
+    private val deleteUserUseCase: DeleteUserUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UserCenterUiState())
     val uiState = _uiState.asStateFlow()
 
     fun init() {
         getUserList()
-        getUserOptions()
+        getFilterOptions()
     }
 
     fun getCallback() =
         UserCenterCallback(
             onSearch = ::search,
             onFilter = ::filter,
-            onRefresh = {},
+            onRefresh = ::init,
             onUpdateSelection = ::updateSelection,
             onResetMessageState = ::resetMessageState,
-            onDeleteUser = {},
+            onDeleteUser = ::deleteUser,
             onSelectAll = ::selectAll,
         )
+
+    private fun getFilterOptions() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoadingFilter = true) }
+            getUserOptionsUseCase().collectLatest { result ->
+                when (result) {
+                    is Result.Success -> {
+                        _uiState.update { state ->
+                            L.wtf{result.data.toString()}
+                            state.copy(
+                                filterOptions = state.filterOptions.copy(
+                                    roleOptions = result.data.roleOptions,
+                                    classOptions = result.data.classOptions
+                                ),
+                                isLoadingFilter = false
+                            )
+                        }
+                    }
+
+                    is Result.Error -> {
+                        _uiState.update { it.copy(isLoadingFilter = false) }
+                    }
+                }
+            }
+        }
+    }
 
     private fun getUserList() {
         val queryParams = uiState.value.queryParams
         _uiState.update { it.copy(isLoadingList = true) }
 
         viewModelScope.launch {
-            delay(1000)
-            if (true) {
-                _uiState.update { it.copy(isLoadingList = false, itemList = getDummyUsers(36)) }
-                return@launch
-            }
             getUserListUseCase(queryParams).collectLatest { result ->
                 when (result) {
                     is Result.Success -> {
@@ -71,10 +94,6 @@ class UserCenterViewmodel(
                 }
             }
         }
-    }
-
-    private fun getUserOptions() {
-
     }
 
     private fun search(searchQuery: String) {
@@ -109,8 +128,24 @@ class UserCenterViewmodel(
         _uiState.update { it.copy(deleteUserState = null) }
     }
 
-    private fun deleteUser() {
-
+    private fun deleteUser(listId: List<String>) {
+        val body = DeleteUserBody(listId)
+        _uiState.update {
+            it.copy(
+                isLoadingOverlay = true,
+                deleteUserState = null
+            )
+        }
+        viewModelScope.launch {
+            deleteUserUseCase(body).collectLatest { result ->
+                _uiState.update {
+                    it.copy(
+                        isLoadingOverlay = false,
+                        deleteUserState = result is Result.Success
+                    )
+                }
+            }
+        }
     }
 
 }

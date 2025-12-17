@@ -1,14 +1,19 @@
 package com.rollinup.apiservice.data.source.network.datasource.attendance
 
 import com.rollinup.apiservice.data.source.network.apiservice.AttendanceApiService
-import com.rollinup.apiservice.data.source.network.model.request.attendance.CreateEditAttendanceBody
+import com.rollinup.apiservice.data.source.network.model.request.attendance.CheckInBody
+import com.rollinup.apiservice.data.source.network.model.request.attendance.CreateAttendanceBody
+import com.rollinup.apiservice.data.source.network.model.request.attendance.EditAttendanceBody
 import com.rollinup.apiservice.data.source.network.model.response.ApiResponse
 import com.rollinup.apiservice.data.source.network.model.response.attendance.GetAttendanceByIdResponse
 import com.rollinup.apiservice.data.source.network.model.response.attendance.GetAttendanceListByClassResponse
 import com.rollinup.apiservice.data.source.network.model.response.attendance.GetAttendanceListByStudentResponse
+import com.rollinup.apiservice.data.source.network.model.response.attendance.GetAttendanceSummaryResponse
 import com.rollinup.apiservice.data.source.network.model.response.attendance.GetDashboardDataResponse
+import com.rollinup.apiservice.data.source.network.model.response.attendance.GetExportAttendanceDataResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.accept
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
@@ -39,6 +44,23 @@ class AttendanceApiDataSource(
         }
     }
 
+    override suspend fun getAttendanceByStudentSummary(
+        studentId: String,
+        query: Map<String, String?>,
+    ): ApiResponse<GetAttendanceSummaryResponse> {
+        return try {
+            val response = httpClient.get("$baseUrl/by-student/$studentId/summary") {
+                query.forEach { (key, value) ->
+                    parameter(key, value)
+                }
+            }
+            val body = response.body<GetAttendanceSummaryResponse>()
+            ApiResponse.Success(data = body, statusCode = response.status)
+        } catch (e: Exception) {
+            ApiResponse.Error(e)
+        }
+    }
+
     override suspend fun getAttendanceListByClass(
         classKey: Int,
         query: Map<String, String?>,
@@ -56,6 +78,23 @@ class AttendanceApiDataSource(
         }
     }
 
+    override suspend fun getAttendanceByClassSummary(
+        classKey: Int,
+        query: Map<String, String?>,
+    ): ApiResponse<GetAttendanceSummaryResponse> {
+        return try {
+            val response = httpClient.get("$baseUrl/by-class/$classKey/summary") {
+                query.forEach { (key, value) ->
+                    parameter(key, value)
+                }
+            }
+            val body = response.body<GetAttendanceSummaryResponse>()
+            ApiResponse.Success(data = body, statusCode = response.status)
+        } catch (e: Exception) {
+            ApiResponse.Error(e)
+        }
+    }
+
     override suspend fun getAttendanceById(id: String): ApiResponse<GetAttendanceByIdResponse> {
         return try {
             val response = httpClient.get("$baseUrl/$id")
@@ -66,10 +105,22 @@ class AttendanceApiDataSource(
         }
     }
 
-    override suspend fun createAttendanceData(body: CreateEditAttendanceBody): ApiResponse<Unit> {
+    override suspend fun createAttendanceData(body: CreateAttendanceBody): ApiResponse<Unit> {
         return try {
-            val response = httpClient.post {
-                contentType(ContentType.MultiPart.FormData)
+            val response = httpClient.post(baseUrl) {
+                contentType(ContentType.Application.Json)
+                setBody(body)
+            }
+            ApiResponse.Success(data = Unit, statusCode = response.status)
+        } catch (e: Exception) {
+            ApiResponse.Error(e)
+        }
+    }
+
+    override suspend fun checkIn(body: CheckInBody): ApiResponse<Unit> {
+        return try {
+            val response = httpClient.post("$baseUrl/check-in") {
+                accept(ContentType.MultiPart.FormData)
                 setBody(body.toMultiPartData())
             }
             ApiResponse.Success(data = Unit, statusCode = response.status)
@@ -78,9 +129,17 @@ class AttendanceApiDataSource(
         }
     }
 
-    override suspend fun getDashboardData(id: String): ApiResponse<GetDashboardDataResponse> {
+    override suspend fun getDashboardData(
+        id: String,
+        query: Map<String, String?>,
+    ): ApiResponse<GetDashboardDataResponse> {
+
         return try {
-            val response = httpClient.get("$baseUrl/dashboard/$id")
+            val response = httpClient.get("/dashboard") {
+                query.forEach { (key, value) ->
+                    parameter(key, value)
+                }
+            }
             val body = response.body<GetDashboardDataResponse>()
             ApiResponse.Success(data = body, statusCode = response.status)
         } catch (e: Exception) {
@@ -90,7 +149,7 @@ class AttendanceApiDataSource(
 
     override suspend fun editAttendance(
         id: String,
-        body: CreateEditAttendanceBody,
+        body: EditAttendanceBody,
     ): ApiResponse<Unit> {
         return try {
             val response = httpClient.put("$baseUrl/$id") {
@@ -103,4 +162,19 @@ class AttendanceApiDataSource(
             ApiResponse.Error(e)
         }
     }
+
+    override suspend fun getExportData(query: Map<String, String?>): ApiResponse<GetExportAttendanceDataResponse> =
+        try {
+            val response = httpClient.get("$baseUrl/export") {
+                contentType(ContentType.Application.Json)
+                query.forEach { (key, value) ->
+                    parameter(key, value)
+                }
+            }
+
+            val body = response.body<GetExportAttendanceDataResponse>()
+            ApiResponse.Success(body, response.status)
+        } catch (e: Exception) {
+            ApiResponse.Error(e)
+        }
 }

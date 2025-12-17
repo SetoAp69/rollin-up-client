@@ -30,7 +30,7 @@ import com.rollinup.rollinup.component.bottomsheet.BottomSheet
 import com.rollinup.rollinup.component.checkbox.CheckBox
 import com.rollinup.rollinup.component.chip.Chip
 import com.rollinup.rollinup.component.loading.ShimmerEffect
-import com.rollinup.rollinup.component.model.OptionData
+import com.rollinup.common.model.OptionData
 import com.rollinup.rollinup.component.ripple.CustomRipple
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4

@@ -2,11 +2,13 @@ package com.rollinup.rollinup.component.date
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import com.rollinup.common.utils.Utils.toLocalDateTime
+import com.rollinup.apiservice.model.permit.PermitType
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import kotlinx.datetime.LocalDateTime
 
 @Composable
 fun DateText(
@@ -14,34 +16,45 @@ fun DateText(
     format: DateTextFormat = DateTextFormat.DATE_TIME,
     color: Color = theme.bodyText,
     style: TextStyle = Style.body,
+    showYear:Boolean = true
 ) {
     Text(
-        text = formatDate(dateString, format),
+        text = DateFormatter.formateDateTimeFromString(dateString, format, showYear),
         color = color,
         style = style
     )
 }
 
-fun formatDate(dateString: String, format: DateTextFormat): String {
-    val dateTime = dateString.toLocalDateTime()
-    val day = dateTime.dayOfWeek.name.take(3)
-    val date = dateTime.day.toString()
-    val month = dateTime.month.name.take(3)
-    val year = dateTime.year.toString()
-    val hour = dateTime.hour.toString()
-    val minute = dateTime.minute.toString()
+@Composable
+fun DateText (
+    dateTime: LocalDateTime,
+    format: DateTextFormat = DateTextFormat.DATE_TIME,
+    color : Color = theme.bodyText,
+    style : TextStyle = Style.body,
+    showYear: Boolean = true
+) {
+    Text(
+        text = DateFormatter.formatDateTime(dateTime, format, showYear),
+        color = color,
+        style = style,
+    )
+}
 
-    return when (format) {
-        DateTextFormat.DATE -> {
-            "$day, $date $month $year"
-        }
-
-        DateTextFormat.DATE_TIME -> {
-            "$day, $date $month $year $hour:$minute"
-        }
-
-        DateTextFormat.TIME -> {
-            "$hour:$minute"
-        }
-    }
+@Composable
+fun PermitDateText(
+    start: String,
+    end: String,
+    type: PermitType,
+    style: TextStyle = Style.body,
+    color: Color = theme.bodyText,
+) {
+    Text(
+        text = DateFormatter.formatPermitDateRange(
+            type = type,
+            start = start,
+            end = end
+        ),
+        style = style,
+        color = color
+    )
 }

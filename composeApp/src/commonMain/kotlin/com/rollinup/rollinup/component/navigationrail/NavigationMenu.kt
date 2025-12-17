@@ -7,6 +7,7 @@ open class NavigationMenu(
     val route: String,
     val icon: DrawableResource,
     val title: String,
+    val filledIcon: DrawableResource,
 ) {
     fun withRole(role: Role): String {
         return route.replace("{role}", role.value)

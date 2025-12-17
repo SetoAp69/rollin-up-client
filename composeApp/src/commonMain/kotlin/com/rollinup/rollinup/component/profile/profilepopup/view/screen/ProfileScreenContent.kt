@@ -25,7 +25,10 @@ import com.rollinup.apiservice.model.common.Gender
 import com.rollinup.apiservice.model.user.UserDetailEntity
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.date.SingleDatePickerField
+import com.rollinup.rollinup.component.handlestate.HandleState
+import com.rollinup.rollinup.component.loading.LoadingOverlay
 import com.rollinup.rollinup.component.loading.ShimmerEffect
+import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.profile.ProfileInfoField
 import com.rollinup.rollinup.component.profile.profilepopup.model.EditProfileFormData
 import com.rollinup.rollinup.component.profile.profilepopup.model.ProfileCallback
@@ -54,7 +57,20 @@ import rollin_up.composeapp.generated.resources.ic_user_line_24
 fun ProfileScreenContent(
     uiState: ProfileDialogUiState,
     cb: ProfileCallback,
+    onShowSnackBar: OnShowSnackBar,
 ) {
+    HandleState(
+        state = uiState.editState,
+        successMsg = "Success, user data successfully edited.",
+        errorMsg = "Error, failed to edit user data, please try again.",
+        onDispose = { cb.onResetMessageState() },
+        onShowSnackBar = onShowSnackBar,
+        onSuccess = {
+            cb.onToggleEdit()
+            cb.onRefresh()
+        }
+    )
+    LoadingOverlay(uiState.isLoadingOverlay)
     Scaffold {
         if (uiState.isLoading) {
             ProfileContentLoading()
@@ -62,7 +78,8 @@ fun ProfileScreenContent(
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .padding(screenPadding)
+                    .padding(screenPadding),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Column(
                     modifier = Modifier.verticalScroll(rememberScrollState())
@@ -83,7 +100,10 @@ fun ProfileScreenContent(
                 }
 
                 if (uiState.isEdit) {
-                    Button("Submit") {
+                    Spacer(itemGap8)
+                    Button(
+                        text = "Submit"
+                    ) {
                         cb.onSubmit(uiState.formData)
                     }
                 }
@@ -91,7 +111,6 @@ fun ProfileScreenContent(
         }
     }
 }
-
 
 @Composable
 private fun ProfileHeaderSection(
@@ -126,10 +145,11 @@ private fun ProfileHeaderSection(
             color = theme.bodyText,
         )
         if (uiState.showEdit) {
+            val text = if (uiState.isEdit) "Cancel" else "Edit"
             Text(
-                text = "Edit",
+                text = text,
                 style = Style.title,
-                color = theme.bodyText,
+                color = theme.textPrimary,
                 modifier = Modifier.clickable {
                     onToggleEdit()
                 }
@@ -201,7 +221,8 @@ private fun EditProfileForm(
     onUpdateFormData: (EditProfileFormData) -> Unit,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(itemGap8)
+        verticalArrangement = Arrangement.spacedBy(itemGap8),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         EditProfileFormNameSection(
             formData = uiState.formData,
@@ -247,6 +268,7 @@ private fun EditProfileFormNameSection(
                 placeholder = "Enter first name",
             )
         }
+        Spacer(itemGap8)
         Box(modifier = Modifier.weight(1f)) {
             TextField(
                 title = "Last name",
@@ -279,57 +301,76 @@ private fun EditProfileFormAdditionalSection(
     onUpdateFormData: (EditProfileFormData) -> Unit,
 ) {
     val formData = uiState.formData
-    TextField(
+
+    ProfileInfoField(
         title = "Email",
-        value = formData.email ?: "",
-        maxChar = 15,
-        onValueChange = { value ->
-            val errorMsg = if (value.length > 30) {
-                "Email can't be more than 30 characters"
-            } else {
-                null
-            }
-            onUpdateFormData(
-                formData.copy(
-                    email = value,
-                    emailError = errorMsg
-                )
-            )
-        },
-        isError = formData.emailError != null,
-        errorMsg = formData.email,
-        placeholder = "Enter email",
+        icon = Res.drawable.ic_mail_user_line_24,
+        value = uiState.userDetail.email,
+        enabled = false
     )
-    SingleDatePickerField(
-        title = "Birthday",
-        placeholder = "Select birthday",
-        value = formData.birthDay,
-        isError = formData.birthDayError,
-        isAllSelectable = true,
-        errorText = "Birthday can't be empty",
-        enabled = true,
-        isDisablePastSelection = false,
-        onValueChange = {
-            onUpdateFormData(
-                formData.copy(
-                    birthDay = it,
-                    birthDayError = false
-                )
+
+//    TODO: Make Email editable for next sprint
+//    TextField(
+//        title = "Email",
+//        value = formData.email ?: "",
+//        maxChar = 15,
+//        onValueChange = { value ->
+//            val errorMsg = if (value.length > 30) {
+//                "Email can't be more than 30 characters"
+//            } else {
+//                null
+//            }
+//            onUpdateFormData(
+//                formData.copy(
+//                    email = value,
+//                    emailError = errorMsg
+//                )
+//            )
+//        },
+//        isError = formData.emailError != null,
+//        errorMsg = formData.email,
+//        placeholder = "Enter email",
+//    )
+    Row {
+        Box(modifier = Modifier.weight(1f)) {
+            SingleDatePickerField(
+                title = "Birthday",
+                placeholder = "Select birthday",
+                value = formData.birthDay,
+                isError = formData.birthDayError,
+                isAllSelectable = true,
+                errorText = "Birthday can't be empty",
+                enabled = true,
+                isDisablePastSelection = false,
+                onValueChange = {
+                    onUpdateFormData(
+                        formData.copy(
+                            birthDay = it,
+                            birthDayError = false
+                        )
+                    )
+                }
+            )
+
+        }
+        Spacer(itemGap8)
+        Box(modifier = Modifier.weight(1f)) {
+            SingleSelectorField(
+                title = "Gender",
+                value = formData.gender,
+                options = uiState.genderOptions,
+                onValueChange = {
+                    onUpdateFormData(
+                        formData.copy(
+                            gender = it
+                        )
+                    )
+                }
             )
         }
-    )
-    SingleSelectorField(
-        title = "Gender",
-        value = formData.gender,
-        options = uiState.genderOptions,
-        onValueChange = {
-            onUpdateFormData(
-                formData.copy(
-                    gender = it
-                )
-            )
-        }
-    )
+
+    }
+
     PhoneNumberTextField(
         value = formData.phone ?: "",
         onValueChange = { value ->
@@ -381,7 +422,7 @@ private fun EditProfileFormDisabledSection(
         enabled = false,
         title = "ID",
         icon = Res.drawable.ic_id_card_line_24,
-        value = userDetail.id
+        value = userDetail.studentId.ifBlank { "-" }
     )
     ProfileInfoField(
         enabled = false,

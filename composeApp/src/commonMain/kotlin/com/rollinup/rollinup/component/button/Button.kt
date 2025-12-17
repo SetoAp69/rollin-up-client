@@ -49,7 +49,7 @@ fun Button(
     onClick: () -> Unit,
 ) {
     val buttonColor = buttonColors ?: getButtonColor(severity, type)
-    val borderWidth = if (isCompact) (2.5).dp else (4.5).dp
+    val borderWidth = 2.5.dp
     val borderColor = if (enabled) buttonColor.contentColor else theme.btnDisabled
 
     val border = when (type) {
@@ -218,7 +218,7 @@ internal fun getButtonColor(
 }
 
 enum class ButtonType {
-    FILLED, OUTLINED, TEXT, ICON
+    FILLED, OUTLINED, ICON
 }
 
 object ButtonDefault {

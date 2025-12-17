@@ -15,6 +15,7 @@ fun PermitApprovalFormBottomSheet(
     showDialog: Boolean,
     selectedId: List<String>,
     onDismissRequest: (Boolean) -> Unit,
+    onSuccess:()->Unit,
 ) {
     val viewModel: PermitApprovalViewModel = koinViewModel()
     val cb = viewModel.getCallback()
@@ -33,7 +34,8 @@ fun PermitApprovalFormBottomSheet(
             uiState = uiState,
             cb = cb,
             onDismissRequest = onDismissRequest,
-            onShowSnackBar = showSnackBar
+            onShowSnackBar = showSnackBar,
+            onSuccess = onSuccess
         )
     }
 }

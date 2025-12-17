@@ -1,7 +1,8 @@
-package com.rollinup.rollinup.screen.dashboard.model.studentdashboard
+package com.rollinup.rollinup.screen.main.screen.dashboard.model.studentdashboard
 
 data class StudentDashboardQuickAccessCallback(
     val onCreatePermit: () -> Unit,
     val onCheckIn: () -> Unit,
-    val onGoToHistory: () -> Unit,
+    val onGoToPermitHistory: () -> Unit,
+    val onGoToAttendanceHistory:()->Unit,
 )

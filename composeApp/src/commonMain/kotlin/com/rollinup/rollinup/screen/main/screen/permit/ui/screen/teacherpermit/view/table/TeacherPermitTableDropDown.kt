@@ -42,6 +42,7 @@ fun TeacherPermitDropDown(
                                 onDetail(items.first().id)
                             }
                         }
+                        onDismissRequest(false)
                     }
                 )
             }

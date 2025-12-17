@@ -41,7 +41,7 @@ fun StudentCenterActionSheet(
                         }
 
                         StudentCenterAction.ATTENDANCE -> {
-                            onNavigateTo(AttendanceRoute.AttendanceByStudentRoute.navigate(item.studentId))
+                            onNavigateTo(AttendanceRoute.AttendanceByStudentRoute.navigate(item.id))
                         }
                     }
                     onDismissRequest(false)
@@ -94,6 +94,6 @@ fun StudentActionDropdown(
     AttendanceByStudentDialog(
         showDialog = showAttendance,
         onDismissRequest = { showAttendance = it },
-        id = item.studentId
+        id = item.id
     )
 }

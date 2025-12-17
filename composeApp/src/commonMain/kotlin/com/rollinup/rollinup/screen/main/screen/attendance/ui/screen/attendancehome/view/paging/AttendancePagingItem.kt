@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.rollinup.component.card.Card
 import com.rollinup.rollinup.component.chip.Chip
 import com.rollinup.rollinup.component.date.DateText
@@ -21,6 +22,7 @@ import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.painterResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_clock_filled_24
@@ -48,7 +50,7 @@ fun AttendancePagingItem(
                 rightContent = {
                     val status = item.attendance?.status ?: AttendanceStatus.NO_DATA
                     Chip(
-                        text = status.name,
+                        text = status.label,
                         severity = status.severity
                     )
                 }
@@ -63,7 +65,7 @@ fun AttendancePagingItem(
                 },
                 rightContent = {
                     item.attendance?.checkedInAt?.let {
-                        Row {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 painter = painterResource(Res.drawable.ic_clock_filled_24),
                                 tint = theme.textPrimary,
@@ -72,7 +74,7 @@ fun AttendancePagingItem(
                             )
                             Spacer(2.dp)
                             DateText(
-                                dateString = it,
+                                dateTime = it.parseToLocalDateTime(TimeZone.UTC),
                                 style = Style.body,
                                 color = theme.textPrimary
                             )

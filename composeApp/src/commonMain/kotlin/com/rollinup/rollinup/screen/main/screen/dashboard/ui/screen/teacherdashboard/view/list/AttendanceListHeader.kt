@@ -16,12 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.chip.Chip
+import com.rollinup.rollinup.component.date.DateRangePicker
+import com.rollinup.rollinup.component.export.ExportAlertDialog
 import com.rollinup.rollinup.component.model.Menu
 import com.rollinup.rollinup.component.searchbar.SearchBarWithMenu
-import com.rollinup.rollinup.component.spacer.Spacer
-import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import com.rollinup.rollinup.component.utils.getAttendanceRecordFileName
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardActionSheet
@@ -34,6 +35,8 @@ fun AttendanceListHeader(
 ) {
     var showFilter by remember { mutableStateOf(false) }
     var showActionSheet by remember { mutableStateOf(false) }
+    var showExportDialog by remember { mutableStateOf(false) }
+    var showDatePicker by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
@@ -76,6 +79,10 @@ fun AttendanceListHeader(
                         showActionSheet = true
                     }
 
+                    Menu.PRINT -> {
+                        showDatePicker = true
+                    }
+
                     else -> {}
                 }
             }
@@ -95,11 +102,33 @@ fun AttendanceListHeader(
         onDismissRequest = { showFilter = it },
         onApply = cb.onUpdateFilter
     )
+    DateRangePicker(
+        isShowDatePicker = showDatePicker,
+        onDismissRequest = { showDatePicker = it },
+        value = uiState.exportDateRanges,
+        onSelectDate = { value ->
+            cb.onUpdateExportDateRanges(value.sorted())
+            showExportDialog = true
+        },
+        title = "Select date ranges",
+        isDisablePastSelection = false,
+        isAllSelectable = true,
+    )
+
+    ExportAlertDialog(
+        isShowDialog = showExportDialog,
+        fileName = getAttendanceRecordFileName(uiState.exportDateRanges, "attendance"),
+        onDismissRequest = { showExportDialog = it },
+        onConfirm = {
+            cb.onExportFile(it)
+        }
+    )
 }
 
 
 private fun getMenu(uiState: TeacherDashboardUiState): List<Menu> {
     return buildList {
+        add(Menu.PRINT)
         val isSelecting = uiState.itemSelected.isNotEmpty()
         val isAllSelected = uiState.isAllSelected
         if (isSelecting) {

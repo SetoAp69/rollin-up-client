@@ -1,13 +1,16 @@
 package com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,7 +29,9 @@ import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.chip.Chip
 import com.rollinup.rollinup.component.dialog.Dialog
 import com.rollinup.rollinup.component.loading.ShimmerEffect
-import com.rollinup.rollinup.component.model.OptionData
+import com.rollinup.common.model.OptionData
+import com.rollinup.common.utils.Utils.now
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.permitform.view.PermitFormContent
 import com.rollinup.rollinup.component.selector.SingleSelector
@@ -44,6 +49,9 @@ import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
 import dev.jordond.compass.Coordinates
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_edit_line_24
 
@@ -98,6 +106,10 @@ fun TeacherDashboardEditAttendanceContent(
     var showDialog by remember { mutableStateOf(false) }
     val generalSetting = LocalGeneralSetting.current
 
+    LaunchedEffect(uiState.submitEditAttendanceState){
+        if(uiState.submitEditAttendanceState == true) onDismissRequest(false)
+    }
+
     LaunchedEffect(uiState.attendanceDetail) {
         cb.onUpdateEditForm(uiState.fetchEditAttendanceForm())
     }
@@ -135,36 +147,42 @@ fun TeacherDashboardEditAttendanceContent(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Header(
-            onUpdateFormData = cb.onUpdateEditForm,
-            formData = formData,
-            isLoading = uiState.isLoadingDetail
-        )
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+        ) {
+            Header(
+                onUpdateFormData = cb.onUpdateEditForm,
+                formData = formData,
+                isLoading = uiState.isLoadingDetail
+            )
 
-        if (uiState.isLoadingDetail) {
-            EditAttendanceLoading()
-        } else {
-            when (formData.status) {
-                AttendanceStatus.ABSENT, AttendanceStatus.EXCUSED -> {
-                    PermitFormContent(
-                        formData = formData,
-                        onUpdateFormData = cb.onUpdateEditForm
-                    )
+            if (uiState.isLoadingDetail) {
+                EditAttendanceLoading()
+            } else {
+                when (formData.status) {
+                    AttendanceStatus.ABSENT, AttendanceStatus.EXCUSED -> {
+                        PermitFormContent(
+                            formData = formData,
+                            onUpdateFormData = cb.onUpdateEditForm
+                        )
+                    }
+
+                    AttendanceStatus.CHECKED_IN, AttendanceStatus.LATE -> {
+                        AttendanceForm(
+                            formData = formData,
+                            onUpdateFormData = cb.onUpdateEditForm,
+                        )
+                    }
+
+                    else -> {}
                 }
-
-                AttendanceStatus.CHECKED_IN, AttendanceStatus.LATE -> {
-                    AttendanceForm(
-                        formData = formData,
-                        onUpdateFormData = cb.onUpdateEditForm,
-                    )
-                }
-
-                else -> {}
             }
         }
 
         Button(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             text = "Submit"
         ) {
             if (formData == uiState.fetchEditAttendanceForm()) onDismissRequest(false)
@@ -180,7 +198,6 @@ fun TeacherDashboardEditAttendanceContent(
         initialStatus = initialStatus,
         onConfirm = {
             cb.onSubmitEditAttendance(detail, formData)
-            onDismissRequest(false)
         },
         onCancel = {}
     )
@@ -209,49 +226,52 @@ private fun Header(
         if (isLoading) {
             ShimmerEffect(60.dp, 24.dp)
         } else {
-            Chip(
-                text = formData.status.label,
-                trailingIcon = Res.drawable.ic_edit_line_24,
-                onClickTrailIcon = {
-                    showSelectStatus = true
-                },
-                severity = formData.status.severity
-            )
+            Box{
+                Chip(
+                    text = formData.status.label,
+                    trailingIcon = Res.drawable.ic_edit_line_24,
+                    onClickTrailIcon = {
+                        showSelectStatus = true
+                    },
+                    severity = formData.status.severity
+                )
+                SingleSelector(
+                    options = AttendanceStatus.entries.map {
+                        OptionData(it.label, it)
+                    },
+                    value = formData.status,
+                    onDismissRequest = { showSelectStatus = it },
+                    isShowSelector = showSelectStatus,
+                    onValueChange = { status ->
+                        var newFormData = EditAttendanceFormData(status = status)
+                        when (status) {
+                            AttendanceStatus.ABSENT -> {
+                                newFormData = newFormData.copy(
+                                    permitFormData = formData.permitFormData.copy(
+                                        type = PermitType.ABSENCE
+                                    )
+                                )
+                            }
+
+                            AttendanceStatus.EXCUSED -> {
+                                newFormData = newFormData.copy(
+                                    permitFormData = formData.permitFormData.copy(
+                                        type = PermitType.DISPENSATION
+                                    )
+                                )
+                            }
+
+                            else -> {}
+                        }
+                        onUpdateFormData(newFormData)
+                    },
+                    title = "Select Attendance Status"
+                )
+            }
         }
     }
 
-    SingleSelector(
-        options = AttendanceStatus.entries.map {
-            OptionData(it.label, it)
-        },
-        value = formData.status,
-        onDismissRequest = { showSelectStatus = it },
-        isShowSelector = showSelectStatus,
-        onValueChange = { status ->
-            var newFormData = EditAttendanceFormData(status = status)
-            when (status) {
-                AttendanceStatus.ABSENT -> {
-                    newFormData = newFormData.copy(
-                        permitFormData = formData.permitFormData.copy(
-                            type = PermitType.ABSENT
-                        )
-                    )
-                }
 
-                AttendanceStatus.EXCUSED -> {
-                    newFormData = newFormData.copy(
-                        permitFormData = formData.permitFormData.copy(
-                            type = PermitType.DISPENSATION
-                        )
-                    )
-                }
-
-                else -> {}
-            }
-            onUpdateFormData(newFormData)
-        },
-        title = "Select Attendance Status"
-    )
 }
 
 @Composable
@@ -280,6 +300,24 @@ private fun PermitFormContent(
     formData: EditAttendanceFormData,
     onUpdateFormData: (EditAttendanceFormData) -> Unit,
 ) {
+    val duration = formData.permitFormData.duration
+    LaunchedEffect(duration){
+        if(duration.isNotEmpty()){
+            val from = duration.first()!!.parseToLocalDateTime()
+            val to = duration.last()!!.parseToLocalDateTime()
+            val today = LocalDateTime(LocalDate.now(), LocalTime(0,0,0))
+            if(today !in from..to){
+                onUpdateFormData(
+                    formData.copy(
+                        permitFormData = formData.permitFormData.copy(
+                            durationError = "Permit must include current date"
+                        )
+                    )
+                )
+            }
+        }
+    }
+
     PermitFormContent(
         formData = formData.permitFormData,
         onUpdateFormData = {

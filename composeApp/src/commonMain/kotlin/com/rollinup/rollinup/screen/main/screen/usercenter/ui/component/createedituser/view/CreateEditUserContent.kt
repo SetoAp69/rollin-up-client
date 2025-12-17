@@ -4,22 +4,26 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.michaelflisar.lumberjack.core.L
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.checkbox.CheckBox
-import com.rollinup.rollinup.component.date.SingleDatePicker
+import com.rollinup.rollinup.component.date.SingleDatePickerField
 import com.rollinup.rollinup.component.loading.LoadingOverlay
 import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.model.OnShowSnackBar
@@ -44,6 +48,7 @@ fun CreateEditUserContent(
     id: String?,
     onDismissRequest: (Boolean) -> Unit,
     onShowSnackBar: OnShowSnackBar,
+    onSuccess: () -> Unit,
 ) {
     val viewModel: CreateEditUserViewModel = koinViewModel()
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -52,9 +57,11 @@ fun CreateEditUserContent(
     DisposableEffect(Unit) {
         if (showDialog) {
             viewModel.init(id)
+            L.wtf { uiState.submitState.toString() }
         }
         onDispose {
-            cb.onResetForm()
+            viewModel.resetUiState()
+            L.wtf { "Disposed:" + uiState.submitState.toString() }
         }
     }
     CreateEditUserStateHandler(
@@ -63,6 +70,7 @@ fun CreateEditUserContent(
         onShowSnackBar = onShowSnackBar,
         onDismissRequest = onDismissRequest,
         onResetForm = cb.onResetForm,
+        onSuccess = onSuccess
     )
     CreateEditUserForm(
         uiState = uiState,
@@ -80,6 +88,7 @@ fun CreateEditUserForm(
         if (!uiState.isLoading) {
             Column(
                 modifier = Modifier
+                    .weight(1f)
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -88,7 +97,8 @@ fun CreateEditUserForm(
                     isEdit = uiState.isEdit,
                     formData = uiState.formData,
                     onUpdateForm = cb.onUpdateForm,
-                    onCheckUserName = cb.onCheckUserName
+                    onCheckUserName = cb.onCheckUserName,
+                    initialUsername = uiState.initialDetail.userName
                 )
                 NameSection(
                     isEdit = uiState.isEdit,
@@ -98,13 +108,13 @@ fun CreateEditUserForm(
                 SelectorSection(
                     options = uiState.formOptions,
                     formData = uiState.formData,
-                    onUpdateForm = cb.onUpdateForm
+                    onUpdateForm = cb.onUpdateForm,
+                    isLoading = uiState.isLoadingOptions
                 )
                 AdditionalInfoSection(
-                    isEdit = uiState.isEdit,
-                    formData = uiState.formData,
+                    uiState = uiState,
                     onUpdateForm = cb.onUpdateForm,
-                    onCheckEmail = cb.onCheckEmail
+                    onCheckEmail = cb.onCheckEmail,
                 )
             }
         } else {
@@ -123,7 +133,9 @@ private fun UserFormFooter(
     uiState: CreateEditUserUiState,
     cb: CreateEditUserCallback,
 ) {
-    Column {
+    Column(
+        modifier = Modifier.padding(top = 12.dp)
+    ) {
         if (!uiState.isEdit) {
             Row(
                 modifier = Modifier.clickable { cb.onToggleStay(!uiState.isStay) },
@@ -145,8 +157,6 @@ private fun UserFormFooter(
             text = "Submit",
             modifier = Modifier.fillMaxWidth()
         ) {
-            if (cb.onValidateForm(uiState.formData, uiState.isEdit))
-                return@Button
             cb.onSubmit(uiState.formData, uiState.isEdit)
         }
     }
@@ -155,23 +165,23 @@ private fun UserFormFooter(
 @Composable
 fun UserNameSection(
     isEdit: Boolean,
+    initialUsername: String,
     formData: CreateEditUserFormData,
     onUpdateForm: (CreateEditUserFormData) -> Unit,
     onCheckUserName: (String) -> Unit,
 ) {
     TextField(
         isRequired = !isEdit,
-        modifier = Modifier.onFocusChanged() { focusState ->
-            if (!focusState.isFocused && !formData.userName.isNullOrBlank()) {
+        modifier = Modifier.onFocusChanged { focusState ->
+            if (!focusState.isFocused && !formData.userName.isNullOrBlank() && formData.userName != initialUsername) {
                 onCheckUserName(formData.userName)
             }
         },
         onValueChange = { newValue ->
-            val errorMessage: String?
-            if (newValue.contains(" ")) {
-                errorMessage = "Username cannot contain space"
+            val errorMessage: String? = if (newValue.contains(" ")) {
+                "Username cannot contain space"
             } else {
-                errorMessage = null
+                null
             }
 
             onUpdateForm(
@@ -241,18 +251,23 @@ fun NameSection(
 
 @Composable
 private fun SelectorSection(
+    isLoading: Boolean,
     options: CreateEditUserFormOption,
     formData: CreateEditUserFormData,
     onUpdateForm: (CreateEditUserFormData) -> Unit,
 ) {
-    Row(
+    val adminRole = options.role.find { it.label.equals("admin",true) }
+    val isAdmin = formData.role == adminRole?.value
+
+    FlowRow(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
+        itemVerticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.spacedBy(itemGap8)
     ) {
         SingleDropDownSelector(
             title = "Gender",
             value = formData.gender,
+            isError = formData.genderError,
             options = options.gender,
             onValueChange = {
                 onUpdateForm(
@@ -263,9 +278,11 @@ private fun SelectorSection(
                 )
             },
         )
-        SingleDatePicker(
+        SingleDatePickerField(
             title = "Birth day",
             value = formData.birthDay,
+            width = 120.dp,
+            isError = formData.birthDayError,
             onValueChange = {
                 onUpdateForm(
                     formData.copy(
@@ -278,6 +295,8 @@ private fun SelectorSection(
         SingleDropDownSelector(
             title = "Role",
             value = formData.role,
+            isError = formData.roleError,
+            isLoading = isLoading,
             options = options.role,
             onValueChange = {
                 onUpdateForm(
@@ -288,53 +307,72 @@ private fun SelectorSection(
                 )
             },
         )
-        SingleDropDownSelector(
-            title = "Class",
-            value = formData.classId,
-            options = options.classX,
-            onValueChange = {
+
+        if(!isAdmin){
+            LaunchedEffect(Unit){
                 onUpdateForm(
                     formData.copy(
-                        classId = it,
+                        classId = null,
                         classError = false
                     )
                 )
-            },
-        )
+            }
+            SingleDropDownSelector(
+                title = "Class",
+                value = formData.classId,
+                isError = formData.classError,
+                isLoading = isLoading,
+                options = options.classX,
+                width = 120.dp,
+                onValueChange = {
+                    onUpdateForm(
+                        formData.copy(
+                            classId = it,
+                            classError = false
+                        )
+                    )
+                },
+            )
+        }
     }
 }
 
+
 @Composable
 private fun AdditionalInfoSection(
-    isEdit: Boolean,
-    formData: CreateEditUserFormData,
+    uiState: CreateEditUserUiState,
     onUpdateForm: (CreateEditUserFormData) -> Unit,
     onCheckEmail: (String) -> Unit,
 ) {
+    val formData = uiState.formData
+    val initialDetail = uiState.initialDetail
+    val studentRole = uiState.formOptions.role.find { it.label.equals("Student", true) }
+    val isStudent = formData.role == studentRole?.value
 
-    TextField(
-        isRequired = !isEdit,
-        onValueChange = { newValue ->
-            val errorMessage: String?
-            if (newValue.contains(" ")) {
-                errorMessage = "Student Id can't contain spaces"
-            } else {
-                errorMessage = null
-            }
+    if (isStudent) {
+        TextField(
+            isRequired = !uiState.isEdit,
+            onValueChange = { newValue ->
+                val errorMessage: String? = if (newValue.contains(" ")) {
+                    "Student Id can't contain spaces"
+                } else {
+                    null
+                }
 
-            onUpdateForm(
-                formData.copy(
-                    studentId = newValue.ifBlank { null },
-                    studentIdError = errorMessage
+                onUpdateForm(
+                    formData.copy(
+                        studentId = newValue.ifBlank { null },
+                        studentIdError = errorMessage
+                    )
                 )
-            )
-        },
-        value = formData.studentId ?: "",
-        placeholder = "Enter student id",
-        title = "Student Id",
-        isError = formData.studentIdError != null,
-        errorMsg = formData.studentIdError
-    )
+            },
+            value = formData.studentId ?: "",
+            placeholder = "Enter student id",
+            title = "Student Id",
+            isError = formData.studentIdError != null,
+            errorMsg = formData.studentIdError
+        )
+    }
 
     TextField(
         title = "Address",
@@ -370,6 +408,7 @@ private fun AdditionalInfoSection(
     )
     TextField(
         title = "Email",
+        isRequired = true,
         value = formData.email ?: "",
         maxChar = 30,
         onValueChange = { newValue ->
@@ -387,7 +426,7 @@ private fun AdditionalInfoSection(
             )
         },
         modifier = Modifier.onFocusChanged { state ->
-            if (!state.isFocused && !formData.email.isNullOrBlank() && formData.emailError == null) {
+            if (!state.isFocused && !formData.email.isNullOrBlank() && formData.emailError == null && formData.email != initialDetail.email) {
                 onCheckEmail(formData.email)
             }
         },

@@ -1,6 +1,7 @@
 package com.rollinup.rollinup.component.camera
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.ImageBitmap
 import com.rollinup.apiservice.model.common.MultiPlatformFile
 
 @Composable
@@ -16,4 +17,8 @@ actual fun CameraPermissionHandler(
     onDenied: () -> Unit,
     onDismissRequest: (Boolean) -> Unit
 ) {
+}
+
+actual fun ByteArray.toImageBitmap(): ImageBitmap {
+    return ImageBitmap(0,0)
 }

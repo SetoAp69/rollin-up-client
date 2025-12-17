@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
 import com.rollinup.common.model.Severity
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.rollinup.component.chip.Chip
 import com.rollinup.rollinup.component.date.DateText
 import com.rollinup.rollinup.component.table.Table
@@ -14,10 +15,12 @@ import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.main.screen.attendance.model.attendancehome.AttendanceHomeAction
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancehome.uistate.AttendanceUiState
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancehome.view.AttendanceHomeActionDropdown
+import kotlinx.datetime.TimeZone
 
 @Composable
 fun AttendanceTable(
     uiState: AttendanceUiState,
+    onRefresh: () -> Unit,
     onClickAction: (AttendanceByClassEntity, AttendanceHomeAction) -> Unit,
 ) {
     Table(
@@ -26,6 +29,7 @@ fun AttendanceTable(
         isLoading = uiState.isLoading,
         showSelection = false,
         showActionMenu = true,
+        onRefresh = onRefresh,
         dropDownMenu = { state ->
             AttendanceHomeActionDropdown(
                 showDropdown = state.expanded,
@@ -41,7 +45,7 @@ fun AttendanceTable(
 
 private fun getColumn(): List<TableColumn<AttendanceByClassEntity>> =
     listOf(
-        TableColumn("Id", weight = 0.5f) {
+        TableColumn("Student ID", weight = 0.5f) {
             Text(
                 text = it.student.studentId,
                 style = Style.body,
@@ -55,7 +59,7 @@ private fun getColumn(): List<TableColumn<AttendanceByClassEntity>> =
                 color = theme.bodyText
             )
         },
-        TableColumn("Class") {
+        TableColumn("Status") {
             val status = it.attendance?.status ?: AttendanceStatus.NO_DATA
             Chip(
                 text = status.label,
@@ -64,7 +68,7 @@ private fun getColumn(): List<TableColumn<AttendanceByClassEntity>> =
         },
         TableColumn("Check in Time") {
             it.attendance?.checkedInAt?.let { time ->
-                DateText(time)
+                DateText(time.parseToLocalDateTime(TimeZone.UTC))
             } ?: Text(
                 text = "-",
                 color = theme.bodyText,

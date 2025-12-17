@@ -11,6 +11,7 @@ import com.rollinup.rollinup.component.utils.getScreenHeight
 fun CreateEditUserDialog(
     showDialog: Boolean,
     onDismissRequest: (Boolean) -> Unit,
+    onSuccess:()->Unit,
     id: String? = null,
 ) {
     val maxHeight = getScreenHeight() * 0.8f
@@ -23,12 +24,12 @@ fun CreateEditUserDialog(
         modifier = Modifier
             .sizeIn(maxHeight = maxHeight, maxWidth = maxWidth)
     ) { onShowSnackBar ->
-
         CreateEditUserContent(
             showDialog = showDialog,
             id = id,
             onDismissRequest = onDismissRequest,
-            onShowSnackBar = onShowSnackBar
+            onShowSnackBar = onShowSnackBar,
+            onSuccess = onSuccess
         )
     }
 

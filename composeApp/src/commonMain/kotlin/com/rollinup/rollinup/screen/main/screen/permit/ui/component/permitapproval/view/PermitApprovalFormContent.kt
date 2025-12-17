@@ -8,19 +8,25 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.rollinup.apiservice.model.permit.PermitDetailEntity
 import com.rollinup.apiservice.model.permit.PermitType
-import com.rollinup.common.utils.Utils.toLocalDateTime
+import com.rollinup.common.model.OptionData
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.handlestate.HandleState
+import com.rollinup.rollinup.component.imageview.ImageView
 import com.rollinup.rollinup.component.loading.LoadingOverlay
 import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.model.OnShowSnackBar
-import com.rollinup.rollinup.component.model.OptionData
 import com.rollinup.rollinup.component.radio.RadioSelectorRow
 import com.rollinup.rollinup.component.record.RecordField
 import com.rollinup.rollinup.component.spacer.Spacer
@@ -32,6 +38,8 @@ import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.main.screen.permit.model.permitapproval.PermitApprovalCallback
 import com.rollinup.rollinup.screen.main.screen.permit.model.permitapproval.PermitApprovalFormData
 import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitapproval.uistate.PermitApprovalUiState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun PermitApprovalFormContent(
@@ -39,14 +47,23 @@ fun PermitApprovalFormContent(
     cb: PermitApprovalCallback,
     onDismissRequest: (Boolean) -> Unit,
     onShowSnackBar: OnShowSnackBar,
+    onSuccess:()->Unit
 ) {
+    val scope = rememberCoroutineScope()
+
     LoadingOverlay(uiState.isLoadingOverlay)
     HandleState(
         state = uiState.submitState,
         successMsg = "Success, permit approval successfully submitted",
         errorMsg = "Error, failed to submit permit approval please try again",
         onDispose = cb.onResetMessageState,
-        onSuccess = { onDismissRequest(false) },
+        onSuccess = {
+            scope.launch {
+                delay(1000)
+                onSuccess()
+                onDismissRequest(false)
+            }
+        },
         onShowSnackBar = onShowSnackBar
     )
 
@@ -175,15 +192,7 @@ fun DetailSection(
         RecordField(
             title = "Permit Attachment"
         ) {
-            Text(
-                text = "View Attachment",
-                color = theme.textPrimary,
-                style = Style.title,
-                modifier = Modifier
-                    .clickable {
-                        //TODO add file download or show file handler
-                    }
-            )
+            AttachmentButton(detail.attachment)
         }
         RecordField(
             title = "Note",
@@ -218,11 +227,37 @@ fun DetailLoading() {
     }
 }
 
+
+@Composable
+private fun AttachmentButton(
+    url: String,
+) {
+    var showImage by remember { mutableStateOf(false) }
+    val text = if (url.isBlank()) "-" else "View Attachment"
+
+    Text(
+        text = text,
+        color = theme.textPrimary,
+        style = Style.title,
+        modifier = Modifier.clickable {
+            if (url.isNotBlank()) {
+                showImage = true
+            }
+        }
+    )
+
+    ImageView(
+        showView = showImage,
+        onDismissRequests = { showImage = it },
+        url = url
+    )
+}
+
 private fun getDuration(
     permit: PermitDetailEntity,
 ): String {
-    val from = permit.startTime.toLocalDateTime()
-    val to = permit.endTime.toLocalDateTime()
+    val from = permit.startTime.parseToLocalDateTime()
+    val to = permit.endTime.parseToLocalDateTime()
 
     return when (
         permit.type
@@ -231,7 +266,7 @@ private fun getDuration(
             "${from.time} - ${to.time}"
         }
 
-        PermitType.ABSENT -> {
+        PermitType.ABSENCE -> {
             val fromDate = from.date
             val toDate = to.date
 

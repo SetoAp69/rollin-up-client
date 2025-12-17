@@ -40,9 +40,9 @@ import com.rollinup.rollinup.component.checkbox.CheckBox
 import com.rollinup.rollinup.component.checkbox.CheckBoxDefaults
 import com.rollinup.rollinup.component.dropdown.DropDownMenu
 import com.rollinup.rollinup.component.dropdown.DropDownState
+import com.rollinup.rollinup.component.empty.EmptyRecord
 import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.pagination.Pagination
-import com.rollinup.rollinup.component.record.RecordField
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
@@ -51,15 +51,17 @@ import com.rollinup.rollinup.component.theme.theme
 import org.jetbrains.compose.resources.painterResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_more_fill_24
+import rollin_up.composeapp.generated.resources.ic_refresh_line_24
 
 @Composable
 fun <T> Table(
     items: List<T>,
     columns: List<TableColumn<T>>,
     isLoading: Boolean,
+    onRefresh: () -> Unit,
     headerContent: (@Composable RowScope.() -> Unit)? = null,
     modifier: Modifier = Modifier,
-    horizontalPadding: Dp = 12.dp,
+    horizontalPadding: Dp = 8.dp,
     verticalPadding: Dp = 4.dp,
     showSelection: Boolean = true,
     showActionMenu: Boolean = true,
@@ -81,7 +83,8 @@ fun <T> Table(
         TableHeader(
             tableState = tableState,
             pageCount = tableState.getTotalPage(items),
-            content = headerContent
+            content = headerContent,
+            onRefresh = onRefresh,
         )
         LazyColumn(
             modifier = Modifier.fillMaxWidth(),
@@ -97,9 +100,7 @@ fun <T> Table(
                         )
                         .fillMaxWidth()
                         .padding(horizontal = horizontalPadding, vertical = verticalPadding)
-                        .height(36.dp)
-                    ,
-
+                        .height(36.dp),
 
                     ) {
                     if (showSelection) {
@@ -116,7 +117,7 @@ fun <T> Table(
                             text = col.title,
                             modifier = Modifier
                                 .weight(col.weight)
-                                .height( 24.dp)
+                                .height(24.dp)
                                 .padding(horizontal = itemGap8),
                             style = Style.title,
                             textAlign = TextAlign.Center,
@@ -135,22 +136,29 @@ fun <T> Table(
             }
 
             if (!isLoading) {
-                items(tableState.getPagedData(items)) { item ->
-                    val isSelected = item in itemSelected
-                    TableRow(
-                        item = item,
-                        columns = columns,
-                        showSelection = showSelection,
-                        showActionMenu = showActionMenu,
-                        isSelected = isSelected,
-                        horizontalPadding = horizontalPadding,
-                        verticalPadding = verticalPadding,
-                        dropDownMenu = dropDownMenu,
-                        isSelecting = itemSelected.isNotEmpty(),
-                        onSelect = {
-                            onSelectItem(item)
-                        },
-                    )
+                val tableItems = tableState.getPagedData(items)
+                if(tableItems.isNotEmpty()){
+                    items(tableItems) { item ->
+                        val isSelected = item in itemSelected
+                        TableRow(
+                            item = item,
+                            columns = columns,
+                            showSelection = showSelection,
+                            showActionMenu = showActionMenu,
+                            isSelected = isSelected,
+                            horizontalPadding = horizontalPadding,
+                            verticalPadding = verticalPadding,
+                            dropDownMenu = dropDownMenu,
+                            isSelecting = itemSelected.isNotEmpty(),
+                            onSelect = {
+                                onSelectItem(item)
+                            },
+                        )
+                    }
+                }else{
+                    item {
+                        EmptyRecord()
+                    }
                 }
             } else {
                 items(5) {
@@ -179,7 +187,7 @@ fun <T> TableRowLoading(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min=48.dp)
+                .heightIn(min = 48.dp)
                 .padding(horizontal = horizontalPadding, vertical = verticalPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -226,7 +234,7 @@ fun <T> TableRow(
     isSelected: Boolean,
     onSelect: (T) -> Unit,
     isSelecting: Boolean = false,
-    horizontalPadding: Dp = 12.dp,
+    horizontalPadding: Dp = 8.dp,
     verticalPadding: Dp = 4.dp,
     dropDownMenu: (@Composable (DropDownState<T>) -> Unit),
 ) {
@@ -234,7 +242,7 @@ fun <T> TableRow(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min=48.dp)
+                .heightIn(min = 48.dp)
                 .padding(horizontal = horizontalPadding, vertical = verticalPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -273,6 +281,7 @@ fun <T> TableRow(
 fun <T> TableHeader(
     tableState: TableState<T>,
     pageCount: Int,
+    onRefresh: () -> Unit,
     content: @Composable (RowScope.() -> Unit)?,
 ) {
     Row(
@@ -298,6 +307,12 @@ fun <T> TableHeader(
             totalPage = pageCount,
             currentPage = tableState.currentPage,
             onPageChange = { tableState.updatePage(it) }
+        )
+        Spacer(itemGap8)
+        com.rollinup.rollinup.component.button.IconButton(
+            icon = Res.drawable.ic_refresh_line_24,
+            onClick = onRefresh,
+            size = 16.dp
         )
 
     }
@@ -466,10 +481,13 @@ private fun RowsPerPage(
 ) {
     var showDropDown by remember { mutableStateOf(false) }
 
-    RecordField(
-        title = "Rows per page",
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            text = "Rows per page :",
+            color = theme.bodyText,
+            style = Style.body
+        )
+        Spacer(itemGap4)
         Box {
             Text(
                 text = selected.toString(),

@@ -1,32 +1,40 @@
-package com.rollinup.rollinup.screen.dashboard.ui.screen.studentdashboard.viewmodel
+package com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.rollinup.apiservice.Utils.toJsonString
-import com.rollinup.apiservice.data.source.network.model.request.attendance.CreateEditAttendanceBody
+import com.michaelflisar.lumberjack.core.L
+import com.rollinup.apiservice.utils.Utils.toJsonString
+import com.rollinup.apiservice.data.source.network.model.request.attendance.CheckInBody
 import com.rollinup.apiservice.data.source.network.model.request.attendance.GetAttendanceListByStudentQueryParams
-import com.rollinup.apiservice.domain.attendance.CreateAttendanceDataUseCase
+import com.rollinup.apiservice.domain.attendance.CheckInUseCase
 import com.rollinup.apiservice.domain.attendance.GetAttendanceByIdUseCase
 import com.rollinup.apiservice.domain.attendance.GetAttendanceByStudentListUseCase
 import com.rollinup.apiservice.domain.attendance.GetDashboardDataUseCase
-import com.rollinup.apiservice.model.attendance.AttendanceStatus
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.MultiPlatformFile
 import com.rollinup.apiservice.model.common.Result
-import com.rollinup.rollinup.screen.dashboard.getAttendanceDetailDummy
-import com.rollinup.rollinup.screen.dashboard.getAttendanceListDummy
-import com.rollinup.rollinup.screen.dashboard.model.studentdashboard.StudentDashboardCallback
-import com.rollinup.rollinup.screen.dashboard.ui.screen.studentdashboard.uistate.StudentDashboardUiState
+import com.rollinup.common.utils.Utils.now
+import com.rollinup.common.utils.Utils.toEpochMillis
+import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.uistate.StudentDashboardUiState
+import com.rollinup.rollinup.screen.main.screen.dashboard.model.studentdashboard.StudentDashboardCallback
+import dev.jordond.compass.Coordinates
 import dev.jordond.compass.Location
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlin.math.PI
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.pow
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 class StudentDashboardViewmodel(
-    private val createAttendanceDataUseCase: CreateAttendanceDataUseCase,
+    private val checkInUseCase: CheckInUseCase,
     private val getAttendanceListByStudentListUseCase: GetAttendanceByStudentListUseCase,
     private val getAttendanceByIdUseCase: GetAttendanceByIdUseCase,
     private val getDashboardDataUseCase: GetDashboardDataUseCase,
@@ -37,7 +45,7 @@ class StudentDashboardViewmodel(
     fun getCallback() = StudentDashboardCallback(
         onRefresh = ::refresh,
         onShowAttendanceDetail = ::showAttendanceDetail,
-        onUpdateLocationValid = ::updateLocationValid,
+        onUpdateLocation = ::updateLocationValid,
         onCheckIn = ::checkIn,
         onUpdateDateRangeSelected = ::updateDateRangeSelected,
         onUpdateLoginData = ::updateLoginData
@@ -67,16 +75,7 @@ class StudentDashboardViewmodel(
                     isLoadingCalendar = true
                 )
             }
-            delay(3000)
-            _uiState.update {
-                it.copy(
-                    isLoadingCalendar = false,
-                    attendanceList = getAttendanceListDummy()
-                )
-            }
-            if (true) {
-                return@launch
-            }
+
             getAttendanceListByStudentListUseCase(
                 id = id,
                 queryParams = queryParams
@@ -88,6 +87,9 @@ class StudentDashboardViewmodel(
                                 isLoadingCalendar = false,
                                 attendanceList = result.data
                             )
+                        }
+                        L.wtf{
+                            result.data.map { "${it.date} - ${it.status}\n" }.toString()
                         }
                     }
 
@@ -111,26 +113,19 @@ class StudentDashboardViewmodel(
         }
 
         val id = _uiState.value.user?.id ?: return
+        val date = LocalDate.now()
 
         viewModelScope.launch {
-            getDashboardDataUseCase(id).collectLatest { result ->
-                when (result) {
-                    is Result.Success -> {
-                        _uiState.update {
-                            it.copy(
-                                isLoadingHeader = false,
-                                summary = result.data.summary,
-                                currentStatus = result.data.attendanceStatus
-                            )
-                        }
-                    }
-
-                    is Result.Error -> {
-                        _uiState.update {
-                            it.copy(isLoadingHeader = false)
-                        }
+            getDashboardDataUseCase(id, date).collectLatest { result->
+                if(result is Result.Success){
+                    _uiState.update {
+                        it.copy(
+                            summary = result.data.summary,
+                            currentStatus = result.data.attendanceStatus
+                        )
                     }
                 }
+                _uiState.update { it.copy(isLoadingHeader = false) }
             }
         }
     }
@@ -143,15 +138,6 @@ class StudentDashboardViewmodel(
     private fun showAttendanceDetail(id: String) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoadingDetail = true) }
-            delay(3000)
-            _uiState.update {
-                it.copy(
-                    isLoadingDetail = false,
-                    attendanceDetail = getAttendanceDetailDummy()
-                )
-            }
-
-            if (true) return@launch
             getAttendanceByIdUseCase(id).collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
@@ -176,18 +162,16 @@ class StudentDashboardViewmodel(
     }
 
     private fun checkIn(attachment: MultiPlatformFile, location: Location) {
-        val id = uiState.value.user?.id ?: return
-
-        val body = CreateEditAttendanceBody(
-            studentUserId = id,
+        val body = CheckInBody(
             latitude = location.coordinates.latitude,
             longitude = location.coordinates.longitude,
             attachment = attachment,
-            status = AttendanceStatus.CHECKED_IN,
+            date = LocalDate.now().toString(),
+            checkedInAt = LocalDateTime.now().toEpochMillis()
         )
-
+        _uiState.update { it.copy(isLoadingOverlay = true) }
         viewModelScope.launch {
-            createAttendanceDataUseCase(body).collectLatest { result ->
+            checkInUseCase(body).collectLatest { result ->
                 _uiState.update {
                     it.copy(
                         isLoadingOverlay = false,
@@ -198,10 +182,21 @@ class StudentDashboardViewmodel(
         }
     }
 
-    private fun updateLocationValid(isValid: Boolean) {
+    private fun updateLocationValid(
+        location: Location?,
+        targetLocation: Coordinates,
+        radius: Double,
+    ) {
         _uiState.update {
             it.copy(
-                isLocationValid = isValid
+                currentLocation = location,
+                isLocationValid = location?.let{
+                    validateLocation(
+                        currentCoordinates = location.coordinates,
+                        targetCoordinates = targetLocation,
+                        maxDistance = radius
+                    )
+                }
             )
         }
     }
@@ -220,6 +215,35 @@ class StudentDashboardViewmodel(
                 user = loginData
             )
         }
+    }
+
+    private fun validateLocation(
+        currentCoordinates: Coordinates,
+        targetCoordinates: Coordinates,
+        maxDistance: Double,
+    ): Boolean {
+        return maxDistance > calculateDistance(currentCoordinates, targetCoordinates)
+    }
+
+    private fun calculateDistance(
+        current: Coordinates,
+        target: Coordinates,
+    ): Double {
+        val earthRad = 6371
+        val deltaLat = (current.latitude - target.latitude).toRadians()
+        val deltaLon = (current.longitude - target.longitude).toRadians()
+        val a = sin(deltaLat / 2).pow(2.0) +
+                sin(deltaLon / 2).pow(2.0) *
+                cos(current.latitude) * cos(target.latitude)
+
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        val finalDistance = earthRad * c * 1000
+
+        return finalDistance
+    }
+
+    private fun Double.toRadians(): Double {
+        return this * PI / 180.0
     }
 
 }

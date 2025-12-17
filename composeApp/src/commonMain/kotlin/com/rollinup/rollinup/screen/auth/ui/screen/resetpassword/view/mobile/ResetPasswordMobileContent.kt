@@ -18,12 +18,14 @@ fun ResetPasswordMobileContent(
     cb: ResetPasswordCallback,
 ) {
     Scaffold(
+        topBar = {
+            Header("Account Recovery")
+        },
         showLoadingOverlay = uiState.isLoadingOverlay
     ) {
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            Header("Account Recovery")
             Spacer(96.dp)
             ResetPasswordForm(
                 onNavigateUp = onNavigateUp,

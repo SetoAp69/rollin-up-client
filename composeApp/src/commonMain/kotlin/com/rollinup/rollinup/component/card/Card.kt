@@ -31,7 +31,7 @@ import rollin_up.composeapp.generated.resources.ic_more_fill_24
 
 @Composable
 fun Card(
-    shadowColor: Color = theme.primary,
+    shadowColor: Color = theme.shadow,
     lineStroke: Color? = theme.popUpStroke,
     backgroundColor: Color = theme.popUpBg,
     onClick: () -> Unit = {},
@@ -41,9 +41,8 @@ fun Card(
     CustomRipple {
         Box(
             modifier = Modifier
-
                 .shadow(
-                    elevation = 4.dp,
+                    elevation = 8.dp,
                     ambientColor = shadowColor,
                     spotColor = shadowColor,
                     shape = RoundedCornerShape(8.dp)

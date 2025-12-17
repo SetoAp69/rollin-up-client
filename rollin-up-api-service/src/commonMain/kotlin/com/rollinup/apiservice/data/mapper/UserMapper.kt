@@ -1,10 +1,13 @@
 package com.rollinup.apiservice.data.mapper
 
+import com.rollinup.apiservice.data.source.network.model.response.user.GetUserByIdResponse
+import com.rollinup.apiservice.data.source.network.model.response.user.GetUserListResponse
+import com.rollinup.apiservice.data.source.network.model.response.user.GetUserOptionsResponse
 import com.rollinup.apiservice.model.common.Gender
 import com.rollinup.apiservice.model.user.UserDetailEntity
 import com.rollinup.apiservice.model.user.UserEntity
-import com.rollinup.apiservice.data.source.network.model.response.user.GetUserByIdResponse
-import com.rollinup.apiservice.data.source.network.model.response.user.GetUserListResponse
+import com.rollinup.apiservice.model.user.UserOptionEntity
+import com.rollinup.common.model.OptionData
 
 class UserMapper {
     fun mapGetUserList(data: List<GetUserListResponse.Data.UserData>): List<UserEntity> {
@@ -17,18 +20,19 @@ class UserMapper {
                 fullName = it.firstName + " " + it.lastName,
                 studentId = it.studentId ?: "",
                 address = it.address,
+                role = it.role,
                 gender = Gender.fromValue(it.gender),
             )
         }
     }
 
-    fun mapGetUserById(data: GetUserByIdResponse.Data): UserDetailEntity{
+    fun mapGetUserById(data: GetUserByIdResponse.Data): UserDetailEntity {
         return UserDetailEntity(
             id = data.id,
             userName = data.username,
             firstName = data.firsName,
             lastName = data.lastName,
-            classX = data.classX?.let{
+            classX = data.classX?.let {
                 UserDetailEntity.Data(
                     id = it.id,
                     name = it.name,
@@ -36,11 +40,11 @@ class UserMapper {
                 )
             },
             email = data.email,
-            fullName = data.firsName +" "+data.lastName,
-            studentId = data.studentId,
+            fullName = data.firsName + " " + data.lastName,
+            studentId = data.studentId?:"-",
             address = data.address,
             gender = Gender.fromValue(data.gender),
-            phoneNumber = data.phoneNumber?:"",
+            phoneNumber = data.phoneNumber ?: "",
             birthDay = data.birthday,
             role = UserDetailEntity.Data(
                 id = data.role.id,
@@ -49,4 +53,32 @@ class UserMapper {
             )
         )
     }
+
+    fun mapUserOptions(data: GetUserOptionsResponse.Data) =
+        UserOptionEntity(
+            roleOptions = data.rolesOptions.map {
+                OptionData(
+                    label = it.label,
+                    value = it.value
+                )
+            },
+            classOptions = data.classOptions.map {
+                OptionData(
+                    label = it.label,
+                    value = it.value
+                )
+            },
+            roleIdOptions = data.rolesIdOptions.map {
+                OptionData(
+                    label = it.label,
+                    value = it.value
+                )
+            },
+            classIdOptions = data.classIdOptions.map {
+                OptionData(
+                    label = it.label,
+                    value = it.value
+                )
+            },
+        )
 }

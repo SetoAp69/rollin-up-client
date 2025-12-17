@@ -3,6 +3,7 @@ package com.rollinup.rollinup.screen.main.screen.permit.ui.screen.studentpermit.
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -11,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.rollinup.apiservice.model.permit.PermitByStudentEntity
 import com.rollinup.common.model.Severity
-import com.rollinup.common.utils.Utils.toLocalDateTime
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.rollinup.component.card.Card
 import com.rollinup.rollinup.component.chip.Chip
 import com.rollinup.rollinup.component.loading.ShimmerEffect
@@ -26,7 +27,9 @@ fun StudentPermitItem(
 ) {
     Card(
         showAction = true,
-        onClickAction = {},
+        onClickAction = {
+            onClickAction(item)
+        },
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(itemGap4)) {
             ItemDataRow(
@@ -105,13 +108,14 @@ private fun ItemDataRow(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         leftContent()
+        Spacer(modifier = Modifier.weight(1f))
         rightContent()
     }
 }
 
 private fun generateDuration(from: String, to: String): String {
-    val dateTimeFrom = from.toLocalDateTime()
-    val dateTimeTo = to.toLocalDateTime()
+    val dateTimeFrom = from.parseToLocalDateTime()
+    val dateTimeTo = to.parseToLocalDateTime()
 
     return when {
         dateTimeFrom == dateTimeTo -> {

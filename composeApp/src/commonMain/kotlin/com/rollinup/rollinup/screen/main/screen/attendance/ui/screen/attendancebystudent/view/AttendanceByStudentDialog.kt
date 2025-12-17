@@ -31,14 +31,15 @@ fun AttendanceByStudentDialog(
         modifier = Modifier
             .sizeIn(maxHeight = height, maxWidth = width)
             .padding(screenPadding * 2)
-    ) {
+    ) { showSnackBar ->
         DisposableEffect(showDialog) {
             if (showDialog) viewModel.init(id)
             onDispose { viewModel.reset() }
         }
         AttendanceByStudentDialogContent(
             uiState = uiState,
-            cb = cb
+            cb = cb,
+            onShowSnackBar = showSnackBar
         )
     }
 }

@@ -28,7 +28,9 @@ fun Header(
                     bottomStart = rad
                 ),
                 color = theme.primary
-            ),
+            )
+            .padding(top = 12.dp)
+        ,
         contentAlignment = Alignment.Center
     ) {
         Text(

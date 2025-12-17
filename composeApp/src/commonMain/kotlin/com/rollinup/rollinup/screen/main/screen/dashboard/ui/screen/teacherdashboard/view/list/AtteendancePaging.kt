@@ -1,4 +1,4 @@
-package com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view.list
+package com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.list
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,7 +11,6 @@ import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.rollinup.component.pagination.PagingColumn
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
-import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.list.AttendanceListHeader
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

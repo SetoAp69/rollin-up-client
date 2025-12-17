@@ -1,21 +1,14 @@
 package com.rollinup.apiservice.data.source.network.model.request.permit
 
-import com.rollinup.apiservice.Utils.toJsonString
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class PermitApprovalBody(
+    @SerialName("listId")
     val listId: List<String> = emptyList(),
+    @SerialName("approvalNote")
     val approvalNote: String = "",
+    @SerialName("isApproved")
     val isApproved: Boolean = false,
-) {
-    fun toHashMap(): HashMap<String, String> {
-        val hashMap = hashMapOf<String, String>()
-
-        listId.toJsonString()?.let {
-            hashMap["listId"] = it
-        }
-        hashMap["approvalNote"] = approvalNote
-        hashMap["isApproved"] = isApproved.toString()
-
-        return hashMap
-    }
-}
+)

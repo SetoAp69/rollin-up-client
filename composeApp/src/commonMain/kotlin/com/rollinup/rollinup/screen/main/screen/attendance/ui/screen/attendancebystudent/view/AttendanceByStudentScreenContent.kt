@@ -1,7 +1,6 @@
 package com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancebystudent.view
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
@@ -14,6 +13,8 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.rollinup.apiservice.model.attendance.AttendanceByStudentEntity
 import com.rollinup.rollinup.component.attendancedetail.AttendanceDetailDialog
+import com.rollinup.rollinup.component.handlestate.HandleState
+import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.screenPadding
@@ -28,13 +29,24 @@ fun AttendanceByStudentScreenContent(
     uiState: AttendanceByStudentUiState,
     pagingData: LazyPagingItems<AttendanceByStudentEntity>,
     cb: AttendanceByStudentCallback,
+    onShowSnackBar: OnShowSnackBar,
 ) {
+    HandleState(
+        state = uiState.exportState,
+        successMsg = "Success, data successfully exported",
+        errorMsg = "Error, failed to export data, please try again",
+        onDispose = cb.onResetMessageState,
+        onShowSnackBar = onShowSnackBar,
+    )
+
     Scaffold(
+        showLoadingOverlay = uiState.isLoadingOverlay,
         topBar = {
             AttendanceByStudentTopBar(
                 onNavigateUp = onNavigateUp,
                 uiState = uiState,
-                onSelectStatus = cb.onSelectStatus
+                onUpdateFilter = cb.onUpdateFilter,
+                onExportFile = cb.onExportFile,
             )
         }
     ) {

@@ -3,7 +3,7 @@ package com.rollinup.apiservice.data.repository.permit
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.rollinup.apiservice.Utils
+import com.rollinup.apiservice.utils.Utils
 import com.rollinup.apiservice.data.mapper.PermitMapper
 import com.rollinup.apiservice.data.repository.permit.pagingsource.GetPermitByClassPagingSource
 import com.rollinup.apiservice.data.repository.permit.pagingsource.GetPermitByStudentPagingSource

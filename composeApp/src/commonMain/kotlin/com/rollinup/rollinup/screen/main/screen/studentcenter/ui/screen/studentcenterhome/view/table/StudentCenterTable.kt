@@ -15,12 +15,21 @@ import com.rollinup.rollinup.screen.main.screen.studentcenter.ui.screen.studentc
 @Composable
 fun StudentCenterTable(
     uiState: StudentCenterUiState,
+    onRefresh: () -> Unit,
 ) {
     Table(
         items = uiState.itemList,
         columns = getColumn(),
         isLoading = uiState.isLoading,
         showSelection = false,
+        headerContent = {
+            Text(
+                text = "Student list",
+                style = Style.popupTitle,
+                color = theme.textPrimary
+            )
+        },
+        onRefresh = onRefresh,
         dropDownMenu = { state ->
             StudentActionDropdown(
                 showSheet = state.expanded,
@@ -33,23 +42,9 @@ fun StudentCenterTable(
 
 private fun getColumn(): List<TableColumn<UserEntity>> {
     return listOf(
-        TableColumn("Id") {
+        TableColumn("Student Id") {
             Text(
-                text = it.id.ifBlank { "-" },
-                color = theme.bodyText,
-                style = Style.body
-            )
-        },
-        TableColumn("Username") {
-            Text(
-                text = it.userName.ifBlank { "-" },
-                color = theme.bodyText,
-                style = Style.body
-            )
-        },
-        TableColumn("Class") {
-            Text(
-                text = it.classX.ifBlank { "-" },
+                text = it.studentId.ifBlank { "-" },
                 color = theme.bodyText,
                 style = Style.body
             )
@@ -57,6 +52,13 @@ private fun getColumn(): List<TableColumn<UserEntity>> {
         TableColumn("Full Name") {
             Text(
                 text = it.fullName.ifBlank { "-" },
+                color = theme.bodyText,
+                style = Style.body
+            )
+        },
+        TableColumn("Class") {
+            Text(
+                text = it.classX.ifBlank { "-" },
                 color = theme.bodyText,
                 style = Style.body
             )
@@ -81,11 +83,5 @@ private fun getColumn(): List<TableColumn<UserEntity>> {
                 severity = Severity.SECONDARY
             )
         },
-        TableColumn("Role") {
-            Chip(
-                text = it.role.ifBlank { "-" },
-                severity = Severity.SECONDARY
-            )
-        }
     )
 }

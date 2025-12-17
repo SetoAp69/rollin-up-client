@@ -4,14 +4,15 @@ import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
 import com.rollinup.apiservice.model.auth.LoginEntity
+import com.rollinup.common.model.OptionData
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.common.utils.Utils.toEpochMillis
-import com.rollinup.common.utils.Utils.toLocalDateTime
-import com.rollinup.rollinup.component.model.OptionData
 import com.rollinup.rollinup.component.permitform.model.PermitFormData
+import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.EditAttendanceFormData
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardApprovalFormData
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardFilterData
-import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.EditAttendanceFormData
 import dev.jordond.compass.Coordinates
+import kotlinx.datetime.LocalDate
 
 data class TeacherDashboardUiState(
     val user: LoginEntity = LoginEntity(),
@@ -28,6 +29,8 @@ data class TeacherDashboardUiState(
     val approvalFormData: TeacherDashboardApprovalFormData = TeacherDashboardApprovalFormData(),
     val editAttendanceFormData: EditAttendanceFormData = EditAttendanceFormData(),
     val filterData: TeacherDashboardFilterData = TeacherDashboardFilterData(),
+    val exportDateRanges: List<LocalDate> = emptyList(),
+    val exportState: Boolean? = null,
 ) {
     val statusOptions
         get() = AttendanceStatus.entries.map {
@@ -46,8 +49,8 @@ data class TeacherDashboardUiState(
                 PermitFormData(
                     duration =
                         listOf(
-                            permit.startTime.toLocalDateTime().toEpochMillis(),
-                            permit.endTime.toLocalDateTime().toEpochMillis()
+                            permit.startTime.parseToLocalDateTime().toEpochMillis(),
+                            permit.endTime.parseToLocalDateTime().toEpochMillis()
                         ),
                     reason = permit.reason,
                     type = permit.type,
@@ -63,7 +66,7 @@ data class TeacherDashboardUiState(
                     null
                 else
                     Coordinates(attendanceDetail.latitude!!, attendanceDetail.longitude!!),
-            checkInTime = attendanceDetail.checkedInAt?.toLocalDateTime()?.toEpochMillis(),
+            checkInTime = attendanceDetail.checkedInAt?.parseToLocalDateTime()?.toEpochMillis(),
         )
     }
 }

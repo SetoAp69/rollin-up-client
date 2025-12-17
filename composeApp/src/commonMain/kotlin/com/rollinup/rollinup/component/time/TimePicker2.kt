@@ -2,26 +2,21 @@ package com.rollinup.rollinup.component.time
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -32,10 +27,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.rollinup.common.utils.Utils.now
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.common.utils.Utils.toEpochMillis
-import com.rollinup.common.utils.Utils.toLocalDateTime
 import com.rollinup.rollinup.component.bottomsheet.BottomSheet
 import com.rollinup.rollinup.component.button.Button
+import com.rollinup.rollinup.component.dropdown.DropDownMenu
 import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
@@ -45,10 +41,10 @@ import com.rollinup.rollinup.component.textfield.TextError
 import com.rollinup.rollinup.component.textfield.TextFieldTitle
 import com.rollinup.rollinup.component.theme.LocalGeneralSetting
 import com.rollinup.rollinup.component.theme.Style
+import com.rollinup.rollinup.component.theme.generalSetting
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.component.utils.getScreenHeight
-import com.rollinup.rollinup.component.utils.isCompact
 import dev.darkokoa.datetimewheelpicker.WheelTimePicker
 import dev.darkokoa.datetimewheelpicker.core.WheelPickerDefaults
 import dev.darkokoa.datetimewheelpicker.core.format.TimeFormat
@@ -56,9 +52,7 @@ import dev.darkokoa.datetimewheelpicker.core.format.timeFormatter
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
-import org.jetbrains.compose.resources.painterResource
-import rollin_up.composeapp.generated.resources.Res
-import rollin_up.composeapp.generated.resources.ic_close_line_24
+import kotlinx.datetime.TimeZone
 
 
 @Composable
@@ -71,14 +65,19 @@ fun TimePickerTextField(
     isError: Boolean = false,
     errorText: String? = null,
     enabled: Boolean = true,
+    max: LocalTime? = null,
+    min: LocalTime? = null,
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
-    val dateValue = value?.toLocalDateTime()
+    val dateValue = value?.parseToLocalDateTime(TimeZone.UTC)
     val stringValue = dateValue?.time?.toString() ?: placeholder
 
     val textStyle = if (value == null) Style.body else Style.title
     val lineColor: Color
     val textColor: Color
+
+    val maxTime = max ?: generalSetting.schoolPeriodEnd
+    val minTime = min ?: generalSetting.checkInPeriodStart
 
     val generalSetting = LocalGeneralSetting.current
 
@@ -162,11 +161,58 @@ fun TimePickerTextField(
                 )
             },
             onDismissRequest = { showBottomSheet = it },
-            min = generalSetting.checkInPeriodStart,
-            max = generalSetting.schoolPeriodEnd,
+            min = minTime,
+            max = maxTime,
         )
     }
+}
 
+@Composable
+fun TimePickerDropDown(
+    showDropdown: Boolean,
+    onValueChange: (LocalTime) -> Unit,
+    onDismissRequest: (Boolean) -> Unit,
+    min: LocalTime = LocalTime(0, 0, 0),
+    max: LocalTime = LocalTime(23, 59, 59),
+    timeFormat: TimeFormat = TimeFormat.HOUR_24,
+) {
+    var tempValue by remember { mutableStateOf(LocalTime.fromSecondOfDay(0)) }
+
+    DropDownMenu(
+        isShowDropDown = showDropdown,
+        onDismissRequest = onDismissRequest,
+    ) {
+        Column(
+            modifier = Modifier
+                .background(
+                    color = theme.popUpBg,
+                    shape = RoundedCornerShape(screenPadding)
+                )
+                .width(200.dp)
+                .height(400.dp)
+                .padding(vertical = screenPadding)
+        ) {
+            TimePicker(
+                modifier = Modifier.weight(1f),
+                onValueChange = {
+                    tempValue = it
+                },
+                min = min,
+                max = max,
+                timeFormat = timeFormat,
+            )
+            Spacer(itemGap8)
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = screenPadding),
+                text = "Apply"
+            ) {
+                onValueChange(tempValue)
+                onDismissRequest(false)
+            }
+        }
+    }
 }
 
 @Composable
@@ -179,8 +225,6 @@ fun TimePickerDialog(
     timeFormat: TimeFormat = TimeFormat.HOUR_24,
 ) {
     var tempValue by remember { mutableStateOf(LocalTime.fromSecondOfDay(0)) }
-    val height = getScreenHeight()
-    val width = getScreenHeight()
 
     val properties = DialogProperties(
         dismissOnBackPress = true,
@@ -193,51 +237,34 @@ fun TimePickerDialog(
             onDismissRequest = { onDismissRequest(false) },
             properties = properties,
         ) {
-            Box(
-                contentAlignment = Alignment.TopEnd,
+            Column(
                 modifier = Modifier
                     .background(
                         color = theme.popUpBg,
                         shape = RoundedCornerShape(screenPadding)
                     )
-                    .width(width * 0.2f)
-                    .heightIn(max = height * 0.3f)
+                    .width(200.dp)
+                    .height(400.dp)
+                    .padding(vertical = screenPadding)
             ) {
-                Icon(
-                    modifier = Modifier
-                        .padding(if (isCompact) 12.dp else 16.dp)
-                        .clip(CircleShape)
-                        .clickable {
-                            onDismissRequest(false)
-                        }
-                        .size(32.dp),
-
-                    tint = theme.lineStroke,
-                    painter = painterResource(Res.drawable.ic_close_line_24),
-                    contentDescription = null
+                TimePicker(
+                    modifier = Modifier.weight(1f),
+                    onValueChange = {
+                        tempValue = it
+                    },
+                    min = min,
+                    max = max,
+                    timeFormat = timeFormat,
                 )
-                Column(
-                    modifier = Modifier.padding(vertical = screenPadding)
+                Spacer(itemGap8)
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = screenPadding),
+                    text = "Apply"
                 ) {
-                    TimePicker2(
-                        modifier = Modifier.weight(1f),
-                        onValueChange = {
-                            tempValue = it
-                        },
-                        min = min,
-                        max = max,
-                        timeFormat = timeFormat,
-                    )
-                    Spacer(itemGap8)
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = screenPadding),
-                        text = "Apply"
-                    ) {
-                        onValueChange(tempValue)
-                        onDismissRequest(false)
-                    }
+                    onValueChange(tempValue)
+                    onDismissRequest(false)
                 }
             }
         }
@@ -260,7 +287,7 @@ fun TimePickerBottomSheet(
         onDismissRequest = onDismissRequest,
         isShowSheet = showSheet
     ) {
-        TimePicker2(
+        TimePicker(
             modifier = Modifier.weight(1f),
             onValueChange = {
                 tempValue = it
@@ -283,7 +310,7 @@ fun TimePickerBottomSheet(
 }
 
 @Composable
-fun TimePicker2(
+fun TimePicker(
     onValueChange: (LocalTime) -> Unit,
     min: LocalTime? = null,
     max: LocalTime? = null,

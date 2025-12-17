@@ -3,6 +3,7 @@ package com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendance
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -14,14 +15,19 @@ import androidx.compose.ui.unit.dp
 import com.rollinup.apiservice.model.attendance.AttendanceByStudentEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
 import com.rollinup.apiservice.model.permit.PermitType
-import com.rollinup.common.utils.Utils.toLocalDateTime
+import com.rollinup.common.utils.Utils.now
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.rollinup.component.card.Card
 import com.rollinup.rollinup.component.chip.Chip
+import com.rollinup.rollinup.component.date.DateFormatter
 import com.rollinup.rollinup.component.date.DateText
+import com.rollinup.rollinup.component.date.PermitDateText
 import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.painterResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_clock_filled_24
@@ -37,8 +43,8 @@ fun AttendanceByStudentPagingItem(
         Column(verticalArrangement = Arrangement.spacedBy(itemGap4)) {
             RowData(
                 leftContent = {
-                    DateText(
-                        dateString = item.date,
+                    Text(
+                        text = DateFormatter.formatDateShort(item.localDate, true),
                         style = Style.title,
                         color = theme.bodyText
                     )
@@ -61,27 +67,38 @@ fun AttendanceByStudentPagingItem(
                     }
                 },
                 rightContent = {
-                    Row {
-                        Icon(
-                            painter = painterResource(Res.drawable.ic_clock_filled_24),
-                            contentDescription = null,
-                            tint = theme.textPrimary,
-                            modifier = Modifier.size(16.dp)
-                        )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(itemGap4)
+                    ) {
                         when (item.status) {
                             AttendanceStatus.LATE, AttendanceStatus.CHECKED_IN -> {
+                                Icon(
+                                    painter = painterResource(Res.drawable.ic_clock_filled_24),
+                                    contentDescription = null,
+                                    tint = theme.textPrimary,
+                                    modifier = Modifier.size(16.dp)
+                                )
                                 DateText(
-                                    dateString = item.checkInTime ?: "-",
+                                    dateTime = item.checkInTime?.parseToLocalDateTime(TimeZone.UTC)
+                                        ?: LocalDateTime.now(),
                                     color = theme.textPrimary
                                 )
                             }
 
                             AttendanceStatus.ABSENT, AttendanceStatus.EXCUSED -> {
                                 item.permit?.let {
-                                    Text(
-                                        text = getDuration(it),
-                                        color = theme.textPrimary,
-                                        style = Style.body
+                                    Icon(
+                                        painter = painterResource(Res.drawable.ic_clock_filled_24),
+                                        contentDescription = null,
+                                        tint = theme.textPrimary,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    PermitDateText(
+                                        start = it.start,
+                                        end = it.end,
+                                        type = it.type,
+                                        color = theme.textPrimary
                                     )
                                 }
                             }
@@ -123,8 +140,8 @@ fun AttendanceByStudentPagingLoading() {
 private fun getDuration(
     permit: AttendanceByStudentEntity.Permit,
 ): String {
-    val from = permit.start.toLocalDateTime()
-    val to = permit.end.toLocalDateTime()
+    val from = permit.start.parseToLocalDateTime()
+    val to = permit.end.parseToLocalDateTime()
 
     return when (
         permit.type
@@ -133,7 +150,7 @@ private fun getDuration(
             "${from.time} - ${to.time}"
         }
 
-        PermitType.ABSENT -> {
+        PermitType.ABSENCE -> {
             val fromDate = from.date
             val toDate = to.date
 
@@ -159,6 +176,7 @@ private fun RowData(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         leftContent()
+        Spacer(modifier = Modifier.weight(1f))
         rightContent()
     }
 }

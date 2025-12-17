@@ -11,13 +11,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -44,8 +42,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.CalendarDay
@@ -61,14 +57,9 @@ import com.kizitonwose.calendar.core.plusMonths
 import com.rollinup.common.utils.Utils.toEpochMilli
 import com.rollinup.common.utils.Utils.toFormattedString
 import com.rollinup.common.utils.Utils.toLocalDate
-import com.rollinup.common.utils.Utils.toLocalDateTime
-import com.rollinup.rollinup.component.bottomsheet.BottomSheet
-import com.rollinup.rollinup.component.button.Button
-import com.rollinup.rollinup.component.button.ButtonType
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.rollinup.component.dropdown.DropDownMenu
 import com.rollinup.rollinup.component.dropdown.DropDownMenuItem
-import com.rollinup.rollinup.component.model.Platform
-import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
@@ -77,23 +68,35 @@ import com.rollinup.rollinup.component.textfield.TextFieldTitle
 import com.rollinup.rollinup.component.theme.LocalHolidayProvider
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
-import com.rollinup.rollinup.component.utils.getPlatform
-import com.rollinup.rollinup.component.utils.getScreenHeight
-import com.rollinup.rollinup.component.utils.getScreenWidth
-import com.rollinup.rollinup.component.utils.isCompact
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.YearMonth
 import org.jetbrains.compose.resources.painterResource
 import rollin_up.composeapp.generated.resources.Res
-import rollin_up.composeapp.generated.resources.ic_close_line_24
 import rollin_up.composeapp.generated.resources.ic_drop_down_arrow_line_left_24
 import rollin_up.composeapp.generated.resources.ic_drop_down_arrow_line_right_24
 import kotlin.time.ExperimentalTime
 
+/**
+ * A composable that provides a text field for selecting a single date from a date picker dialog.
+ *
+ * @param title The title of the date picker field.
+ * @param value The currently selected date in milliseconds since epoch.
+ * @param enable Whether the date picker field is enabled.
+ * @param contentColor The color of the content (text and icon).
+ * @param backgroundColor The background color of the date picker field.
+ * @param placeHolder The placeholder text to display when no date is selected.
+ * @param width The width of the date picker field.
+ * @param isError Whether the date picker field is in an error state.
+ * @param textError The error text to display when in an error state.
+ * @param onValueChange A callback that is invoked when a date is selected.
+ * @param isDisablePastSelection Whether to disable the selection of past dates.
+ * @param isAllSelectable Whether all dates are selectable.
+ * @param color The color scheme for the date picker.
+ */
 @Composable
-fun SingleDatePicker(
+fun SingleDatePickerField(
     title: String,
     value: Long?,
     enable: Boolean = true,
@@ -107,10 +110,10 @@ fun SingleDatePicker(
     isDisablePastSelection: Boolean = false,
     isAllSelectable: Boolean = false,
     color: DatePickerColor = DatePickerDefault.color,
-    ) {
+) {
     var showPicker by remember { mutableStateOf(false) }
     val rotationState by animateFloatAsState(targetValue = if (showPicker) 90f else 0F)
-    val sValue = value?.toLocalDateTime()?.date?.toString() ?: placeHolder
+    val sValue = value?.parseToLocalDateTime()?.date?.toString() ?: placeHolder
 
     val modifier = width?.let {
         Modifier.width(it)
@@ -152,18 +155,99 @@ fun SingleDatePicker(
             isError = isError
         )
     }
-    DatePicker(
+    SingleDatePicker(
         isShowDatePicker = showPicker,
-        onDismissRequest = { showPicker = false },
-        value = value?.let { listOf(it) } ?: emptyList(),
-        onValueChange = { value -> onValueChange(value.firstOrNull()) },
+        onDismissRequest = { showPicker = it },
+        value = value?.toLocalDate(),
+        onSelectDate = { date ->
+            onValueChange(date?.toEpochMilli())
+        },
         isDisablePastSelection = isDisablePastSelection,
         isAllSelectable = isAllSelectable,
-        maxSelection = 1,
         color = color
     )
 }
 
+/**
+ * A composable that provides a filterable date picker for selecting a single date.
+ *
+ * @param title The title of the date picker.
+ * @param value The currently selected date in milliseconds since epoch.
+ * @param enabled Whether the date picker is enabled.
+ * @param placeHolder The placeholder text to display when no date is selected.
+ * @param onValueChange A callback that is invoked when a date is selected.
+ */
+@Composable
+fun SingleFilterDatePicker(
+    title: String,
+    value: Long?,
+    enabled: Boolean,
+    placeHolder: String = "Date",
+    onValueChange: (Long?) -> Unit,
+) {
+    var showDatePicker by remember { mutableStateOf(false) }
+    val rotationValue by animateFloatAsState(if (showDatePicker) 90f else 0f)
+
+    val dateValue = value?.toLocalDate()
+    val label = when {
+        dateValue != null -> dateValue.toFormattedString()
+        else -> placeHolder
+    }
+
+    TextFieldTitle(
+        title = title,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start,
+            modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .clickable(enabled) { showDatePicker = true }
+                .background(
+                    color = theme.secondary,
+                    shape = RoundedCornerShape(8.dp),
+                )
+                .fillMaxWidth()
+                .padding(itemGap4)
+        ) {
+            if (enabled) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_drop_down_arrow_line_right_24),
+                    tint = theme.primary,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(16.dp)
+                        .rotate(rotationValue)
+                )
+                Spacer(itemGap4)
+            }
+            Text(
+                text = label,
+                color = theme.primary,
+                style = Style.body
+            )
+        }
+    }
+
+    SingleDatePicker(
+        isShowDatePicker = showDatePicker,
+        onDismissRequest = { showDatePicker = it },
+        value = value?.toLocalDate(),
+        onSelectDate = { date -> onValueChange(date?.toEpochMilli()) },
+        isDisablePastSelection = false,
+        isAllSelectable = true,
+    )
+}
+
+/**
+ * A composable that provides a filterable date picker for selecting a range of dates.
+ *
+ * @param title The title of the date picker.
+ * @param value The currently selected date range in milliseconds since epoch.
+ * @param enabled Whether the date picker is enabled.
+ * @param placeHolder The placeholder text to display when no date is selected.
+ * @param onValueChange A callback that is invoked when a date range is selected.
+ */
 @Composable
 fun FilterDatePicker(
     title: String,
@@ -218,24 +302,35 @@ fun FilterDatePicker(
             }
             Text(
                 text = label,
-                color = theme.primary,
-                style = Style.body
+                color = theme.textPrimary,
+                style = Style.title
             )
         }
     }
-    DatePickerDialog(
-        isShowDialog = showDateSelector,
+    DateRangePicker(
+        isShowDatePicker = showDateSelector,
         onDismissRequest = { showDateSelector = it },
-        value = dateValue,
-        maxSelection = Int.MAX_VALUE,
-        isDisabledPastSelection = false,
-        isAllSelectable = true,
-        onValueChange = {
-            onValueChange(it.map { it.toEpochMilli() })
-        }
+        value = value.map { it.toLocalDate() },
+        onSelectDate = { value -> onValueChange(value.map { it.toEpochMilli() }) },
     )
 }
 
+/**
+ * A composable that provides a text field for selecting a single date from a date picker dialog.
+ * This is a convenience wrapper around [DateRangePickerField] with a `maxRange` of 1.
+ *
+ * @param title The title of the date picker field.
+ * @param placeholder The placeholder text to display when no date is selected.
+ * @param value The currently selected date in milliseconds since epoch.
+ * @param color The color scheme for the date picker.
+ * @param isError Whether the date picker field is in an error state.
+ * @param isAllSelectable Whether all dates are selectable.
+ * @param errorText The error text to display when in an error state.
+ * @param enabled Whether the date picker field is enabled.
+ * @param isDisablePastSelection Whether to disable the selection of past dates.
+ * @param isRequired Whether the field is required.
+ * @param onValueChange A callback that is invoked when a date is selected.
+ */
 @Composable
 fun SingleDatePickerField(
     title: String,
@@ -250,38 +345,51 @@ fun SingleDatePickerField(
     isRequired: Boolean = false,
     onValueChange: (Long?) -> Unit,
 ) {
-    DatePickerField(
+    DateRangePickerField(
         title = title,
         placeholder = placeholder,
         value = value?.let { listOf(it) } ?: emptyList(),
-        maxSelection = 1,
+        maxRange = 1,
         color = color,
         isError = isError,
         isAllSelectable = isAllSelectable,
         errorText = errorText,
         enabled = enabled,
         isDisablePastSelection = isDisablePastSelection,
-        platform = getPlatform(),
-        isRequired = isRequired,
-        onValueChange = {
-            onValueChange(it.firstOrNull())
-        }
-    )
+        isRequired = isRequired
+    ) {
+        onValueChange(it.firstOrNull())
+    }
 }
 
+/**
+ * A composable that provides a text field for selecting a date range from a date picker dialog.
+ *
+ * @param title The title of the date picker field.
+ * @param placeholder The placeholder text to display when no date is selected.
+ * @param value The currently selected date range in milliseconds since epoch.
+ * @param maxRange The maximum number of days that can be selected in a range.
+ * @param color The color scheme for the date picker.
+ * @param isError Whether the date picker field is in an error state.
+ * @param isAllSelectable Whether all dates are selectable.
+ * @param errorText The error text to display when in an error state.
+ * @param enabled Whether the date picker field is enabled.
+ * @param isDisablePastSelection Whether to disable the selection of past dates.
+ * @param isRequired Whether the field is required.
+ * @param onValueChange A callback that is invoked when a date range is selected.
+ */
 @Composable
-fun DatePickerField(
+fun DateRangePickerField(
     title: String,
     placeholder: String,
     value: List<Long>,
-    maxSelection: Int = 3,
+    maxRange: Int = 3,
     color: DatePickerColor = DatePickerDefault.color,
     isError: Boolean = false,
     isAllSelectable: Boolean = false,
     errorText: String? = null,
     enabled: Boolean = true,
     isDisablePastSelection: Boolean = true,
-    platform: Platform,
     isRequired: Boolean = false,
     onValueChange: (List<Long>) -> Unit,
 ) {
@@ -340,263 +448,154 @@ fun DatePickerField(
         }
     }
 
-    when (platform) {
-        Platform.IOS, Platform.ANDROID -> {
-            DatePickerBottomSheet(
-                isShowSheet = showBottomSheet,
-                onDismissRequest = { showBottomSheet = it },
-                value = selectedDate,
-                onValueChange = {
-                    onValueChange(
-                        it.map { date -> date.toEpochMilli() }
-                            .sortedBy { millis -> millis }
-                    )
-                },
-                isDisabledPastSelection = isDisablePastSelection,
-                maxSelection = maxSelection,
-                color = color,
-                isAllSelectable = isAllSelectable
-            )
-        }
+    DateRangePicker(
+        isShowDatePicker = showBottomSheet,
+        onDismissRequest = { showBottomSheet = it },
+        value = value.map { it.toLocalDate() },
+        onSelectDate = { value -> onValueChange(value.map { it.toEpochMilli() }) },
+        maxRange = maxRange,
+        isDisablePastSelection = isDisablePastSelection,
+        isAllSelectable = isAllSelectable,
+        color = color
+    )
 
-        else -> {
-            DatePickerDialog(
-                isShowDialog = showBottomSheet,
-                onDismissRequest = { showBottomSheet = it },
-                value = selectedDate,
-                onValueChange = {
-                    onValueChange(
-                        it.map { date -> date.toEpochMilli() }
-                            .sortedBy { millis -> millis }
-                    )
-                },
-                isDisabledPastSelection = isDisablePastSelection,
-                maxSelection = maxSelection,
-                isAllSelectable = isAllSelectable,
-                color = color
-            )
-        }
-    }
 }
 
+/**
+ * An expect composable for displaying a single-date picker.
+ *
+ * @param isShowDatePicker Whether to show the date picker.
+ * @param onDismissRequest A callback that is invoked when the date picker is dismissed.
+ * @param value The currently selected date.
+ * @param onSelectDate A callback that is invoked when a date is selected.
+ * @param isDisablePastSelection Whether to disable the selection of past dates.
+ * @param isAllSelectable Whether all dates are selectable.
+ * @param color The color scheme for the date picker.
+ */
 @Composable
-fun DatePickerDialog(
-    isShowDialog: Boolean,
-    onDismissRequest: (Boolean) -> Unit,
-    value: List<LocalDate>,
-    onValueChange: (List<LocalDate>) -> Unit,
-    isAllSelectable: Boolean = false,
-    isDisabledPastSelection: Boolean = true,
-    maxSelection: Int = Int.MAX_VALUE,
-    color: DatePickerColor = DatePickerDefault.color,
-) {
-    val width = getScreenWidth() * 0.2f
-    val height = getScreenHeight() * 0.56f
-    var currentValue by remember { mutableStateOf(value) }
-
-    LaunchedEffect(isShowDialog) {
-        if (value != currentValue && isShowDialog) currentValue = value
-    }
-
-    if (isShowDialog) {
-        Dialog(
-            onDismissRequest = {
-                onDismissRequest(false)
-            },
-            properties = DialogProperties(
-                dismissOnBackPress = true,
-                dismissOnClickOutside = true,
-                usePlatformDefaultWidth = false
-            )
-        ) {
-            Column(
-                modifier = Modifier
-                    .background(
-                        shape = RoundedCornerShape(12.dp),
-                        color = theme.popUpBg
-                    )
-                    .sizeIn(
-                        minWidth = 360.dp,
-                        minHeight = 526.dp,
-                        maxWidth = if (width > 360.dp) width else 360.dp,
-                        maxHeight = if (height > 526.dp) height else 526.dp
-                    )
-                    .padding(if (isCompact) 18.dp else 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
-                    horizontalArrangement = Arrangement.End,
-                ) {
-                    Icon(
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .clickable {
-                                onDismissRequest(false)
-                            }
-                            .size(32.dp),
-                        tint = theme.lineStroke,
-                        painter = painterResource(Res.drawable.ic_close_line_24),
-                        contentDescription = null
-                    )
-                }
-                DatePickerCalendar(
-                    value = currentValue,
-                    onValueChange = { value ->
-                        currentValue = value
-                    },
-                    isDisabledPastSelection = isDisabledPastSelection,
-                    maxSelection = maxSelection,
-                    color = color,
-                    isAllSelectable = isAllSelectable
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = "Reset",
-                        type = ButtonType.OUTLINED,
-                    ) {
-                        currentValue = emptyList()
-                    }
-                    Spacer(itemGap8)
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = "Apply",
-                    ) {
-                        onValueChange(currentValue)
-                        onDismissRequest(false)
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun DatePicker(
+expect fun SingleDatePicker(
     isShowDatePicker: Boolean,
     onDismissRequest: (Boolean) -> Unit,
-    value: List<Long>,
-    onValueChange: (List<Long>) -> Unit,
-    isDisablePastSelection: Boolean,
-    isAllSelectable: Boolean,
-    maxSelection: Int,
-    color: DatePickerColor,
-) {
-    val dateSelected = value.map { it.toLocalDate() }
+    value: LocalDate?,
+    onSelectDate: (LocalDate?) -> Unit,
+    isDisablePastSelection: Boolean = false,
+    isAllSelectable: Boolean = true,
+    color: DatePickerColor = DatePickerDefault.color,
+)
 
-    fun valueChange(value: List<LocalDate>) {
-        onValueChange(value.map { it.toEpochMilli() })
-    }
-
-    if (getPlatform().isMobile()) {
-        DatePickerBottomSheet(
-            isShowSheet = isShowDatePicker,
-            onDismissRequest = onDismissRequest,
-            value = dateSelected,
-            onValueChange = ::valueChange,
-            isDisabledPastSelection = isDisablePastSelection,
-            isAllSelectable = isAllSelectable,
-            maxSelection = maxSelection,
-            color = color
-        )
-    } else {
-        DatePickerDialog(
-            onDismissRequest = onDismissRequest,
-            value = dateSelected,
-            onValueChange = ::valueChange,
-            isAllSelectable = isAllSelectable,
-            maxSelection = maxSelection,
-            color = color,
-            isShowDialog = isShowDatePicker,
-            isDisabledPastSelection = isDisablePastSelection,
-        )
-    }
-}
-
+/**
+ * An expect composable for displaying a date range picker.
+ *
+ * @param isShowDatePicker Whether to show the date picker.
+ * @param onDismissRequest A callback that is invoked when the date picker is dismissed.
+ * @param value The currently selected date range.
+ * @param onSelectDate A callback that is invoked when a date range is selected.
+ * @param maxRange The maximum number of days that can be selected in a range.
+ * @param isDisablePastSelection Whether to disable the selection of past dates.
+ * @param isAllSelectable Whether all dates are selectable.
+ * @param color The color scheme for the date picker.
+ */
 @Composable
-fun DatePickerBottomSheet(
-    isShowSheet: Boolean,
+expect fun DateRangePicker(
+    isShowDatePicker: Boolean,
     onDismissRequest: (Boolean) -> Unit,
     value: List<LocalDate>,
-    onValueChange: (List<LocalDate>) -> Unit,
-    isDisabledPastSelection: Boolean = true,
-    isAllSelectable: Boolean = false,
-    maxSelection: Int = Int.MAX_VALUE,
+    onSelectDate: (List<LocalDate>) -> Unit,
+    title:String = "",
+    maxRange: Int = Int.MAX_VALUE,
+    isDisablePastSelection: Boolean = false,
+    isAllSelectable: Boolean = true,
     color: DatePickerColor = DatePickerDefault.color,
-) {
-    var currentValue by remember { mutableStateOf(value) }
+)
 
-    LaunchedEffect(isShowSheet) {
-        if (value != currentValue && isShowSheet) currentValue = value
-    }
-
-    BottomSheet(
-        isShowSheet = isShowSheet,
-        modifier = Modifier
-            .height(getScreenHeight() * 0.52f),
-        onDismissRequest = onDismissRequest
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = if (isCompact) 12.dp else 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(16.dp)
-            DatePickerCalendar(
-                value = currentValue,
-                onValueChange = { value ->
-                    currentValue = value
-                },
-                maxSelection = maxSelection,
-                isDisabledPastSelection = isDisabledPastSelection,
-                color = color,
-                isAllSelectable = isAllSelectable
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Row {
-                Button(
-                    modifier = Modifier.weight(1f),
-                    text = "Reset",
-                    type = ButtonType.OUTLINED,
-                ) {
-                    currentValue = emptyList()
-                }
-                Spacer(itemGap8)
-                Button(
-                    modifier = Modifier.weight(1f),
-                    text = "Apply",
-                ) {
-                    onValueChange(currentValue)
-                    onDismissRequest(false)
-                }
-
-            }
-        }
-    }
-
-}
-
+/**
+ * A composable that displays a calendar for selecting a single date.
+ *
+ * @param value The currently selected date.
+ * @param onSelectDate A callback that is invoked when a date is selected.
+ * @param isAllSelectable Whether all dates are selectable.
+ * @param isDisablePastSelection Whether to disable the selection of past dates.
+ * @param color The color scheme for the date picker.
+ */
 @Composable
 fun DatePickerCalendar(
+    value: LocalDate?,
+    onSelectDate: (LocalDate) -> Unit,
+    isAllSelectable: Boolean = true,
+    isDisablePastSelection: Boolean = false,
+    color: DatePickerColor = DatePickerDefault.color,
+) {
+    val holidayList = LocalHolidayProvider.current
+
+    BaseDatePickerCalendar(
+        holidayList = holidayList,
+        value = value?.let { listOf(it) } ?: emptyList(),
+        onSelectDate = onSelectDate,
+        isAllSelectable = isAllSelectable,
+        isDisablePastSelection = isDisablePastSelection,
+        color = color
+    )
+}
+
+/**
+ * A composable that displays a calendar for selecting a date range.
+ *
+ * @param value The currently selected date range.
+ * @param onSelectDate A callback that is invoked when a date range is selected.
+ * @param isDisablePastSelection Whether to disable the selection of past dates.
+ * @param isAllSelectable Whether all dates are selectable.
+ * @param maxSelection The maximum number of days that can be selected in a range.
+ * @param color The color scheme for the date picker.
+ */
+@Composable
+fun DateRangePickerCalendar(
     value: List<LocalDate> = emptyList(),
-    onValueChange: (List<LocalDate>) -> Unit,
-    isDisabledPastSelection: Boolean = true,
+    onSelectDate: (List<LocalDate>) -> Unit,
+    isDisablePastSelection: Boolean = true,
     isAllSelectable: Boolean,
     maxSelection: Int = Int.MAX_VALUE,
     color: DatePickerColor = DatePickerDefault.color,
+) {
+    val holidayList = LocalHolidayProvider.current
+
+    BaseDatePickerCalendar(
+        holidayList = holidayList,
+        value = value,
+        onSelectDate = { date ->
+            when {
+                date in value -> {
+                    onSelectDate(value.minus(date))
+                }
+
+                value.size < 2 -> {
+                    val first = value.firstOrNull()
+                    val totalDaysInSelection =
+                        calculateSelectedDate(first, date, holidayList)
+
+                    if (first != null && totalDaysInSelection > maxSelection) return@BaseDatePickerCalendar
+                    onSelectDate(value.plus(date))
+                }
+
+                else -> onSelectDate(listOf(date))
+            }
+        },
+        isAllSelectable = isAllSelectable,
+        isDisablePastSelection = isDisablePastSelection,
+        color = color
+    )
+}
+
+@Composable
+private fun BaseDatePickerCalendar(
+    holidayList: List<LocalDate>,
+    value: List<LocalDate>,
+    onSelectDate: (LocalDate) -> Unit,
+    isAllSelectable: Boolean,
+    isDisablePastSelection: Boolean,
+    color: DatePickerColor,
 ) {
     val dayOfWeeks = remember { daysOfWeek() }
     var currentMonth by remember { mutableStateOf(YearMonth.now()) }
-    val holidayList = LocalHolidayProvider.current
-
     val calendarState = rememberCalendarState(
         startMonth = currentMonth,
         endMonth = currentMonth,
@@ -612,7 +611,7 @@ fun DatePickerCalendar(
             state = calendarState,
             userScrollEnabled = false,
             monthHeader = { month ->
-                DatePickerMonthHeader(
+                CalendarMonthHeader(
                     month = month,
                     onNextMonth = {
                         currentMonth = currentMonth.plusMonths(1)
@@ -634,25 +633,8 @@ fun DatePickerCalendar(
                 DayContent(
                     selectedDate = value.sortedBy { it },
                     day = day,
-                    isDisablePastSelection = isDisabledPastSelection,
-                    onUpdateSelection = { date ->
-                        when {
-                            date in value -> {
-                                onValueChange(value.minus(date))
-                            }
-
-                            value.size < 2 -> {
-                                val first = value.firstOrNull()
-                                val totalDaysInSelection =
-                                    calculateSelectedDate(first, date, holidayList)
-
-                                if (first != null && totalDaysInSelection > maxSelection) return@DayContent
-                                onValueChange(value.plus(date))
-                            }
-
-                            else -> onValueChange(listOf(date))
-                        }
-                    },
+                    isDisablePastSelection = isDisablePastSelection,
+                    onSelectDate = onSelectDate,
                     color = color,
                     holidayList = holidayList,
                     isAllSelectable = isAllSelectable
@@ -668,7 +650,7 @@ fun DayContent(
     day: CalendarDay,
     isDisablePastSelection: Boolean,
     isAllSelectable: Boolean,
-    onUpdateSelection: (LocalDate) -> Unit,
+    onSelectDate: (LocalDate) -> Unit,
     holidayList: List<LocalDate>,
     color: DatePickerColor,
 ) {
@@ -703,7 +685,7 @@ fun DayContent(
                         holidayList = holidayList
                     )
                 ) {
-                    onUpdateSelection(day.date)
+                    onSelectDate(day.date)
                 }
                 .datePickerHighlight(
                     isStart = isStart,
@@ -726,69 +708,8 @@ fun DayContent(
 
 }
 
-//@Composable
-//fun DatePickerMonthHeader(
-//    month: CalendarMonth,
-//    onNextMonth: () -> Unit,
-//    onPreviousMonth: () -> Unit,
-//    dayOfWeeks: List<DayOfWeek>,
-//) {
-//    Column(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(bottom = itemGap4),
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//    ) {
-//        Row(
-//            modifier = Modifier.fillMaxWidth(),
-//            horizontalArrangement = Arrangement.SpaceBetween,
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            Icon(
-//                painter = painterResource(Res.drawable.ic_drop_down_arrow_line_left_24),
-//                tint = theme.bodyText,
-//                contentDescription = null,
-//                modifier = Modifier
-//                    .clip(CircleShape)
-//                    .clickable {
-//                        onPreviousMonth()
-//                    }
-//            )
-//            Text(
-//                text = month.yearMonth.month.name + " " + month.yearMonth.year,
-//                style = Style.title,
-//                color = theme.bodyText
-//            )
-//            Icon(
-//                painter = painterResource(Res.drawable.ic_drop_down_arrow_line_right_24),
-//                tint = theme.bodyText,
-//                contentDescription = null,
-//                modifier = Modifier
-//                    .clip(CircleShape)
-//                    .clickable {
-//                        onNextMonth()
-//                    }
-//            )
-//        }
-//        Spacer(itemGap8)
-//        Row(
-//            modifier = Modifier.fillMaxWidth(),
-//        ) {
-//            for (day in dayOfWeeks) {
-//                Text(
-//                    text = day.name.take(3),
-//                    style = Style.title,
-//                    color = theme.bodyText,
-//                    modifier = Modifier.weight(1f),
-//                    textAlign = TextAlign.Center
-//                )
-//            }
-//        }
-//    }
-//}
-
 @Composable
-fun DatePickerMonthHeader(
+private fun CalendarMonthHeader(
     month: CalendarMonth,
     onNextMonth: () -> Unit,
     onPreviousMonth: () -> Unit,

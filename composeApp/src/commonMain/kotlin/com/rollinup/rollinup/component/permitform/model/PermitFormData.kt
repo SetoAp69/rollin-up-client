@@ -5,9 +5,9 @@ import com.rollinup.apiservice.model.permit.PermitType
 
 data class PermitFormData(
     val duration: List<Long?> = emptyList(),
-    val reason: String? = null,
+    val reason: String? = "Sick",
     val isSick: Boolean = true,
-    val type: PermitType = PermitType.ABSENT,
+    val type: PermitType = PermitType.ABSENCE,
     val attachment: MultiPlatformFile? = null,
     val note: String? = null,
     val fileName: String? = null,

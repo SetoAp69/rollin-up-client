@@ -6,11 +6,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
-import com.rollinup.rollinup.component.date.DatePickerField
+import com.rollinup.rollinup.component.date.DateRangePickerField
 import com.rollinup.rollinup.component.filter.FilterSelector
 import com.rollinup.rollinup.component.filter.FilterSelectorBottomSheet
 import com.rollinup.rollinup.component.spacer.Spacer
-import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitFilterData
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitTab
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.uistate.TeacherPermitUiState
@@ -57,16 +56,14 @@ fun TeacherPermitFilterSheet(
             )
         }
         Spacer(12.dp)
-        DatePickerField(
+        DateRangePickerField(
             title = "",
-            isAllSelectable = true,
-            isDisablePastSelection = false,
             placeholder = "Select date range",
             value = tempData.dateRange,
-            platform = getPlatform(),
-            onValueChange = {
-                tempData = tempData.copy(dateRange = it)
-            },
-        )
+            isAllSelectable = true,
+            isDisablePastSelection = false,
+        ) {
+            tempData = tempData.copy(dateRange = it)
+        }
     }
 }

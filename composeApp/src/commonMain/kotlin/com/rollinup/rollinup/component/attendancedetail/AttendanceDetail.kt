@@ -3,28 +3,34 @@ package com.rollinup.rollinup.component.attendancedetail
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
 import com.rollinup.apiservice.model.permit.PermitType
-import com.rollinup.common.utils.Utils.toLocalDateTime
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
+import com.rollinup.rollinup.component.date.DateFormatter
+import com.rollinup.rollinup.component.date.DateText
+import com.rollinup.rollinup.component.date.DateTextFormat
 import com.rollinup.rollinup.component.dialog.Dialog
+import com.rollinup.rollinup.component.imageview.ImageView
 import com.rollinup.rollinup.component.loading.ShimmerEffect
-import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.record.RecordField
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
@@ -32,9 +38,8 @@ import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.spacer.screenPadding
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
-import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.component.utils.getScreenHeight
-import com.rollinup.rollinup.component.utils.getScreenWidth
+import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import rollin_up.composeapp.generated.resources.Res
@@ -49,14 +54,14 @@ fun AttendanceDetailDialog(
     isLoading: Boolean,
     detail: AttendanceDetailEntity,
 ) {
-    val maxWidth = if (getPlatform().isMobile()) getScreenWidth() * 0.75f else 400.dp
     val maxHeight = getScreenHeight() * 0.5f
 
     Dialog(
         showDialog = showDialog,
         onDismissRequest = onDismissRequest,
         modifier = Modifier
-            .sizeIn(maxHeight = maxHeight, maxWidth = maxWidth)
+            .width(IntrinsicSize.Max)
+            .heightIn(max = maxHeight)
             .padding(screenPadding * 2)
     ) {
         if (isLoading) {
@@ -84,12 +89,7 @@ fun AttendanceDetailLoading() {
         Spacer(itemGap8)
         Column() {
             repeat(5) {
-                ShimmerEffect(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .fillMaxWidth()
-                        .height(18.dp)
-                )
+                ShimmerEffect(200.dp, 18.dp)
                 Spacer(itemGap8)
             }
         }
@@ -103,7 +103,7 @@ fun AttendanceDetailContent(
     Column(
         modifier = Modifier
             .fillMaxWidth(),
-        horizontalAlignment = Alignment.Start
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AttendanceDetailHeaderSection(detail)
         AttendanceDetailRecordSection(detail)
@@ -176,10 +176,9 @@ private fun AttendanceDetailHeaderSection(
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(itemGap4)
-                Text(
-                    text = it.toLocalDateTime().time.toString(),
-                    style = Style.title,
-                    color = theme.textPrimary
+                DateText(
+                    dateTime = it.parseToLocalDateTime(TimeZone.UTC),
+                    color = theme.textPrimary,
                 )
             }
         }
@@ -197,14 +196,23 @@ private fun AttendanceDetailRecordSection(
             title = "Name",
             content = detail.student.name
         )
-        RecordField(
-            title = "Id",
-            content = detail.student.studentId ?: "-"
-        )
-        RecordField(
-            title = "Class",
-            content = detail.student.xClass ?: "-"
-        )
+        if (detail.status != AttendanceStatus.NO_DATA) {
+            RecordField(
+                title = "Id",
+                content = detail.student.studentId ?: "-"
+            )
+            RecordField(
+                title = "Class",
+                content = detail.student.xClass ?: "-"
+            )
+        }
+        detail.attachment?.let {
+           RecordField(
+               title = "Attachment",
+           ){
+               AttachmentButton(it)
+           }
+        }
         detail.permit?.let { permit ->
             RecordField(
                 title = "Duration",
@@ -213,15 +221,7 @@ private fun AttendanceDetailRecordSection(
             RecordField(
                 title = "Permit Attachment"
             ) {
-                Text(
-                    text = "View Attachment",
-                    color = theme.textPrimary,
-                    style = Style.title,
-                    modifier = Modifier
-                        .clickable {
-                            //TODO add file download or show file handler
-                        }
-                )
+                AttachmentButton(permit.attachment)
             }
             permit.reason?.let {
                 RecordField(
@@ -232,16 +232,42 @@ private fun AttendanceDetailRecordSection(
         }
         RecordField(
             title = "Created at",
-            content = detail.createdAt
-        )
+        ) {
+            DateText(detail.createdAt)
+        }
     }
+}
+
+@Composable
+private fun AttachmentButton(
+    url: String,
+) {
+    var showImage by remember { mutableStateOf(false) }
+    val text = if (url.isBlank()) "-" else "View Attachment"
+
+    Text(
+        text = text,
+        color = theme.textPrimary,
+        style = Style.title,
+        modifier = Modifier.clickable {
+            if (url.isNotBlank()) {
+                showImage = true
+            }
+        }
+    )
+
+    ImageView(
+        showView = showImage,
+        onDismissRequests = { showImage = it },
+        url = url
+    )
 }
 
 private fun getDuration(
     permit: AttendanceDetailEntity.Permit,
 ): String {
-    val from = permit.startTime.toLocalDateTime()
-    val to = permit.endTime.toLocalDateTime()
+    val from = permit.startTime.parseToLocalDateTime(TimeZone.UTC)
+    val to = permit.endTime.parseToLocalDateTime(TimeZone.UTC)
 
     return when (
         permit.type
@@ -250,15 +276,14 @@ private fun getDuration(
             "${from.time} - ${to.time}"
         }
 
-        PermitType.ABSENT -> {
+        PermitType.ABSENCE -> {
             val fromDate = from.date
             val toDate = to.date
 
             if (fromDate == toDate) {
-                "${from.time}"
+                DateFormatter.formatDateTime(from, DateTextFormat.DATE)
             } else {
-                "${from.time} - ${to.time}"
-
+                return DateFormatter.formatDateRange(from.date, to.date)
             }
         }
     }

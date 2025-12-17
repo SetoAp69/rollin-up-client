@@ -1,6 +1,8 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
+import org.gradle.util.internal.GUtil.loadProperties
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.konan.properties.loadProperties
 import java.util.Properties
 
 plugins {
@@ -8,6 +10,27 @@ plugins {
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.androidLint)
     alias(libs.plugins.kotlin.serialization)
+}
+
+val envProperties = loadProperties(rootProject.file("env.properties"))
+
+val buildGenerator by tasks.registering(Sync::class){
+    from(
+        resources.text.fromString(
+            """
+                package com.rollinup.apiservice
+                object BuildConfig{
+                   const val BASE_URL = "${envProperties["BASE_URL"]}"
+                   const val IS_PROD = ${envProperties["IS_PROD"]}
+                   const val FILE_URL = "${envProperties["FILE_URL"]}"
+               }
+            """.trimIndent()
+        )
+    ){
+        rename{"BuildConfig.kt"}
+        into("com/rollinup/apiservice")
+    }
+    into(layout.buildDirectory.dir("generated-src/kotlin/"))
 }
 
 
@@ -73,6 +96,9 @@ kotlin {
     // common to share sources between related targets.
     // See: https://kotlinlang.org/docs/multiplatform-hierarchy.html
     sourceSets {
+        commonMain.configure{
+            kotlin.srcDir(buildGenerator.map { it.destinationDir })
+        }
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
@@ -90,6 +116,9 @@ kotlin {
                 //Kotlinx-datetime
                 implementation(libs.kotlinx.datetime)
 
+                //Axer
+                implementation(libs.axer)
+
                 // Add KMP dependencies here
                 //Lumberjack
                 implementation(libs.lumberjack.core)
@@ -100,6 +129,7 @@ kotlin {
                 api(libs.datastore.preferences)
                 api(libs.datastore)
 
+                //common
                 implementation(project(":common"))
             }
         }

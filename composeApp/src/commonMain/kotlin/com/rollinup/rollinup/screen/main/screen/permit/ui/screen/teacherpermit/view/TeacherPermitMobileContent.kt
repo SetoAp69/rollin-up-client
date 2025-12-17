@@ -11,7 +11,6 @@ import androidx.paging.compose.LazyPagingItems
 import com.rollinup.apiservice.model.permit.PermitByClassEntity
 import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.spacer.screenPadding
-import com.rollinup.rollinup.component.tab.TabList
 import com.rollinup.rollinup.component.tab.TabRow
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitTab
 import com.rollinup.rollinup.screen.main.screen.permit.model.teacherpermit.TeacherPermitCallback
@@ -53,8 +52,13 @@ fun TeacherPermitMobileContent(
         initialPage = PermitTab.entries.indexOf(PermitTab.ACTIVE),
         pageCount = { PermitTab.entries.size })
 
+
     LaunchedEffect(pagerState.currentPage) {
         cb.onTabChange(pagerState.currentPage)
+    }
+
+    LaunchedEffect(uiState.currentTabIndex){
+        pagerState.scrollToPage(uiState.currentTabIndex)
     }
 
     Column {
@@ -63,8 +67,11 @@ fun TeacherPermitMobileContent(
         ) {
             TabRow(
                 tabList = uiState.tabList,
-                currentIndex = uiState.currentTabIndex,
-                onTabChange = cb.onTabChange
+                currentTab = uiState.currentTabIndex,
+                onTabChange = {
+                    cb.onTabChange(it)
+                }
+
             )
         }
 

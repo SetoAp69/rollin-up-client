@@ -2,20 +2,11 @@ package com.rollinup.rollinup.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.rollinup.apiservice.model.common.Role
-import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
-import com.rollinup.rollinup.component.platformwarning.PlatformWarning
-import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.theme.LocalAuthViewmodel
-import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.screen.auth.navigation.AuthNavigationRoute
 import com.rollinup.rollinup.screen.auth.navigation.authGraph
-import com.rollinup.rollinup.screen.auth.ui.screen.loginscreen.view.LoginScreen
-import com.rollinup.rollinup.screen.dashboard.ui.screen.studentdashboard.view.StudentDashboardScreen
 import com.rollinup.rollinup.screen.main.navigation.MainRoute
 import com.rollinup.rollinup.screen.main.navigation.mainGraph
 import com.rollinup.rollinup.screen.splashscreen.SplashScreen
@@ -25,16 +16,30 @@ import com.rollinup.rollinup.screen.test.ui.view.TestScreen
 fun NavGraphBuilder.appGraph(
     navController: NavHostController,
     onShowSnackBar: (String, Boolean) -> Unit,
+    onLogout: () -> Unit,
 ) {
+    fun navigateTo(route: String) {
+        navController.navigate(route)
+    }
 
-    val onNavigateUp: () -> Unit = { navController.popBackStack() }
-    val onNavigateTo: (String) -> Unit = { navController.navigate(it) }
+    fun navigateUp() {
+        navController.popBackStack()
+    }
 
     composable(NavigationRoute.SplashScreen.route) {
         val authViewModel = LocalAuthViewmodel.current
-        SplashScreen(navController = navController) { loginData ->
-            authViewModel.login(loginData)
-        }
+        SplashScreen(
+            onLogin = { loginData ->
+                authViewModel.login(loginData)
+            },
+            onGoToLogin = {
+                navController.navigate(AuthNavigationRoute.Login.route) {
+                    popUpTo(NavigationRoute.SplashScreen.route) {
+                        inclusive = true
+                    }
+                }
+            }
+        )
     }
 
     navigation(
@@ -52,23 +57,29 @@ fun NavGraphBuilder.appGraph(
         startDestination = MainRoute.DashBoardRoute.route
     ) {
         mainGraph(
-            onNavigateTo = onNavigateTo,
+            onNavigateTo = ::navigateTo,
             onShowSnackBar = onShowSnackBar,
-            onNavigateUp = onNavigateUp
+            onNavigateUp = ::navigateUp
         )
     }
 
+//    composable(NavigationRoute.MainRoute.route) {
+//        val loginData = localUser
+//
+//        MainNavHost(
+////            navController = navController,
+//            loginData = loginData,
+//            onLogout = onLogout
+//        )
+//    }
+
 
     composable(NavigationRoute.TestRoute.route) {
-        val authViewModel = LocalAuthViewmodel.current
-
         TestScreen(
             onShowSnackBar = onShowSnackBar,
             onNavigateUp = { navController.popBackStack() },
             navController = navController,
-            onUpdateLoginData = {
-                authViewModel.logout()
-            }
+            onUpdateLoginData = { onLogout() }
         )
     }
 

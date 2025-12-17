@@ -1,4 +1,4 @@
-package com.rollinup.rollinup.screen.dashboard.ui.screen.studentdashboard.uistate
+package com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.uistate
 
 import com.rollinup.apiservice.model.attendance.AttendanceByStudentEntity
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
@@ -13,8 +13,8 @@ data class StudentDashboardUiState(
     val isLoadingCalendar: Boolean = false,
     val isLoadingOverlay: Boolean = false,
     val summary: AttendanceSummaryEntity = AttendanceSummaryEntity(),
-    val currentStatus: AttendanceStatus = AttendanceStatus.NO_DATA,
     val attendanceDetail: AttendanceDetailEntity = AttendanceDetailEntity(),
+    val currentStatus: AttendanceStatus = AttendanceStatus.NO_DATA,
     val currentAttendance: AttendanceByStudentEntity? = null,
     val checkInState: Boolean? = null,
     val user: LoginEntity? = null,
@@ -23,3 +23,4 @@ data class StudentDashboardUiState(
     val currentLocation: Location? = null,
     val selectedDateRange: List<Long> = emptyList(),
 )
+

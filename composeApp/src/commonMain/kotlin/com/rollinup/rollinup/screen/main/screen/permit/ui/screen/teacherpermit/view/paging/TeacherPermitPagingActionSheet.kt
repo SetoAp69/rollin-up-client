@@ -11,6 +11,7 @@ import com.rollinup.rollinup.component.bottomsheet.BottomSheet
 import com.rollinup.rollinup.component.button.ActionButton
 import com.rollinup.rollinup.component.dropdown.DropDownMenuItem
 import com.rollinup.rollinup.screen.main.screen.permit.model.teacherpermit.TeacherPermitAction
+import com.rollinup.rollinup.screen.main.screen.permit.model.teacherpermit.TeacherPermitCallback
 import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitapproval.view.PermitApprovalFormBottomSheet
 import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitdetail.view.PermitDetailDialog
 
@@ -18,6 +19,7 @@ import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitdetail
 fun TeacherPermitPagingActionSheet(
     showSheet: Boolean,
     isActive: Boolean,
+    cb: TeacherPermitCallback,
     onDismissRequest: (Boolean) -> Unit,
     items: List<PermitByClassEntity>,
 ) {
@@ -60,6 +62,7 @@ fun TeacherPermitPagingActionSheet(
         showDialog = showApproval,
         selectedId = items.map { it.id },
         onDismissRequest = { showApproval = false },
+        onSuccess = cb.onRefresh,
     )
     items.firstOrNull()?.id?.let {
         PermitDetailDialog(

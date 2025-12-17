@@ -70,7 +70,7 @@ fun ResetPasswordForm(
 }
 
 @Composable
-fun NewPasswordForm(
+private fun NewPasswordForm(
     uiState: ResetPasswordUiState,
     onSubmitNewPassword: (String) -> Unit,
 ) {
@@ -158,7 +158,7 @@ fun NewPasswordForm(
 }
 
 @Composable
-fun SubmitOtpForm(
+private fun SubmitOtpForm(
     onSubmitOtp: (String) -> Unit,
     uiState: ResetPasswordUiState,
     onUpdateStep: (Int) -> Unit,
@@ -232,7 +232,7 @@ fun SubmitOtpForm(
 
 
 @Composable
-fun SubmitEmailForm(
+private fun SubmitEmailForm(
     uiState: ResetPasswordUiState,
     onSubmitEmail: (String) -> Unit,
     onNavigateUp: () -> Unit,
@@ -269,17 +269,17 @@ fun SubmitEmailForm(
                     onValueChange = { value ->
                         emailInput = value
                         if (value.contains(" ")) {
-                            emailError = "Email or Username cannot contain spaces"
+                            emailError = "Email cannot contain spaces"
                         }
                         if (value.length < 5) {
-                            emailError = "Email or Username cannot be less than 5 characters"
+                            emailError = "Email cannot be less than 5 characters"
                         }
                         if (value.isBlank()) {
                             emailError = null
                         }
                         emailError = null
                     },
-                    placeholder = "Enter your email or username",
+                    placeholder = "Enter your email",
                     isError = emailError != null,
                     errorMsg = emailError,
                     leadingIcon = Res.drawable.ic_mail_line_24,
@@ -290,7 +290,7 @@ fun SubmitEmailForm(
                     text = "Submit",
                     onClick = {
                         if (emailInput.isBlank()) {
-                            emailError = "Email or Username cannot be empty"
+                            emailError = "Email cannot be empty"
                         } else {
                             onSubmitEmail(emailInput)
                         }

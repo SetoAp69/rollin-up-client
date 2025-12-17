@@ -45,11 +45,11 @@ class StudentPermitViewModel(
         )
 
     private fun getPermitPaging() {
-        val queryparams = _uiState.value.queryParams
+        val queryParams = _uiState.value.queryParams
         val id = _uiState.value.user.id.ifBlank { return }
 
         viewModelScope.launch {
-            getPermitByStudentPagingUseCase(id, queryparams).collectLatest { result ->
+            getPermitByStudentPagingUseCase(id, queryParams).collectLatest { result ->
                 _pagingData.value = result
             }
         }

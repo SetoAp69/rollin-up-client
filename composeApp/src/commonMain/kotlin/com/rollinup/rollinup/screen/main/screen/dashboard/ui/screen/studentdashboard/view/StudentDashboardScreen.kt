@@ -5,7 +5,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.theme.localUser
-import com.rollinup.rollinup.screen.dashboard.ui.screen.studentdashboard.viewmodel.StudentDashboardViewmodel
+import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.viewmodel.StudentDashboardViewmodel
+import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.view.StudentDashboardContent
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

@@ -45,7 +45,6 @@ class EditPermitUseCase(private val repository: PermitRepository) {
         repository.editPermit(id, body)
 }
 
-//TODO Changes this to an actual usecase
 class CancelPermitUseCase(private val repository: PermitRepository) {
     operator fun invoke(id: String) =
         repository.editPermit(id, CreateEditPermitBody())

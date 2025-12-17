@@ -32,15 +32,6 @@ class PermitDetailViewModel(
     private fun getDetail(id: String) {
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-            if(true){
-                delay(1000)
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        detail = generateDummyPermitDetail()
-                    )
-                }
-            }
             getPermitByIdUseCase(id).collectLatest { result ->
                 when (result) {
                     is Result.Success -> {

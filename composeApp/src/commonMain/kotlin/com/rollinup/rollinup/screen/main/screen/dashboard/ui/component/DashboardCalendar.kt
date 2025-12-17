@@ -87,7 +87,6 @@ fun DashboardCalendar(
                 monthFooter = {_->
                   Spacer(itemGap8)
                 },
-//                contentPadding = screenPaddingValues,
                 dayContent = {
                     DayContent(
                         day = it,
@@ -244,7 +243,7 @@ private fun DayContent(
                     } else {
                         Box(
                             modifier = Modifier
-                                .size(itemGap4)
+                                .size(12.dp)
                                 .background(
                                     color = getStatusColor(
                                         attendanceStatus =

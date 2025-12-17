@@ -1,11 +1,15 @@
 package com.rollinup.apiservice.domain.user
 
 import com.rollinup.apiservice.data.repository.user.UserRepository
+import com.rollinup.apiservice.data.source.network.model.request.user.CheckEmailOrUsernameQueryParams
 import com.rollinup.apiservice.data.source.network.model.request.user.CreateEditUserBody
 import com.rollinup.apiservice.data.source.network.model.request.user.CreateResetPasswordRequestBody
+import com.rollinup.apiservice.data.source.network.model.request.user.DeleteUserBody
 import com.rollinup.apiservice.data.source.network.model.request.user.GetUserQueryParams
-import com.rollinup.apiservice.data.source.network.model.request.user.SubmitOTPBody
 import com.rollinup.apiservice.data.source.network.model.request.user.SubmitResetPasswordBody
+import com.rollinup.apiservice.data.source.network.model.request.user.SubmitResetPasswordOTPBody
+import com.rollinup.apiservice.data.source.network.model.request.user.SubmitVerificationOTPBody
+import com.rollinup.apiservice.data.source.network.model.request.user.UpdatePasswordAndVerificationBody
 
 class GetUserListUseCase(private val repository: UserRepository) {
     operator fun invoke(queryParams: GetUserQueryParams) = repository.getUserList(queryParams)
@@ -33,9 +37,35 @@ class CreateResetPasswordRequestUseCase(private val repository: UserRepository) 
 }
 
 class SubmitResetOtpUseCase(private val repository: UserRepository) {
-    operator fun invoke(body: SubmitOTPBody) = repository.submitResetOtp(body)
+    operator fun invoke(body: SubmitResetPasswordOTPBody) = repository.submitResetOtp(body)
 }
 
 class SubmitResetPasswordUseCase(private val repository: UserRepository) {
     operator fun invoke(body: SubmitResetPasswordBody) = repository.submitResetPassword(body)
+}
+
+class GetUserOptionsUseCase(private val repository: UserRepository) {
+    operator fun invoke() = repository.getOptions()
+}
+
+class DeleteUserUseCase(private val repository: UserRepository) {
+    operator fun invoke(body: DeleteUserBody) = repository.deleteUser(body)
+}
+
+class CheckEmailOrUsernameUseCase(private val repository: UserRepository) {
+    operator fun invoke(queryParams: CheckEmailOrUsernameQueryParams) =
+        repository.checkEmailOrUsername(queryParams)
+}
+
+class SubmitVerificationOtpUseCase(private val repository: UserRepository) {
+    operator fun invoke(body: SubmitVerificationOTPBody) = repository.submitVerificationOtp(body)
+}
+
+class UpdatePasswordAndVerificationUseCase(private val repository: UserRepository) {
+    operator fun invoke(body: UpdatePasswordAndVerificationBody) =
+        repository.updatePasswordAndVerification(body)
+}
+
+class ResendVerificationOtpUseCase(private val repository: UserRepository) {
+    operator fun invoke() = repository.resendVerificationOtp()
 }

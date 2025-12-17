@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -18,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,11 +46,59 @@ import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.component.utils.getScreenWidth
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_close_line_24
+
+@Composable
+fun DialogScreen(
+    showDialog: Boolean,
+    onDismissRequest: (Boolean) -> Unit,
+    content: @Composable (OnShowSnackBar) -> Unit,
+) {
+    val properties = DialogProperties(
+        dismissOnBackPress = true,
+        dismissOnClickOutside = true,
+        usePlatformDefaultWidth = false
+    )
+
+    if (showDialog) {
+        val snackBarHostSate = remember { SnackbarHostState() }
+        val scope = rememberCoroutineScope()
+        var isSuccess by remember { mutableStateOf(false) }
+
+        fun showSnackBar(message: String, success: Boolean) {
+            isSuccess = success
+            scope.launch {
+                snackBarHostSate.showSnackbar(message = message)
+            }
+        }
+
+        Dialog(
+            onDismissRequest = { onDismissRequest(false) },
+            properties = properties,
+        ) {
+            DisposableEffect(Unit) {
+                onDispose { scope.cancel() }
+            }
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                SnackBarHost(
+                    snackBarHostState = snackBarHostSate,
+                    isSuccess = isSuccess,
+                )
+                content { message, success ->
+                    showSnackBar(message, success)
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun Dialog(
@@ -63,19 +113,12 @@ fun Dialog(
         dismissOnClickOutside = true,
         usePlatformDefaultWidth = false
     )
-    val snackBarHostSate = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     var isSuccess by remember { mutableStateOf(false) }
 
-    fun showSnackBar(message: String, success: Boolean) {
-        isSuccess = success
-        scope.launch {
-            snackBarHostSate.showSnackbar(message = message)
-        }
-
-    }
-
     if (showDialog) {
+        val snackBarHostSate = remember { SnackbarHostState() }
+
         Dialog(
             onDismissRequest = { onDismissRequest(false) },
             properties = properties,
@@ -113,7 +156,10 @@ fun Dialog(
                     }
 
                     content { message, success ->
-                        showSnackBar(message, success)
+                        isSuccess = success
+                        scope.launch {
+                            snackBarHostSate.showSnackbar(message = message)
+                        }
                     }
                 }
             }

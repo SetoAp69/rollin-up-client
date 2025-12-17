@@ -36,56 +36,47 @@ fun AttendanceByStudentSummary(
 
 @Composable
 fun AttendanceByStudentSummaryContent(summary: AttendanceSummaryEntity) {
-    Column {
-        RowData(
-            leftContent = {
+    RowData(
+        leftContent = {
+            Column {
                 RecordFieldWithNotation(
                     label = "Checked In",
                     color = theme.success,
                     content = summary.checkedIn.toString(),
                 )
-            },
-            rightContent = {
-                RecordFieldWithNotation(
-                    label = "Absent",
-                    color = theme.danger,
-                    content = summary.absent.toString(),
-                )
-            }
-        )
-        RowData(
-            leftContent = {
+
                 RecordFieldWithNotation(
                     label = "Late",
                     color = theme.warning,
                     content = summary.late.toString(),
                 )
-            },
-            rightContent = {
-                RecordFieldWithNotation(
-                    label = "Sick",
-                    color = theme.danger,
-                    content = summary.sick.toString(),
-                )
-            }
-        )
-        RowData(
-            leftContent = {
                 RecordFieldWithNotation(
                     label = "Excused",
                     color = theme.warning,
                     content = summary.excused.toString(),
                 )
-            },
-            rightContent = {
+            }
+        },
+        rightContent = {
+            Column {
+                RecordFieldWithNotation(
+                    label = "Absent",
+                    color = theme.danger,
+                    content = summary.absent.toString(),
+                )
+                RecordFieldWithNotation(
+                    label = "Sick",
+                    color = theme.danger,
+                    content = summary.sick.toString(),
+                )
                 RecordFieldWithNotation(
                     label = "Other",
                     color = theme.danger,
                     content = summary.other.toString(),
                 )
             }
-        )
-    }
+        }
+    )
 }
 
 @Composable

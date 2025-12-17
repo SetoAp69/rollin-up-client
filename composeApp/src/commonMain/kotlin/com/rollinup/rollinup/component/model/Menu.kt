@@ -10,13 +10,13 @@ import rollin_up.composeapp.generated.resources.ic_search_line_24
 import rollin_up.composeapp.generated.resources.ic_select_all_line_24
 import rollin_up.composeapp.generated.resources.ic_unselect_all_fill_24
 
-enum class Menu(val title: String, val icon: DrawableResource) {
+enum class Menu(val title: String, val icon: DrawableResource, val iconFilled: DrawableResource = icon) {
     SEARCH(
         title = "Search",
         icon = Res.drawable.ic_search_line_24
     ),
     FILTER(
-        title = "FILTER",
+        title = "Filter",
         icon = Res.drawable.ic_filter_line_24
     ),
     PRINT(

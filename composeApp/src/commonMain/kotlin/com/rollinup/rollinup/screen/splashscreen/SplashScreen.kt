@@ -15,17 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.rollinup.apiservice.model.auth.LoginEntity
-import com.rollinup.rollinup.navigation.NavigationRoute
-import com.rollinup.rollinup.screen.auth.navigation.AuthNavigationRoute
 import com.rollinup.rollinup.screen.splashscreen.viewmodel.SplashScreenViewmodel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SplashScreen(
-    navController: NavController,
-    onUpdateLoginData: (LoginEntity) -> Unit,
+    onLogin: (LoginEntity) -> Unit,
+    onGoToLogin: () -> Unit,
 ) {
     val isDark = isSystemInDarkTheme()
     val primary = if (isDark) Color(0xFF704DC8) else Color(0xFF965FD4)
@@ -37,20 +34,21 @@ fun SplashScreen(
             when (state) {
                 true -> {
                     val loginData = uiState.loginData!!
-                    onUpdateLoginData(loginData)
-                    navController.navigate(NavigationRoute.MainRoute.navigate(loginData.role)) {
-                        popUpTo(NavigationRoute.SplashScreen.route) {
-                            inclusive = true
-                        }
-                    }
+                    onLogin(loginData)
+//                    navController.navigate(NavigationRoute.MainRoute.navigate(loginData.role)) {
+//                        popUpTo(NavigationRoute.SplashScreen.route) {
+//                            inclusive = true
+//                        }
+//                    }
                 }
 
                 false -> {
-                    navController.navigate(AuthNavigationRoute.Login.route) {
-                        popUpTo(NavigationRoute.SplashScreen.route) {
-                            inclusive = true
-                        }
-                    }
+                    onGoToLogin()
+//                    navController.navigate(AuthNavigationRoute.Login.route) {
+//                        popUpTo(NavigationRoute.SplashScreen.route) {
+//                            inclusive = true
+//                        }
+//                    }
                 }
             }
         }

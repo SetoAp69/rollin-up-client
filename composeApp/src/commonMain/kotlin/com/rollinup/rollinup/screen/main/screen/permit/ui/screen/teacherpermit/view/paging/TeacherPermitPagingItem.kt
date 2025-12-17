@@ -13,10 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.rollinup.apiservice.model.permit.PermitByClassEntity
 import com.rollinup.common.model.Severity
-import com.rollinup.common.utils.Utils.toLocalDateTime
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.rollinup.component.card.Card
 import com.rollinup.rollinup.component.chip.Chip
 import com.rollinup.rollinup.component.date.DateText
+import com.rollinup.rollinup.component.date.PermitDateText
 import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
@@ -56,7 +57,7 @@ fun TeacherPermitPagingItem(
                 },
                 rightContent = {
                     Chip(
-                        text = item.type,
+                        text = item.type.label,
                         severity = Severity.SECONDARY
                     )
                 }
@@ -70,9 +71,10 @@ fun TeacherPermitPagingItem(
                     )
                 },
                 rightContent = {
-                    if (item.reason == null) {
-                        DateText(dateString = item.startTime)
-                    }
+                    Chip(
+                        text = item.approvalStatus.label,
+                        severity = item.approvalStatus.severity
+                    )
                 }
             )
             if (item.reason != null) {
@@ -85,7 +87,6 @@ fun TeacherPermitPagingItem(
                         )
                     },
                     rightContent = {
-                        DateText(dateString = item.startTime)
                     },
                 )
             }
@@ -99,18 +100,16 @@ fun TeacherPermitPagingItem(
                             modifier = Modifier.size(14.dp)
                         )
                         Spacer(itemGap4)
-                        Text(
-                            text = generateDuration(item.startTime, item.endTime),
-                            color = theme.bodyText,
-                            style = Style.body
+                        PermitDateText(
+                            start = item.startTime,
+                            end = item.endTime,
+                            type = item.type,
+                            color = theme.textPrimary
                         )
                     }
                 },
                 rightContent = {
-                    Chip(
-                        text = item.approvalStatus.label,
-                        severity = item.approvalStatus.severity
-                    )
+                    DateText(dateString = item.createdAt, showYear = false)
                 }
             )
         }
@@ -166,8 +165,8 @@ private fun ItemDataRow(
 }
 
 private fun generateDuration(from: String, to: String): String {
-    val dateTimeFrom = from.toLocalDateTime()
-    val dateTimeTo = to.toLocalDateTime()
+    val dateTimeFrom = from.parseToLocalDateTime()
+    val dateTimeTo = to.parseToLocalDateTime()
 
     return when {
         dateTimeFrom == dateTimeTo -> {

@@ -1,6 +1,6 @@
 package com.rollinup.apiservice.data.source.network.datasource
 
-import com.rollinup.apiservice.model.common.GeneralSetting
+import com.rollinup.apiservice.model.common.GlobalSetting
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.sse.deserialize
 import io.ktor.client.plugins.sse.sse
@@ -20,7 +20,7 @@ class SSE(private val client: HttpClient) {
             this.incoming.collect { event ->
                 when (event.event) {
                     "" -> {
-                        emit(deserialize<GeneralSetting>(event.data))
+                        emit(deserialize<GlobalSetting>(event.data))
                     }
                 }
             }

@@ -10,6 +10,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.rollinup.rollinup.component.handlestate.HandleState
+import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.profile.profilepopup.view.dialog.ProfileDialog
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.theme.Style
@@ -24,23 +26,32 @@ import com.rollinup.rollinup.screen.main.screen.usercenter.ui.view.table.UserCen
 fun UserCenterContent(
     uiState: UserCenterUiState,
     cb: UserCenterCallback,
+    onShowSnackBar: OnShowSnackBar,
 ) {
     var selectedId by remember { mutableStateOf("") }
     var showEdit by remember { mutableStateOf(false) }
     var showDetail by remember { mutableStateOf(false) }
-
+    HandleState(
+        state = uiState.deleteUserState,
+        successMsg = "Success, user data successfully deleted",
+        errorMsg = "Error, failed to delete user data, please try again.",
+        onDispose = { cb.onResetMessageState() },
+        onSuccess = cb.onRefresh,
+        onShowSnackBar = onShowSnackBar
+    )
     Column(modifier = Modifier.padding(24.dp)) {
         Text(
             text = "User Center",
-            style = Style.headerBold,
-            color = theme.primary
+            style = Style.popupTitle,
+            color = theme.textPrimary
 
         )
         Spacer(12.dp)
         UserCenterTableFilter(
             uiState = uiState,
             onSearch = cb.onSearch,
-            onFilter = cb.onFilter
+            onFilter = cb.onFilter,
+            onRefresh = cb.onRefresh
         )
         Spacer(12.dp)
         UserCenterTable(
@@ -66,6 +77,7 @@ fun UserCenterContent(
     CreateEditUserDialog(
         showDialog = showEdit,
         onDismissRequest = { showEdit = it },
-        id = selectedId
+        id = selectedId,
+        onSuccess = cb.onRefresh
     )
 }

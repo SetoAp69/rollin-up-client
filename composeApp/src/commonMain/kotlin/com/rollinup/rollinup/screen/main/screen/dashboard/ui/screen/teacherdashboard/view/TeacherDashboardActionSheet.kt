@@ -117,7 +117,7 @@ fun TeacherDashboardActionSheet(
         detail = uiState.attendanceDetail
     )
 
-    _root_ide_package_.com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardApprovalSheet(
+    TeacherDashboardApprovalSheet(
         showSheet = showApproval,
         onDismissRequest = {
             showApproval = it
@@ -131,6 +131,7 @@ fun TeacherDashboardActionSheet(
         isShowForm = showEdit,
         onDismissRequest = {
             onDismissRequest(it)
+            cb.onResetEditForm()
             showEdit = it
         },
         uiState = uiState,

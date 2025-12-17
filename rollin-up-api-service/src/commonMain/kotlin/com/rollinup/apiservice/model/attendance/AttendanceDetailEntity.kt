@@ -9,6 +9,7 @@ data class AttendanceDetailEntity(
     val checkedInAt: String? = null,
     val updatedAt: String = "",
     val createdAt: String = "",
+    val attachment:String? = null,
     val longitude: Double? = null,
     val latitude: Double? = null,
     val permit: Permit? = null,
@@ -23,7 +24,7 @@ data class AttendanceDetailEntity(
     data class Permit(
         val id: String = "",
         val reason: String? = null,
-        val type: PermitType = PermitType.ABSENT,
+        val type: PermitType = PermitType.ABSENCE,
         val startTime: String = "",
         val endTime: String = "",
         val note: String? = null,

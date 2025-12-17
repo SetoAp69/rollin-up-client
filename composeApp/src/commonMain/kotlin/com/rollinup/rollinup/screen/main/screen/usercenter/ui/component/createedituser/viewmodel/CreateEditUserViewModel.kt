@@ -2,19 +2,22 @@ package com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.createe
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.michaelflisar.lumberjack.core.L
+import com.rollinup.apiservice.data.source.network.model.request.user.CheckEmailOrUsernameQueryParams
 import com.rollinup.apiservice.data.source.network.model.request.user.CreateEditUserBody
+import com.rollinup.apiservice.domain.user.CheckEmailOrUsernameUseCase
 import com.rollinup.apiservice.domain.user.EditUserUseCase
 import com.rollinup.apiservice.domain.user.GetUserByIdUseCase
+import com.rollinup.apiservice.domain.user.GetUserOptionsUseCase
 import com.rollinup.apiservice.domain.user.RegisterUserUseCase
 import com.rollinup.apiservice.model.common.Result
 import com.rollinup.apiservice.model.user.UserDetailEntity
 import com.rollinup.common.utils.Utils.toEpochMillis
-import com.rollinup.common.utils.Utils.toLocalDateTime
-import com.rollinup.rollinup.screen.dashboard.generateDummyUserDetail
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
+import com.rollinup.rollinup.BuildConfig
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.CreateEditUserCallback
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.CreateEditUserFormData
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.createedituser.uistate.CreateEditUserUiState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -23,32 +26,57 @@ import kotlinx.coroutines.launch
 
 class CreateEditUserViewModel(
     private val getUserByIdUseCase: GetUserByIdUseCase,
+    private val getUserOptionUseCase: GetUserOptionsUseCase,
     private val editUserUseCase: EditUserUseCase,
     private val registerUserUseCase: RegisterUserUseCase,
+    private val checkEmailOrUsernameUseCase: CheckEmailOrUsernameUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(CreateEditUserUiState())
     val uiState = _uiState.asStateFlow()
 
     fun init(id: String?) {
+        getOptions()
+
         _uiState.value = _uiState.value.copy(isEdit = id != null)
-        id?.let{
+        id?.let {
             _uiState.value = _uiState.value.copy(isLoading = true)
             viewModelScope.launch {
-                if (true) {
-                    delay(1000)
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            formData = fetchFormFromDetail(generateDummyUserDetail())
-                        )
-                    }
-                    return@launch
-                }
                 getUserByIdUseCase(id).collectLatest { result ->
                     if (result is Result.Success) {
-                        _uiState.update { it.copy(formData = fetchFormFromDetail(result.data)) }
+                        _uiState.update {
+                            it.copy(
+                                formData = fetchFormFromDetail(result.data),
+                                initialDetail = result.data
+                            )
+                        }
                     }
                     _uiState.update { it.copy(isLoading = false) }
+                }
+            }
+        }
+    }
+
+    fun getOptions() {
+        _uiState.update { it.copy(isLoadingOptions = true) }
+
+        viewModelScope.launch {
+            getUserOptionUseCase().collectLatest { result ->
+                when (result) {
+                    is Result.Success -> {
+                        _uiState.update { state ->
+                            state.copy(
+                                isLoadingOptions = false,
+                                formOptions = state.formOptions.copy(
+                                    role = result.data.roleIdOptions,
+                                    classX = result.data.classIdOptions
+                                )
+                            )
+                        }
+                    }
+
+                    is Result.Error -> {
+                        _uiState.update { it.copy(isLoadingOptions = false) }
+                    }
                 }
             }
         }
@@ -65,6 +93,10 @@ class CreateEditUserViewModel(
             onCheckUserName = ::checkUserName,
             onToggleStay = ::toggleStay,
         )
+
+    fun resetUiState(){
+        _uiState.update { CreateEditUserUiState() }
+    }
 
     private fun updateForm(formData: CreateEditUserFormData) {
         _uiState.update { it.copy(formData = formData) }
@@ -89,6 +121,10 @@ class CreateEditUserViewModel(
         val isStudentRole = formData.role ==
                 formOptions.role.find { it.label.equals("Student", true) }?.value
 
+        if (!isEdit && formData.userName.isNullOrBlank()) {
+            formData = formData.copy(userNameError = "Username can't be empty")
+        }
+
         if (!isEdit && formData.lastName.isNullOrBlank()) {
             formData = formData.copy(lastNameError = "Last name can't be empty")
         }
@@ -109,17 +145,20 @@ class CreateEditUserViewModel(
             formData = formData.copy(
                 genderError = formData.gender == null,
                 birthDayError = formData.birthDay == null,
-                classError = formData.classId == null,
+                classError = formData.classId == null && isStudentRole,
                 roleError = formData.role == null,
             )
         }
+        L.wtf { formData.toString() }
 
         updateForm(formData)
         return formData.isValid()
     }
 
     private fun submit(formData: CreateEditUserFormData, isEdit: Boolean) {
-        val body = mapBodyFromForm(formData)
+        if (!validateForm(formData, isEdit)) return
+
+        val body = mapBodyFromForm(formData,isEdit)
         val domain =
             if (isEdit)
                 editUserUseCase(id = formData.id, body = body)
@@ -127,11 +166,11 @@ class CreateEditUserViewModel(
                 registerUserUseCase(body)
 
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoadingOverlay = true) }
+            _uiState.update { it.copy(isLoadingOverlay = true, submitState = null) }
             domain.collectLatest { result ->
                 _uiState.update {
                     it.copy(
-                        isLoading = false,
+                        isLoadingOverlay = false,
                         submitState = result is Result.Success
                     )
                 }
@@ -139,13 +178,18 @@ class CreateEditUserViewModel(
         }
     }
 
-    private fun checkUserName(userName: String) {
+    private fun checkUserName(username: String) {
         viewModelScope.launch {
-            delay(300)
-            if ((0..1).random() == 1) {
-                _uiState.update {
-                    it.copy(
-                        formData = it.formData.copy(userNameError = "Username is already exists")
+            val query = CheckEmailOrUsernameQueryParams(username = username)
+            checkEmailOrUsernameUseCase(query).collectLatest { result ->
+                val errorMessage =
+                    if (result is Result.Error) "Username is already used" else null
+
+                _uiState.update { state ->
+                    state.copy(
+                        formData = state.formData.copy(
+                            userNameError = errorMessage
+                        )
                     )
                 }
             }
@@ -154,11 +198,16 @@ class CreateEditUserViewModel(
 
     private fun checkEmail(email: String) {
         viewModelScope.launch {
-            delay(300)
-            if ((0..1).random() == 1) {
-                _uiState.update {
-                    it.copy(
-                        formData = it.formData.copy(emailError = "Email is already used")
+            val query = CheckEmailOrUsernameQueryParams(email = email)
+            checkEmailOrUsernameUseCase(query).collectLatest { result ->
+                val errorMessage =
+                    if (result is Result.Error) "Email is already used" else null
+
+                _uiState.update { state ->
+                    state.copy(
+                        formData = state.formData.copy(
+                            emailError = errorMessage
+                        )
                     )
                 }
             }
@@ -172,7 +221,7 @@ class CreateEditUserViewModel(
             userName = data.userName,
             lastName = data.lastName,
             gender = data.gender.value,
-            birthDay = data.birthDay.toLocalDateTime().toEpochMillis(),
+            birthDay = data.birthDay.parseToLocalDateTime().toEpochMillis(),
             role = data.role.id,
             classId = data.classX?.id,
             studentId = data.studentId,
@@ -182,16 +231,17 @@ class CreateEditUserViewModel(
         )
     }
 
-    private fun mapBodyFromForm(formData: CreateEditUserFormData): CreateEditUserBody {
+    private fun mapBodyFromForm(formData: CreateEditUserFormData, isEdit:Boolean): CreateEditUserBody {
         return CreateEditUserBody(
             username = formData.userName,
             firstName = formData.firstName,
             lastName = formData.lastName,
             email = formData.email,
-            password = "TemporaryPassword12@",
             role = formData.role,
             address = formData.address,
+            studentId = formData.studentId,
             classX = formData.classId,
+            birthDay = formData.birthDay,
             phoneNumber = formData.phone,
             gender = formData.gender
         )

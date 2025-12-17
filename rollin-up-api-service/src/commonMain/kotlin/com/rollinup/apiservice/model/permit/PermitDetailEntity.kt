@@ -4,7 +4,7 @@ data class PermitDetailEntity(
     val id: String = "",
     val date: String = "",
     val name: String = "",
-    val type: PermitType = PermitType.ABSENT,
+    val type: PermitType = PermitType.ABSENCE,
     val student: User = User(),
     val startTime: String = "",
     val endTime: String = "",

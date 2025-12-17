@@ -1,14 +1,12 @@
 package com.rollinup.apiservice.data.source.network.model.request.permit
 
-import com.rollinup.apiservice.Utils.toJsonString
 import com.rollinup.apiservice.model.common.MultiPlatformFile
 import com.rollinup.apiservice.model.permit.ApprovalStatus
 import com.rollinup.apiservice.model.permit.PermitType
+import com.rollinup.apiservice.utils.Utils.appendFile
+import com.rollinup.apiservice.utils.Utils.toJsonString
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
-import io.ktor.http.ContentType
-import io.ktor.http.Headers
-import io.ktor.http.HttpHeaders
 
 data class CreateEditPermitBody(
     val studentId: String? = null,
@@ -50,17 +48,9 @@ data class CreateEditPermitBody(
                     )
                 }
                 attachment?.let {
-                    val contentType = when (it.extension) {
-                        "pdf" -> ContentType.Application.Pdf
-                        else -> ContentType.Image.Any
-                    }.contentType
-
-                    append(
-                        key = "attachment",
-                        value = it.readBytes(),
-                        headers = Headers.build {
-                            append(HttpHeaders.ContentType, contentType)
-                        }
+                    appendFile(
+                        file = it,
+                        key = "attachment"
                     )
                 }
                 approvalStatus?.let {

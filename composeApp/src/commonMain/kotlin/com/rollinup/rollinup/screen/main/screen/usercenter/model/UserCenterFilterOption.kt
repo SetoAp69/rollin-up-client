@@ -1,7 +1,7 @@
 package com.rollinup.rollinup.screen.main.screen.usercenter.model
 
 import com.rollinup.apiservice.model.common.Gender
-import com.rollinup.rollinup.component.model.OptionData
+import com.rollinup.common.model.OptionData
 
 data class UserCenterFilterOption(
     val classOptions: List<OptionData<Int>> = emptyList(),

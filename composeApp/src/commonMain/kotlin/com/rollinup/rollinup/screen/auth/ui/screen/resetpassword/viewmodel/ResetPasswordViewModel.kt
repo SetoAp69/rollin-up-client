@@ -3,7 +3,7 @@ package com.rollinup.rollinup.screen.auth.ui.screen.resetpassword.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rollinup.apiservice.data.source.network.model.request.user.CreateResetPasswordRequestBody
-import com.rollinup.apiservice.data.source.network.model.request.user.SubmitOTPBody
+import com.rollinup.apiservice.data.source.network.model.request.user.SubmitResetPasswordOTPBody
 import com.rollinup.apiservice.data.source.network.model.request.user.SubmitResetPasswordBody
 import com.rollinup.apiservice.domain.user.CreateResetPasswordRequestUseCase
 import com.rollinup.apiservice.domain.user.SubmitResetOtpUseCase
@@ -69,7 +69,7 @@ class ResetPasswordViewModel(
             it.copy(isLoadingOverlay = true)
         }
 
-        val body = SubmitOTPBody(
+        val body = SubmitResetPasswordOTPBody(
             email = _uiState.value.email,
             otp = otp
         )

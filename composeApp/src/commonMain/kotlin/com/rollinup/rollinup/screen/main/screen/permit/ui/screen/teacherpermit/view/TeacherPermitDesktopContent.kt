@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.rollinup.rollinup.component.handlestate.HandleState
 import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.spacer.screenPadding
 import com.rollinup.rollinup.component.theme.Style
@@ -28,8 +29,8 @@ fun TeacherPermitDesktopContent(
         ) {
             Text(
                 text = "Teacher Permit",
-                style = Style.headerBold,
-                color = theme.primary
+                style = Style.popupTitle,
+                color = theme.textPrimary
             )
             TeacherPermitTableFilter(
                 uiState = uiState,

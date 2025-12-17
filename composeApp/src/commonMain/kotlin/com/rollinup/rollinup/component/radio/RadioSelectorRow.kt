@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
-import com.rollinup.rollinup.component.model.OptionData
+import com.rollinup.common.model.OptionData
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.textfield.TextFieldTitle
 import com.rollinup.rollinup.component.theme.Style

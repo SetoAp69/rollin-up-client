@@ -3,8 +3,8 @@ package com.rollinup.rollinup.screen.splashscreen.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rollinup.apiservice.domain.auth.LoginJWTUseCase
+import com.rollinup.apiservice.domain.token.GetTokenUseCase
 import com.rollinup.apiservice.model.common.Result
-import com.rollinup.apiservice.data.source.datastore.LocalDataStore
 import com.rollinup.rollinup.screen.splashscreen.uistate.SplashScreenUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 
 class SplashScreenViewmodel(
-    private val localDataStore: LocalDataStore,
+    private val getTokenUseCase: GetTokenUseCase,
     private val loginJWTUseCase: LoginJWTUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SplashScreenUiState())
@@ -30,7 +30,7 @@ class SplashScreenViewmodel(
 
     fun auth() {
         viewModelScope.launch {
-            val accessToken = localDataStore.getToken()
+            val accessToken = getTokenUseCase()
             if (accessToken.isBlank()) {
                 _uiState.update { it.copy(isLoading = false, loginState = false) }
                 return@launch
@@ -52,7 +52,7 @@ class SplashScreenViewmodel(
                             _uiState.update {
                                 it.copy(
                                     isLoading = false,
-                                    loginState = true,
+                                    loginState = result.data.isVerified,
                                     loginData = result.data
                                 )
                             }

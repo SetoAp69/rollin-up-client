@@ -14,7 +14,7 @@ data class GetDashboardDataResponse(
 ) {
     @Serializable
     data class Data(
-        @SerialName("status")
+        @SerialName("currentStatus")
         val status: String = "",
         @SerialName("summary")
         val summary: Summary = Summary(),

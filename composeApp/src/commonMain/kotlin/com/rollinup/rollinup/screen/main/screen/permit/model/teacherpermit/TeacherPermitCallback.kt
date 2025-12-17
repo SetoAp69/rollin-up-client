@@ -10,4 +10,7 @@ data class TeacherPermitCallback(
     val onRefresh: () -> Unit = {},
     val onFilter: (PermitFilterData) -> Unit = {},
     val onSearch: (String) -> Unit = {},
+    val onResetSelection: () -> Unit = {},
+    val onExportFile: (String) -> Unit = {},
+    val onResetMessageState: () -> Unit = {},
 )

@@ -8,6 +8,8 @@ import com.rollinup.apiservice.model.permit.PermitByClassEntity
 import com.rollinup.apiservice.model.permit.PermitByStudentEntity
 import com.rollinup.apiservice.model.permit.PermitDetailEntity
 import com.rollinup.apiservice.model.permit.PermitType
+import com.rollinup.apiservice.utils.Utils
+import com.rollinup.apiservice.utils.Utils.getFileLink
 
 class PermitMapper {
     fun mapPermitListByStudentResponse(data: List<GetPermitListByStudentResponse.Data.PermitListDTO>): List<PermitByStudentEntity> {
@@ -36,7 +38,7 @@ class PermitMapper {
                 startTime = d.startTime,
                 reason = d.reason,
                 approvalStatus = d.approvalStatus.let { ApprovalStatus.fromValue(it) },
-                type = d.type,
+                type = PermitType.fromValue(d.type),
                 endTime = d.endTime,
                 student = PermitByClassEntity.User(
                     id = d.student.id,
@@ -64,7 +66,7 @@ class PermitMapper {
             },
             startTime = data.startTime,
             endTime = data.endTime,
-            attachment = data.attachment,
+            attachment = data.attachment.getFileLink(),
             note = data.note,
             reason = data.reason,
             createdAt = data.createdAt,

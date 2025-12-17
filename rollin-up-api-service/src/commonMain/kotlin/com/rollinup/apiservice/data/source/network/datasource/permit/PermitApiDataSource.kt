@@ -1,6 +1,7 @@
 package com.rollinup.apiservice.data.source.network.datasource.permit
 
 import com.rollinup.apiservice.data.source.network.apiservice.PermitApiService
+import com.rollinup.apiservice.data.source.network.httpclient.NetworkClient
 import com.rollinup.apiservice.data.source.network.model.request.permit.CreateEditPermitBody
 import com.rollinup.apiservice.data.source.network.model.request.permit.PermitApprovalBody
 import com.rollinup.apiservice.data.source.network.model.response.ApiResponse
@@ -94,7 +95,7 @@ class PermitApiDataSource(
 
     override suspend fun createPermit(body: CreateEditPermitBody): ApiResponse<Unit> {
         return try {
-            val response = httpClient.post("$baseUrl/") {
+            val response = httpClient.post(baseUrl) {
                 contentType(ContentType.MultiPart.FormData)
                 setBody(body.toMultiPart())
             }

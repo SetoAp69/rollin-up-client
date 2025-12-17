@@ -3,8 +3,7 @@ package com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendance
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.rollinup.apiservice.model.attendance.AttendanceByStudentEntity
-import com.rollinup.apiservice.model.permit.PermitType
-import com.rollinup.common.utils.Utils.toLocalDateTime
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.rollinup.component.chip.Chip
 import com.rollinup.rollinup.component.date.DateText
 import com.rollinup.rollinup.component.date.DateTextFormat
@@ -15,12 +14,14 @@ import com.rollinup.rollinup.component.table.TableColumn
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancebystudent.uistate.AttendanceByStudentUiState
+import kotlinx.datetime.TimeZone
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_info_line_24
 
 @Composable
 fun AttendanceByStudentTable(
     uiState: AttendanceByStudentUiState,
+    onRefresh: () -> Unit,
     onClickDetail: (AttendanceByStudentEntity) -> Unit,
 ) {
     Table(
@@ -35,6 +36,7 @@ fun AttendanceByStudentTable(
                 style = Style.popupTitle
             )
         },
+        onRefresh = onRefresh,
         dropDownMenu = { state ->
             DropDownMenu(
                 isShowDropDown = state.expanded,
@@ -57,7 +59,7 @@ private fun getColumn(): List<TableColumn<AttendanceByStudentEntity>> =
         TableColumn("Date") {
             DateText(it.date)
         },
-        TableColumn("Status") {
+        TableColumn("Status",0.5f) {
             Chip(
                 text = it.status.label,
                 severity = it.status.severity
@@ -66,13 +68,13 @@ private fun getColumn(): List<TableColumn<AttendanceByStudentEntity>> =
         TableColumn("Check in Time") { data ->
             data.checkInTime?.let {
                 DateText(
-                    dateString = it,
+                    dateTime = it.parseToLocalDateTime(TimeZone.UTC),
                     format = DateTextFormat.TIME
                 )
             }
         },
         TableColumn("Duration", 0.5f) { data ->
-            val text = data.permit?.let { getDuration(it) } ?: "-"
+            val text = data.permit?.durationString ?: "-"
             Text(
                 text = text,
                 color = theme.bodyText,
@@ -87,31 +89,3 @@ private fun getColumn(): List<TableColumn<AttendanceByStudentEntity>> =
             )
         }
     )
-
-
-private fun getDuration(
-    permit: AttendanceByStudentEntity.Permit,
-): String {
-    val from = permit.start.toLocalDateTime()
-    val to = permit.end.toLocalDateTime()
-
-    return when (
-        permit.type
-    ) {
-        PermitType.DISPENSATION -> {
-            "${from.time} - ${to.time}"
-        }
-
-        PermitType.ABSENT -> {
-            val fromDate = from.date
-            val toDate = to.date
-
-            if (fromDate == toDate) {
-                "${from.time}"
-            } else {
-                "${from.time} - ${to.time}"
-
-            }
-        }
-    }
-}

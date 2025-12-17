@@ -64,7 +64,6 @@ fun TeacherDashboardContent(
         )
     } else {
         TeacherDashboardContentDesktop(
-            onNavigateTo = onNavigateTo,
             uiState = uiState,
             cb = cb
         )

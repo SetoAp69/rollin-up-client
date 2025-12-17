@@ -100,10 +100,10 @@ fun SubmitEmailForm(
                 onValueChange = { value ->
                     emailInput = value
                     if (value.contains(" ")) {
-                        emailError = "Email or Username cannot contain spaces"
+                        emailError = "Email cannot contain spaces"
                     }
                     if (value.length < 5) {
-                        emailError = "Email or Username cannot be less than 5 characters"
+                        emailError = "Email cannot be less than 5 characters"
                     }
                     if (value.isBlank()) {
                         emailError = null
@@ -120,7 +120,7 @@ fun SubmitEmailForm(
                 text = "Submit",
                 onClick = {
                     if (emailInput.isBlank()) {
-                        emailError = "Email or Username cannot be empty"
+                        emailError = "Email cannot be empty"
                     } else {
                         onSubmitEmail(emailInput)
                     }
@@ -302,87 +302,3 @@ private fun SubmitOtpForm(
         )
     }
 }
-//
-//@Composable
-//private fun SubmitEmailForm(
-//    uiState: ResetPasswordUiState,
-//    onSubmitEmail: (String) -> Unit,
-//    onNavigateUp: () -> Unit,
-//) {
-//    var emailInput by remember { mutableStateOf("") }
-//    var emailError: String? by remember { mutableStateOf(null) }
-//
-//    LaunchedEffect(uiState.step) {
-//        emailInput = ""
-//        emailError = null
-//    }
-//
-//    Column(
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(screenPadding)
-//    ) {
-//        Column(
-//            modifier = Modifier
-//                .height(320.dp)
-//        ) {
-//            Column(
-//                horizontalAlignment = Alignment.CenterHorizontally
-//            ) {
-//                Text(
-//                    text = "Email or Username",
-//                    style = Style.title,
-//                    color = theme.bodyText
-//                )
-//                Spacer(itemGap8)
-//                TextField(
-//                    value = emailInput,
-//                    onValueChange = { value ->
-//                        emailInput = value
-//                        if (value.contains(" ")) {
-//                            emailError = "Email or Username cannot contain spaces"
-//                        }
-//                        if (value.length < 5) {
-//                            emailError = "Email or Username cannot be less than 5 characters"
-//                        }
-//                        if (value.isBlank()) {
-//                            emailError = null
-//                        }
-//                        emailError = null
-//                    },
-//                    placeHolder = "Enter your email or username",
-//                    isError = emailError != null,
-//                    errorMsg = emailError,
-//                    leadingIcon = Res.drawable.ic_mail_line_24,
-//                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-//                )
-//                Spacer(120.dp)
-//                Button(
-//                    text = "Submit",
-//                    onClick = {
-//                        if (emailInput.isBlank()) {
-//                            emailError = "Email or Username cannot be empty"
-//                        } else {
-//                            onSubmitEmail(emailInput)
-//                        }
-//                    },
-//                    modifier = Modifier.fillMaxWidth(),
-//                    severity = Severity.PRIMARY,
-//                    type = ButtonType.FILLED
-//                )
-//            }
-//        }
-//        Text(
-//            text = "Back to Login",
-//            color = theme.textPrimary,
-//            style = Style.title,
-//            modifier = Modifier
-//                .clickable {
-//                    onNavigateUp()
-//                }
-//                .padding(horizontal = itemGap4)
-//        )
-//    }
-//}
-

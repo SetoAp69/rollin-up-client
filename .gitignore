@@ -18,4 +18,5 @@ captures
 **/xcshareddata/WorkspaceSettings.xcsettings
 *.properties
 ***/network_security_config.xml
+*./kcef-bundle/
 

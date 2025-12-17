@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
 import com.rollinup.apiservice.model.attendance.AttendanceSummaryEntity
 import com.rollinup.apiservice.model.auth.LoginEntity
+import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.chip.Chip
 import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.spacer.Spacer
@@ -31,12 +32,10 @@ import com.rollinup.rollinup.component.spacer.screenPaddingValues
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.utils.isCompact
-import com.rollinup.rollinup.screen.dashboard.ui.screen.studentdashboard.uistate.StudentDashboardUiState
+import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.uistate.StudentDashboardUiState
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import rollin_up.composeapp.generated.resources.Res
-import rollin_up.composeapp.generated.resources.ic_eye_close_line_24
-import rollin_up.composeapp.generated.resources.ic_eye_eye_open_line
 import rollin_up.composeapp.generated.resources.ic_location_invalid_line_24
 import rollin_up.composeapp.generated.resources.ic_location_line_24
 
@@ -138,7 +137,7 @@ private fun HeaderContent(
     ) {
         UserInfoSection(
             userData = uiState.user ?: LoginEntity(),
-            attendanceStatus = uiState.currentAttendance?.status ?: AttendanceStatus.NO_DATA
+            attendanceStatus = uiState.currentStatus
         )
         SummarySection(
             summary = uiState.summary,
@@ -155,16 +154,18 @@ fun SummarySection(
     val locationIcon: DrawableResource
     val iconColor: Color
 
-    when(isLocationValid){
-        true ->{
+    when (isLocationValid) {
+        true -> {
             locationIcon = Res.drawable.ic_location_line_24
             iconColor = theme.success
         }
-        false ->{
+
+        false -> {
             locationIcon = Res.drawable.ic_location_invalid_line_24
             iconColor = theme.danger
         }
-        null ->{
+
+        null -> {
             locationIcon = Res.drawable.ic_location_invalid_line_24
             iconColor = theme.chipDisabledBg
         }
@@ -184,17 +185,20 @@ fun SummarySection(
         ) {
             SummaryItem(
                 amount = summary.checkedIn.toString(),
-                title = "Attended"
+                title = "Attended",
+                severity = Severity.SUCCESS
             )
             CircleSpacer()
             SummaryItem(
                 amount = summary.absent.toString(),
-                title = "Absent"
+                title = "Absent",
+                severity = Severity.DANGER
             )
             CircleSpacer()
             SummaryItem(
                 amount = summary.excused.toString(),
-                title = "Excused"
+                title = "Excused",
+                severity = Severity.WARNING
             )
         }
         Icon(
@@ -223,6 +227,7 @@ private fun CircleSpacer() {
 private fun SummaryItem(
     amount: String,
     title: String,
+    severity: Severity,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -233,10 +238,9 @@ private fun SummaryItem(
             color = theme.primary
         )
         Spacer(itemGap4)
-        Text(
+        Chip(
             text = title,
-            style = Style.small,
-            color = theme.bodyText
+            severity = severity
         )
     }
 }
@@ -292,7 +296,7 @@ private fun UserInfoSection(
             }
         }
         Chip(
-            text = attendanceStatus.value,
+            text = attendanceStatus.label,
             severity = attendanceStatus.severity
         )
 

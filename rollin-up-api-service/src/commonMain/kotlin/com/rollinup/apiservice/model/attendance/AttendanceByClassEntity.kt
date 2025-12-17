@@ -1,7 +1,7 @@
 package com.rollinup.apiservice.model.attendance
 
 import com.rollinup.apiservice.model.permit.PermitType
-import com.rollinup.common.utils.Utils.toLocalDateTime
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import kotlinx.serialization.Serializable
 
 data class AttendanceByClassEntity(
@@ -26,21 +26,21 @@ data class AttendanceByClassEntity(
     data class Permit(
         val id: String = "",
         val reason: String? = null,
-        val type: PermitType = PermitType.ABSENT,
+        val type: PermitType = PermitType.ABSENCE,
         val start: String = "",
         val end: String = "",
     ) {
         val durationString: String
             get() {
-                val from = start.toLocalDateTime()
-                val to = end.toLocalDateTime()
+                val from = start.parseToLocalDateTime()
+                val to = end.parseToLocalDateTime()
 
                 return when (type) {
                     PermitType.DISPENSATION -> {
                         "${from.time} - ${to.time}"
                     }
 
-                    PermitType.ABSENT -> {
+                    PermitType.ABSENCE -> {
                         val fromDate = from.date
                         val toDate = to.date
 

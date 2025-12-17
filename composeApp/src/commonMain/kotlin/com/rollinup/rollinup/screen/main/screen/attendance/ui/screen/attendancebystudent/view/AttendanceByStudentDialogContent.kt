@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,6 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.rollinup.apiservice.model.user.UserDetailEntity
 import com.rollinup.rollinup.component.attendancedetail.AttendanceDetailDialog
+import com.rollinup.rollinup.component.handlestate.HandleState
+import com.rollinup.rollinup.component.loading.LoadingOverlay
+import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.screen.main.screen.attendance.model.attendancebystudent.AttendanceByStudentCallback
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancebystudent.uistate.AttendanceByStudentUiState
@@ -25,7 +27,16 @@ import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendanceb
 fun AttendanceByStudentDialogContent(
     uiState: AttendanceByStudentUiState,
     cb: AttendanceByStudentCallback,
+    onShowSnackBar: OnShowSnackBar,
 ) {
+    HandleState(
+        state = uiState.exportState,
+        successMsg = "Success, data successfully exported",
+        errorMsg = "Error, failed to export data, please try again",
+        onDispose = cb.onResetMessageState,
+        onShowSnackBar = onShowSnackBar,
+    )
+    LoadingOverlay(uiState.isLoadingOverlay)
     Row(modifier = Modifier.fillMaxWidth()) {
         Box(modifier = Modifier.weight(1f)) {
             ProfileSection(
@@ -41,6 +52,7 @@ fun AttendanceByStudentDialogContent(
             )
         }
     }
+
 }
 
 @Composable
@@ -53,14 +65,16 @@ private fun TableSection(
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         AttendanceByStudentTableFilter(
             uiState = uiState,
-            onStatusSelected = cb.onSelectStatus
+            onUpdateFilter = cb.onUpdateFilter,
+            onExportFile = cb.onExportFile
         )
         AttendanceByStudentTable(
             uiState = uiState,
             onClickDetail = { item ->
                 showDetail = true
                 cb.onGetDetail(item.id)
-            }
+            },
+            onRefresh = cb.onRefresh
         )
     }
 

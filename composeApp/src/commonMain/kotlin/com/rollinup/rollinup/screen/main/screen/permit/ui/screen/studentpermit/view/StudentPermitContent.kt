@@ -1,6 +1,7 @@
 package com.rollinup.rollinup.screen.main.screen.permit.ui.screen.studentpermit.view
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -11,7 +12,7 @@ import androidx.paging.compose.LazyPagingItems
 import com.rollinup.apiservice.model.permit.PermitByStudentEntity
 import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.spacer.screenPadding
-import com.rollinup.rollinup.component.tab.TabList
+import com.rollinup.rollinup.component.tab.TabRow
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitTab
 import com.rollinup.rollinup.screen.main.screen.permit.model.studentpermit.StudentPermitCallback
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.studentpermit.uistate.StudentPermitUiState
@@ -24,6 +25,11 @@ fun StudentPermitContent(
     cb: StudentPermitCallback,
     onNavigateUp: () -> Unit,
 ) {
+    val pagerState = rememberPagerState(
+        initialPage = PermitTab.entries.indexOf(PermitTab.ACTIVE),
+        pageCount = { PermitTab.entries.size }
+    )
+
     Scaffold(
         topBar = {
             StudentPermitTopBar(
@@ -33,25 +39,27 @@ fun StudentPermitContent(
             )
         }
     ) {
-        val pagerState = rememberPagerState(
-            initialPage = PermitTab.entries.indexOf(PermitTab.ACTIVE),
-            pageCount = { PermitTab.entries.size })
-
         LaunchedEffect(pagerState.currentPage) {
             cb.onTabChange(pagerState.currentPage)
         }
 
-        Column {
-            Column(
-                modifier = Modifier.padding(screenPadding)
-            ) {
-                TabList(
-                    tabList = uiState.tabList,
-                    currentIndex = uiState.currentTabIndex,
-                    onTabChange = cb.onTabChange
-                )
-            }
+        LaunchedEffect(uiState.currentTabIndex){
+            pagerState.scrollToPage(uiState.currentTabIndex)
+        }
 
+        Column(
+            modifier = Modifier
+        ) {
+            TabRow(
+                tabList = uiState.tabList,
+                currentTab = uiState.currentTabIndex,
+                onTabChange = {
+                    cb.onTabChange(it)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(screenPadding)
+            )
             HorizontalPager(
                 state = pagerState,
                 pageContent = { page ->
@@ -62,5 +70,7 @@ fun StudentPermitContent(
                 },
             )
         }
+
+
     }
 }

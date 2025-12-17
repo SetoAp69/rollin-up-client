@@ -1,10 +1,12 @@
 package com.rollinup.apiservice.di
 
+import com.michaelflisar.lumberjack.core.L
+import com.rollinup.apiservice.BuildConfig
 import com.rollinup.apiservice.Constant
 import com.rollinup.apiservice.data.source.datastore.LocalDataStore
 import com.rollinup.apiservice.utils.JSON_TYPE
+import io.github.orioneee.Axer
 import io.ktor.client.HttpClient
-import io.ktor.client.HttpClientConfig
 import io.ktor.client.call.body
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.auth.Auth
@@ -38,17 +40,19 @@ object ClientModule {
 }
 
 private fun getSSEClient(localDataStore: LocalDataStore) = HttpClient {
+    this.
     expectSuccess = true
     defaultRequest {
         url {
             protocol = URLProtocol.HTTP //TODO:Changes this to HTTPS on productions
-            host = "192.168.137.1:8089"
+            host = BuildConfig.BASE_URL
         }
     }
 
     install(ContentNegotiation) {
         json(
             json = Json {
+                encodeDefaults = true
                 ignoreUnknownKeys = true
                 this.prettyPrint = true
             }
@@ -63,7 +67,7 @@ private fun getSSEClient(localDataStore: LocalDataStore) = HttpClient {
 
     install(Auth) {
         bearer {
-
+            sendWithoutRequest{true}
             loadTokens {
                 val accessToken = localDataStore.getToken()
                 val refreshToken = localDataStore.getRefreshToken()
@@ -109,7 +113,7 @@ private fun getClient(localDataStore: LocalDataStore) = HttpClient {
     defaultRequest {
         url {
             protocol = URLProtocol.HTTP //TODO:Changes this to HTTPS on productions
-            host = "192.168.137.1:8089"
+            host = BuildConfig.BASE_URL
         }
     }
 
@@ -120,6 +124,7 @@ private fun getClient(localDataStore: LocalDataStore) = HttpClient {
     install(ContentNegotiation) {
         json(
             json = Json {
+                encodeDefaults = true
                 ignoreUnknownKeys = true
                 this.prettyPrint = true
             }
@@ -134,8 +139,9 @@ private fun getClient(localDataStore: LocalDataStore) = HttpClient {
 
     install(Auth) {
         bearer {
-
+            sendWithoutRequest{true}
             loadTokens {
+                L.wtf{"Loading token:"}
                 val accessToken = localDataStore.getToken()
                 val refreshToken = localDataStore.getRefreshToken()
                 BearerTokens(
@@ -166,66 +172,10 @@ private fun getClient(localDataStore: LocalDataStore) = HttpClient {
             }
         }
     }
-}
 
-private fun HttpClientConfig<*>.getBaseClient(localDataStore: LocalDataStore) = {
-    expectSuccess = true
-    defaultRequest {
-        url {
-            protocol = URLProtocol.HTTP //TODO:Changes this to HTTPS on productions
-            host = "192.168.137.1:8089"
-        }
-    }
-
-    install(ContentNegotiation) {
-        json(
-            json = Json {
-                ignoreUnknownKeys = true
-                this.prettyPrint = true
-            }
-        )
-    }
-
-    install(Logging) {
-        logger = Logger.DEFAULT
-        level = LogLevel.ALL
-        this.sanitizeHeader { header -> header == HttpHeaders.Authorization }
-    }
-
-    install(Auth) {
-        bearer {
-
-            loadTokens {
-                val accessToken = localDataStore.getToken()
-                val refreshToken = localDataStore.getRefreshToken()
-                BearerTokens(
-                    accessToken = accessToken,
-                    refreshToken = refreshToken
-                )
-            }
-
-            refreshTokens {
-                val refreshToken = oldTokens?.refreshToken ?: ""
-                val body = hashMapOf("refreshToken" to refreshToken)
-
-                val response = client.post("auth/refresh-token") {
-                    headers.remove(HttpHeaders.Authorization)
-                    contentType(JSON_TYPE)
-                    setBody(body)
-                }.body<HashMap<String, String>>()
-
-                val newAccessToken = response["accessToken"] ?: ""
-
-                localDataStore.updateToken(refreshToken)
-                localDataStore.updateRefreshToken(newAccessToken)
-
-                BearerTokens(
-                    accessToken = newAccessToken,
-                    refreshToken = refreshToken
-                )
-            }
-        }
+    install(Axer.ktorPlugin){
     }
 }
+
 
 

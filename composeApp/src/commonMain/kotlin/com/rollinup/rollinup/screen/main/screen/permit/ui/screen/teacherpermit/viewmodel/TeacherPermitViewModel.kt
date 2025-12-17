@@ -2,23 +2,20 @@ package com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.LoadState
-import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import com.rollinup.apiservice.domain.permit.GetPermitByClassListUseCase
 import com.rollinup.apiservice.domain.permit.GetPermitByClassPagingUseCase
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.Result
 import com.rollinup.apiservice.model.permit.PermitByClassEntity
+import com.rollinup.rollinup.component.date.DateFormatter
+import com.rollinup.rollinup.component.export.FileWriter
 import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.utils.getPlatform
-import com.rollinup.rollinup.screen.dashboard.generateDummyPermitByClassList
-import com.rollinup.rollinup.screen.dashboard.generateDummyPermitByStudentList
+import com.rollinup.rollinup.screen.main.screen.permit.model.PermitFilterData
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitTab
 import com.rollinup.rollinup.screen.main.screen.permit.model.teacherpermit.TeacherPermitCallback
-import com.rollinup.rollinup.screen.main.screen.permit.model.PermitFilterData
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.uistate.TeacherPermitUiState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -28,7 +25,7 @@ import kotlinx.coroutines.launch
 class TeacherPermitViewModel(
     private val getPermitByClassListUseCase: GetPermitByClassListUseCase,
     private val getPermitByClassPagingUseCase: GetPermitByClassPagingUseCase,
-//    private val
+    private val fileWriter: FileWriter,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(TeacherPermitUiState())
     val uiState = _uiState.asStateFlow()
@@ -41,7 +38,6 @@ class TeacherPermitViewModel(
     fun init(user: LoginEntity?) {
         if (user == null) return
         _uiState.update { it.copy(user = user) }
-
         if (isMobile) {
             getItemPaging()
         } else {
@@ -56,7 +52,10 @@ class TeacherPermitViewModel(
             onTabChange = ::tabChange,
             onRefresh = ::refresh,
             onFilter = ::filter,
-            onSearch = ::search
+            onSearch = ::search,
+            onResetSelection = ::resetSelection,
+            onExportFile = ::exportFile,
+            onResetMessageState = ::resetMessageState,
         )
 
     private fun getItemList() {
@@ -65,16 +64,6 @@ class TeacherPermitViewModel(
 
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
-
-            if(true){
-                delay(500)
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        itemList = generateDummyPermitByClassList(88)
-                    )
-                }
-            }
             getPermitByClassListUseCase(classKey, queryParams).collectLatest { result ->
                 when (result) {
                     is Result.Success -> {
@@ -102,23 +91,15 @@ class TeacherPermitViewModel(
         }
     }
 
+    private fun resetSelection() {
+        _uiState.update { it.copy(itemSelected = emptyList()) }
+    }
+
     private fun getItemPaging() {
         val classKey = _uiState.value.user.classKey ?: return
         val queryParams = _uiState.value.queryParams
 
         viewModelScope.launch {
-            delay(1000)
-            if(true){
-                _pagingData.value = PagingData.from(
-                    data=generateDummyPermitByClassList(88),
-                    sourceLoadStates = LoadStates(
-                        refresh = LoadState.NotLoading(true),
-                        prepend = LoadState.NotLoading(true),
-                        append = LoadState.NotLoading(true)
-                    )
-                )
-                return@launch
-            }
             getPermitByClassPagingUseCase(classKey, queryParams).collectLatest { result ->
                 _pagingData.value = result
             }
@@ -196,6 +177,68 @@ class TeacherPermitViewModel(
                     }
                 }
             }
+        }
+    }
+
+    private fun exportFile(fileName: String) {
+        _uiState.update { it.copy(isLoadingOverlay = true, exportState = null) }
+        viewModelScope.launch {
+            val queryParams = _uiState.value.queryParams
+            val classKey = _uiState.value.user.classKey ?: return@launch
+
+            getPermitByClassListUseCase(classKey, queryParams).collectLatest { result ->
+                when (result) {
+                    is Result.Success -> {
+                        viewModelScope.launch {
+                            val data = fetchExportData(result.data)
+                            fileWriter.writeExcel(fileName, data)
+                            _uiState.update {
+                                it.copy(
+                                    isLoadingOverlay = false,
+                                    exportState = true
+                                )
+                            }
+                        }
+                    }
+
+                    is Result.Error -> {
+                        _uiState.update {
+                            it.copy(
+                                isLoadingOverlay = false,
+                                exportState = false
+                            )
+                        }
+                    }
+
+                }
+
+            }
+        }
+    }
+
+    private fun fetchExportData(data: List<PermitByClassEntity>): List<Pair<String, List<*>>> {
+        return listOf(
+            "Name" to data.map { d -> d.student.name },
+            "Class" to data.map { d -> d.student.xClass },
+            "Type" to data.map { d -> d.type.label },
+            "Duration" to data.map { d ->
+                DateFormatter.formatPermitDateRange(
+                    type = d.type,
+                    start = d.startTime,
+                    end = d.endTime,
+                )
+            },
+            "Reason" to data.map { d -> d.reason ?: "-" },
+            "Status" to data.map { d -> d.approvalStatus.label },
+            "Created at" to data.map { d -> DateFormatter.formateDateTimeFromString(d.createdAt) }
+        )
+    }
+
+    private fun resetMessageState() {
+        _uiState.update {
+            it.copy(
+                exportState = null
+            )
         }
     }
 }

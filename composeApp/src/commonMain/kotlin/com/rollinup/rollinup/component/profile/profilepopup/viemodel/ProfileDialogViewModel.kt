@@ -3,17 +3,16 @@ package com.rollinup.rollinup.component.profile.profilepopup.viemodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rollinup.apiservice.data.source.network.model.request.user.CreateEditUserBody
+import com.rollinup.apiservice.domain.user.CheckEmailOrUsernameUseCase
 import com.rollinup.apiservice.domain.user.EditUserUseCase
 import com.rollinup.apiservice.domain.user.GetUserByIdUseCase
 import com.rollinup.apiservice.model.common.Result
 import com.rollinup.apiservice.model.user.UserDetailEntity
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.common.utils.Utils.toEpochMillis
-import com.rollinup.common.utils.Utils.toLocalDateTime
 import com.rollinup.rollinup.component.profile.profilepopup.model.EditProfileFormData
-import com.rollinup.rollinup.component.profile.profilepopup.uistate.ProfileDialogUiState
-import com.rollinup.rollinup.getDummyUserDetail
 import com.rollinup.rollinup.component.profile.profilepopup.model.ProfileCallback
-import kotlinx.coroutines.delay
+import com.rollinup.rollinup.component.profile.profilepopup.uistate.ProfileDialogUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -30,16 +29,6 @@ class ProfileDialogViewModel(
     fun init(id: String, showEdit: Boolean) {
         _uiState.update { it.copy(isLoading = true, showEdit = showEdit) }
         viewModelScope.launch {
-            if (true) {
-                delay(1000)
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        userDetail = getDummyUserDetail()
-                    )
-                }
-                return@launch
-            }
             getUserByIdUseCase(id).collectLatest { result ->
                 if (result is Result.Success) {
                     _uiState.update { it.copy(userDetail = result.data) }
@@ -53,12 +42,20 @@ class ProfileDialogViewModel(
         _uiState.update { ProfileDialogUiState() }
     }
 
+    fun refresh() {
+        val id = _uiState.value.userDetail.id
+        val showEdit = _uiState.value.showEdit
+
+        init(id, showEdit)
+    }
+
     fun getCallback() = ProfileCallback(
         onToggleEdit = ::toggleEdit,
         onUpdateForm = ::updateFormData,
         onSubmit = ::submit,
         onValidate = ::validateForm,
-        onResetMessageState = ::resetMessageState
+        onResetMessageState = ::resetMessageState,
+        onRefresh = ::refresh
     )
 
     private fun toggleEdit() {
@@ -111,12 +108,12 @@ class ProfileDialogViewModel(
     private fun submit(formData: EditProfileFormData) {
         if (!validateForm(formData)) return
         val body = mapFormToBody(formData)
-        _uiState.update { it.copy(isLoading = false) }
+        _uiState.update { it.copy(isLoadingOverlay = true) }
 
         viewModelScope.launch {
             editUserByIdUseCase(formData.id, body).collectLatest { result ->
                 _uiState.update {
-                    it.copy(editState = result is Result.Success, isLoading = false)
+                    it.copy(editState = result is Result.Success, isLoadingOverlay = false)
                 }
             }
         }
@@ -130,7 +127,7 @@ class ProfileDialogViewModel(
         lastName = profile.lastName,
         userName = profile.userName,
         gender = profile.gender.value,
-        birthDay = profile.birthDay.toLocalDateTime().toEpochMillis(),
+        birthDay = profile.birthDay.parseToLocalDateTime().toEpochMillis(),
         address = profile.address,
         phone = profile.phoneNumber,
         email = profile.email,

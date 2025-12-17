@@ -2,6 +2,7 @@ package com.rollinup.rollinup.component.dropdown
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -110,21 +111,22 @@ fun DropDownMenuItem(
                 )
                 .width(150.dp),
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            Text(
+                text = label,
+                style = Style.body,
+                color = textColor
+            )
             icon?.let {
+                Spacer(gap)
                 Icon(
                     painter = painterResource(it),
                     tint = iconTint,
                     contentDescription = null,
                     modifier = Modifier.size(16.dp)
                 )
-                Spacer(gap)
             }
-            Text(
-                text = label,
-                style = Style.body,
-                color = textColor
-            )
         }
     }
 }

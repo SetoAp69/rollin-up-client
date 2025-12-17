@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.rollinup.apiservice.model.common.Gender
 import com.rollinup.apiservice.model.user.UserDetailEntity
 import com.rollinup.rollinup.component.button.Button
-import com.rollinup.rollinup.component.date.SingleDatePicker
+import com.rollinup.rollinup.component.date.SingleDatePickerField
 import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.profile.ProfileInfoField
 import com.rollinup.rollinup.component.profile.profilepopup.model.EditProfileFormData
@@ -191,7 +191,7 @@ private fun ProfileEditForm(
             )
         }
         Box(modifier = Modifier.weight(1f)) {
-            SingleDatePicker(
+            SingleDatePickerField(
                 title = "Birthday",
                 value = formData.birthDay,
                 enable = true,

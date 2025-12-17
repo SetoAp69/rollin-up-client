@@ -1,6 +1,7 @@
 package com.rollinup.rollinup.navigation
 
 import com.rollinup.apiservice.model.common.Role
+import com.rollinup.rollinup.screen.auth.navigation.AuthNavigationRoute
 
 sealed class NavigationRoute(val route: String) {
     object SplashScreen : NavigationRoute("splash-screen")
@@ -13,14 +14,13 @@ sealed class NavigationRoute(val route: String) {
     }
 
     companion object {
-        fun String.showsRail(): Boolean {
-            return this !in listOf(
-                SplashScreen.route,
-                Auth.route,
-                "auth/reset-password",
-                "auth/login"
-            )
-        }
+        fun getRouteWithoutRail() = listOf<String>(
+            Auth.route,
+            SplashScreen.route,
+            AuthNavigationRoute.Login.route,
+            AuthNavigationRoute.ResetPassword.route,
+            AuthNavigationRoute.UpdatePassword.route
+        )
     }
 }
 

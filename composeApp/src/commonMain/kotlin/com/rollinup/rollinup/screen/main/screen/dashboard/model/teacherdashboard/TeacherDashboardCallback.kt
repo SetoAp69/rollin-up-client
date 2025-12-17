@@ -3,6 +3,7 @@ package com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboar
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
+import kotlinx.datetime.LocalDate
 
 data class TeacherDashboardCallback(
     val onRefresh: () -> Unit = {},
@@ -19,4 +20,7 @@ data class TeacherDashboardCallback(
     val onValidateApproval: (TeacherDashboardApprovalFormData) -> Boolean = { false },
     val onSubmitEditAttendance: (AttendanceDetailEntity, EditAttendanceFormData) -> Unit = { _, _ -> },
     val onResetSelection: () -> Unit = {},
+    val onResetEditForm: () -> Unit = {},
+    val onExportFile: (String) -> Unit = {},
+    val onUpdateExportDateRanges: (List<LocalDate>) -> Unit = {},
 )

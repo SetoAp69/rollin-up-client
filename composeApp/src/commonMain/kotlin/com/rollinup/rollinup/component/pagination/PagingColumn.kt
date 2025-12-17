@@ -3,6 +3,8 @@ package com.rollinup.rollinup.component.pagination
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -15,6 +17,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import com.rollinup.rollinup.component.empty.EmptyRecord
 import com.rollinup.rollinup.component.pullrefresh.PullRefresh
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.screenPaddingValues
@@ -35,16 +38,23 @@ fun <T : Any> PagingColumn(
     ) {
         LazyColumn(
             contentPadding = contentPadding,
-            verticalArrangement = contentArrangement
+            verticalArrangement = contentArrangement,
+            modifier = Modifier.fillMaxHeight()
         ) {
             if (pagingData.loadState.refresh is LoadState.Loading) {
                 repeat(5) {
                     item { loadingContent() }
                 }
             }else{
-                items(pagingData.itemCount) { index ->
-                    pagingData[index]?.let {
-                        itemContent(it)
+                if(pagingData.loadState.isIdle && pagingData.itemCount == 0){
+                    item {
+                        EmptyRecord()
+                    }
+                }else{
+                    items(pagingData.itemCount) { index ->
+                        pagingData[index]?.let {
+                            itemContent(it)
+                        }
                     }
                 }
             }

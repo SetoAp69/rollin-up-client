@@ -61,11 +61,7 @@ fun ShimmerEffect(
         label = "shimmerColor"
     )
 
-//    val brush = Brush.linearGradient(
-//        colors = shimmerColors,
-//        start = Offset(x = translateAnimation.value - 500, y = 0.0F),
-//        end = Offset(x = translateAnimation.value, y = 0.0F)
-//    )
+
 
     val brush = SolidColor(
         value = theme.textFieldBackGround.copy(alpha = (translateAnimation.value / 1000) + 0.2f)

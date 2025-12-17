@@ -2,7 +2,7 @@ package com.rollinup.rollinup.component.profile.profilepopup.uistate
 
 import com.rollinup.apiservice.model.common.Gender
 import com.rollinup.apiservice.model.user.UserDetailEntity
-import com.rollinup.rollinup.component.model.OptionData
+import com.rollinup.common.model.OptionData
 import com.rollinup.rollinup.component.profile.profilepopup.model.EditProfileFormData
 
 data class ProfileDialogUiState(

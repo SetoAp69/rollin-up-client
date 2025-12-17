@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.profile.profilepopup.view.screen.ProfileScreen
 import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.topbar.TopBar
@@ -12,6 +13,7 @@ import com.rollinup.rollinup.component.topbar.TopBar
 fun StudentProfileScreen(
     id: String,
     onNavigateUp: () -> Unit,
+    onShowSnackBar: OnShowSnackBar
 ) {
     Scaffold(
         topBar = {
@@ -26,7 +28,8 @@ fun StudentProfileScreen(
         Column(modifier = Modifier.fillMaxSize()) {
             ProfileScreen(
                 id = id,
-                showEdit =false
+                showEdit =false,
+                onShowSnackBar = onShowSnackBar
             )
         }
     }

@@ -52,17 +52,18 @@ fun BottomSheet(
     val shape = BottomSheetDefaults.ExpandedShape
     val properties = ModalBottomSheetProperties(shouldDismissOnBackPress = true)
     val scope = rememberCoroutineScope()
-    val snackBarHostState = remember { SnackbarHostState() }
     var isSuccess by remember { mutableStateOf(false) }
 
-    fun showSnackBar(message: String, success: Boolean) {
-        isSuccess = success
-        scope.launch {
-            snackBarHostState.showSnackbar(message = message)
-        }
-    }
-
     if (isShowSheet) {
+        val snackBarHostState = remember { SnackbarHostState() }
+
+        fun showSnackBar(message: String, success: Boolean) {
+            isSuccess = success
+            scope.launch {
+                snackBarHostState.showSnackbar(message = message)
+            }
+        }
+
         Box(contentAlignment = Alignment.BottomCenter) {
             ModalBottomSheet(
                 onDismissRequest = {
@@ -78,7 +79,7 @@ fun BottomSheet(
                 contentWindowInsets = { BottomSheetDefaults.windowInsets },
                 properties = properties,
                 content = {
-                    Box(contentAlignment = Alignment.BottomCenter){
+                    Box(contentAlignment = Alignment.BottomCenter) {
                         Column(
                             modifier = modifier
                                 .padding(

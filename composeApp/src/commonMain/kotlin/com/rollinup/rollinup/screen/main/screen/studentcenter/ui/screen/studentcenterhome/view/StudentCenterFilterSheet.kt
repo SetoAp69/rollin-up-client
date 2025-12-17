@@ -34,7 +34,7 @@ fun StudentCenterFilterSheet(
         showReset = tempData != StudentCenterFilterData(),
     ) {
         FilterSelector(
-            isLoading = uiState.isLoading,
+            isLoading = uiState.isLoadingFilter,
             title = "Class",
             options = uiState.classOptions,
             value = tempData.classX,

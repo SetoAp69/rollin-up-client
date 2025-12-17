@@ -1,6 +1,6 @@
 package com.rollinup.rollinup.screen.main.screen.usercenter.ui.uistate
 
-import com.rollinup.apiservice.Utils.toJsonString
+import com.rollinup.apiservice.utils.Utils.toJsonString
 import com.rollinup.apiservice.data.source.network.model.request.user.GetUserQueryParams
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.user.UserEntity
@@ -10,6 +10,7 @@ import com.rollinup.rollinup.screen.main.screen.usercenter.model.UserCenterFilte
 data class UserCenterUiState(
     val isLoadingList: Boolean = false,
     val isLoadingOverlay: Boolean = false,
+    val isLoadingFilter: Boolean = false,
     val deleteUserState: Boolean? = null,
     val searchQuery: String = "",
     val itemList: List<UserEntity> = emptyList(),

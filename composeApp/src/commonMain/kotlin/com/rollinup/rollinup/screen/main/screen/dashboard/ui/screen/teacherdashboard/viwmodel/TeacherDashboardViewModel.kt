@@ -6,7 +6,9 @@ import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import com.michaelflisar.lumberjack.core.L
-import com.rollinup.apiservice.data.source.network.model.request.attendance.CreateEditAttendanceBody
+import com.rollinup.apiservice.data.source.network.model.request.attendance.CreateAttendanceBody
+import com.rollinup.apiservice.data.source.network.model.request.attendance.EditAttendanceBody
+import com.rollinup.apiservice.data.source.network.model.request.attendance.GetExportAttendanceDataQueryParams
 import com.rollinup.apiservice.data.source.network.model.request.permit.CreateEditPermitBody
 import com.rollinup.apiservice.data.source.network.model.request.permit.PermitApprovalBody
 import com.rollinup.apiservice.domain.attendance.CreateAttendanceDataUseCase
@@ -14,32 +16,35 @@ import com.rollinup.apiservice.domain.attendance.EditAttendanceDataUseCase
 import com.rollinup.apiservice.domain.attendance.GetAttendanceByClassListUseCase
 import com.rollinup.apiservice.domain.attendance.GetAttendanceByClassPagingUseCase
 import com.rollinup.apiservice.domain.attendance.GetAttendanceByIdUseCase
+import com.rollinup.apiservice.domain.attendance.GetExportAttendanceDataUseCase
 import com.rollinup.apiservice.domain.permit.CreatePermitUseCase
 import com.rollinup.apiservice.domain.permit.DoApprovalUseCase
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
+import com.rollinup.apiservice.model.attendance.ExportAttendanceDataEntity
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.Result
 import com.rollinup.apiservice.model.permit.ApprovalStatus
 import com.rollinup.apiservice.model.permit.PermitType
+import com.rollinup.apiservice.utils.Utils.toJsonString
 import com.rollinup.common.utils.Utils.now
 import com.rollinup.common.utils.Utils.toEpochMillis
+import com.rollinup.rollinup.component.export.FileWriter
 import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.screen.dashboard.getAttendanceByClassDummy
-import com.rollinup.rollinup.screen.dashboard.getAttendanceDetailDummy
-import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardApprovalFormData
-import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardFilterData
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.EditAttendanceFormData
+import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardApprovalFormData
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
+import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardFilterData
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
 class TeacherDashboardViewModel(
@@ -50,6 +55,8 @@ class TeacherDashboardViewModel(
     private val createPermitUseCase: CreatePermitUseCase,
     private val createAttendanceDataUseCase: CreateAttendanceDataUseCase,
     private val editAttendanceDataUseCase: EditAttendanceDataUseCase,
+    private val getExportAttendanceDataUseCase: GetExportAttendanceDataUseCase,
+    private val fileWriter: FileWriter,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(TeacherDashboardUiState())
     val uiState = _uiState.asStateFlow()
@@ -84,7 +91,13 @@ class TeacherDashboardViewModel(
         onGetDetail = ::getDetail,
         onUpdateEditForm = ::updateEditForm,
         onValidateEditForm = ::validateEditForm,
-        onSubmitEditAttendance = ::submitEditAttendance
+        onSubmitEditAttendance = ::submitEditAttendance,
+        onResetEditForm = ::resetEditForm,
+        onResetSelection = ::resetSelection,
+        onRefreshList = ::refresh,
+        onValidateApproval = ::validateApprovalForm,
+        onExportFile = ::exportFile,
+        onUpdateExportDateRanges = ::updateExportDateRange,
     )
 
     //Fetch Data
@@ -92,16 +105,8 @@ class TeacherDashboardViewModel(
         _uiState.update {
             it.copy(isLoadingList = true)
         }
-        val classKey = uiState.value.user?.classKey ?: 0
+        val classKey = uiState.value.user.classKey ?: 0
         viewModelScope.launch {
-            delay(2000)
-            _uiState.update {
-                it.copy(
-                    isLoadingList = false,
-                    attendanceList = getAttendanceByClassDummy()
-                )
-            }
-            if (true) return@launch
             getAttendanceByClassListUseCase(
                 classKey = classKey,
                 queryParams = _uiState.value.filterData.toQueryParams()
@@ -141,7 +146,6 @@ class TeacherDashboardViewModel(
                     append = LoadState.NotLoading(endOfPaginationReached = true)
                 )
             )
-            if (true) return@launch
 
             getAttendanceByClassPagingUseCase(
                 classKey = classKey,
@@ -156,7 +160,8 @@ class TeacherDashboardViewModel(
         if (data.attendance == null) {
             _uiState.update {
                 it.copy(
-                    attendanceDetail = generateDetail(data)
+                    attendanceDetail = generateDetail(data),
+                    isLoadingDetail = false
                 )
             }
             return
@@ -164,16 +169,6 @@ class TeacherDashboardViewModel(
 
         viewModelScope.launch {
             _uiState.update { it.copy(isLoadingDetail = true) }
-            delay(2000)
-            if (true) {
-                _uiState.update {
-                    it.copy(
-                        attendanceDetail = getAttendanceDetailDummy(),
-                        isLoadingDetail = false
-                    )
-                }
-                return@launch
-            }
             getAttendanceByIdUseCase(data.attendance!!.id)
                 .collectLatest { result ->
                     when (result) {
@@ -286,7 +281,7 @@ class TeacherDashboardViewModel(
         if ((formData.duration.isEmpty() || formData.duration.any { it == null }))
             formData = formData.copy(durationError = "Duration can't be empty")
 
-        if (formData.reason.isNullOrBlank() && formData.type == PermitType.ABSENT)
+        if (formData.reason.isNullOrBlank() && formData.type == PermitType.ABSENCE)
             formData = formData.copy(reasonError = "Please select a reason")
 
         _uiState.update {
@@ -374,7 +369,7 @@ class TeacherDashboardViewModel(
     @Suppress("UNCHECKED_CAST")
     private fun createPermit(formData: EditAttendanceFormData) {
         val permitFormData = formData.permitFormData
-        val userId = _uiState.value.user?.id ?: return
+        val userId = _uiState.value.user.id
         val body = CreateEditPermitBody(
             studentId = formData.studentUserId,
             reason = permitFormData.reason,
@@ -402,9 +397,9 @@ class TeacherDashboardViewModel(
 
     @Suppress("UNCHECKED_CAST")
     private fun editAttendance(id: String, formData: EditAttendanceFormData) {
-        val user = _uiState.value.user ?: return
+        val user = _uiState.value.user
         val permitFormData = formData.permitFormData
-        val body = CreateEditAttendanceBody(
+        val body = EditAttendanceBody(
             studentUserId = formData.studentUserId,
             latitude = formData.location?.latitude,
             longitude = formData.location?.longitude,
@@ -436,11 +431,10 @@ class TeacherDashboardViewModel(
     private fun checkIn(
         formData: EditAttendanceFormData,
     ) {
-        val body = CreateEditAttendanceBody(
-            studentUserId = formData.studentUserId,
-            latitude = formData.location?.latitude,
-            longitude = formData.location?.longitude,
-            checkedInAt = formData.checkInTime
+        val body = CreateAttendanceBody(
+            id = formData.studentUserId,
+            date = LocalDate.now().toString(),
+            checkInAt = formData.checkInTime!!
         )
 
         viewModelScope.launch {
@@ -460,7 +454,7 @@ class TeacherDashboardViewModel(
     private fun updateSelection(data: AttendanceByClassEntity) {
         val newData = _uiState.value.itemSelected.toMutableList()
 
-        if(newData.contains(data)){
+        if (newData.contains(data)) {
             newData.remove(data)
         } else {
             newData.add(data)
@@ -482,16 +476,7 @@ class TeacherDashboardViewModel(
         } else {
             viewModelScope.launch {
                 _uiState.update { it.copy(isLoadingOverlay = true) }
-                delay(1000)
-                if(true){
-                    _uiState.update {
-                        it.copy(
-                            isAllSelected = true,
-                            itemSelected = getAttendanceByClassDummy()
-                        )
-                    }
-                    return@launch
-                }
+
                 val queryParams = _uiState.value.filterData.toQueryParams()
                 val classKey = _uiState.value.user.classKey ?: return@launch
                 getAttendanceByClassListUseCase(classKey, queryParams).collectLatest { result ->
@@ -521,12 +506,96 @@ class TeacherDashboardViewModel(
         }
     }
 
-    private fun resetSelection(){
+    private fun resetSelection() {
         _uiState.update {
             it.copy(
                 itemSelected = emptyList(),
                 isAllSelected = false
             )
+        }
+    }
+
+    private fun resetEditForm() {
+        _uiState.update {
+            it.copy(
+                editAttendanceFormData = EditAttendanceFormData(),
+            )
+        }
+        resetSelection()
+    }
+
+    private fun exportFile(fileName: String) {
+        _uiState.update { it.copy(isLoadingOverlay = true) }
+        val classKey = _uiState.value.user.classKey ?: return
+        val dateRange = _uiState.value.exportDateRanges
+        val queryPrams = GetExportAttendanceDataQueryParams(
+            classKey = classKey,
+            dateRange = dateRange.toJsonString()
+        )
+        viewModelScope.launch {
+            getExportAttendanceDataUseCase(queryPrams).collectLatest { result ->
+                when (result) {
+                    is Result.Success -> {
+                        viewModelScope.launch {
+                            val data = fetchExportData(result.data)
+                            fileWriter.writeExcel(fileName, data)
+                            _uiState.update {
+                                it.copy(
+                                    isLoadingOverlay = false,
+                                    exportState = true
+                                )
+                            }
+                        }
+                    }
+
+                    is Result.Error -> {
+                        _uiState.update {
+                            it.copy(
+                                isLoadingOverlay = false,
+                                exportState = true
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateExportDateRange(dateRange: List<LocalDate>) {
+        _uiState.update {
+            it.copy(
+                exportDateRanges = dateRange
+            )
+        }
+    }
+
+    private fun fetchExportData(data: ExportAttendanceDataEntity): List<Pair<String, List<*>>> {
+        val mappedData = listOf(
+            "Id" to data.data.map { it.studentId },
+            "Name" to data.data.map { it.fullName },
+            "Class" to data.data.map { it.classX }
+        )
+        val attendancePerDate = mapAttendanceDataByDate(data)
+
+        return mappedData + attendancePerDate
+    }
+
+    private fun mapAttendanceDataByDate(data: ExportAttendanceDataEntity): List<Pair<String, List<String>>> {
+        val dateRange = data.dateRange
+        if (dateRange.isEmpty()) return emptyList()
+
+        val studentAttendanceMap =
+            data.data.associate { student ->
+                student.studentId to student.dataPerDate.associate {
+                    it.date to it.status
+                }
+            }
+
+        return (dateRange.first()..dateRange.last()).map { date ->
+            val statusPerDate = data.data.map { student ->
+                studentAttendanceMap[student.studentId]?.get(date) ?: "-"
+            }
+            date.toString() to statusPerDate
         }
     }
 

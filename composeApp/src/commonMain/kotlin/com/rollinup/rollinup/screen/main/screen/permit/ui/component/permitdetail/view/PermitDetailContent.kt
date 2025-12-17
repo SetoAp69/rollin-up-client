@@ -5,19 +5,26 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.rollinup.apiservice.model.permit.ApprovalStatus
 import com.rollinup.apiservice.model.permit.PermitDetailEntity
 import com.rollinup.apiservice.model.permit.PermitType
-import com.rollinup.common.utils.Utils.toFormattedString
-import com.rollinup.common.utils.Utils.toLocalDateTime
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.rollinup.component.chip.Chip
+import com.rollinup.rollinup.component.date.DateFormatter
+import com.rollinup.rollinup.component.date.DateText
+import com.rollinup.rollinup.component.date.DateTextFormat
+import com.rollinup.rollinup.component.imageview.ImageView
 import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.record.RecordField
 import com.rollinup.rollinup.component.spacer.Spacer
@@ -25,6 +32,7 @@ import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import kotlinx.datetime.TimeZone
 
 @Composable
 fun PermitDetailDialogContent(
@@ -49,25 +57,12 @@ fun PermitDetailContent(detail: PermitDetailEntity) {
 
 @Composable
 fun PermitDetailLoading() {
-    Column {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            ShimmerEffect(150.dp, 24.dp)
-            ShimmerEffect(60.dp, 24.dp)
-        }
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        ShimmerEffect(150.dp, 24.dp)
         Spacer(itemGap8)
-        Column() {
-            repeat(5) {
-                ShimmerEffect(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .fillMaxWidth()
-                        .height(18.dp)
-                )
-                Spacer(itemGap8)
-            }
+        repeat(6) {
+            ShimmerEffect(200.dp, 18.dp)
+            Spacer(itemGap8)
         }
     }
 }
@@ -76,16 +71,12 @@ fun PermitDetailLoading() {
 private fun HeaderSection(detail: PermitDetailEntity) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.Center
     ) {
         Text(
             text = detail.type.label,
             style = Style.headerBold,
             color = theme.primary
-        )
-        Chip(
-            text = detail.approvalStatus.label,
-            severity = detail.approvalStatus.severity
         )
     }
 }
@@ -95,7 +86,8 @@ private fun DataRecordSection(
     detail: PermitDetailEntity,
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(itemGap4)
+        verticalArrangement = Arrangement.spacedBy(itemGap4),
+        modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
         RecordField(
             title = "Name",
@@ -109,6 +101,15 @@ private fun DataRecordSection(
             title = "Class",
             content = detail.student.xClass ?: "-"
         )
+        RecordField(
+            title = "Status",
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Chip(
+                text = detail.approvalStatus.label,
+                severity = detail.approvalStatus.severity
+            )
+        }
         detail.reason?.let {
             RecordField(
                 title = "Reason",
@@ -126,17 +127,16 @@ private fun DataRecordSection(
 
         RecordField(
             title = "Created at",
-            content = detail.createdAt
+            content = {
+                DateText(
+                    dateTime = detail.createdAt.parseToLocalDateTime(TimeZone.currentSystemDefault())
+                )
+            }
         )
 
         RecordField("Attachment") {
-            Text(
-                text = "View Attachment",
-                color = theme.textPrimary,
-                style = Style.title,
-                modifier = Modifier.clickable {
-                    //TODO add show files or pic
-                }
+            AttachmentButton(
+                url = detail.attachment
             )
         }
         ApprovalSection(detail)
@@ -144,14 +144,24 @@ private fun DataRecordSection(
 }
 
 @Composable
-fun ApprovalSection(
+private fun ApprovalSection(
     detail: PermitDetailEntity,
 ) {
     if (detail.approvalStatus != ApprovalStatus.APPROVAL_PENDING) {
         RecordField(
             title = "Approved at",
-            content = detail.approvedAt?.toLocalDateTime()?.toString() ?: "-"
-        )
+        ) {
+            detail.approvedAt?.let {
+                DateText(
+                    dateTime = it.parseToLocalDateTime(TimeZone.currentSystemDefault()),
+                    color = theme.textPrimary
+                )
+            } ?: Text(
+                text = "-",
+                style = Style.body,
+                color = theme.bodyText
+            )
+        }
         RecordField(
             title = "Approved by",
             content = detail.approvedBy?.name ?: "-"
@@ -161,14 +171,35 @@ fun ApprovalSection(
             content = detail.approvalNote ?: "-"
         )
     }
+}
 
+@Composable
+private fun AttachmentButton(url: String) {
+    var showImage by remember { mutableStateOf(false) }
+    val text = if (url.isBlank()) "-" else "View Attachment"
+
+    Text(
+        text = text,
+        color = theme.textPrimary,
+        style = Style.title,
+        modifier = Modifier
+            .clickable(url.isNotBlank()) {
+                showImage = true
+            }
+    )
+
+    ImageView(
+        showView = showImage,
+        onDismissRequests = { showImage = it },
+        url = url
+    )
 }
 
 private fun getDuration(
     permit: PermitDetailEntity,
 ): String {
-    val from = permit.startTime.toLocalDateTime()
-    val to = permit.endTime.toLocalDateTime()
+    val from = permit.startTime.parseToLocalDateTime(TimeZone.UTC)
+    val to = permit.endTime.parseToLocalDateTime(TimeZone.UTC)
 
     return when (
         permit.type
@@ -177,15 +208,14 @@ private fun getDuration(
             "${from.time} - ${to.time}"
         }
 
-        PermitType.ABSENT -> {
-            val fromDate = from.date.toFormattedString()
-            val toDate = to.date.toFormattedString()
+        PermitType.ABSENCE -> {
+            val fromDate = from.date
+            val toDate = to.date
 
             if (fromDate == toDate) {
-                "${from.time}"
+                DateFormatter.formatDateTime(from, DateTextFormat.DATE)
             } else {
-                "${from.time} - ${to.time}"
-
+                return DateFormatter.formatDateRange(from.date, to.date)
             }
         }
     }

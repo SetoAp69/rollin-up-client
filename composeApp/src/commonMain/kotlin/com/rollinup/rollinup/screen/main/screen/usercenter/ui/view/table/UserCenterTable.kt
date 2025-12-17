@@ -41,7 +41,8 @@ fun UserCenterTable(
         isLoading = uiState.isLoadingList,
         itemSelected = uiState.itemSelected,
         onSelectItem = cb.onUpdateSelection,
-        onToggleSelectAll = cb.onSelectAll
+        onToggleSelectAll = cb.onSelectAll,
+        onRefresh = cb.onRefresh
     ) { dropDownState ->
         UserCenterTableDropDown(
             isShowDropdown = dropDownState.expanded,
@@ -105,13 +106,6 @@ private fun TableHeaderContent(itemSelected: Int) {
 
 private fun getColumn(): List<TableColumn<UserEntity>> {
     return listOf(
-        TableColumn("Id") {
-            Text(
-                text = it.id.ifBlank { "-" },
-                color = theme.bodyText,
-                style = Style.body
-            )
-        },
         TableColumn("Username") {
             Text(
                 text = it.userName.ifBlank { "-" },
@@ -119,7 +113,7 @@ private fun getColumn(): List<TableColumn<UserEntity>> {
                 style = Style.body
             )
         },
-        TableColumn("Class") {
+        TableColumn("Class", 0.7f) {
             Text(
                 text = it.classX.ifBlank { "-" },
                 color = theme.bodyText,
@@ -147,13 +141,13 @@ private fun getColumn(): List<TableColumn<UserEntity>> {
                 style = Style.body
             )
         },
-        TableColumn("Gender") {
+        TableColumn("Gender", 0.5f) {
             Chip(
                 text = it.gender.label.ifBlank { "-" },
                 severity = Severity.SECONDARY
             )
         },
-        TableColumn("Role") {
+        TableColumn("Role", 0.5f) {
             Chip(
                 text = it.role.ifBlank { "-" },
                 severity = Severity.SECONDARY

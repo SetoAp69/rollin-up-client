@@ -47,7 +47,8 @@ fun TeacherPermitPaging(
             showSheet = showActionSheet,
             isActive = uiState.currentTab == PermitTab.ACTIVE,
             onDismissRequest = { showActionSheet = it },
-            items = listOf(it)
+            items = listOf(it),
+            cb = cb
         )
     }
 }

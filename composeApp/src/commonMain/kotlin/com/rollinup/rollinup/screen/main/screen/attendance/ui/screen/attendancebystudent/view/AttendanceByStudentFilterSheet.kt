@@ -6,35 +6,49 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.rollinup.apiservice.model.attendance.AttendanceStatus
+import com.rollinup.rollinup.component.date.DateRangePickerField
 import com.rollinup.rollinup.component.filter.FilterSelector
 import com.rollinup.rollinup.component.filter.FilterSelectorBottomSheet
-import com.rollinup.rollinup.component.model.OptionData
+import com.rollinup.rollinup.component.spacer.Spacer
+import com.rollinup.rollinup.component.spacer.itemGap8
+import com.rollinup.rollinup.screen.main.screen.attendance.model.attendancebystudent.AttendanceByStudentFilterData
+import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancebystudent.uistate.AttendanceByStudentUiState
 
 @Composable
 fun AttendanceByStudentFilterSheet(
     showFilter: Boolean,
     onDismissRequest: (Boolean) -> Unit,
-    options: List<OptionData<AttendanceStatus>>,
-    value: List<AttendanceStatus>,
-    onValueChange: (List<AttendanceStatus>) -> Unit,
+    uiState: AttendanceByStudentUiState,
+    onUpdateFilter: (AttendanceByStudentFilterData) -> Unit,
 ) {
-    var tempValue by remember { mutableStateOf(value) }
-    LaunchedEffect(value) {
-        if (tempValue != value) tempValue = value
+    var tempValue by remember { mutableStateOf(uiState.filterData) }
+    LaunchedEffect(uiState.filterData) {
+        if (tempValue != uiState.filterData) tempValue = uiState.filterData
     }
     FilterSelectorBottomSheet(
         isShowSheet = showFilter,
         onDismissRequest = onDismissRequest,
-        onApply = { onValueChange },
-        onReset = { tempValue = emptyList() },
-        showReset = tempValue.isNotEmpty(),
+        onApply = { onUpdateFilter(tempValue) },
+        onReset = { tempValue = AttendanceByStudentFilterData() },
+        showReset = tempValue != AttendanceByStudentFilterData(),
     ) {
         FilterSelector(
             title = "Status",
-            options = options,
-            value = tempValue,
-            onValueChange = { tempValue = it }
+            options = uiState.statusOptions,
+            value = tempValue.status,
+            onValueChange = { tempValue = tempValue.copy(status = it) }
+        )
+        Spacer(itemGap8)
+        DateRangePickerField(
+            title = "Date",
+            placeholder = "-",
+            value = tempValue.dateRange,
+            onValueChange = { date ->
+                tempValue = tempValue.copy(
+                    dateRange = date.sorted()
+                )
+            },
+            isAllSelectable = true
         )
     }
 }

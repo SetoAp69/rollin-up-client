@@ -10,7 +10,6 @@ import com.rollinup.apiservice.model.permit.PermitByStudentEntity
 import com.rollinup.rollinup.component.pagination.PagingColumn
 import com.rollinup.rollinup.component.spacer.screenPaddingValues
 import com.rollinup.rollinup.screen.main.screen.permit.model.studentpermit.StudentPermitCallback
-import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.studentpermit.uistate.StudentPermitUiState
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.studentpermit.view.StudentPermitActionSheet
 
 @Composable
@@ -28,7 +27,7 @@ fun StudentPermitPaging(
                 item = item,
                 onClickAction = {
                     itemSelected = it
-                    showAction = false
+                    showAction = true
                 }
             )
         },
@@ -41,9 +40,9 @@ fun StudentPermitPaging(
     itemSelected?.let {
         StudentPermitActionSheet(
             isShowSheet = showAction,
-            onDismissRequest = { showAction = it },
+            onDismissRequest = { state -> showAction = state },
             item = it,
-            cb = cb
+            cb = cb,
         )
     }
 }

@@ -46,21 +46,25 @@ import com.kizitonwose.calendar.core.plusMonths
 import com.michaelflisar.lumberjack.core.L
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.common.model.Severity
+import com.rollinup.rollinup.component.bottombar.BottomBar
+import com.rollinup.rollinup.component.bottombar.rememberBottomBarState
 import com.rollinup.rollinup.component.bottomsheet.BottomSheet
 import com.rollinup.rollinup.component.button.ActionButton
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.camera.CameraView
 import com.rollinup.rollinup.component.card.Card
 import com.rollinup.rollinup.component.chip.Chip
-import com.rollinup.rollinup.component.date.DatePickerField
+import com.rollinup.rollinup.component.date.DateRangePickerField
 import com.rollinup.rollinup.component.dialog.AlertDialog
 import com.rollinup.rollinup.component.filepicker.FilePicker
+import com.rollinup.rollinup.component.imageview.Image
+import com.rollinup.rollinup.component.imageview.ImageView
+import com.rollinup.rollinup.component.loading.LoadingOverlay
 import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.model.Menu
 import com.rollinup.rollinup.component.permitform.view.PermitForm
 import com.rollinup.rollinup.component.pullrefresh.PullRefresh
 import com.rollinup.rollinup.component.scaffold.Scaffold
-import com.rollinup.rollinup.component.selector.SelectorTest
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
@@ -73,12 +77,13 @@ import com.rollinup.rollinup.component.time.SnapListTest
 import com.rollinup.rollinup.component.time.TimeDurationTextFieldTest
 import com.rollinup.rollinup.component.time.TimePickerBottomSheet
 import com.rollinup.rollinup.component.topbar.TopBar
-import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.component.utils.getScreenHeight
 import com.rollinup.rollinup.component.utils.toAnnotatedString
 import com.rollinup.rollinup.navigation.NavigationRoute
 import com.rollinup.rollinup.screen.auth.navigation.AuthNavigationRoute
 import com.rollinup.rollinup.screen.dashboard.ui.component.DashboardCalendar
+import com.rollinup.rollinup.screen.main.navigation.MainRoute
+import dev.jordond.compass.Location
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.YearMonth
@@ -87,6 +92,13 @@ import rollin_up.composeapp.generated.resources.ic_camera_line_24
 import rollin_up.composeapp.generated.resources.ic_check_line_24
 import rollin_up.composeapp.generated.resources.ic_info_line_24
 import kotlin.time.ExperimentalTime
+
+//@Composable
+//fun MapTest() {
+//    Scaffold {
+//        SettingMapTest()
+//    }
+//}
 
 @Composable
 fun TestScreen(
@@ -118,16 +130,28 @@ fun TestScreen(
                 },
                 onOpenCamera = { isShowCamera = true }
             )
+        },
+        bottomBar = {
+            BottomBar(
+                listMenu = listOf(
+                    MainRoute.ProfileRoute,
+                    MainRoute.DashBoardRoute,
+                    MainRoute.SettingRoute
+                ),
+                onNavigate = {},
+                state = rememberBottomBarState(MainRoute.DashBoardRoute),
+                showBottomBar = true
+            )
         }
     ) {
+
+
         PagingDummyDialog(
             isShowDialog = showPagingDialog,
             onDismissRequest = {
                 showPagingDialog = false
             }
         )
-
-
 
         CameraView(
             onDismissRequest = { isShowCamera = it },
@@ -157,16 +181,47 @@ fun TestScreen(
             var selected by remember { mutableStateOf(listOf<Int>()) }
             var isRefreshing by remember { mutableStateOf(false) }
             var showTimePicker by remember { mutableStateOf(false) }
+            var showLoadingOverlay by remember { mutableStateOf(false) }
             var selectedDate by remember { mutableStateOf(emptyList<Long>()) }
 
+
+            Button("Show Loading"){
+                showLoadingOverlay = true
+                scope.launch {
+                    delay(7000)
+                    showLoadingOverlay = false
+                }
+            }
+
+            LoadingOverlay(show = showLoadingOverlay)
+
+            ImageTest()
             LaunchedEffect(showShimmer) {
                 delay(1000)
                 if (showShimmer) showShimmer = false
             }
+
+            var currentLocation: Location? by remember { mutableStateOf(null) }
+            var startTracking by remember { mutableStateOf(false) }
+
+//            LocationHandler(
+//                onLocationChanges = { currentLocation = it },
+//                startTracking = startTracking
+//            )
+
+            Text(
+                text = currentLocation?.coordinates?.toString() ?: "No location",
+                style = Style.body,
+                color = theme.bodyText
+            )
+
+            Button("Start Tracking") {
+                startTracking = true
+            }
             FilePicker(
                 value = null,
                 fileName = null,
-                showCameraOption = true ,
+                showCameraOption = true,
                 onValueChange = {}
             )
 //            CalendarContent()
@@ -236,22 +291,19 @@ fun TestScreen(
 //                onDismissRequest = { showDatePicker = it },
 //                onValueChange = {}
 //            )
-            SelectorTest()
 
             Column(modifier = Modifier.padding(screenPaddingValues)) {
-                DatePickerField(
+                DateRangePickerField(
                     title = "Absent Duration",
                     placeholder = "Select duration",
 //                errorText = ,
                     value = selectedDate,
-                    maxSelection = 3,
+                    maxRange = 3,
 //                isError = ,
 //                enabled = false ,
-                    platform = getPlatform(),
-                    isDisablePastSelection = true
-                ) { value ->
-                    selectedDate = value
-                }
+                    isDisablePastSelection = true,
+                    onValueChange = {},
+                )
             }
 //            TimePicker()
             SnapListTest()
@@ -559,6 +611,29 @@ fun CalendarContent() {
 //            }
 
         }
+    )
+}
+
+@Composable
+fun ImageTest() {
+    var showFullImage by remember { mutableStateOf(false) }
+    Card {
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Image(
+                width = 60.dp,
+                height = 60.dp,
+                url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjjQ3Dcj2FvF1nsOQhqvx6o6Gb8KOEwie_rQ&s",
+                onClick = { showFullImage = true }
+            )
+        }
+    }
+
+    ImageView(
+        showView = showFullImage,
+        url = "https://upload.wikimedia.org/wikipedia/en/f/f0/My_Beautiful_Dark_Twisted_Fantasy.jpg",
+        onDismissRequests = { showFullImage = it },
     )
 }
 

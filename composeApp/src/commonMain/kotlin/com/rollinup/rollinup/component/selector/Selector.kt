@@ -37,10 +37,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.rollinup.common.model.OptionData
 import com.rollinup.rollinup.component.bottomsheet.BottomSheet
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.dropdown.DropDownMenu
-import com.rollinup.rollinup.component.model.OptionData
+import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.model.Platform
 import com.rollinup.rollinup.component.ripple.CustomRipple
 import com.rollinup.rollinup.component.spacer.Spacer
@@ -48,6 +49,7 @@ import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.spacer.screenPadding
 import com.rollinup.rollinup.component.textfield.TextError
+import com.rollinup.rollinup.component.textfield.TextFieldDefaults
 import com.rollinup.rollinup.component.textfield.TextFieldTitle
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
@@ -98,19 +100,22 @@ fun <T> SingleSelectorField(
                     showSelector = true
                 }
                 .fillMaxWidth()
+                .height(TextFieldDefaults.height)
                 .background(color = backgroundColor, shape = RoundedCornerShape(8.dp))
                 .padding(itemGap4),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(itemGap4),
         ) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_drop_down_arrow_line_right_24),
-                tint = contentColor,
-                modifier = Modifier
-                    .size(16.dp)
-                    .rotate(rotationState),
-                contentDescription = null
-            )
+            if (isEnabled) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_drop_down_arrow_line_right_24),
+                    tint = contentColor,
+                    modifier = Modifier
+                        .size(16.dp)
+                        .rotate(rotationState),
+                    contentDescription = null
+                )
+            }
             Text(
                 text = sValue,
                 style = Style.title,
@@ -138,20 +143,21 @@ fun <T> SingleSelectorField(
 @Composable
 fun <T> MultiDropDownSelector(
     title: String,
+    isLoading: Boolean = false,
     value: List<T>,
     enable: Boolean = true,
     contentColor: Color = theme.textPrimary,
     backgroundColor: Color = theme.secondary,
     placeHolder: String = "-",
     options: List<OptionData<T>>,
-    width: Dp? = 100.dp,
+    width: Dp? = 124.dp,
     onValueChange: (List<T>) -> Unit,
 ) {
     var showSelector by remember { mutableStateOf(false) }
     val rotationState by animateFloatAsState(targetValue = if (showSelector) 90f else 0F)
 
     val sValue = when {
-        value.size == 1 -> options.find { it.value == value }?.label?.take(10) ?: ""
+        value.size == 1 -> options.find { it.value == value.first() }?.label?.take(10) ?: ""
         value.isEmpty() -> placeHolder
         else -> value.size.toString() + " selected"
     }
@@ -164,7 +170,6 @@ fun <T> MultiDropDownSelector(
         TextFieldTitle(
             title = title,
         ) {
-
             Row(
                 modifier = Modifier
                     .clickable(enable) {
@@ -194,6 +199,7 @@ fun <T> MultiDropDownSelector(
 
         MultiSelector(
             isShowSelector = showSelector,
+            isLoading = isLoading,
             title = title,
             value = value,
             options = options,
@@ -211,24 +217,28 @@ fun <T> SingleDropDownSelector(
     contentColor: Color = theme.textPrimary,
     backgroundColor: Color = theme.secondary,
     placeHolder: String = "-",
+    isError:Boolean = false,
     width: Dp? = 100.dp,
+    isLoading:Boolean = false,
     options: List<OptionData<T>>,
     onValueChange: (T) -> Unit,
 ) {
+    val backgroundColor = if(isError) theme.textFieldBgError else backgroundColor
+    val contentColor = if(isError) theme.danger else contentColor
+
+    var showSelector by remember { mutableStateOf(false) }
+    val rotationState by animateFloatAsState(targetValue = if (showSelector) 90f else 0F)
+
+    val sValue = options.find {
+        it.value == value
+    }?.label?:placeHolder
+
+    val modifier = width?.let {
+        Modifier.width(it)
+    } ?: Modifier.fillMaxWidth()
     TextFieldTitle(
         title = title,
     ) {
-        var showSelector by remember { mutableStateOf(false) }
-        val rotationState by animateFloatAsState(targetValue = if (showSelector) 90f else 0F)
-
-        val sValue = value?.toString()?.let {
-            if (it.length > 10) "${it.take(7)}..." else it
-        } ?: placeHolder
-
-        val modifier = width?.let {
-            Modifier.width(it)
-        } ?: Modifier.fillMaxWidth()
-
         Row(
             modifier = Modifier
                 .clickable(enable) {
@@ -261,6 +271,7 @@ fun <T> SingleDropDownSelector(
             title = title,
             value = value,
             options = options,
+            isLoading = isLoading,
             onValueChange = onValueChange,
             onDismissRequest = { showSelector = it },
             isShowSelector = showSelector,
@@ -269,243 +280,18 @@ fun <T> SingleDropDownSelector(
 }
 
 @Composable
-fun SelectorTest() {
-    var multiSelectorValue by remember { mutableStateOf(listOf<Int>()) }
-    var singleSelectorValue: Int? by remember { mutableStateOf(null) }
-    var showSingleSelector: Boolean by remember { mutableStateOf(false) }
-    var showMultiSelector: Boolean by remember { mutableStateOf(false) }
-
-    val options = (1..20).map {
-        OptionData(
-            label = "Option $it",
-            value = it
-        )
-    }
-
-    Column {
-        Text(
-            text = "$singleSelectorValue",
-            style = Style.body,
-            color = theme.bodyText
-        )
-        Spacer(itemGap4)
-        Text(
-            text = "$multiSelectorValue",
-            style = Style.body,
-            color = theme.bodyText
-        )
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Button(modifier = Modifier.weight(1f), text = "Single") {
-                showSingleSelector = true
-            }
-            Spacer(itemGap8)
-            Button(modifier = Modifier.weight(1f), text = "Multi") {
-                showMultiSelector = true
-            }
-        }
-
-        SingleSelector(
-            isShowSelector = showSingleSelector,
-            onDismissRequest = { showSingleSelector = it },
-            title = "Balls",
-            value = singleSelectorValue,
-            options = options,
-            onValueChange = {
-                singleSelectorValue = it
-            }
-        )
-
-        MultiSelector(
-            isShowSelector = showMultiSelector,
-            onDismissRequest = { showMultiSelector = it },
-            title = "MultiBallverse",
-            value = multiSelectorValue,
-            options = options,
-            onValueChange = {
-                multiSelectorValue = it
-            }
-        )
-    }
-
-
-}
-
-@Composable
-fun <T> SingleSelector(
+expect fun <T> SingleSelector(
     isShowSelector: Boolean,
     onDismissRequest: (Boolean) -> Unit,
     title: String,
     value: T?,
     options: List<OptionData<T>>,
+    isLoading: Boolean = false,
     onValueChange: (T) -> Unit,
-) {
-    when (getPlatform()) {
-        Platform.IOS, Platform.ANDROID -> {
-            SingleSelectorBottomSheet(
-                isShowSelector = isShowSelector,
-                onDismissRequest = onDismissRequest,
-                title = title,
-                value = value,
-                options = options,
-                onValueChange = onValueChange
-            )
-        }
-
-        else -> {
-            SingleSelectorDialog(
-                isShowSelector = isShowSelector,
-                onDismissRequest = onDismissRequest,
-                title = title,
-                value = value,
-                options = options,
-                onValueChange = onValueChange
-            )
-        }
-//        else -> {
-//            SingleSelectorDropDown(
-//                isShowSelector = isShowSelector,
-//                onDismissRequest = onDismissRequest,
-//                title = title,
-//                value = value,
-//                options = options,
-//                onValueChange = onValueChange
-//            )
-//        }
-    }
-}
+)
 
 @Composable
-fun <T> SingleSelectorDropDown(
-    isShowSelector: Boolean,
-    onDismissRequest: (Boolean) -> Unit,
-    title: String,
-    value: T?,
-    options: List<OptionData<T>>,
-    onValueChange: (T) -> Unit,
-) {
-    val height = getScreenHeight() * 0.56f
-    val width = getScreenHeight() * 0.15f
-    DropDownMenu(
-        onDismissRequest = { onDismissRequest(false) },
-        isShowDropDown = isShowSelector
-    ) {
-        Box(
-            modifier = Modifier
-                .heightIn(max = height)
-                .widthIn(max = width)
-                .background(
-                    color = theme.popUpBg,
-                    shape = RoundedCornerShape(12.dp)
-                ),
-            contentAlignment = Alignment.TopEnd
-        ) {
-            Icon(
-                modifier = Modifier
-                    .padding(if (isCompact) 12.dp else 16.dp)
-                    .clip(CircleShape)
-                    .clickable {
-                        onDismissRequest(false)
-                    }
-                    .size(32.dp),
-                tint = theme.lineStroke,
-                painter = painterResource(Res.drawable.ic_close_line_24),
-                contentDescription = null
-            )
-            SingleSelectorContent(
-                title = title,
-                value = value,
-                isDropDown = true,
-                options = options,
-                onValueChange = onValueChange,
-                onDismissRequest = onDismissRequest
-            )
-        }
-    }
-}
-
-@Composable
-fun <T> SingleSelectorDialog(
-    isShowSelector: Boolean,
-    onDismissRequest: (Boolean) -> Unit,
-    title: String,
-    value: T?,
-    options: List<OptionData<T>>,
-    onValueChange: (T) -> Unit,
-) {
-    val height = getScreenHeight()
-    val width = getScreenWidth()
-    val properties = DialogProperties(
-        dismissOnBackPress = true,
-        dismissOnClickOutside = true,
-        usePlatformDefaultWidth = false
-    )
-    if (isShowSelector) {
-        Dialog(
-            onDismissRequest = { onDismissRequest(false) },
-            properties = properties
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(width * 0.2f, height * 0.56f)
-                    .background(
-                        color = theme.popUpBg,
-                        shape = RoundedCornerShape(12.dp)
-                    ),
-                contentAlignment = Alignment.TopEnd
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .padding(if (isCompact) 12.dp else 16.dp)
-                        .clip(CircleShape)
-                        .clickable {
-                            onDismissRequest(false)
-                        }
-                        .size(32.dp),
-                    tint = theme.lineStroke,
-                    painter = painterResource(Res.drawable.ic_close_line_24),
-                    contentDescription = null
-                )
-                SingleSelectorContent(
-                    title = title,
-                    value = value,
-                    options = options,
-                    onValueChange = onValueChange,
-                    onDismissRequest = onDismissRequest
-                )
-            }
-        }
-    }
-
-}
-
-
-@Composable
-fun <T> SingleSelectorBottomSheet(
-    isShowSelector: Boolean,
-    onDismissRequest: (Boolean) -> Unit,
-    title: String,
-    value: T?,
-    options: List<OptionData<T>>,
-    onValueChange: (T) -> Unit,
-) {
-    val height = getScreenHeight()
-    BottomSheet(
-        modifier = Modifier.heightIn(max = height * 0.8f),
-        isShowSheet = isShowSelector,
-        onDismissRequest = onDismissRequest
-    ) {
-        SingleSelectorContent(
-            title = title,
-            value = value,
-            options = options,
-            onValueChange = onValueChange,
-            onDismissRequest = onDismissRequest
-        )
-    }
-}
-
-@Composable
-private fun <T> SingleSelectorContent(
+fun <T> SingleSelectorContent(
     title: String,
     isDropDown: Boolean = false,
     value: T?,
@@ -548,182 +334,19 @@ private fun <T> SingleSelectorContent(
     }
 }
 
-
 @Composable
-fun <T> MultiSelector(
+expect fun <T> MultiSelector(
     isShowSelector: Boolean,
     onDismissRequest: (Boolean) -> Unit,
     title: String,
     value: List<T>,
     options: List<OptionData<T>>,
+    isLoading: Boolean = false,
     onValueChange: (List<T>) -> Unit,
-) {
-    when (getPlatform()) {
-        Platform.IOS, Platform.ANDROID -> {
-            MultiSelectorBottomSheet(
-                isShowSelector = isShowSelector,
-                onDismissRequest = onDismissRequest,
-                title = title,
-                value = value,
-                options = options,
-                onValueChange = onValueChange
-            )
-        }
-
-//        else -> {
-//            MultiSelectorDialog(
-//                isShowSelector = isShowSelector,
-//                onDismissRequest = onDismissRequest,
-//                title = title,
-//                value = value,
-//                options = options,
-//                onValueChange = onValueChange
-//            )
-//        }
-        else -> {
-            MultiSelectorDropDown(
-                isShowSelector = isShowSelector,
-                onDismissRequest = onDismissRequest,
-                title = title,
-                value = value,
-                options = options,
-                onValueChange = onValueChange
-            )
-        }
-
-    }
-}
+)
 
 @Composable
-fun <T> MultiSelectorDropDown(
-    isShowSelector: Boolean,
-    onDismissRequest: (Boolean) -> Unit,
-    title: String,
-    value: List<T>,
-    options: List<OptionData<T>>,
-    onValueChange: (List<T>) -> Unit,
-) {
-    val height = getScreenHeight() * 0.3f
-    val width = getScreenHeight() * 0.2f
-
-    DropDownMenu(
-        onDismissRequest = { onDismissRequest(false) },
-        isShowDropDown = isShowSelector
-    ) {
-        Box(
-            modifier = Modifier
-                .width(width)
-                .height(height)
-                .background(
-                    color = theme.popUpBg,
-                    shape = RoundedCornerShape(12.dp)
-                ),
-            contentAlignment = Alignment.TopEnd
-        ) {
-            MultiSelectorContent(
-                title = title,
-                value = value,
-                options = options,
-                isDropDown = true,
-                onValueChange = {
-                    onValueChange(it)
-                    onDismissRequest(false)
-                }
-            )
-        }
-
-    }
-
-}
-
-@Composable
-fun <T> MultiSelectorDialog(
-    isShowSelector: Boolean,
-    onDismissRequest: (Boolean) -> Unit,
-    title: String,
-    value: List<T>,
-    options: List<OptionData<T>>,
-    onValueChange: (List<T>) -> Unit,
-) {
-    val height = getScreenHeight()
-    val width = getScreenWidth()
-    val properties = DialogProperties(
-        dismissOnBackPress = true,
-        dismissOnClickOutside = true,
-        usePlatformDefaultWidth = false
-    )
-    if (isShowSelector) {
-        Dialog(
-            onDismissRequest = { onDismissRequest(false) },
-            properties = properties
-        ) {
-            Box(
-                modifier = Modifier
-                    .width(width * 0.2f)
-                    .heightIn(max = height * 0.56f)
-                    .background(
-                        color = theme.popUpBg,
-                        shape = RoundedCornerShape(12.dp)
-                    ),
-                contentAlignment = Alignment.TopEnd
-            ) {
-                MultiSelectorContent(
-                    title = title,
-                    value = value,
-                    options = options,
-                    onValueChange = {
-                        onValueChange(it)
-                        onDismissRequest(false)
-                    }
-                )
-                Icon(
-                    modifier = Modifier
-                        .padding(if (isCompact) 12.dp else 16.dp)
-                        .clip(CircleShape)
-                        .clickable {
-                            onDismissRequest(false)
-                        }
-                        .size(32.dp),
-                    tint = theme.lineStroke,
-                    painter = painterResource(Res.drawable.ic_close_line_24),
-                    contentDescription = null
-                )
-            }
-        }
-    }
-
-}
-
-
-@Composable
-fun <T> MultiSelectorBottomSheet(
-    isShowSelector: Boolean,
-    onDismissRequest: (Boolean) -> Unit,
-    title: String,
-    value: List<T>,
-    options: List<OptionData<T>>,
-    onValueChange: (List<T>) -> Unit,
-) {
-    val height = getScreenHeight()
-    BottomSheet(
-        modifier = Modifier.heightIn(max = height * 0.8f),
-        isShowSheet = isShowSelector,
-        onDismissRequest = onDismissRequest
-    ) {
-        MultiSelectorContent(
-            title = title,
-            value = value,
-            options = options,
-            onValueChange = {
-                onValueChange(it)
-                onDismissRequest(false)
-            }
-        )
-    }
-}
-
-@Composable
-private fun <T> MultiSelectorContent(
+fun <T> MultiSelectorContent(
     title: String,
     value: List<T>,
     options: List<OptionData<T>>,
@@ -747,7 +370,9 @@ private fun <T> MultiSelectorContent(
             .padding(vertical = if (isCompact) 12.dp else 16.dp)
     ) {
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxSize()
         ) {
             Text(
                 modifier = Modifier.padding(
@@ -803,6 +428,47 @@ private fun <T> MultiSelectorContent(
     }
 }
 
+@Composable
+fun SelectorLoading(
+    title: String,
+    isDropDown: Boolean,
+) {
+    val itemGap = if (isDropDown) 0.dp else itemGap4
+    val titleStyle = if (isDropDown) Style.title else Style.popupTitle
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(vertical = if (isCompact) 12.dp else 16.dp)
+    ) {
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                modifier = Modifier.padding(
+                    start = screenPadding,
+                    end = screenPadding,
+                    bottom = itemGap8
+                ),
+                text = title,
+                style = titleStyle,
+                color = theme.bodyText
+            )
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(itemGap)
+            ) {
+                items(5) {
+                    Column(
+                        modifier = Modifier.padding(horizontal = 12.dp)
+                    ) {
+                        ShimmerEffect(modifier = Modifier.fillMaxWidth())
+                    }
+                }
+            }
+        }
+    }
+}
 
 @Composable
 private fun <T> SelectorItem(

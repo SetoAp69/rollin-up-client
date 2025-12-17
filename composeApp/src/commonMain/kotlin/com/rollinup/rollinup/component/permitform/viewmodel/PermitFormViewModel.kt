@@ -2,18 +2,19 @@ package com.rollinup.rollinup.component.permitform.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.michaelflisar.lumberjack.core.L
 import com.rollinup.apiservice.data.source.network.model.request.permit.CreateEditPermitBody
 import com.rollinup.apiservice.domain.permit.CreatePermitUseCase
 import com.rollinup.apiservice.domain.permit.EditPermitUseCase
 import com.rollinup.apiservice.domain.permit.GetPermitByIdUseCase
+import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.Result
 import com.rollinup.apiservice.model.permit.PermitType
 import com.rollinup.common.utils.Utils.toEpochMillis
-import com.rollinup.common.utils.Utils.toLocalDateTime
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.rollinup.component.permitform.model.PermitFormCallback
 import com.rollinup.rollinup.component.permitform.model.PermitFormData
 import com.rollinup.rollinup.component.permitform.uistate.PermitFormUiState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -30,10 +31,12 @@ class PermitFormViewModel(
 
     fun init(
         id: String?,
+        user: LoginEntity?
     ) {
         _uiState.update {
             it.copy(
-                id = id
+                id = id,
+                user = user
             )
         }
 
@@ -48,8 +51,8 @@ class PermitFormViewModel(
                     val formData = with(result.data) {
                         PermitFormData(
                             duration = listOf(
-                                startTime.toLocalDateTime().toEpochMillis(),
-                                endTime.toLocalDateTime().toEpochMillis()
+                                startTime.parseToLocalDateTime().toEpochMillis(),
+                                endTime.parseToLocalDateTime().toEpochMillis()
                             ),
                             reason = reason,
                             type = type,
@@ -83,8 +86,11 @@ class PermitFormViewModel(
         if ((formData.duration.isEmpty() || formData.duration.any { it == null }) && !_uiState.value.isEdit)
             formData = formData.copy(durationError = "Duration can't be empty")
 
-        if (formData.reason.isNullOrBlank() && formData.type == PermitType.ABSENT && !_uiState.value.isEdit)
+        if (formData.reason.isNullOrBlank() && formData.type == PermitType.ABSENCE && !_uiState.value.isEdit)
             formData = formData.copy(reasonError = "Please select a reason")
+
+        if (formData.attachment ==null && !_uiState.value.isEdit)
+            formData = formData.copy(reasonError = "Please put an attachment")
 
         _uiState.update { it.copy(formData = formData) }
 
@@ -95,6 +101,7 @@ class PermitFormViewModel(
         formData: PermitFormData,
     ) {
         _uiState.update { it.copy(formData = formData) }
+        L.wtf{ "Attachment"+formData.attachment?.readBytes().toString()}
     }
 
     @Suppress("UNCHECKED_CAST")

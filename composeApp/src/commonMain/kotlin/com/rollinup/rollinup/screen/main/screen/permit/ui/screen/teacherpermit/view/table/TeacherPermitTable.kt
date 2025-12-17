@@ -1,14 +1,17 @@
 package com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.view.table
 
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.rollinup.apiservice.model.permit.PermitByClassEntity
 import com.rollinup.common.model.Severity
-import com.rollinup.common.utils.Utils.toLocalDateTime
 import com.rollinup.rollinup.component.chip.Chip
 import com.rollinup.rollinup.component.date.DateText
 import com.rollinup.rollinup.component.tab.TabRow
@@ -45,6 +48,7 @@ fun TeacherPermitTableContent(
                 onTabChange = cb.onTabChange
             )
         },
+        onRefresh = cb.onRefresh,
         dropDownMenu = { state ->
             TeacherPermitDropDown(
                 showDropDown = state.expanded,
@@ -74,7 +78,8 @@ fun TeacherPermitTableContent(
     PermitApprovalFormDialog(
         showDialog = showApproval,
         selectedId = idSelected,
-        onDismissRequest = { showApproval = it }
+        onDismissRequest = { showApproval = it },
+        onSuccess = cb.onRefresh
     )
 }
 
@@ -85,8 +90,9 @@ private fun TeacherPermitTableHeader(
 ) {
     TabRow(
         tabList = uiState.tabList,
-        currentIndex = uiState.currentTabIndex,
-        onTabChange = onTabChange
+        currentTab = uiState.currentTabIndex,
+        onTabChange = onTabChange,
+        modifier = Modifier.widthIn(max = 400.dp)
     )
 }
 
@@ -109,7 +115,7 @@ private fun getColumn(): List<TableColumn<PermitByClassEntity>> {
         },
         TableColumn("Type", 0.5f) {
             Chip(
-                text = it.type,
+                text = it.type.label,
                 severity = Severity.SECONDARY
             )
         },
@@ -129,17 +135,17 @@ private fun getColumn(): List<TableColumn<PermitByClassEntity>> {
 
         TableColumn("Start") {
             DateText(
-                dateString = it.startTime.toLocalDateTime().toString(),
+                dateString = it.startTime,
             )
         },
         TableColumn("End") {
             DateText(
-                dateString = it.endTime.toLocalDateTime().toString(),
+                dateString = it.endTime,
             )
         },
         TableColumn("Requested at") {
             DateText(
-                dateString = it.createdAt.toLocalDateTime().toString(),
+                dateString = it.createdAt,
             )
         }
     )

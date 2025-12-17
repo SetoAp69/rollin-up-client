@@ -33,10 +33,15 @@ compass = "2.4.0"
 camera = "1.5.1"
 moko = "0.20.1"
 calendar = "2.8.0"
-kotlinx-datetime ="0.7.1"
+kotlinx-datetime = "0.7.1"
 skiko = "0.9.30"
 wheelPicker = "1.1.0-alpha05-compose1.8"
-
+webview = "2.0.1"
+kcef = "2025.03.23"
+talsec = "17.0.0"
+axer = "1.2.5"
+compottie="2.0.2"
+dataframe = "0.15.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -53,8 +58,11 @@ kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-s
 compose-navigation = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
 ui-backhandler = { group = "org.jetbrains.compose.ui", name = "ui-backhandler", version.ref = "composeMultiplatform" }
 
+#Axer
+axer = { group = "io.github.orioneee", name = "axer", version.ref = "axer" }
+
 #datetime
-kotlinx-datetime={group = "org.jetbrains.kotlinx", name="kotlinx-datetime", version.ref="kotlinx-datetime"}
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 
 #camera
 androidx-camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "camera" }
@@ -63,10 +71,13 @@ androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycl
 androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camera" }
 
 #datetime-wheel-picker
-datetime-wheel-picker = {group = "io.github.darkokoa", name ="datetime-wheel-picker", version.ref = "wheelPicker"}
+datetime-wheel-picker = { group = "io.github.darkokoa", name = "datetime-wheel-picker", version.ref = "wheelPicker" }
 
 #skiko
-skiko-awt-runtime-windows-x64 = {group = "org.jetbrains.skiko", name = "skiko-awt-runtime-windows-x64", version.ref = "skiko"}
+skiko-awt-runtime-windows-x64 = { group = "org.jetbrains.skiko", name = "skiko-awt-runtime-windows-x64", version.ref = "skiko" }
+
+#talsec
+talsec-security = { group = "com.aheaditec.talsec.security", name = "TalsecSecurity-Community", version.ref = "talsec" }
 
 #coil
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
@@ -107,14 +118,11 @@ permission-gallery = { group = "dev.icerock.moko", name = "permissions-gallery",
 permission-location = { group = "dev.icerock.moko", name = "permissions-location", version.ref = "moko" }
 permission-camera = { group = "dev.icerock.moko", name = "permissions-camera", version.ref = "moko" }
 
-
 #lumberjack
 lumberjack-core = { module = "io.github.mflisar.lumberjack:core", version.ref = "lumberjack" }
 implementation-lumberjack = { module = "io.github.mflisar.lumberjack:implementation-lumberjack", version.ref = "lumberjack" }
 logger-console = { module = "io.github.mflisar.lumberjack:logger-console", version.ref = "lumberjack" }
 lumberjack-android = { module = "io.github.mflisar.lumberjack:implementation-lumberjack-android", version.ref = "lumberjack" }
-
-
 
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
@@ -122,6 +130,14 @@ androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
 
 #api-service
 rollin-up-api-service = { group = "com.rolinup", name = "rollin-up-api-service" }
+
+#compottie
+compottie = {group="io.github.alexzhirkevich", name = "compottie", version.ref = "compottie"}
+compottie-dot = {group="io.github.alexzhirkevich", name = "compottie-dot", version.ref = "compottie"}
+
+#kotlin dataframe
+kotlinx-dataframe={group = "org.jetbrains.kotlinx", name="dataframe", version.ref="dataframe"}
+kotlinx-dataframe-excel={group = "org.jetbrains.kotlinx", name="dataframe-excel", version.ref="dataframe"}
 
 #multiplatform settings
 multiplatform-settings = { group = "com.russhwolf", name = "multiplatform-settings", version.ref = "multiplatformSettings" }
@@ -138,12 +154,19 @@ datastore = { group = "androidx.datastore", name = "datastore", version.ref = "d
 #desugar jdk
 desugar-jdk = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar" }
 
+#kcef
+kcef = { group = "dev.datlag", name = "kcef", version.ref = "kcef" }
+
 #compass
 compass-geocoder = { module = "dev.jordond.compass:geocoder", version.ref = "compass" }
 compass-geocoder-mobile = { module = "dev.jordond.compass:geocoder-mobile", version.ref = "compass" }
 compass-geolocation = { module = "dev.jordond.compass:geolocation", version.ref = "compass" }
 compass-geolocation-mobile = { module = "dev.jordond.compass:geolocation-mobile", version.ref = "compass" }
+compass-geolocation-web = { module = "dev.jordond.compass:geolocation-web", version.ref = "compass" }
+compass-geocoder-web-googlemaps = { module = "dev.jordond.compass:geocoder-web-googlemaps", version.ref = "compass" }
 
+#webview
+compose-webview-multiplatform = { group = "io.github.kevinnzou", name = "compose-webview-multiplatform", version.ref = "webview" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

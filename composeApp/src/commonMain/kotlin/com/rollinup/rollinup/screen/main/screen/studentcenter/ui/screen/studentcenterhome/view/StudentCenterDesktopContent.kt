@@ -30,15 +30,16 @@ fun StudentCenterDesktopContent(
         ) {
             Text(
                 text = "Student Center",
-                style = Style.headerBold,
-                color = theme.primary
+                style = Style.popupTitle,
+                color = theme.textPrimary
             )
             StudentCenterTableFilter(
                 uiState = uiState,
                 cb = cb
             )
             StudentCenterTable(
-                uiState = uiState
+                uiState = uiState,
+                onRefresh = cb.onRefresh
             )
         }
     }

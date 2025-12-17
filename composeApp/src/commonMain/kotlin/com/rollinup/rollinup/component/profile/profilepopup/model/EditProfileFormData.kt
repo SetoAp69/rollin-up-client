@@ -32,7 +32,7 @@ data class EditProfileFormData(
         get() = listOf(genderError, birthDayError, classError, roleError)
 
     val selectorErrorMsg: String?
-        get() = if (selectorError.any()) "Please select all fields" else null
+        get() = if (selectorError.any { it }) "Please select all fields" else null
 
     fun isValid(): Boolean {
         return listOf(

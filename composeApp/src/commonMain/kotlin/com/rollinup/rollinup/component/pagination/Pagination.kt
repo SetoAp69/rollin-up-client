@@ -3,10 +3,9 @@ package com.rollinup.rollinup.component.pagination
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,10 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.rollinup.rollinup.component.button.IconButton
 import com.rollinup.rollinup.component.ripple.CustomRipple
+import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
-import org.jetbrains.compose.resources.painterResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_drop_down_arrow_line_left_24
 import rollin_up.composeapp.generated.resources.ic_drop_down_arrow_line_right_24
@@ -36,18 +36,15 @@ fun Pagination(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(
-                painter = painterResource(Res.drawable.ic_drop_down_arrow_line_left_24),
-                tint = theme.bodyText,
-                contentDescription = null,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(4.dp))
-                    .clickable(currentPage != 1) {
-                        onPageChange(currentPage - 1)
-                    }
-                    .size(24.dp)
-                    .padding(2.dp)
+            IconButton(
+                icon = Res.drawable.ic_drop_down_arrow_line_left_24,
+                onClick = {
+                    onPageChange(currentPage - 1)
+                },
+                enabled = currentPage!=1,
+                size = 16.dp
             )
+            Spacer(4.dp)
             val hasHiddenItemOnLeft = currentPage >= showedPageCount && totalPage > showedPageCount
             if (hasHiddenItemOnLeft) {
                 Text(
@@ -111,18 +108,14 @@ fun Pagination(
 
                 )
             }
-
-            Icon(
-                painter = painterResource(Res.drawable.ic_drop_down_arrow_line_right_24),
-                tint = theme.bodyText,
-                contentDescription = null,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(4.dp))
-                    .clickable(currentPage != totalPage) {
-                        onPageChange(currentPage + 1)
-                    }
-                    .size(24.dp)
-                    .padding(2.dp)
+            Spacer(4.dp)
+            IconButton(
+                icon = Res.drawable.ic_drop_down_arrow_line_right_24,
+                onClick = {
+                    onPageChange(currentPage + 1)
+                },
+                enabled = currentPage!=totalPage,
+                size = 16.dp
             )
         }
     }

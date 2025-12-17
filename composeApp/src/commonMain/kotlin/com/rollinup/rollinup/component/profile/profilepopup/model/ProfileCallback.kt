@@ -6,4 +6,5 @@ data class ProfileCallback(
     val onSubmit: (EditProfileFormData) -> Unit = {},
     val onValidate: (EditProfileFormData) -> Boolean = { false },
     val onResetMessageState: () -> Unit = {},
+    val onRefresh: () -> Unit,
 )

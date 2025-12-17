@@ -25,12 +25,14 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.dp
 import com.rollinup.apiservice.model.common.MultiPlatformFile
 import com.rollinup.apiservice.model.permit.PermitType
+import com.rollinup.common.model.OptionData
 import com.rollinup.rollinup.component.button.Button
-import com.rollinup.rollinup.component.date.DatePickerField
+import com.rollinup.rollinup.component.date.DateRangePickerField
 import com.rollinup.rollinup.component.filepicker.FilePicker
+import com.rollinup.rollinup.component.handlestate.HandleState
 import com.rollinup.rollinup.component.loading.LoadingOverlay
 import com.rollinup.rollinup.component.loading.ShimmerEffect
-import com.rollinup.rollinup.component.model.OptionData
+import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.permitform.model.PermitFormCallback
 import com.rollinup.rollinup.component.permitform.model.PermitFormData
 import com.rollinup.rollinup.component.permitform.uistate.PermitFormUiState
@@ -42,7 +44,6 @@ import com.rollinup.rollinup.component.textfield.TextFieldTitle
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.time.TimeDurationTextField
-import com.rollinup.rollinup.component.utils.getPlatform
 import org.jetbrains.compose.resources.painterResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_drop_down_arrow_line_right_24
@@ -56,7 +57,7 @@ fun PermitFormContent(
         formData = formData,
         onUpdateFormData = onUpdateFormData
     )
-    if (formData.type == PermitType.ABSENT) {
+    if (formData.type == PermitType.ABSENCE) {
         PermitReasonSection(
             onUpdateFormData = onUpdateFormData,
             formData = formData
@@ -113,9 +114,13 @@ fun PermitFormContent(
     cb: PermitFormCallback,
     onSuccess: () -> Unit,
     onError: () -> Unit,
+    onShowSnackbar: OnShowSnackBar,
 ) {
     val formData = uiState.formData
     val isEdit = uiState.isEdit
+    val title = if (isEdit) "Edit Permit Request" else "Create Permit Request"
+
+    LoadingOverlay(uiState.isLoadingOverlay)
 
     LaunchedEffect(formData.type) {
         if (formData.type == PermitType.DISPENSATION) {
@@ -130,9 +135,15 @@ fun PermitFormContent(
         }
     }
 
-    LoadingOverlay(uiState.isLoadingOverlay)
-
-    val title = if (isEdit) "Edit Permit Request" else "Create Permit Request"
+    HandleState(
+        state = uiState.submitState,
+        successMsg = "Success, Permit request successfully submitted.",
+        errorMsg = "Error, failed to submit permit request, please try again.",
+        onDispose = cb.onResetMessageState,
+        onError = onSuccess,
+        onSuccess = onSuccess,
+        onShowSnackBar = onShowSnackbar,
+    )
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -214,24 +225,22 @@ fun PermitFormDurationSection(
     onUpdateFormData: (PermitFormData) -> Unit,
 ) {
     when (formData.type) {
-        PermitType.ABSENT -> {
+        PermitType.ABSENCE -> {
             @Suppress("UNCHECKED_CAST")
-            DatePickerField(
+            DateRangePickerField(
                 title = "Duration",
                 placeholder = "Select permit duration",
                 value = formData.duration.filter { it != null } as List<Long>,
-                platform = getPlatform(),
-                onValueChange = {
-                    onUpdateFormData(
-                        formData.copy(
-                            duration = it,
-                            durationError = null
-                        )
-                    )
-                },
                 isError = formData.durationError != null,
                 errorText = formData.durationError
-            )
+            ) {
+                onUpdateFormData(
+                    formData.copy(
+                        duration = it,
+                        durationError = null
+                    )
+                )
+            }
         }
 
         PermitType.DISPENSATION -> {
@@ -264,7 +273,7 @@ fun PermitFormHeader(
     val options = listOf(
         OptionData(
             label = "Absent",
-            value = PermitType.ABSENT
+            value = PermitType.ABSENCE
         ),
         OptionData(
             label = "Dispensation",

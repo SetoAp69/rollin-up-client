@@ -1,9 +1,12 @@
 package com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.createedituser.view
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import com.rollinup.rollinup.component.handlestate.HandleState
 import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.createedituser.uistate.CreateEditUserUiState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun CreateEditUserStateHandler(
@@ -12,6 +15,7 @@ fun CreateEditUserStateHandler(
     onResetForm:()->Unit,
     onShowSnackBar: OnShowSnackBar,
     onDismissRequest: (Boolean) -> Unit,
+    onSuccess:()->Unit,
 ) {
     val successMessage =
         if(uiState.isEdit){
@@ -27,15 +31,20 @@ fun CreateEditUserStateHandler(
             "Error, failed to create user data"
         }
 
+    val scope = rememberCoroutineScope()
+
     HandleState(
         state = uiState.submitState,
         successMsg = successMessage,
         errorMsg = errorMessage,
         onDispose = onResetMessageState,
         onSuccess ={
-            if(!uiState.isStay){
-                onDismissRequest(false)
-            }else{
+            scope.launch{
+                onSuccess()
+                if (!uiState.isStay) {
+                    delay(1000)
+                    onDismissRequest(false)
+                }
                 onResetForm()
             }
         } ,

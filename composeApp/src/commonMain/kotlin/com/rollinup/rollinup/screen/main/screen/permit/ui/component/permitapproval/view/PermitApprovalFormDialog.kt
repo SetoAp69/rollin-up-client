@@ -17,6 +17,7 @@ fun PermitApprovalFormDialog(
     showDialog: Boolean,
     selectedId: List<String>,
     onDismissRequest: (Boolean) -> Unit,
+    onSuccess: () -> Unit
 ) {
     val viewModel: PermitApprovalViewModel = koinViewModel()
     val cb = viewModel.getCallback()
@@ -37,7 +38,8 @@ fun PermitApprovalFormDialog(
             uiState = uiState,
             cb = cb,
             onDismissRequest = onDismissRequest,
-            onShowSnackBar = showSnackBar
+            onShowSnackBar = showSnackBar,
+            onSuccess = onSuccess
         )
     }
 }
