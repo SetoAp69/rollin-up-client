@@ -28,7 +28,7 @@ val buildConfigGenerator by tasks.registering(Sync::class) {
                    const val IS_PROD = ${envProperties["IS_PROD"]}
                    const val TEMP_PASSWORD = ${envProperties["TEMP_PASSWORD"]}
                }
-            """.trimMargin()
+            """.trimIndent()
         )
     ) {
         rename { "BuildConfig.kt" }
@@ -102,7 +102,7 @@ kotlin {
 
             //Dataframe
             implementation(libs.kotlinx.dataframe)
-            implementation(libs.kotlinx.dataframe.excel)
+//            implementation(libs.kotlinx.dataframe.excel)
 
             //moko permission
             implementation(libs.permission.camera)
@@ -195,7 +195,7 @@ kotlin {
 
             //Dataframe
             implementation(libs.kotlinx.dataframe)
-            implementation(libs.kotlinx.dataframe.excel)
+//            implementation(libs.kotlinx.dataframe.excel)
 
         }
         iosMain.dependencies {
@@ -241,13 +241,19 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.1"
     }
     packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
+//        resources {
+//            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+//        }
+        resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+        resources.pickFirsts.add("/META-INF/kotlin-jupyter-libraries/libraries.json")
+        resources.excludes.add("/META-INF/thirdparty-LICENSE")
+        resources.pickFirsts.add("arrow-git.properties")
+        resources.pickFirsts.add("META-INF/DEPENDENCIES")
     }
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false

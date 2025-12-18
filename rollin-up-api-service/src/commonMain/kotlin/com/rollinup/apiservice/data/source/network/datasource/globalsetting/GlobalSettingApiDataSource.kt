@@ -25,7 +25,7 @@ class GlobalSettingApiDataSource(
     private val httpClient: HttpClient,
     private val sseClient: HttpClient,
 ) : GlobalSettingApiService {
-    private val url = "general-setting"
+    private val url = "global-setting"
     override fun listen(): Flow<ApiResponse<GeneralSettingResponse>> = flow {
         sseClient.sse(
             urlString = "/sse",

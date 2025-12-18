@@ -1,7 +1,7 @@
 [versions]
 agp = "8.8.0"
 android-compileSdk = "36"
-android-minSdk = "24"
+android-minSdk = "26"
 android-targetSdk = "36"
 androidx-activity = "1.10.1"
 androidx-appcompat = "1.7.1"
@@ -137,7 +137,6 @@ compottie-dot = {group="io.github.alexzhirkevich", name = "compottie-dot", versi
 
 #kotlin dataframe
 kotlinx-dataframe={group = "org.jetbrains.kotlinx", name="dataframe", version.ref="dataframe"}
-kotlinx-dataframe-excel={group = "org.jetbrains.kotlinx", name="dataframe-excel", version.ref="dataframe"}
 
 #multiplatform settings
 multiplatform-settings = { group = "com.russhwolf", name = "multiplatform-settings", version.ref = "multiplatformSettings" }

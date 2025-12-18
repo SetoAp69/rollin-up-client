@@ -71,6 +71,7 @@ fun AttendanceHomeTopBar(
         onDismissRequest = { showExportDialog = it },
         onConfirm = {
             cb.onExportFile(it)
+            cb.onUpdateExportDateRange(emptyList())
         }
     )
 }

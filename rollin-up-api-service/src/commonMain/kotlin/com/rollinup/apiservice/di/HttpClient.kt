@@ -101,7 +101,7 @@ private fun getSSEClient(localDataStore: LocalDataStore) = HttpClient {
     }
 
     install(SSE) {
-        maxReconnectionAttempts = 4
+        maxReconnectionAttempts = 5
         reconnectionTime = 2.seconds
         bufferPolicy = SSEBufferPolicy.LastEvents(10)
     }
@@ -118,7 +118,7 @@ private fun getClient(localDataStore: LocalDataStore) = HttpClient {
     }
 
     install(HttpTimeout) {
-        requestTimeoutMillis = 2000
+        requestTimeoutMillis = 3000
     }
 
     install(ContentNegotiation) {
@@ -141,7 +141,6 @@ private fun getClient(localDataStore: LocalDataStore) = HttpClient {
         bearer {
             sendWithoutRequest{true}
             loadTokens {
-                L.wtf{"Loading token:"}
                 val accessToken = localDataStore.getToken()
                 val refreshToken = localDataStore.getRefreshToken()
                 BearerTokens(

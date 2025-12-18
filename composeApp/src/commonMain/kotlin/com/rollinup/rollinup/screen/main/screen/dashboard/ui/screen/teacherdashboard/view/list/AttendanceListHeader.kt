@@ -121,6 +121,7 @@ fun AttendanceListHeader(
         onDismissRequest = { showExportDialog = it },
         onConfirm = {
             cb.onExportFile(it)
+            cb.onUpdateExportDateRanges(emptyList())
         }
     )
 }
