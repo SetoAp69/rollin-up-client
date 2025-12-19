@@ -40,7 +40,7 @@ fun AttendanceByStudentSummaryContent(summary: AttendanceSummaryEntity) {
         leftContent = {
             Column {
                 RecordFieldWithNotation(
-                    label = "Checked In",
+                    label = "On Time",
                     color = theme.success,
                     content = summary.checkedIn.toString(),
                 )

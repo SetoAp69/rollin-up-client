@@ -13,7 +13,7 @@ import com.rollinup.common.model.Severity
 import com.rollinup.common.model.UiMode
 import com.rollinup.rollinup.component.dialog.AlertDialog
 import com.rollinup.rollinup.component.theme.LocalAuthViewmodel
-import com.rollinup.rollinup.component.theme.LocalGeneralSetting
+import com.rollinup.rollinup.component.theme.LocalGlobalSetting
 import com.rollinup.rollinup.component.theme.LocalTheme
 import com.rollinup.rollinup.component.theme.LocalUiModeViewModel
 import com.rollinup.rollinup.component.theme.RollinUpTheme
@@ -27,7 +27,7 @@ import rollin_up.composeapp.generated.resources.ic_info_line_24
 
 @Composable
 fun App(
-    onFinish:()->Unit,
+    onFinish: () -> Unit,
 ) {
     val authViewModel: AuthViewModel = koinViewModel()
     val generalSettingViewModel: GlobalSettingViewModel = koinViewModel()
@@ -36,6 +36,7 @@ fun App(
     val uiMode = uiModeViewModel.uiMode.collectAsStateWithLifecycle().value
     val authState = authViewModel.uiState.collectAsStateWithLifecycle().value
     val securityAlerts = securityViewModel.securityAlert.collectAsStateWithLifecycle().value
+    val globalSetting = generalSettingViewModel.globalSetting.collectAsStateWithLifecycle().value
 
     DisposableEffect(authState.loginState) {
         if (authState.loginState == AuthUiState.LoginState.Login) {
@@ -54,10 +55,12 @@ fun App(
         LocalTheme provides generateTheme(uiMode),
         LocalUiModeViewModel provides uiModeViewModel,
         LocalAuthViewmodel provides authViewModel,
-        LocalGeneralSetting provides generalSettingViewModel.globalSetting.collectAsStateWithLifecycle().value
+        LocalGlobalSetting provides globalSetting
     ) {
         RollinUpTheme {
-            NavigationHost()
+            NavigationHost(
+                onRefreshSetting = { generalSettingViewModel.init() }
+            )
             SecurityAlertDialog(
                 showDialog = securityAlerts.isNotEmpty(),
                 securityAlert = securityAlerts,
@@ -104,7 +107,7 @@ fun SecurityAlertDialog(
 }
 
 fun getAlertTitle(securityAlert: List<SecurityAlert>) =
-    if (securityAlert.size == 1) "Security Alert : ${securityAlert.firstOrNull()?.title?:""}"
+    if (securityAlert.size == 1) "Security Alert : ${securityAlert.firstOrNull()?.title ?: ""}"
     else "Multiple Security Alert"
 
 @Composable

@@ -53,6 +53,7 @@ fun BottomBar(
         listMenu.firstOrNull() ?: MainRoute.DashBoardRoute
     ),
     onGetHeight: (Dp) -> Unit = { _ -> },
+    onRefresh: () -> Unit,
 ) {
     val listMenu = listMenu.take(5)
     val middleIndex = (listMenu.size / 2)
@@ -100,8 +101,10 @@ fun BottomBar(
                             menu = menu,
                             isSelected = state.currentMenu == menu,
                             onMenuClick = {
-                                onNavigate(menu)
-                                state.onNavigate(menu)
+                                if (state.currentMenu == menu)
+                                    onRefresh()
+                                else
+                                    onNavigate(menu); state.onNavigate(menu)
                             }
                         )
                     }
@@ -111,8 +114,10 @@ fun BottomBar(
                 menu = listMenu[middleIndex],
                 isSelected = state.currentMenu == listMenu[middleIndex],
                 onMenuClick = { menu ->
-                    onNavigate(menu)
-                    state.onNavigate(menu)
+                    if (menu == state.currentMenu)
+                        onRefresh()
+                    else
+                        onNavigate(menu); state.onNavigate(menu)
                 },
             )
         }
@@ -144,7 +149,9 @@ private fun BottomBarMainMenu(
                 )
                 .clip(CircleShape)
                 .border(width = 8.dp, color = theme.secondary, shape = CircleShape)
-                .clickable(!isSelected) { onMenuClick(menu) }
+                .clickable {
+                    onMenuClick(menu)
+                }
                 .background(color = theme.primary)
                 .padding(16.dp)
         ) {
@@ -176,7 +183,6 @@ fun BottomBarMenu(
         Column(
             modifier = Modifier
                 .clickable(
-                    enabled = !isSelected,
                     interactionSource = interactionSource,
                     indication = null
                 ) {

@@ -3,7 +3,7 @@ package com.rollinup.apiservice.model.attendance
 import com.rollinup.common.model.Severity
 
 enum class AttendanceStatus(val value: String, val label: String, val severity: Severity) {
-    CHECKED_IN("checked_in", "Checked In", Severity.SUCCESS),
+    ON_TIME("checked_in", "On Time", Severity.SUCCESS),
     LATE("late", "Late", Severity.WARNING),
     ABSENT("absent", "Absent", Severity.DANGER),
     EXCUSED("excused", "Excused", Severity.WARNING),

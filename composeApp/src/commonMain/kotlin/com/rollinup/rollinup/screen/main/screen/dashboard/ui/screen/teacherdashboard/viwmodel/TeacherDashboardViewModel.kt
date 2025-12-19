@@ -253,7 +253,7 @@ class TeacherDashboardViewModel(
         return when (initialStatus) {
             AttendanceStatus.NO_DATA -> {
                 when (formData.status) {
-                    AttendanceStatus.CHECKED_IN, AttendanceStatus.LATE ->
+                    AttendanceStatus.ON_TIME, AttendanceStatus.LATE ->
                         validateCheckInForm(formData)
 
                     AttendanceStatus.EXCUSED, AttendanceStatus.ABSENT ->
@@ -352,7 +352,7 @@ class TeacherDashboardViewModel(
         when (initialData.status) {
             AttendanceStatus.NO_DATA -> {
                 when (formData.status) {
-                    AttendanceStatus.LATE, AttendanceStatus.CHECKED_IN -> checkIn(formData)
+                    AttendanceStatus.LATE, AttendanceStatus.ON_TIME -> checkIn(formData)
                     AttendanceStatus.EXCUSED, AttendanceStatus.ABSENT -> createPermit(formData)
                     AttendanceStatus.NO_DATA, AttendanceStatus.APPROVAL_PENDING -> {
                         return

@@ -78,7 +78,7 @@ fun AttendanceListItem(
                     color = theme.bodyText
                 )
                 when (item.attendance?.status) {
-                    AttendanceStatus.LATE, AttendanceStatus.CHECKED_IN -> {
+                    AttendanceStatus.LATE, AttendanceStatus.ON_TIME -> {
                         item.attendance?.checkedInAt?.let {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically

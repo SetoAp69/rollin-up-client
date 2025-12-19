@@ -40,7 +40,6 @@ object ClientModule {
 }
 
 private fun getSSEClient(localDataStore: LocalDataStore) = HttpClient {
-    this.
     expectSuccess = true
     defaultRequest {
         url {

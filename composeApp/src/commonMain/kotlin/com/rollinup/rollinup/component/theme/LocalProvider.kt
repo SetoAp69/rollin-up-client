@@ -25,7 +25,7 @@ val LocalUiModeViewModel = compositionLocalOf<UiModeViewModel> {
 val localUser: LoginEntity?
     @Composable get() = LocalAuthViewmodel.current.uiState.collectAsStateWithLifecycle().value.loginData
 
-val LocalGeneralSetting = compositionLocalOf<GlobalSetting> {
+val LocalGlobalSetting = compositionLocalOf<GlobalSetting> {
     error("General Setting not found")
 }
 
@@ -37,5 +37,5 @@ val LocalUiMode = compositionLocalOf<UiMode> {
     error("UiMode not found")
 }
 
-val generalSetting
-    @Composable get() = LocalGeneralSetting.current
+val globalSetting
+    @Composable get() = LocalGlobalSetting.current

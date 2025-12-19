@@ -37,7 +37,7 @@ import com.rollinup.rollinup.component.permitform.view.PermitFormContent
 import com.rollinup.rollinup.component.selector.SingleSelector
 import com.rollinup.rollinup.component.spacer.screenPadding
 import com.rollinup.rollinup.component.textfield.TextFieldDefaults
-import com.rollinup.rollinup.component.theme.LocalGeneralSetting
+import com.rollinup.rollinup.component.theme.LocalGlobalSetting
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.time.TimePickerTextField
@@ -104,7 +104,7 @@ fun TeacherDashboardEditAttendanceContent(
     val initialStatus = detail.status
     val formData = uiState.editAttendanceFormData
     var showDialog by remember { mutableStateOf(false) }
-    val generalSetting = LocalGeneralSetting.current
+    val generalSetting = LocalGlobalSetting.current
 
     LaunchedEffect(uiState.submitEditAttendanceState){
         if(uiState.submitEditAttendanceState == true) onDismissRequest(false)
@@ -125,8 +125,8 @@ fun TeacherDashboardEditAttendanceContent(
             }
 
             in listOf(
-                AttendanceStatus.CHECKED_IN,
-                AttendanceStatus.CHECKED_IN
+                AttendanceStatus.ON_TIME,
+                AttendanceStatus.ON_TIME
             ),
                 -> {
                 cb.onUpdateEditForm(
@@ -168,7 +168,7 @@ fun TeacherDashboardEditAttendanceContent(
                         )
                     }
 
-                    AttendanceStatus.CHECKED_IN, AttendanceStatus.LATE -> {
+                    AttendanceStatus.ON_TIME, AttendanceStatus.LATE -> {
                         AttendanceForm(
                             formData = formData,
                             onUpdateFormData = cb.onUpdateEditForm,

@@ -42,8 +42,10 @@ import com.rollinup.rollinup.component.textfield.TextField
 import com.rollinup.rollinup.component.textfield.TextFieldDefaults
 import com.rollinup.rollinup.component.textfield.TextFieldTitle
 import com.rollinup.rollinup.component.theme.Style
+import com.rollinup.rollinup.component.theme.globalSetting
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.time.TimeDurationTextField
+import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.painterResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_drop_down_arrow_line_right_24
@@ -244,17 +246,42 @@ fun PermitFormDurationSection(
         }
 
         PermitType.DISPENSATION -> {
+            val schoolStart = globalSetting.schoolPeriodStart
+            val schoolEnd = globalSetting.schoolPeriodEnd
+
             TimeDurationTextField(
-                value = formData.duration,
-                onValueChange = {
+                value = formData.duration.map { second ->
+                    if (second == null) null
+                    else LocalTime.fromSecondOfDay(second.toInt())
+                },
+                onValueChange = { value ->
+                    val from = value.first()
+                    val to = value[1]
+
+                    val min = value.first() ?: schoolStart
+                    val max = value[1] ?: schoolEnd
+
+                    val errorMessage = when {
+                        from != null && to == null && from < schoolStart -> "Dispensation can't be start before school period"
+                        to != null && from == null && to > schoolEnd -> "Dispensation must end before school period end"
+                        (to != null && to < min) || (from != null && from > max) -> "Invalid duration ranges"
+                        (value.all { it != null } && to!! > schoolEnd && from!! < schoolStart) -> "Invalid duration ranges"
+                        else -> null
+                    }
+
                     onUpdateFormData(
                         formData.copy(
-                            duration = it,
-                            durationError = null
+                            duration = value.map { time ->
+                                if (time == null) null
+                                else time.toSecondOfDay().toLong()
+                            },
+                            durationError = errorMessage
                         )
                     )
                 },
                 isRequired = true,
+                isError = formData.durationError != null,
+                textError = formData.durationError,
                 title = "Duration"
             )
         }

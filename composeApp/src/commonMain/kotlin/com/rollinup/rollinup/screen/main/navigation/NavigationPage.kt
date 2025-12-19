@@ -27,6 +27,7 @@ fun NavGraphBuilder.mainGraph(
     onNavigateTo: (String) -> Unit,
     onShowSnackBar: (String, Boolean) -> Unit,
     onNavigateUp: () -> Unit,
+    onRefreshSetting:()->Unit,
 ) {
     composable(
         route = MainRoute.DashBoardRoute.route,
@@ -52,7 +53,8 @@ fun NavGraphBuilder.mainGraph(
                 if (platform.isMobile()) {
                     StudentDashboardScreen(
                         onShowSnackBar = onShowSnackBar,
-                        onNavigateTo = onNavigateTo
+                        onNavigateTo = onNavigateTo,
+                        onRefreshSetting = onRefreshSetting
                     )
                 } else {
                     PlatformWarning(Role.STUDENT, platform)

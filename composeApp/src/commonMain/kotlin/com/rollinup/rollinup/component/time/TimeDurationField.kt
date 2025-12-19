@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -21,12 +19,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.dp
 import com.rollinup.rollinup.component.model.Platform
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.textfield.TextError
 import com.rollinup.rollinup.component.textfield.TextFieldTitle
-import com.rollinup.rollinup.component.theme.LocalGeneralSetting
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.utils.getPlatform
@@ -34,22 +30,10 @@ import kotlinx.datetime.LocalTime
 import kotlin.time.ExperimentalTime
 
 @Composable
-fun TimeDurationTextFieldTest() {
-    var value by remember { mutableStateOf(listOf<Long?>()) }
-    TimeDurationTextField(
-        title = "Duration",
-        value = value,
-        onValueChange = { value = it }
-    )
-    Spacer(modifier = Modifier.height(24.dp))
-
-}
-
-@Composable
 fun TimeDurationTextField(
     title: String,
-    value: List<Long?>,
-    onValueChange: (List<Long?>) -> Unit,
+    value: List<LocalTime?>,
+    onValueChange: (List<LocalTime?>) -> Unit,
     modifier: Modifier = Modifier,
     isRequired: Boolean = false,
     isError: Boolean = false,
@@ -82,37 +66,17 @@ fun TimeDurationTextField(
 @ExperimentalTime
 @Composable
 fun TimeDurationTextField(
-    value: List<Long?>,
-    onValueChange: (List<Long?>) -> Unit,
+    value: List<LocalTime?>,
+    onValueChange: (List<LocalTime?>) -> Unit,
     modifier: Modifier = Modifier,
     isError: Boolean = false,
     enable: Boolean = true,
 ) {
-    val generalSetting = LocalGeneralSetting.current
-
     val value = listOf(value.firstOrNull(), value.getOrNull(1))
-    val from = value.firstOrNull()?.let {
-        LocalTime.fromSecondOfDay(it.toInt())
-    }
-    val to = value.lastOrNull()?.let {
-        LocalTime.fromSecondOfDay(it.toInt())
-    }
+    val from = value.firstOrNull()
+    val to = value[1]
 
     val isEmpty = value.isEmpty() || value.all { it == null }
-
-    val min =
-        if (from == null || from > generalSetting.schoolPeriodEnd) {
-            generalSetting.schoolPeriodStart
-        } else {
-            from
-        }
-    val max =
-        if (to == null || to < generalSetting.schoolPeriodStart) {
-            generalSetting.schoolPeriodEnd
-        } else {
-            to
-        }
-
 
     var isFrom by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -192,20 +156,18 @@ fun TimeDurationTextField(
         when (platform) {
             Platform.ANDROID, Platform.IOS -> {
                 TimePickerBottomSheet(
-                    min = min,
-                    max = max,
                     showSheet = showBottomSheet,
                     onDismissRequest = { showBottomSheet = it },
                     onValueChange = { time ->
                         val newValue = if (isFrom) {
                             buildList {
-                                add(time.toSecondOfDay().toLong())
+                                add(time)
                                 add(value.getOrNull(1))
                             }
                         } else {
                             buildList {
                                 add(value.getOrNull(0))
-                                add(time.toSecondOfDay().toLong())
+                                add(time)
                             }
                         }
                         onValueChange(newValue)
@@ -215,20 +177,18 @@ fun TimeDurationTextField(
 
             else -> {
                 TimePickerDropDown(
-                    min = min,
-                    max = max,
                     showDropdown = showBottomSheet,
                     onDismissRequest = { showBottomSheet = it },
                     onValueChange = { time ->
                         val newValue = if (isFrom) {
                             buildList {
-                                add(time.toSecondOfDay().toLong())
+                                add(time)
                                 add(value.getOrNull(1))
                             }
                         } else {
                             buildList {
                                 add(value.getOrNull(0))
-                                add(time.toSecondOfDay().toLong())
+                                add(time)
                             }
                         }
                         onValueChange(newValue)

@@ -5,32 +5,35 @@ import androidx.lifecycle.viewModelScope
 import com.rollinup.apiservice.domain.globalsetting.GetCachedGlobalSettingUseCase
 import com.rollinup.apiservice.domain.globalsetting.GetGlobalSettingUseCase
 import com.rollinup.apiservice.domain.globalsetting.ListenGlobalSettingSSE
+import com.rollinup.apiservice.domain.globalsetting.UpdateCachedGlobalSettingUseCase
 import com.rollinup.apiservice.model.common.GlobalSetting
 import com.rollinup.apiservice.model.common.Result
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class GlobalSettingViewModel(
     private val listenGlobalSettingSSE: ListenGlobalSettingSSE,
     private val getCachedGlobalSettingUseCase: GetCachedGlobalSettingUseCase,
+    private val updateCachedGlobalSettingUseCase: UpdateCachedGlobalSettingUseCase,
     private val getGlobalSettingUseCase: GetGlobalSettingUseCase,
 ) : ViewModel() {
 
     private var _globalSetting = MutableStateFlow(GlobalSetting())
     val globalSetting = _globalSetting.asStateFlow()
 
-    fun init(){
+    fun init() {
         viewModelScope.launch {
-            getGlobalSettingUseCase().collect { result ->
-                if(result is Result.Success){
-                    _globalSetting.value = result.data
+            getGlobalSetting().collect { result ->
+                if (result is Result.Success) {
+                    updateCachedGlobalSettingUseCase(result.data)
                 }
             }
         }
     }
+
+    private fun getGlobalSetting() = getGlobalSettingUseCase()
 
     fun fetchLocalSetting() {
         viewModelScope.launch {
@@ -43,10 +46,18 @@ class GlobalSettingViewModel(
     fun listen() {
         viewModelScope.launch {
             listenGlobalSettingSSE().collect {
-                if (it is Result.Success) {
-                    fetchLocalSetting()
+                getGlobalSetting().collect { result ->
+                    if (result is Result.Success) {
+                        _globalSetting.value = result.data
+                        updateCachedGlobalSetting(result.data)
+                    }
                 }
             }
         }
     }
+
+    private suspend fun updateCachedGlobalSetting(globalSetting: GlobalSetting) {
+        updateCachedGlobalSettingUseCase(globalSetting)
+    }
+
 }

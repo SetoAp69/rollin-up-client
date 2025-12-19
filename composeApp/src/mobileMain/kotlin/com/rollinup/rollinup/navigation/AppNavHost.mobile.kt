@@ -32,6 +32,7 @@ actual fun AppNavHost(
     initialRoute: String,
     loginData: LoginEntity?,
     onLogout: () -> Unit,
+    onRefreshSetting: () -> Unit,
 ) {
     var isSuccess: Boolean? by remember { mutableStateOf(null) }
     var bottomBarHeight by remember { mutableStateOf(0.dp) }
@@ -41,12 +42,12 @@ actual fun AppNavHost(
     val listMenu = listOf(MainRoute.ProfileRoute, MainRoute.DashBoardRoute, MainRoute.SettingRoute)
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route?: ""
+    val currentRoute = navBackStackEntry?.destination?.route ?: ""
     val showBottomBar = showBottomBar(navBackStackEntry)
 
     fun onNavigateTo(route: String) {
         navController
-            .navigate(route){
+            .navigate(route) {
                 popUpTo(currentRoute) {
                     inclusive = true
                 }
@@ -82,11 +83,12 @@ actual fun AppNavHost(
                 ) {
                     appGraph(
                         navController = navController,
+                        onLogout = onLogout,
+                        onRefreshSetting = onRefreshSetting,
                         onShowSnackBar = { msg, success ->
                             isSuccess = success
                             showSnackBar(msg)
-                        },
-                        onLogout = onLogout
+                        }
                     )
                 }
             }
@@ -98,6 +100,7 @@ actual fun AppNavHost(
                 state = rememberBottomBarState(initialMenu = MainRoute.DashBoardRoute),
                 onGetHeight = { height -> bottomBarHeight = height + 16.dp },
                 showBottomBar = showBottomBar,
+                onRefresh = {}
             )
 
         }

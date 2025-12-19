@@ -12,7 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.rollinup.rollinup.component.theme.LocalGlobalSetting
 import dev.jordond.compass.Location
 import dev.jordond.compass.geolocation.Geolocator
 import dev.jordond.compass.geolocation.Locator
@@ -25,18 +25,33 @@ actual fun LocationHandler(
     startTracking: Boolean,
 ) {
     var showDeniedDialog by remember { mutableStateOf(false) }
+
     val viewModel: LocationViewModel = koinViewModel()
     val state = viewModel.state.collectAsStateWithLifecycle().value
+
     val context = LocalContext.current
+
+    val globalSetting = LocalGlobalSetting.current
+    val geofence = Geofence(
+        rad = globalSetting.radius,
+        longitude = globalSetting.longitude,
+        latitude = globalSetting.latitude
+    )
 
     LaunchedEffect(startTracking) {
         if ((startTracking)) {
             viewModel.init()
-            viewModel.listenLocation { onLocationChanges(it) }
         } else {
             viewModel.stopTracking()
         }
+    }
 
+    LaunchedEffect(state.location) {
+        onLocationChanges(state.location)
+    }
+
+    LaunchedEffect(geofence) {
+        viewModel.restartTracking()
     }
 
     LaunchedEffect(state.isDenied) {

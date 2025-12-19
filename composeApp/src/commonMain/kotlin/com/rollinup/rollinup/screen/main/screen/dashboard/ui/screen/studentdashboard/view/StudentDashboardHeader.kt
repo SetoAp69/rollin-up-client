@@ -185,20 +185,26 @@ fun SummarySection(
         ) {
             SummaryItem(
                 amount = summary.checkedIn.toString(),
-                title = "Attended",
+                title = "On Time",
                 severity = Severity.SUCCESS
             )
             CircleSpacer()
             SummaryItem(
-                amount = summary.absent.toString(),
-                title = "Absent",
-                severity = Severity.DANGER
+                amount = summary.late.toString(),
+                title = "Late",
+                severity = Severity.WARNING
             )
             CircleSpacer()
             SummaryItem(
                 amount = summary.excused.toString(),
                 title = "Excused",
                 severity = Severity.WARNING
+            )
+            CircleSpacer()
+            SummaryItem(
+                amount = summary.absent.toString(),
+                title = "Absent",
+                severity = Severity.DANGER
             )
         }
         Icon(

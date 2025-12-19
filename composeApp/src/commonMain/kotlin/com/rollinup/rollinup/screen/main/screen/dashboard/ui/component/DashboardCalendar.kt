@@ -265,7 +265,7 @@ private fun getStatusColor(
     attendanceStatus: AttendanceStatus,
 ): Color {
     return when (attendanceStatus) {
-        AttendanceStatus.CHECKED_IN -> theme.primary
+        AttendanceStatus.ON_TIME -> theme.primary
         AttendanceStatus.LATE, AttendanceStatus.EXCUSED, AttendanceStatus.APPROVAL_PENDING -> theme.warning
         AttendanceStatus.ABSENT -> theme.danger
         AttendanceStatus.NO_DATA -> theme.chipDisabledBg

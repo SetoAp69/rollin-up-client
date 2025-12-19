@@ -1,14 +1,11 @@
 package com.rollinup.apiservice.data.source.network.datasource.globalsetting
 
-import com.michaelflisar.lumberjack.core.L
 import com.rollinup.apiservice.data.source.network.apiservice.GlobalSettingApiService
 import com.rollinup.apiservice.data.source.network.model.request.globalsetting.EditGlobalSettingBody
 import com.rollinup.apiservice.data.source.network.model.response.ApiResponse
 import com.rollinup.apiservice.data.source.network.model.response.globalsetting.GetGlobalSettingResponse
-import com.rollinup.apiservice.data.source.network.model.response.sse.GeneralSettingResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.sse.deserialize
 import io.ktor.client.plugins.sse.sse
 import io.ktor.client.request.get
 import io.ktor.client.request.patch
@@ -25,10 +22,10 @@ class GlobalSettingApiDataSource(
     private val httpClient: HttpClient,
     private val sseClient: HttpClient,
 ) : GlobalSettingApiService {
-    private val url = "global-setting"
-    override fun listen(): Flow<ApiResponse<GeneralSettingResponse>> = flow {
+    private val url = "/global-setting"
+    override fun listen(): Flow<ApiResponse<Unit>> = flow {
         sseClient.sse(
-            urlString = "/sse",
+            urlString = "$url/sse",
             deserialize = { typeInfo, jsonString ->
                 val json = Json(Json.Default) {
                     ignoreUnknownKeys = true
@@ -39,11 +36,10 @@ class GlobalSettingApiDataSource(
         ) {
             incoming.collect { event ->
                 when (event.event) {
-                    "general-setting" -> {
-                        L.wtf { "Data source receiving event" }
+                    "global-setting-update" -> {
                         emit(
                             ApiResponse.Success(
-                                data = deserialize<GeneralSettingResponse>(event.data)!!,
+                                data = Unit,
                                 statusCode = HttpStatusCode.OK
                             )
                         )

@@ -10,4 +10,5 @@ expect fun AppNavHost(
     initialRoute:String,
     loginData: LoginEntity?,
     onLogout: () -> Unit,
+    onRefreshSetting:()->Unit,
 )

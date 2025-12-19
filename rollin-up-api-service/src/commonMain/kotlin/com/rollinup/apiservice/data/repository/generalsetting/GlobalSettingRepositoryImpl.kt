@@ -21,27 +21,21 @@ class GlobalSettingRepositoryImpl(
     private val ioDispatcher: CoroutineDispatcher,
     private val mapper: GlobalSettingMapper,
 ) : GlobalSettingRepository {
-    override fun listen(): Flow<Result<Unit, NetworkError>> = flow {
-        apiDataSource.listen().collect { response ->
-            when (response) {
-                is ApiResponse.Error -> {
-                    emit(Utils.handleApiError(response.e))
-                }
 
-                is ApiResponse.Success -> {
-                    val data = mapper.mapGlobalSetting(response.data)
-                    localDataSource.updateGlobalSetting(data)
-                    emit(Result.Success(Unit))
+    override fun listen(): Flow<Unit> =
+        flow {
+            apiDataSource.listen().collect { response ->
+                when (response) {
+                    is ApiResponse.Error -> {}
+
+                    is ApiResponse.Success -> {
+                        emit(Unit)
+                    }
                 }
             }
         }
-    }
-        .catch { e -> emit(Utils.handleApiError(e as Exception)) }
-        .flowOn(ioDispatcher)
-
-    override suspend fun getCachedGlobalSetting(): GlobalSetting? {
-        return localDataSource.getLocalGlobalSetting()
-    }
+            .catch { e -> e.printStackTrace() }
+            .flowOn(ioDispatcher)
 
     override fun getGlobalSetting(): Flow<Result<GlobalSetting, NetworkError>> =
         flow {
@@ -76,4 +70,11 @@ class GlobalSettingRepositoryImpl(
             .catch { e -> emit(Utils.handleApiError(e as Exception)) }
             .flowOn(ioDispatcher)
 
+    override suspend fun getCachedGlobalSetting(): GlobalSetting? {
+        return localDataSource.getLocalGlobalSetting()
+    }
+
+    override suspend fun updateCachedGlobalSetting(globalSetting: GlobalSetting) {
+        localDataSource.updateGlobalSetting(globalSetting)
+    }
 }

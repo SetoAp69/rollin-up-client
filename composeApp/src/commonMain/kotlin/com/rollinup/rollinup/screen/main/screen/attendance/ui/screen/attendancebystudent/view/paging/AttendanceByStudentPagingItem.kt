@@ -72,7 +72,7 @@ fun AttendanceByStudentPagingItem(
                         horizontalArrangement = Arrangement.spacedBy(itemGap4)
                     ) {
                         when (item.status) {
-                            AttendanceStatus.LATE, AttendanceStatus.CHECKED_IN -> {
+                            AttendanceStatus.LATE, AttendanceStatus.ON_TIME -> {
                                 Icon(
                                     painter = painterResource(Res.drawable.ic_clock_filled_24),
                                     contentDescription = null,

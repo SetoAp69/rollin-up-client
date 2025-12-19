@@ -22,5 +22,8 @@ data class StudentDashboardUiState(
     val isLocationValid: Boolean? = null,
     val currentLocation: Location? = null,
     val selectedDateRange: List<Long> = emptyList(),
-)
+){
+    val isLoadingRefresh
+        get() = listOf(isLoadingHeader, isLoadingCalendar).any{it}
+}
 

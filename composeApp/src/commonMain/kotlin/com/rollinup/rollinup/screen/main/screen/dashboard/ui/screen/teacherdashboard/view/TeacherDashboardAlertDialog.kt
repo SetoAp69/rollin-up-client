@@ -18,7 +18,7 @@ fun SubmitAttendanceEditDialog(
 ) {
     val message = when {
         initialStatus == AttendanceStatus.ABSENT && status in listOf(
-            AttendanceStatus.CHECKED_IN,
+            AttendanceStatus.ON_TIME,
             AttendanceStatus.LATE
         ) -> {
             "This action will update current attendance data and cancel future permit(s), are you sure you want to continue?"

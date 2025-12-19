@@ -5,14 +5,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.theme.localUser
-import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.viewmodel.StudentDashboardViewmodel
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.view.StudentDashboardContent
+import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.viewmodel.StudentDashboardViewmodel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun StudentDashboardScreen(
     onShowSnackBar: OnShowSnackBar,
     onNavigateTo: (String) -> Unit,
+    onRefreshSetting: () -> Unit,
 ) {
     val viewModel: StudentDashboardViewmodel = koinViewModel()
     val cb = viewModel.getCallback()
@@ -27,7 +28,8 @@ fun StudentDashboardScreen(
         onShowSnackBar = onShowSnackBar,
         uiState = uiState,
         cb = cb,
-        onNavigateTo = onNavigateTo
+        onNavigateTo = onNavigateTo,
+        onRefreshSetting = onRefreshSetting
     )
 }
 

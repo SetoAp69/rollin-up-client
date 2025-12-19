@@ -9,6 +9,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.koin.core.module.Module
 import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.ic_file_export_line_24
 import rollin_up.composeapp.generated.resources.ic_gear_line_24
 
 object ExportFileModule {
@@ -28,7 +29,7 @@ fun ExportAlertDialog(
 
     AlertDialog(
         title = "Export File",
-        icon = Res.drawable.ic_gear_line_24,
+        icon = Res.drawable.ic_file_export_line_24,
         content = "The $fileName data will be exported to your default download path as **$exportedFileName**".toAnnotatedString(),
         onClickCancel = { onDismissRequest(false) },
         onClickConfirm = { onConfirm(exportedFileName) },

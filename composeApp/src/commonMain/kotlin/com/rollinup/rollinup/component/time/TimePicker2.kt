@@ -39,12 +39,11 @@ import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.spacer.screenPadding
 import com.rollinup.rollinup.component.textfield.TextError
 import com.rollinup.rollinup.component.textfield.TextFieldTitle
-import com.rollinup.rollinup.component.theme.LocalGeneralSetting
+import com.rollinup.rollinup.component.theme.LocalGlobalSetting
 import com.rollinup.rollinup.component.theme.Style
-import com.rollinup.rollinup.component.theme.generalSetting
+import com.rollinup.rollinup.component.theme.globalSetting
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.utils.getPlatform
-import com.rollinup.rollinup.component.utils.getScreenHeight
 import dev.darkokoa.datetimewheelpicker.WheelTimePicker
 import dev.darkokoa.datetimewheelpicker.core.WheelPickerDefaults
 import dev.darkokoa.datetimewheelpicker.core.format.TimeFormat
@@ -76,10 +75,10 @@ fun TimePickerTextField(
     val lineColor: Color
     val textColor: Color
 
-    val maxTime = max ?: generalSetting.schoolPeriodEnd
-    val minTime = min ?: generalSetting.checkInPeriodStart
+    val maxTime = max ?: globalSetting.schoolPeriodEnd
+    val minTime = min ?: globalSetting.checkInPeriodStart
 
-    val generalSetting = LocalGeneralSetting.current
+    val generalSetting = LocalGlobalSetting.current
 
     when {
         isError -> {

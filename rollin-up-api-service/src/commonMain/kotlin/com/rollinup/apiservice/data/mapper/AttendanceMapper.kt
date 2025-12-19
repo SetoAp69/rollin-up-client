@@ -39,7 +39,7 @@ class AttendanceMapper {
 
     fun mapDashboardData(data: GetDashboardDataResponse.Data): DashboardDataEntity {
         return DashboardDataEntity(
-            attendanceStatus = AttendanceStatus.fromValue(data.status),
+            attendanceStatus = AttendanceStatus.fromValue(data.status?:""),
             summary = with(data.summary) {
                 AttendanceSummaryEntity(
                     checkedIn = checkedIn,

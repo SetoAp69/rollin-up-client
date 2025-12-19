@@ -20,6 +20,7 @@ import com.rollinup.apiservice.domain.globalsetting.EditGlobalSettingUseCase
 import com.rollinup.apiservice.domain.globalsetting.GetCachedGlobalSettingUseCase
 import com.rollinup.apiservice.domain.globalsetting.GetGlobalSettingUseCase
 import com.rollinup.apiservice.domain.globalsetting.ListenGlobalSettingSSE
+import com.rollinup.apiservice.domain.globalsetting.UpdateCachedGlobalSettingUseCase
 import com.rollinup.apiservice.domain.pagging.GetPagingDummyUseCase
 import com.rollinup.apiservice.domain.permit.CancelPermitUseCase
 import com.rollinup.apiservice.domain.permit.CreatePermitUseCase
@@ -80,6 +81,7 @@ object DomainModule {
         singleOf(::GetCachedGlobalSettingUseCase)
         singleOf(::GetGlobalSettingUseCase)
         singleOf(::EditGlobalSettingUseCase)
+        singleOf(::UpdateCachedGlobalSettingUseCase )
     }
 
     private fun Module.userDomain() {

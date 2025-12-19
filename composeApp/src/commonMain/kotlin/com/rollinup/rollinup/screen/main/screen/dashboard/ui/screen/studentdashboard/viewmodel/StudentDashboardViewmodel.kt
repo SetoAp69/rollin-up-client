@@ -3,7 +3,6 @@ package com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdash
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.michaelflisar.lumberjack.core.L
-import com.rollinup.apiservice.utils.Utils.toJsonString
 import com.rollinup.apiservice.data.source.network.model.request.attendance.CheckInBody
 import com.rollinup.apiservice.data.source.network.model.request.attendance.GetAttendanceListByStudentQueryParams
 import com.rollinup.apiservice.domain.attendance.CheckInUseCase
@@ -13,11 +12,11 @@ import com.rollinup.apiservice.domain.attendance.GetDashboardDataUseCase
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.MultiPlatformFile
 import com.rollinup.apiservice.model.common.Result
+import com.rollinup.apiservice.utils.Utils.toJsonString
 import com.rollinup.common.utils.Utils.now
 import com.rollinup.common.utils.Utils.toEpochMillis
-import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.uistate.StudentDashboardUiState
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.studentdashboard.StudentDashboardCallback
-import dev.jordond.compass.Coordinates
+import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.uistate.StudentDashboardUiState
 import dev.jordond.compass.Location
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,12 +25,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-import kotlin.math.PI
-import kotlin.math.atan2
-import kotlin.math.cos
-import kotlin.math.pow
-import kotlin.math.sin
-import kotlin.math.sqrt
 
 class StudentDashboardViewmodel(
     private val checkInUseCase: CheckInUseCase,
@@ -45,7 +38,7 @@ class StudentDashboardViewmodel(
     fun getCallback() = StudentDashboardCallback(
         onRefresh = ::refresh,
         onShowAttendanceDetail = ::showAttendanceDetail,
-        onUpdateLocation = ::updateLocationValid,
+        onUpdateLocation = ::updateLocation,
         onCheckIn = ::checkIn,
         onUpdateDateRangeSelected = ::updateDateRangeSelected,
         onUpdateLoginData = ::updateLoginData
@@ -88,7 +81,7 @@ class StudentDashboardViewmodel(
                                 attendanceList = result.data
                             )
                         }
-                        L.wtf{
+                        L.wtf {
                             result.data.map { "${it.date} - ${it.status}\n" }.toString()
                         }
                     }
@@ -116,8 +109,8 @@ class StudentDashboardViewmodel(
         val date = LocalDate.now()
 
         viewModelScope.launch {
-            getDashboardDataUseCase(id, date).collectLatest { result->
-                if(result is Result.Success){
+            getDashboardDataUseCase(id, date).collectLatest { result ->
+                if (result is Result.Success) {
                     _uiState.update {
                         it.copy(
                             summary = result.data.summary,
@@ -128,11 +121,13 @@ class StudentDashboardViewmodel(
                 _uiState.update { it.copy(isLoadingHeader = false) }
             }
         }
+        L.w { _uiState.value.summary.toString() }
     }
 
     private fun refresh() {
         getSummary()
         getAttendanceList()
+//                    _globalSetting.value = result.data
     }
 
     private fun showAttendanceDetail(id: String) {
@@ -182,21 +177,14 @@ class StudentDashboardViewmodel(
         }
     }
 
-    private fun updateLocationValid(
+    private fun updateLocation(
         location: Location?,
-        targetLocation: Coordinates,
-        radius: Double,
+        isValid: Boolean,
     ) {
         _uiState.update {
             it.copy(
                 currentLocation = location,
-                isLocationValid = location?.let{
-                    validateLocation(
-                        currentCoordinates = location.coordinates,
-                        targetCoordinates = targetLocation,
-                        maxDistance = radius
-                    )
-                }
+                isLocationValid = isValid
             )
         }
     }
@@ -215,35 +203,6 @@ class StudentDashboardViewmodel(
                 user = loginData
             )
         }
-    }
-
-    private fun validateLocation(
-        currentCoordinates: Coordinates,
-        targetCoordinates: Coordinates,
-        maxDistance: Double,
-    ): Boolean {
-        return maxDistance > calculateDistance(currentCoordinates, targetCoordinates)
-    }
-
-    private fun calculateDistance(
-        current: Coordinates,
-        target: Coordinates,
-    ): Double {
-        val earthRad = 6371
-        val deltaLat = (current.latitude - target.latitude).toRadians()
-        val deltaLon = (current.longitude - target.longitude).toRadians()
-        val a = sin(deltaLat / 2).pow(2.0) +
-                sin(deltaLon / 2).pow(2.0) *
-                cos(current.latitude) * cos(target.latitude)
-
-        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-        val finalDistance = earthRad * c * 1000
-
-        return finalDistance
-    }
-
-    private fun Double.toRadians(): Double {
-        return this * PI / 180.0
     }
 
 }

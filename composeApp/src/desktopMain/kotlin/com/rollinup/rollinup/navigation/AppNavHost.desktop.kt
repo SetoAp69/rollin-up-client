@@ -56,6 +56,7 @@ actual fun AppNavHost(
     initialRoute: String,
     loginData: LoginEntity?,
     onLogout: () -> Unit,
+    onRefreshSetting: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }

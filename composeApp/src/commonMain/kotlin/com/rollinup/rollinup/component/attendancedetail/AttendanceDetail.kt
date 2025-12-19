@@ -118,7 +118,7 @@ private fun AttendanceDetailHeaderSection(
     val tint: Color
 
     when (detail.status) {
-        AttendanceStatus.CHECKED_IN -> {
+        AttendanceStatus.ON_TIME -> {
             tint = theme.success
             icon = Res.drawable.ic_user_check_fill_24
         }

@@ -16,6 +16,7 @@ import com.rollinup.rollinup.screen.test.ui.view.TestScreen
 fun NavGraphBuilder.appGraph(
     navController: NavHostController,
     onShowSnackBar: (String, Boolean) -> Unit,
+    onRefreshSetting:()->Unit,
     onLogout: () -> Unit,
 ) {
     fun navigateTo(route: String) {
@@ -59,7 +60,8 @@ fun NavGraphBuilder.appGraph(
         mainGraph(
             onNavigateTo = ::navigateTo,
             onShowSnackBar = onShowSnackBar,
-            onNavigateUp = ::navigateUp
+            onNavigateUp = ::navigateUp,
+            onRefreshSetting = onRefreshSetting
         )
     }
 

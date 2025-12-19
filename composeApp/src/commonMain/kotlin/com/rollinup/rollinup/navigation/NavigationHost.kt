@@ -10,7 +10,9 @@ import com.rollinup.rollinup.screen.auth.navigation.AuthNavigationRoute
 
 
 @Composable
-fun NavigationHost() {
+fun NavigationHost(
+    onRefreshSetting: () -> Unit,
+) {
     val navController = rememberNavController()
 
     val loginState = LocalAuthViewmodel.current.uiState.value.loginState
@@ -19,19 +21,21 @@ fun NavigationHost() {
 
     AppNavHost(
         navController = navController,
-        loginData = loginData,
         initialRoute = getInitialRoute(
             loginState = loginState,
             loginData = loginData
-        )
-    ) {
-        authViewmodel.logout()
-        navController.navigate(NavigationRoute.Auth.route)
-        navController.popBackStack(
-            inclusive = true,
-            route = navController.previousBackStackEntry?.destination?.route ?: ""
-        )
-    }
+        ),
+        loginData = loginData,
+        {
+            authViewmodel.logout()
+            navController.navigate(NavigationRoute.Auth.route)
+            navController.popBackStack(
+                inclusive = true,
+                route = navController.previousBackStackEntry?.destination?.route ?: ""
+            )
+        },
+        onRefreshSetting = onRefreshSetting
+    )
 }
 
 private fun getInitialRoute(loginState: AuthUiState.LoginState?, loginData: LoginEntity?): String {
@@ -39,6 +43,8 @@ private fun getInitialRoute(loginState: AuthUiState.LoginState?, loginData: Logi
         AuthUiState.LoginState.Login -> NavigationRoute.MainRoute.navigate(loginData?.role!!)
         AuthUiState.LoginState.Logout -> NavigationRoute.Auth.route
         AuthUiState.LoginState.Unverified -> AuthNavigationRoute.UpdatePassword.route
-        null -> { NavigationRoute.SplashScreen.route }
+        null -> {
+            NavigationRoute.SplashScreen.route
+        }
     }
 }

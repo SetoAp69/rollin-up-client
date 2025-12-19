@@ -70,11 +70,10 @@ import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.spacer.screenPaddingValues
 import com.rollinup.rollinup.component.theme.Style
-import com.rollinup.rollinup.component.theme.generalSetting
+import com.rollinup.rollinup.component.theme.globalSetting
 import com.rollinup.rollinup.component.theme.localUser
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.time.SnapListTest
-import com.rollinup.rollinup.component.time.TimeDurationTextFieldTest
 import com.rollinup.rollinup.component.time.TimePickerBottomSheet
 import com.rollinup.rollinup.component.topbar.TopBar
 import com.rollinup.rollinup.component.utils.getScreenHeight
@@ -140,7 +139,8 @@ fun TestScreen(
                 ),
                 onNavigate = {},
                 state = rememberBottomBarState(MainRoute.DashBoardRoute),
-                showBottomBar = true
+                showBottomBar = true,
+                onRefresh = {}
             )
         }
     ) {
@@ -241,8 +241,6 @@ fun TestScreen(
                     showPagingDialog = true
                 }
             )
-
-            TimeDurationTextFieldTest()
 //            FilePicker()
             Button(text = "Show Permit Form") {
                 showPermitForm = true
@@ -258,7 +256,7 @@ fun TestScreen(
             )
             Spacer(itemGap8)
             Text(
-                text = generalSetting.toString(),
+                text = globalSetting.toString(),
                 style = Style.body,
                 color = theme.bodyText,
                 modifier = Modifier.padding(screenPaddingValues)
