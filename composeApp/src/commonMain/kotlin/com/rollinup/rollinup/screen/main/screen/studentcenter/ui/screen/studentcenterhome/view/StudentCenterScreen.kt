@@ -8,7 +8,11 @@ import com.rollinup.rollinup.component.handlestate.HandleState
 import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.theme.localUser
 import com.rollinup.rollinup.screen.main.screen.studentcenter.ui.screen.studentcenterhome.viewmodel.StudentCenterViewModel
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.msg_export_error
+import rollin_up.composeapp.generated.resources.msg_export_success
 
 @Composable
 fun StudentCenterScreen(
@@ -27,8 +31,8 @@ fun StudentCenterScreen(
     }
     HandleState(
         state = uiState.exportState,
-        successMsg = "Success, data successfully exported",
-        errorMsg = "Error, failed to export data, please try again",
+        successMsg = stringResource(Res.string.msg_export_success),
+        errorMsg = stringResource(Res.string.msg_export_error),
         onDispose = cb.onResetMessageState,
         onShowSnackBar = onShowSnackBar,
     )

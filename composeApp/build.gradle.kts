@@ -235,6 +235,12 @@ kotlin {
 android {
     namespace = "com.rollinup.rollinup"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
+//
+    androidResources{
+        generateLocaleConfig = true
+        localeFilters.add("en")
+        localeFilters.add("id")
+    }
 
     defaultConfig {
         applicationId = "com.rollinup.rollinup"
@@ -244,9 +250,6 @@ android {
         versionName = "0.1"
     }
     packaging {
-//        resources {
-//            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-//        }
         resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
         resources.pickFirsts.add("/META-INF/kotlin-jupyter-libraries/libraries.json")
         resources.excludes.add("/META-INF/thirdparty-LICENSE")

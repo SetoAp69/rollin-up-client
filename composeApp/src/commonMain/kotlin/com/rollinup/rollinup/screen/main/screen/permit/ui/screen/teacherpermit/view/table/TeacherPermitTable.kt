@@ -24,6 +24,16 @@ import com.rollinup.rollinup.screen.main.screen.permit.model.teacherpermit.Teach
 import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitapproval.view.PermitApprovalFormDialog
 import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitdetail.view.PermitDetailDialog
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.uistate.TeacherPermitUiState
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_class
+import rollin_up.composeapp.generated.resources.label_created_at
+import rollin_up.composeapp.generated.resources.label_end
+import rollin_up.composeapp.generated.resources.label_full_name
+import rollin_up.composeapp.generated.resources.label_permit_type
+import rollin_up.composeapp.generated.resources.label_reason
+import rollin_up.composeapp.generated.resources.label_start
+import rollin_up.composeapp.generated.resources.label_status
 
 @Composable
 fun TeacherPermitTableContent(
@@ -97,35 +107,36 @@ private fun TeacherPermitTableHeader(
 }
 
 
+@Composable
 private fun getColumn(): List<TableColumn<PermitByClassEntity>> {
     return listOf(
-        TableColumn("Full name") {
+        TableColumn(stringResource(Res.string.label_full_name)) {
             Text(
                 text = it.student.name,
                 style = Style.body,
                 color = theme.bodyText
             )
         },
-        TableColumn("Class",0.5f) {
+        TableColumn(stringResource(Res.string.label_class),0.5f) {
             Text(
                 text = it.student.xClass,
                 style = Style.body,
                 color = theme.bodyText
             )
         },
-        TableColumn("Type", 0.5f) {
+        TableColumn(stringResource(Res.string.label_permit_type), 0.5f) {
             Chip(
                 text = it.type.label,
                 severity = Severity.SECONDARY
             )
         },
-        TableColumn("Status", 0.8f) {
+        TableColumn(stringResource(Res.string.label_status), 0.8f) {
             Chip(
                 text = it.approvalStatus.label,
                 severity = it.approvalStatus.severity
             )
         },
-        TableColumn(title = "Reason", weight = 0.5f) {
+        TableColumn(title = stringResource(Res.string.label_reason), weight = 0.5f) {
             Text(
                 text = it.reason ?: "-",
                 style = Style.body,
@@ -133,17 +144,17 @@ private fun getColumn(): List<TableColumn<PermitByClassEntity>> {
             )
         },
 
-        TableColumn("Start") {
+        TableColumn(stringResource(Res.string.label_start)) {
             DateText(
                 dateString = it.startTime,
             )
         },
-        TableColumn("End") {
+        TableColumn(stringResource(Res.string.label_end)) {
             DateText(
                 dateString = it.endTime,
             )
         },
-        TableColumn("Requested at") {
+        TableColumn(stringResource(Res.string.label_created_at)) {
             DateText(
                 dateString = it.createdAt,
             )

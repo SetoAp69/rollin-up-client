@@ -49,9 +49,11 @@ import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_more_fill_24
 import rollin_up.composeapp.generated.resources.ic_refresh_line_24
+import rollin_up.composeapp.generated.resources.label_rows_per_page
 
 @Composable
 fun <T> Table(
@@ -483,7 +485,7 @@ private fun RowsPerPage(
 
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
-            text = "Rows per page :",
+            text = stringResource(Res.string.label_rows_per_page),
             color = theme.bodyText,
             style = Style.body
         )

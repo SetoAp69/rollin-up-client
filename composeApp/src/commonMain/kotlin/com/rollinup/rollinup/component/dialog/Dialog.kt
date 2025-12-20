@@ -50,8 +50,11 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_close_line_24
+import rollin_up.composeapp.generated.resources.label_close
+import rollin_up.composeapp.generated.resources.label_confirm
 
 @Composable
 fun DialogScreen(
@@ -178,8 +181,8 @@ fun AlertDialog(
     title: String? = null,
     showCancelButton: Boolean = true,
     isSingleButton: Boolean = false,
-    btnConfirmText: String = "Confirm",
-    btnCancelText: String = "Close",
+    btnConfirmText: String = stringResource(Res.string.label_confirm),
+    btnCancelText: String = stringResource(Res.string.label_close),
     icon: DrawableResource? = null,
     iconTint: Color = theme.primary,
     severity: Severity = Severity.PRIMARY,
@@ -218,8 +221,8 @@ fun AlertDialog(
     title: String? = null,
     showCancelButton: Boolean = true,
     isSingleButton: Boolean = false,
-    btnConfirmText: String = "Confirm",
-    btnCancelText: String = "Close",
+    btnConfirmText: String = stringResource(Res.string.label_confirm),
+    btnCancelText: String = stringResource(Res.string.label_close),
     icon: DrawableResource? = null,
     iconTint: Color = theme.primary,
     severity: Severity = Severity.PRIMARY,
@@ -255,8 +258,8 @@ fun AlertDialog(
     title: String? = null,
     showCancelButton: Boolean = true,
     isSingleButton: Boolean = false,
-    btnConfirmText: String = "Confirm",
-    btnCancelText: String = "Close",
+    btnConfirmText: String = stringResource(Res.string.label_confirm),
+    btnCancelText: String = stringResource(Res.string.label_close),
     onClickConfirm: () -> Unit,
     onClickCancel: () -> Unit,
     icon: DrawableResource? = null,

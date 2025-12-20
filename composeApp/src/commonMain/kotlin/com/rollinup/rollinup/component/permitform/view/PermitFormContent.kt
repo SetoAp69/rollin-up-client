@@ -47,8 +47,28 @@ import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.time.TimeDurationTextField
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_drop_down_arrow_line_right_24
+import rollin_up.composeapp.generated.resources.label_absent
+import rollin_up.composeapp.generated.resources.label_attachment
+import rollin_up.composeapp.generated.resources.label_create_permit_request
+import rollin_up.composeapp.generated.resources.label_dispensation
+import rollin_up.composeapp.generated.resources.label_duration
+import rollin_up.composeapp.generated.resources.label_edit_permit_request
+import rollin_up.composeapp.generated.resources.label_note
+import rollin_up.composeapp.generated.resources.label_permit_type
+import rollin_up.composeapp.generated.resources.label_reason
+import rollin_up.composeapp.generated.resources.label_select_permit_duration
+import rollin_up.composeapp.generated.resources.label_submit
+import rollin_up.composeapp.generated.resources.msg_duration_error_invalid
+import rollin_up.composeapp.generated.resources.msg_duration_error_too_early
+import rollin_up.composeapp.generated.resources.msg_duration_error_too_late
+import rollin_up.composeapp.generated.resources.msg_file_error_max_size
+import rollin_up.composeapp.generated.resources.msg_permit_submit_error
+import rollin_up.composeapp.generated.resources.msg_permit_submit_success
+import rollin_up.composeapp.generated.resources.ph_permit_note
+import rollin_up.composeapp.generated.resources.ph_permit_reason
 
 @Composable
 fun PermitFormContent(
@@ -65,8 +85,9 @@ fun PermitFormContent(
             formData = formData
         )
     }
+    val maxFileSizeError = stringResource(Res.string.msg_file_error_max_size)
     FilePicker(
-        title = "Attachment",
+        title = stringResource(Res.string.label_attachment),
         isRequired = true,
         isError = formData.attachmentError != null,
         errorMsg = formData.attachmentError,
@@ -79,7 +100,7 @@ fun PermitFormContent(
 
             if ((it?.readBytes()?.size ?: 0) > 1 * 1024 * 1024) {
                 newValue = null
-                textError = "File size must be less than 1MB"
+                textError = maxFileSizeError
             } else {
                 newValue = it
                 textError = null
@@ -94,7 +115,7 @@ fun PermitFormContent(
         }
     )
     TextField(
-        title = "Note",
+        title = stringResource(Res.string.label_note),
         value = formData.note ?: "",
         onValueChange = {
             onUpdateFormData(
@@ -104,7 +125,7 @@ fun PermitFormContent(
                 )
             )
         },
-        placeholder = "Enter permit note",
+        placeholder = stringResource(Res.string.ph_permit_note),
         isError = formData.noteError != null,
         errorMsg = formData.noteError
     )
@@ -120,7 +141,9 @@ fun PermitFormContent(
 ) {
     val formData = uiState.formData
     val isEdit = uiState.isEdit
-    val title = if (isEdit) "Edit Permit Request" else "Create Permit Request"
+    val title =
+        if (isEdit) stringResource(Res.string.label_edit_permit_request)
+        else stringResource(Res.string.label_create_permit_request)
 
     LoadingOverlay(uiState.isLoadingOverlay)
 
@@ -139,8 +162,8 @@ fun PermitFormContent(
 
     HandleState(
         state = uiState.submitState,
-        successMsg = "Success, Permit request successfully submitted.",
-        errorMsg = "Error, failed to submit permit request, please try again.",
+        successMsg = stringResource(Res.string.msg_permit_submit_success),
+        errorMsg = stringResource(Res.string.msg_permit_submit_error),
         onDispose = cb.onResetMessageState,
         onError = onSuccess,
         onSuccess = onSuccess,
@@ -182,7 +205,7 @@ fun PermitReasonSection(
     )
 
     TextFieldTitle(
-        title = "Reason",
+        title = stringResource(Res.string.label_reason),
         isRequired = true,
     ) {
         RadioSelectorRow(
@@ -213,7 +236,7 @@ fun PermitReasonSection(
                         )
                     )
                 },
-                placeholder = "Enter permit reason",
+                placeholder = stringResource(Res.string.ph_permit_reason),
                 isError = formData.reasonError != null,
                 errorMsg = formData.reasonError
             )
@@ -230,8 +253,8 @@ fun PermitFormDurationSection(
         PermitType.ABSENCE -> {
             @Suppress("UNCHECKED_CAST")
             DateRangePickerField(
-                title = "Duration",
-                placeholder = "Select permit duration",
+                title = stringResource(Res.string.label_duration),
+                placeholder = stringResource(Res.string.label_select_permit_duration),
                 value = formData.duration.filter { it != null } as List<Long>,
                 isError = formData.durationError != null,
                 errorText = formData.durationError
@@ -249,6 +272,10 @@ fun PermitFormDurationSection(
             val schoolStart = globalSetting.schoolPeriodStart
             val schoolEnd = globalSetting.schoolPeriodEnd
 
+            val tooEarlyMsgError = stringResource(Res.string.msg_duration_error_too_early)
+            val tooLateMsgError = stringResource(Res.string.msg_duration_error_too_late)
+            val invalidDurationError = stringResource(Res.string.msg_duration_error_invalid)
+
             TimeDurationTextField(
                 value = formData.duration.map { second ->
                     if (second == null) null
@@ -262,10 +289,10 @@ fun PermitFormDurationSection(
                     val max = value[1] ?: schoolEnd
 
                     val errorMessage = when {
-                        from != null && to == null && from < schoolStart -> "Dispensation can't be start before school period"
-                        to != null && from == null && to > schoolEnd -> "Dispensation must end before school period end"
-                        (to != null && to < min) || (from != null && from > max) -> "Invalid duration ranges"
-                        (value.all { it != null } && to!! > schoolEnd && from!! < schoolStart) -> "Invalid duration ranges"
+                        from != null && to == null && from < schoolStart -> tooEarlyMsgError
+                        to != null && from == null && to > schoolEnd -> tooLateMsgError
+                        (to != null && to < min) || (from != null && from > max) -> invalidDurationError
+                        (value.all { it != null } && to!! > schoolEnd && from!! < schoolStart) -> invalidDurationError
                         else -> null
                     }
 
@@ -282,7 +309,7 @@ fun PermitFormDurationSection(
                 isRequired = true,
                 isError = formData.durationError != null,
                 textError = formData.durationError,
-                title = "Duration"
+                title = stringResource(Res.string.label_duration)
             )
         }
     }
@@ -299,11 +326,11 @@ fun PermitFormHeader(
 
     val options = listOf(
         OptionData(
-            label = "Absent",
+            label = stringResource(Res.string.label_absent),
             value = PermitType.ABSENCE
         ),
         OptionData(
-            label = "Dispensation",
+            label = stringResource(Res.string.label_dispensation),
             value = PermitType.DISPENSATION
         )
     )
@@ -346,7 +373,7 @@ fun PermitFormHeader(
     SingleSelector(
         isShowSelector = isShowSelector,
         onDismissRequest = { isShowSelector = it },
-        title = "Permit Type",
+        title = stringResource(Res.string.label_permit_type),
         value = formData.type,
         options = options,
         onValueChange = {
@@ -368,7 +395,7 @@ fun PermitLoadingContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        val title = if (isEdit) "Edit Permit Request " else "Create Permit Request"
+        val title = if (isEdit) stringResource(Res.string.label_edit_permit_request) else  stringResource(Res.string.label_create_permit_request)
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.Top,
@@ -382,7 +409,7 @@ fun PermitLoadingContent(
             ShimmerEffect(80.dp)
         }
         listOf(
-            "Duration",
+            stringResource(Res.string.label_duration),
             "Attachment",
             "Note"
         ).forEach {
@@ -398,10 +425,9 @@ fun PermitLoadingContent(
             }
         }
         Button(
-            text = "Submit",
+            text = stringResource(Res.string.label_submit),
             modifier = Modifier.fillMaxWidth()
         ) {
         }
-
     }
 }

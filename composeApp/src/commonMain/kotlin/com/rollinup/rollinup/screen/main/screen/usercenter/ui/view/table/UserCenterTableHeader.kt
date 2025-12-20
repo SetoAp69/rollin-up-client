@@ -27,8 +27,14 @@ import com.rollinup.rollinup.screen.main.screen.usercenter.model.UserCenterFilte
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.UserCenterFilterOption
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.createedituser.view.CreateEditUserDialog
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.uistate.UserCenterUiState
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_plus_line_24
+import rollin_up.composeapp.generated.resources.label_all
+import rollin_up.composeapp.generated.resources.label_class
+import rollin_up.composeapp.generated.resources.label_gender
+import rollin_up.composeapp.generated.resources.label_role
+import rollin_up.composeapp.generated.resources.label_search
 
 @Composable
 fun UserCenterTableFilter(
@@ -52,7 +58,7 @@ fun UserCenterTableFilter(
     ) {
         Box(modifier = Modifier.width(320.dp)) {
             SearchTextField(
-                title = "Search",
+                title = stringResource(Res.string.label_search),
                 onValueChange = {},
                 value = uiState.searchQuery,
                 onSearch = onSearch
@@ -93,8 +99,8 @@ private fun UserCenterFilterRow(
         showReset = filterData != UserCenterFilterData(),
     ) {
         MultiDropDownSelector(
-            title = "Class",
-            placeHolder = "All",
+            title = stringResource(Res.string.label_class),
+            placeHolder = stringResource(Res.string.label_all),
             isLoading = isLoading,
             value = filterData.classKey,
             options = filterOptions.classOptions,
@@ -108,9 +114,9 @@ private fun UserCenterFilterRow(
         )
 
         MultiDropDownSelector(
-            title = "Role",
+            title = stringResource(Res.string.label_role),
             isLoading = isLoading,
-            placeHolder = "All",
+            placeHolder = stringResource(Res.string.label_all),
             value = filterData.role,
             options = filterOptions.roleOptions,
             onValueChange = {
@@ -123,8 +129,8 @@ private fun UserCenterFilterRow(
         )
 
         MultiDropDownSelector(
-            title = "Gender",
-            placeHolder = "All",
+            title = stringResource(Res.string.label_gender),
+            placeHolder = stringResource(Res.string.label_all),
             value = filterData.gender,
             options = filterOptions.genderOptions,
             onValueChange = {

@@ -9,6 +9,9 @@ import com.rollinup.rollinup.component.dropdown.DropDownMenu
 import com.rollinup.rollinup.component.dropdown.DropDownMenuItem
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.UserCenterAction
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.msg_no_action_available
 
 @Composable
 fun UserCenterTableDropDown(
@@ -25,7 +28,7 @@ fun UserCenterTableDropDown(
     ) {
         if (listAction.isEmpty()) {
             DropDownMenuItem(
-                label = "No Action available",
+                label = stringResource(Res.string.msg_no_action_available),
                 onClick = { onDismissRequest(false) },
             )
         } else {

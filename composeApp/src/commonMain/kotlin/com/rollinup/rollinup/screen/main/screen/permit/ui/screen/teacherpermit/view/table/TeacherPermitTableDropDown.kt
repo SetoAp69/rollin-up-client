@@ -6,6 +6,9 @@ import com.rollinup.apiservice.model.permit.PermitByClassEntity
 import com.rollinup.rollinup.component.dropdown.DropDownMenu
 import com.rollinup.rollinup.component.dropdown.DropDownMenuItem
 import com.rollinup.rollinup.screen.main.screen.permit.model.teacherpermit.TeacherPermitAction
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.msg_no_action_available
 
 @Composable
 fun TeacherPermitDropDown(
@@ -23,7 +26,7 @@ fun TeacherPermitDropDown(
     ) {
         if (actions.isEmpty()) {
             DropDownMenuItem(
-                label = "No action available",
+                label = stringResource(Res.string.msg_no_action_available),
                 onClick = {}
             )
         } else {

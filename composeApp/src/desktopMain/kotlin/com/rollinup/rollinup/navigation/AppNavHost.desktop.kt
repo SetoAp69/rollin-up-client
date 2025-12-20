@@ -110,6 +110,7 @@ actual fun AppNavHost(
                 },
                 navController = navController,
                 onLogout = onLogout,
+                onRefreshSetting = {},
             )
         }
     }

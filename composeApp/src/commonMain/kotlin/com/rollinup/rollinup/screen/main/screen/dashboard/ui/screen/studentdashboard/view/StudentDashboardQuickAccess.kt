@@ -40,7 +40,7 @@ fun StudentDashboardQuickAccess(
                 onClick = cb.onCreatePermit
             )
             DashBoardButton(
-                text = "Permit History",
+                text = "Permit",
                 icon = Res.drawable.ic_mail_open_line_24,
                 isEnabled = true,
                 onClick = cb.onGoToPermitHistory

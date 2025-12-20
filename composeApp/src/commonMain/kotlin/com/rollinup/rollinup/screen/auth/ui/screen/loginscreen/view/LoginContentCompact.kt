@@ -11,9 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.button.ButtonType
-import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.spacer.screenPaddingValues
@@ -25,6 +25,12 @@ import com.rollinup.rollinup.screen.auth.model.login.LoginCallback
 import com.rollinup.rollinup.screen.auth.model.login.LoginFormData
 import com.rollinup.rollinup.screen.auth.navigation.AuthNavigationRoute
 import com.rollinup.rollinup.screen.auth.ui.screen.loginscreen.uistate.LoginUiState
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_login
+import rollin_up.composeapp.generated.resources.msg_forgot_password
+import rollin_up.composeapp.generated.resources.ph_password
+import rollin_up.composeapp.generated.resources.ph_username_email
 
 
 @Composable
@@ -51,7 +57,7 @@ fun LoginContentCompact(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "I forgot my password",
+                text = stringResource(Res.string.msg_forgot_password),
                 style = Style.body,
                 color = theme.textPrimary
             )
@@ -84,7 +90,7 @@ private fun LoginForm(
             .padding(screenPaddingValues)
     ) {
         TextField(
-            placeholder = "Enter your email/username",
+            placeholder = stringResource(Res.string.ph_username_email),
             value = formData.email,
             maxChar = 30,
             onValueChange = { value ->
@@ -109,7 +115,7 @@ private fun LoginForm(
                     )
                 )
             },
-            placeholder = "Enter your password",
+            placeholder = stringResource(Res.string.ph_password),
             modifier = Modifier.fillMaxWidth(),
             isError = formData.passwordError != null,
             errorMsg = formData.passwordError
@@ -121,7 +127,7 @@ private fun LoginForm(
             onClick = {
                 onSubmit(formData)
             },
-            text = "Login",
+            text = stringResource(Res.string.label_login),
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -133,21 +139,9 @@ private fun LoginHeader() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp)
-//            .background(
-//                shape = RoundedCornerShape(bottomEndPercent = 50, bottomStartPercent = 50),
-//                color = theme.primary
-//            )
-        ,
+            .height(200.dp),
         contentAlignment = Alignment.Center
     ) {
-//        Image(
-//            modifier = Modifier.fillMaxSize(),
-//            contentScale = ContentScale.FillBounds,
-//            colorFilter = ColorFilter.tint(color = theme.primary, blendMode = BlendMode.Color),
-//            painter = painterResource(Res.drawable.wavy_header_background),
-//            contentDescription = null,
-//        )
         LoginBackgroundShape()
     }
 }

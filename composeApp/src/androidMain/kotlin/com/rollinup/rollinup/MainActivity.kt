@@ -32,6 +32,7 @@ class MainActivity : ComponentActivity() {
                 AndroidDataModule() + AppModule()
             )
         }
+        
         setContent {
             AndroidApp {
                 finish()

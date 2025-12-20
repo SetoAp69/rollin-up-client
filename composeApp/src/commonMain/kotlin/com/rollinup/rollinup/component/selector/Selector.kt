@@ -10,14 +10,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -29,20 +26,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.rollinup.common.model.OptionData
-import com.rollinup.rollinup.component.bottomsheet.BottomSheet
 import com.rollinup.rollinup.component.button.Button
-import com.rollinup.rollinup.component.dropdown.DropDownMenu
 import com.rollinup.rollinup.component.loading.ShimmerEffect
-import com.rollinup.rollinup.component.model.Platform
 import com.rollinup.rollinup.component.ripple.CustomRipple
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
@@ -53,18 +44,18 @@ import com.rollinup.rollinup.component.textfield.TextFieldDefaults
 import com.rollinup.rollinup.component.textfield.TextFieldTitle
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
-import com.rollinup.rollinup.component.utils.getPlatform
-import com.rollinup.rollinup.component.utils.getScreenHeight
-import com.rollinup.rollinup.component.utils.getScreenWidth
 import com.rollinup.rollinup.component.utils.isCompact
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_checkbox_blank_line_24
 import rollin_up.composeapp.generated.resources.ic_checkbox_selected_fill_24
-import rollin_up.composeapp.generated.resources.ic_close_line_24
 import rollin_up.composeapp.generated.resources.ic_drop_down_arrow_line_right_24
 import rollin_up.composeapp.generated.resources.ic_radio_selected_line_24
 import rollin_up.composeapp.generated.resources.ic_radio_unselect_line_24
+import rollin_up.composeapp.generated.resources.label_apply
+import rollin_up.composeapp.generated.resources.label_select
+import rollin_up.composeapp.generated.resources.label_select_all
 
 @Composable
 fun <T> SingleSelectorField(
@@ -75,7 +66,7 @@ fun <T> SingleSelectorField(
     isEnabled: Boolean = true,
     textError: String? = null,
     onValueChange: (T) -> Unit,
-    placeHolder: String = "Select",
+    placeHolder: String = stringResource(Res.string.label_select),
 ) {
     var showSelector by remember { mutableStateOf(false) }
     val rotationState by animateFloatAsState(if (showSelector) 90F else 0F)
@@ -217,21 +208,21 @@ fun <T> SingleDropDownSelector(
     contentColor: Color = theme.textPrimary,
     backgroundColor: Color = theme.secondary,
     placeHolder: String = "-",
-    isError:Boolean = false,
+    isError: Boolean = false,
     width: Dp? = 100.dp,
-    isLoading:Boolean = false,
+    isLoading: Boolean = false,
     options: List<OptionData<T>>,
     onValueChange: (T) -> Unit,
 ) {
-    val backgroundColor = if(isError) theme.textFieldBgError else backgroundColor
-    val contentColor = if(isError) theme.danger else contentColor
+    val backgroundColor = if (isError) theme.textFieldBgError else backgroundColor
+    val contentColor = if (isError) theme.danger else contentColor
 
     var showSelector by remember { mutableStateOf(false) }
     val rotationState by animateFloatAsState(targetValue = if (showSelector) 90f else 0F)
 
     val sValue = options.find {
         it.value == value
-    }?.label?:placeHolder
+    }?.label ?: placeHolder
 
     val modifier = width?.let {
         Modifier.width(it)
@@ -421,7 +412,7 @@ fun <T> MultiSelectorContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = if (isCompact) 12.dp else 16.dp),
-            text = "Apply"
+            text = stringResource(Res.string.label_apply)
         ) {
             onValueChange(tempValue)
         }
@@ -566,7 +557,7 @@ private fun SelectAll(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Select All",
+                text = stringResource(Res.string.label_select_all),
                 color = theme.bodyText,
                 style = textStyle
             )

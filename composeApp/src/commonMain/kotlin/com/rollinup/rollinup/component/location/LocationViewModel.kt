@@ -2,7 +2,6 @@ package com.rollinup.rollinup.component.location
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.michaelflisar.lumberjack.core.L
 import dev.jordond.compass.Priority
 import dev.jordond.compass.geolocation.Geolocator
 import dev.jordond.compass.geolocation.LocationRequest
@@ -84,9 +83,7 @@ class LocationViewModel(
 
                 else -> {}
             }
-            L.wtf {
-                "Tracking Status : $status"
-            }
+
         }
     }
 

@@ -10,7 +10,11 @@ import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.theme.localUser
 import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.viewmodel.TeacherPermitViewModel
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.msg_export_error
+import rollin_up.composeapp.generated.resources.msg_export_success
 
 @Composable
 fun TeacherPermitScreen(
@@ -28,8 +32,8 @@ fun TeacherPermitScreen(
     }
     HandleState(
         state = uiState.exportState,
-        successMsg = "Success, data successfully exported",
-        errorMsg = "Error, failed to export data, please try again",
+        successMsg = stringResource(Res.string.msg_export_success),
+        errorMsg = stringResource(Res.string.msg_export_error),
         onDispose = cb.onResetMessageState,
         onShowSnackBar = onShowSnackBar,
     )

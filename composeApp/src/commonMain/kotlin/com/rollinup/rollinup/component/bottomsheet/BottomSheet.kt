@@ -32,6 +32,9 @@ import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.theme.theme
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_apply
 
 @Composable
 fun BottomSheet(
@@ -113,7 +116,7 @@ fun BottomSheet(
     modifier: Modifier = Modifier,
     isShowSheet: Boolean,
     onClickConfirm: () -> Unit,
-    btnConfirmText: String = "Apply",
+    btnConfirmText: String = stringResource(Res.string.label_apply),
     skipPartialExpanded: Boolean = true,
     dragHandleColor: Color = theme.textFieldBackGround,
     containerColor: Color = theme.popUpBg,

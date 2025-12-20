@@ -28,8 +28,13 @@ import com.rollinup.rollinup.component.utils.Utils
 import com.rollinup.rollinup.screen.auth.model.resetpassword.ResetPasswordCallback
 import com.rollinup.rollinup.screen.auth.ui.screen.resetpassword.uistate.ResetPasswordUiState
 import com.rollinup.rollinup.screen.auth.ui.screen.resetpassword.view.OTPTextField
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_mail_line_24
+import rollin_up.composeapp.generated.resources.label_back_to_login
+import rollin_up.composeapp.generated.resources.label_email
+import rollin_up.composeapp.generated.resources.label_submit
+import rollin_up.composeapp.generated.resources.ph_email
 
 @Composable
 internal fun ResetPasswordFormDesktop(
@@ -92,8 +97,8 @@ private fun SubmitEmailForm(
                 emailError = null
 
             },
-            placeholder = "Enter your email or username",
-            title = "Email or username",
+            placeholder = stringResource(Res.string.ph_email),
+            title = stringResource(Res.string.label_email),
             isError = emailError != null,
             errorMsg = emailError,
             leadingIcon = Res.drawable.ic_mail_line_24,
@@ -109,11 +114,11 @@ private fun SubmitEmailForm(
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            text = "Submit"
+            text = stringResource(Res.string.label_submit)
         )
         Spacer(itemGap8)
         Text(
-            text = "Back to Login",
+            text = stringResource(Res.string.label_back_to_login),
             style = Style.title,
             color = theme.textPrimary,
             modifier = Modifier

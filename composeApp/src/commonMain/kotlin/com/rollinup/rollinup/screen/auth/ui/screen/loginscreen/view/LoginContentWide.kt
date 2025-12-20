@@ -31,6 +31,12 @@ import com.rollinup.rollinup.screen.auth.model.login.LoginCallback
 import com.rollinup.rollinup.screen.auth.model.login.LoginFormData
 import com.rollinup.rollinup.screen.auth.navigation.AuthNavigationRoute
 import com.rollinup.rollinup.screen.auth.ui.screen.loginscreen.uistate.LoginUiState
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_login
+import rollin_up.composeapp.generated.resources.msg_forgot_password
+import rollin_up.composeapp.generated.resources.ph_password
+import rollin_up.composeapp.generated.resources.ph_username_email
 
 @Composable
 fun LoginContentWide(
@@ -100,7 +106,7 @@ fun RowScope.LoginForm(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Login",
+            text = stringResource(Res.string.label_login),
             style = Style.header,
             color = theme.bodyText,
         )
@@ -116,7 +122,7 @@ fun RowScope.LoginForm(
                 )
 
             },
-            placeholder = "Enter your email/username",
+            placeholder = stringResource(Res.string.ph_username_email),
             isError = formData.emailError != null,
             errorMsg = formData.emailError,
         )
@@ -130,13 +136,13 @@ fun RowScope.LoginForm(
                     )
                 )
             },
-            placeholder = "Enter your password",
+            placeholder =stringResource(Res.string.ph_password),
             modifier = Modifier.fillMaxWidth(),
             isError = formData.passwordError != null,
             errorMsg = formData.passwordError,
         )
         Button(
-            text = "Login",
+            text = stringResource(Res.string.label_login),
             type = ButtonType.FILLED,
             severity = Severity.PRIMARY,
             onClick = {
@@ -151,7 +157,7 @@ fun RowScope.LoginForm(
                 }
         ) {
             Text(
-                text = "I forgot my password",
+                text = stringResource(Res.string.msg_forgot_password),
                 style = Style.body,
                 color = theme.textPrimary
             )

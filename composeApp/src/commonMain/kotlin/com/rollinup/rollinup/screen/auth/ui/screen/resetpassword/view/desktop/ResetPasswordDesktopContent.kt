@@ -18,6 +18,9 @@ import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.auth.model.resetpassword.ResetPasswordCallback
 import com.rollinup.rollinup.screen.auth.ui.screen.resetpassword.uistate.ResetPasswordUiState
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_account_recovery
 
 @Composable
 fun ResetPasswordDesktopContent(
@@ -47,7 +50,7 @@ fun ResetPasswordDesktopContent(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Account Recovery",
+                        text = stringResource(Res.string.label_account_recovery),
                         color = theme.bodyText,
                         style = Style.headerBold
                     )

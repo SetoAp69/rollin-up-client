@@ -10,6 +10,11 @@ import com.rollinup.rollinup.component.filter.FilterSelector
 import com.rollinup.rollinup.component.filter.FilterSelectorBottomSheet
 import com.rollinup.rollinup.screen.main.screen.studentcenter.model.StudentCenterFilterData
 import com.rollinup.rollinup.screen.main.screen.studentcenter.ui.screen.studentcenterhome.uistate.StudentCenterUiState
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_cancel
+import rollin_up.composeapp.generated.resources.label_class
+import rollin_up.composeapp.generated.resources.label_gender
 
 @Composable
 fun StudentCenterFilterSheet(
@@ -35,7 +40,7 @@ fun StudentCenterFilterSheet(
     ) {
         FilterSelector(
             isLoading = uiState.isLoadingFilter,
-            title = "Class",
+            title = stringResource(Res.string.label_class),
             options = uiState.classOptions,
             value = tempData.classX,
             onValueChange = {
@@ -45,7 +50,7 @@ fun StudentCenterFilterSheet(
 
         FilterSelector(
             isLoading = uiState.isLoading,
-            title = "Gender",
+            title = stringResource(Res.string.label_gender),
             options = uiState.genderOptions,
             value = tempData.gender,
             onValueChange = {

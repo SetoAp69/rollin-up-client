@@ -21,8 +21,10 @@ import com.rollinup.rollinup.component.topbar.BaseTopBar
 import com.rollinup.rollinup.component.topbar.TopAppBarDefaults
 import com.rollinup.rollinup.component.utils.getPlatform
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_info_line_24
+import rollin_up.composeapp.generated.resources.label_login
 
 @Composable
 fun LoginTopAppBar(
@@ -59,7 +61,7 @@ fun LoginTopBar(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Login",
+                    text = stringResource(Res.string.label_login),
                     style = Style.header,
                     color = theme.textBtnPrimary
                 )

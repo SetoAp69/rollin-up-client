@@ -52,6 +52,9 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_apply
 
 
 @Composable
@@ -205,7 +208,7 @@ fun TimePickerDropDown(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = screenPadding),
-                text = "Apply"
+                text = stringResource(Res.string.label_apply)
             ) {
                 onValueChange(tempValue)
                 onDismissRequest(false)
@@ -260,7 +263,7 @@ fun TimePickerDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = screenPadding),
-                    text = "Apply"
+                    text =stringResource(Res.string.label_apply)
                 ) {
                     onValueChange(tempValue)
                     onDismissRequest(false)
@@ -300,7 +303,7 @@ fun TimePickerBottomSheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            text = "Apply"
+            text =stringResource(Res.string.label_apply)
         ) {
             onValueChange(tempValue)
             onDismissRequest(false)

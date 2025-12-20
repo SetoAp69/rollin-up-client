@@ -2,7 +2,6 @@ package com.rollinup.rollinup.screen.main.screen.dashboard.model.studentdashboar
 
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.MultiPlatformFile
-import dev.jordond.compass.Coordinates
 import dev.jordond.compass.Location
 
 data class StudentDashboardCallback(

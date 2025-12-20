@@ -8,6 +8,9 @@ import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.profile.profilepopup.view.screen.ProfileScreen
 import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.topbar.TopBar
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_student_profile
 
 @Composable
 fun StudentProfileScreen(
@@ -21,7 +24,7 @@ fun StudentProfileScreen(
                 onClickMenu = {},
                 menu = emptyList(),
                 onNavigateUp = onNavigateUp,
-                title = "Student Profile"
+                title = stringResource(Res.string.label_student_profile)
             )
         }
     ) {

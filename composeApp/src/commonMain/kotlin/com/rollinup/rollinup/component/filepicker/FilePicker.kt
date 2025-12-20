@@ -40,10 +40,12 @@ import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.utils.applyIf
 import com.rollinup.rollinup.component.utils.getPlatform
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_delete_line_24
 import rollin_up.composeapp.generated.resources.ic_edit_line_24
 import rollin_up.composeapp.generated.resources.ic_upload_fill_24
+import rollin_up.composeapp.generated.resources.label_upload
 
 @Composable
 expect fun FileHandler(
@@ -261,7 +263,7 @@ private fun FilePickerNullContent(
         )
         Spacer(itemGap8)
         Text(
-            text = "Upload File",
+            text = stringResource(Res.string.label_upload),
             style = Style.body,
             color = contentColor
         )

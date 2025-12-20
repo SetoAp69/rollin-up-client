@@ -35,20 +35,10 @@ fun SplashScreen(
                 true -> {
                     val loginData = uiState.loginData!!
                     onLogin(loginData)
-//                    navController.navigate(NavigationRoute.MainRoute.navigate(loginData.role)) {
-//                        popUpTo(NavigationRoute.SplashScreen.route) {
-//                            inclusive = true
-//                        }
-//                    }
                 }
 
                 false -> {
                     onGoToLogin()
-//                    navController.navigate(AuthNavigationRoute.Login.route) {
-//                        popUpTo(NavigationRoute.SplashScreen.route) {
-//                            inclusive = true
-//                        }
-//                    }
                 }
             }
         }

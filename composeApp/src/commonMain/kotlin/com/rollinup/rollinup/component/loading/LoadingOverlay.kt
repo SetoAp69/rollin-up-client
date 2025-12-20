@@ -62,14 +62,7 @@ fun LottieAnimation() {
             composition = lottieAnimation,
             iteration = Compottie.IterateForever,
             iterations = Compottie.IterateForever,
-//            reverseOnRepeat = ,
-//            speed = ,
-//            clipSpec = ,
-//            initialProgress = ,
             continueFromPreviousAnimate = true ,
-//            cancellationBehavior = ,
-//            ignoreSystemAnimationsDisabled = ,
-//            useCompositionFrameRate = ,
         )
     }
 

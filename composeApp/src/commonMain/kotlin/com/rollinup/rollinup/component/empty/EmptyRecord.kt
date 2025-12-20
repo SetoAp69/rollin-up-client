@@ -20,7 +20,9 @@ import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.rememberLottieAnimatable
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.msg_record_empty
 
 @Composable
 fun EmptyRecord() {
@@ -50,7 +52,7 @@ fun EmptyRecord() {
             )
             Spacer(12.dp)
             Text(
-                text = "Record is Empty",
+                text = stringResource(Res.string.msg_record_empty),
                 style = Style.popupBody,
                 color = theme.textPrimary
             )

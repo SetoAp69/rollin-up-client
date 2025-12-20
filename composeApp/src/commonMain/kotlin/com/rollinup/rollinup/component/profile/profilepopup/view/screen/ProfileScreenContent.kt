@@ -42,7 +42,9 @@ import com.rollinup.rollinup.component.textfield.PhoneNumberTextField
 import com.rollinup.rollinup.component.textfield.TextField
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.Res.string
 import rollin_up.composeapp.generated.resources.ic_calendar_fill_24
 import rollin_up.composeapp.generated.resources.ic_female_line_24
 import rollin_up.composeapp.generated.resources.ic_home_line_24
@@ -52,6 +54,33 @@ import rollin_up.composeapp.generated.resources.ic_male_line_24
 import rollin_up.composeapp.generated.resources.ic_phone_line_24
 import rollin_up.composeapp.generated.resources.ic_user_board_line_24
 import rollin_up.composeapp.generated.resources.ic_user_line_24
+import rollin_up.composeapp.generated.resources.label_address
+import rollin_up.composeapp.generated.resources.label_birthday
+import rollin_up.composeapp.generated.resources.label_cancel
+import rollin_up.composeapp.generated.resources.label_class
+import rollin_up.composeapp.generated.resources.label_edit
+import rollin_up.composeapp.generated.resources.label_email
+import rollin_up.composeapp.generated.resources.label_first_name
+import rollin_up.composeapp.generated.resources.label_full_name
+import rollin_up.composeapp.generated.resources.label_gender
+import rollin_up.composeapp.generated.resources.label_id
+import rollin_up.composeapp.generated.resources.label_last_name
+import rollin_up.composeapp.generated.resources.label_phone
+import rollin_up.composeapp.generated.resources.label_role
+import rollin_up.composeapp.generated.resources.label_student_id
+import rollin_up.composeapp.generated.resources.label_submit
+import rollin_up.composeapp.generated.resources.msg_address_error_max
+import rollin_up.composeapp.generated.resources.msg_birthday_error_empty
+import rollin_up.composeapp.generated.resources.msg_first_name_max_error
+import rollin_up.composeapp.generated.resources.msg_last_name_max_error
+import rollin_up.composeapp.generated.resources.msg_phone_error_max
+import rollin_up.composeapp.generated.resources.msg_user_edit_error
+import rollin_up.composeapp.generated.resources.msg_user_edit_success
+import rollin_up.composeapp.generated.resources.ph_address
+import rollin_up.composeapp.generated.resources.ph_first_name
+import rollin_up.composeapp.generated.resources.ph_last_name
+import rollin_up.composeapp.generated.resources.ph_phone
+import rollin_up.composeapp.generated.resources.ph_select_birthday
 
 @Composable
 fun ProfileScreenContent(
@@ -61,8 +90,8 @@ fun ProfileScreenContent(
 ) {
     HandleState(
         state = uiState.editState,
-        successMsg = "Success, user data successfully edited.",
-        errorMsg = "Error, failed to edit user data, please try again.",
+        successMsg = stringResource(string.msg_user_edit_success),
+        errorMsg = stringResource(string.msg_user_edit_error),
         onDispose = { cb.onResetMessageState() },
         onShowSnackBar = onShowSnackBar,
         onSuccess = {
@@ -102,7 +131,7 @@ fun ProfileScreenContent(
                 if (uiState.isEdit) {
                     Spacer(itemGap8)
                     Button(
-                        text = "Submit"
+                        text = stringResource(string.label_submit)
                     ) {
                         cb.onSubmit(uiState.formData)
                     }
@@ -145,7 +174,8 @@ private fun ProfileHeaderSection(
             color = theme.bodyText,
         )
         if (uiState.showEdit) {
-            val text = if (uiState.isEdit) "Cancel" else "Edit"
+            val text =
+                if (uiState.isEdit) stringResource(string.label_cancel) else stringResource(string.label_edit)
             Text(
                 text = text,
                 style = Style.title,
@@ -168,47 +198,47 @@ private fun ProfileInfoSection(
     }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         ProfileInfoField(
-            title = "Full Name",
+            title = stringResource(string.label_full_name),
             icon = Res.drawable.ic_user_line_24,
             value = userDetail.fullName
         )
         ProfileInfoField(
-            title = "ID",
+            title = stringResource(string.label_student_id),
             icon = Res.drawable.ic_id_card_line_24,
             value = userDetail.id
         )
         ProfileInfoField(
-            title = "Class",
+            title = stringResource(string.label_class),
             icon = Res.drawable.ic_user_board_line_24,
             value = userDetail.classX?.name ?: "-"
         )
         ProfileInfoField(
-            title = "Role",
+            title = stringResource(string.label_role),
             icon = Res.drawable.ic_user_board_line_24,
             value = userDetail.role.name
         )
         ProfileInfoField(
-            title = "Email",
+            title = stringResource(string.label_email),
             icon = Res.drawable.ic_mail_user_line_24,
             value = userDetail.email
         )
         ProfileInfoField(
-            title = "Birthday",
+            title = stringResource(string.label_birthday),
             icon = Res.drawable.ic_calendar_fill_24,
             value = userDetail.birthDay
         )
         ProfileInfoField(
-            title = "Gender",
+            title = stringResource(string.label_gender),
             icon = genderIcon,
             value = userDetail.gender.label
         )
         ProfileInfoField(
-            title = "Phone",
+            title = stringResource(string.label_phone),
             icon = Res.drawable.ic_phone_line_24,
             value = userDetail.phoneNumber
         )
         ProfileInfoField(
-            title = "Address",
+            title = stringResource(string.label_address),
             icon = Res.drawable.ic_home_line_24,
             value = userDetail.address
         )
@@ -241,18 +271,21 @@ private fun EditProfileFormNameSection(
     formData: EditProfileFormData,
     onUpdateFormData: (EditProfileFormData) -> Unit,
 ) {
+    val firstNameErrorMsg = stringResource(string.msg_first_name_max_error)
+    val lastNameErrorMsg = stringResource(string.msg_last_name_max_error)
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Top
     ) {
         Box(modifier = Modifier.weight(1f)) {
             TextField(
-                title = "First name",
+                title = stringResource(string.label_first_name),
                 value = formData.firstName ?: "",
                 maxChar = 15,
                 onValueChange = { value ->
                     val errorMsg = if (value.length > 15) {
-                        "First name can't be more than 15 characters"
+                        firstNameErrorMsg
                     } else {
                         null
                     }
@@ -265,18 +298,18 @@ private fun EditProfileFormNameSection(
                 },
                 isError = formData.firstNameError != null,
                 errorMsg = formData.firstNameError,
-                placeholder = "Enter first name",
+                placeholder = stringResource(string.ph_first_name),
             )
         }
         Spacer(itemGap8)
         Box(modifier = Modifier.weight(1f)) {
             TextField(
-                title = "Last name",
+                title = stringResource(string.label_last_name),
                 value = formData.lastName ?: "",
                 maxChar = 15,
                 onValueChange = { value ->
                     val errorMsg = if (value.length > 15) {
-                        "Last name can't be more than 15 characters"
+                        lastNameErrorMsg
                     } else {
                         null
                     }
@@ -289,7 +322,7 @@ private fun EditProfileFormNameSection(
                 },
                 isError = formData.lastNameError != null,
                 errorMsg = formData.lastName,
-                placeholder = "Enter last name",
+                placeholder = stringResource(string.ph_last_name),
             )
         }
     }
@@ -303,43 +336,23 @@ private fun EditProfileFormAdditionalSection(
     val formData = uiState.formData
 
     ProfileInfoField(
-        title = "Email",
+        title = stringResource(string.label_email),
         icon = Res.drawable.ic_mail_user_line_24,
         value = uiState.userDetail.email,
         enabled = false
     )
 
 //    TODO: Make Email editable for next sprint
-//    TextField(
-//        title = "Email",
-//        value = formData.email ?: "",
-//        maxChar = 15,
-//        onValueChange = { value ->
-//            val errorMsg = if (value.length > 30) {
-//                "Email can't be more than 30 characters"
-//            } else {
-//                null
-//            }
-//            onUpdateFormData(
-//                formData.copy(
-//                    email = value,
-//                    emailError = errorMsg
-//                )
-//            )
-//        },
-//        isError = formData.emailError != null,
-//        errorMsg = formData.email,
-//        placeholder = "Enter email",
-//    )
+
     Row {
         Box(modifier = Modifier.weight(1f)) {
             SingleDatePickerField(
-                title = "Birthday",
-                placeholder = "Select birthday",
+                title = stringResource(string.label_birthday),
+                placeholder = stringResource(string.ph_select_birthday),
                 value = formData.birthDay,
                 isError = formData.birthDayError,
                 isAllSelectable = true,
-                errorText = "Birthday can't be empty",
+                errorText = stringResource(string.msg_birthday_error_empty),
                 enabled = true,
                 isDisablePastSelection = false,
                 onValueChange = {
@@ -356,7 +369,7 @@ private fun EditProfileFormAdditionalSection(
         Spacer(itemGap8)
         Box(modifier = Modifier.weight(1f)) {
             SingleSelectorField(
-                title = "Gender",
+                title = stringResource(string.label_gender),
                 value = formData.gender,
                 options = uiState.genderOptions,
                 onValueChange = {
@@ -371,11 +384,13 @@ private fun EditProfileFormAdditionalSection(
 
     }
 
+    val phoneErrorMessage = stringResource(string.msg_phone_error_max)
+    val addressErrorMessage = stringResource(string.msg_address_error_max)
     PhoneNumberTextField(
         value = formData.phone ?: "",
         onValueChange = { value ->
             val errorMsg = if (value.length > 16) {
-                "Phone number can't be more than 16 characters"
+                phoneErrorMessage
             } else {
                 null
             }
@@ -386,18 +401,18 @@ private fun EditProfileFormAdditionalSection(
                 )
             )
         },
-        placeholder = "Enter phone number",
-        title = "Phone",
+        placeholder = stringResource(string.ph_phone),
+        title = stringResource(string.label_phone),
         isError = formData.phoneError != null,
         errorMsg = formData.phoneError,
     )
     TextField(
-        title = "Address",
+        title = stringResource(string.label_address),
         value = formData.address ?: "",
         maxChar = 15,
         onValueChange = { value ->
             val errorMsg = if (value.length > 120) {
-                "Address can't be more than 30 characters"
+                addressErrorMessage
             } else {
                 null
             }
@@ -410,7 +425,7 @@ private fun EditProfileFormAdditionalSection(
         },
         isError = formData.addressError != null,
         errorMsg = formData.address,
-        placeholder = "Enter address",
+        placeholder = stringResource(string.ph_address),
     )
 }
 
@@ -420,19 +435,19 @@ private fun EditProfileFormDisabledSection(
 ) {
     ProfileInfoField(
         enabled = false,
-        title = "ID",
+        title = stringResource(string.label_id),
         icon = Res.drawable.ic_id_card_line_24,
         value = userDetail.studentId.ifBlank { "-" }
     )
     ProfileInfoField(
         enabled = false,
-        title = "Class",
+        title = stringResource(string.label_class),
         icon = Res.drawable.ic_user_board_line_24,
         value = userDetail.classX?.name ?: "-"
     )
     ProfileInfoField(
         enabled = false,
-        title = "Role",
+        title = stringResource(string.label_role),
         icon = Res.drawable.ic_user_board_line_24,
         value = userDetail.role.name
     )

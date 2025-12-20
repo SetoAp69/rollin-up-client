@@ -10,6 +10,9 @@ import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.screen.auth.model.resetpassword.ResetPasswordCallback
 import com.rollinup.rollinup.screen.auth.ui.screen.resetpassword.uistate.ResetPasswordUiState
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_account_recovery
 
 @Composable
 fun ResetPasswordMobileContent(
@@ -19,7 +22,7 @@ fun ResetPasswordMobileContent(
 ) {
     Scaffold(
         topBar = {
-            Header("Account Recovery")
+            Header(stringResource(Res.string.label_account_recovery))
         },
         showLoadingOverlay = uiState.isLoadingOverlay
     ) {

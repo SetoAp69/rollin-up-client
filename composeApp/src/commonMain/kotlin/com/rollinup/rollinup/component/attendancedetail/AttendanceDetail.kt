@@ -42,10 +42,20 @@ import com.rollinup.rollinup.component.utils.getScreenHeight
 import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_clock_filled_24
 import rollin_up.composeapp.generated.resources.ic_user_check_fill_24
 import rollin_up.composeapp.generated.resources.ic_user_cross_fill_24
+import rollin_up.composeapp.generated.resources.label_attachment
+import rollin_up.composeapp.generated.resources.label_class
+import rollin_up.composeapp.generated.resources.label_created_at
+import rollin_up.composeapp.generated.resources.label_duration
+import rollin_up.composeapp.generated.resources.label_name
+import rollin_up.composeapp.generated.resources.label_permit_attachment
+import rollin_up.composeapp.generated.resources.label_reason
+import rollin_up.composeapp.generated.resources.label_student_id
+import rollin_up.composeapp.generated.resources.label_view_attachment
 
 @Composable
 fun AttendanceDetailDialog(
@@ -193,45 +203,45 @@ private fun AttendanceDetailRecordSection(
         verticalArrangement = Arrangement.spacedBy(itemGap4)
     ) {
         RecordField(
-            title = "Name",
+            title = stringResource(Res.string.label_name),
             content = detail.student.name
         )
         if (detail.status != AttendanceStatus.NO_DATA) {
             RecordField(
-                title = "Id",
+                title = stringResource(Res.string.label_student_id),
                 content = detail.student.studentId ?: "-"
             )
             RecordField(
-                title = "Class",
+                title = stringResource(Res.string.label_class),
                 content = detail.student.xClass ?: "-"
             )
         }
         detail.attachment?.let {
-           RecordField(
-               title = "Attachment",
-           ){
-               AttachmentButton(it)
-           }
+            RecordField(
+                title = stringResource(Res.string.label_attachment),
+            ) {
+                AttachmentButton(it)
+            }
         }
         detail.permit?.let { permit ->
             RecordField(
-                title = "Duration",
+                title =  stringResource(Res.string.label_duration),
                 content = getDuration(permit)
             )
             RecordField(
-                title = "Permit Attachment"
+                title =  stringResource(Res.string.label_permit_attachment)
             ) {
                 AttachmentButton(permit.attachment)
             }
             permit.reason?.let {
                 RecordField(
-                    title = "Reason",
+                    title =  stringResource(Res.string.label_reason),
                     content = it
                 )
             }
         }
         RecordField(
-            title = "Created at",
+            title =  stringResource(Res.string.label_created_at),
         ) {
             DateText(detail.createdAt)
         }
@@ -243,7 +253,7 @@ private fun AttachmentButton(
     url: String,
 ) {
     var showImage by remember { mutableStateOf(false) }
-    val text = if (url.isBlank()) "-" else "View Attachment"
+    val text = if (url.isBlank()) "-" else stringResource(Res.string.label_view_attachment)
 
     Text(
         text = text,

@@ -54,10 +54,10 @@ import com.kizitonwose.calendar.core.minusMonths
 import com.kizitonwose.calendar.core.now
 import com.kizitonwose.calendar.core.plusDays
 import com.kizitonwose.calendar.core.plusMonths
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.common.utils.Utils.toEpochMilli
 import com.rollinup.common.utils.Utils.toFormattedString
 import com.rollinup.common.utils.Utils.toLocalDate
-import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.rollinup.component.dropdown.DropDownMenu
 import com.rollinup.rollinup.component.dropdown.DropDownMenuItem
 import com.rollinup.rollinup.component.spacer.Spacer
@@ -73,9 +73,11 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.YearMonth
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_drop_down_arrow_line_left_24
 import rollin_up.composeapp.generated.resources.ic_drop_down_arrow_line_right_24
+import rollin_up.composeapp.generated.resources.label_date
 import kotlin.time.ExperimentalTime
 
 /**
@@ -182,7 +184,7 @@ fun SingleFilterDatePicker(
     title: String,
     value: Long?,
     enabled: Boolean,
-    placeHolder: String = "Date",
+    placeHolder: String = stringResource(Res.string.label_date),
     onValueChange: (Long?) -> Unit,
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
@@ -253,7 +255,7 @@ fun FilterDatePicker(
     title: String,
     value: List<Long>,
     enabled: Boolean,
-    placeHolder: String = "Date",
+    placeHolder: String = stringResource(Res.string.label_date),
     onValueChange: (List<Long>) -> Unit,
 ) {
     var showDateSelector by remember { mutableStateOf(false) }
@@ -273,6 +275,7 @@ fun FilterDatePicker(
 
     TextFieldTitle(
         title = title,
+        modifier = Modifier.padding(vertical = itemGap4)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -501,7 +504,7 @@ expect fun DateRangePicker(
     onDismissRequest: (Boolean) -> Unit,
     value: List<LocalDate>,
     onSelectDate: (List<LocalDate>) -> Unit,
-    title:String = "",
+    title: String = "",
     maxRange: Int = Int.MAX_VALUE,
     isDisablePastSelection: Boolean = false,
     isAllSelectable: Boolean = true,

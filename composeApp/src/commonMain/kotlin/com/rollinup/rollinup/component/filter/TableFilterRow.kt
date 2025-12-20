@@ -12,6 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_reset
 
 @Composable
 fun TableFilterRow(
@@ -25,7 +28,7 @@ fun TableFilterRow(
     ) {
         if (showReset) {
             Text(
-                text = "Reset",
+                text = stringResource(Res.string.label_reset),
                 style = Style.title,
                 color = theme.textPrimary,
                 modifier = Modifier

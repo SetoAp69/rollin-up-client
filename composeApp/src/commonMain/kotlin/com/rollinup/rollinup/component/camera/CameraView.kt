@@ -49,12 +49,15 @@ import com.rollinup.rollinup.component.theme.theme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_camera_switch_ilne_24
 import rollin_up.composeapp.generated.resources.ic_check_line_24
 import rollin_up.composeapp.generated.resources.ic_close_line_24
 import rollin_up.composeapp.generated.resources.ic_info_line_24
 import rollin_up.composeapp.generated.resources.ic_user_cross_fill_24
+import rollin_up.composeapp.generated.resources.label_permission_denied
+import rollin_up.composeapp.generated.resources.msg_camera_permission_denied
 
 @Composable
 expect fun CameraHandler(
@@ -149,18 +152,17 @@ fun ImagePreview(
             BoxWithConstraints(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(imageBitmap.width.toFloat()/ imageBitmap.height.toFloat())
-                    .weight(1f)
-                ,
-            ){
+                    .aspectRatio(imageBitmap.width.toFloat() / imageBitmap.height.toFloat())
+                    .weight(1f),
+            ) {
                 val state = rememberTransformableState { zoomChange, panChange, _ ->
                     zoomScale = (zoomScale * zoomChange).coerceIn(1f, 5f)
 
                     val extraWidth = (zoomScale - 1) * constraints.maxWidth
-                    val extraHeight = (zoomScale -1)* constraints.maxHeight
+                    val extraHeight = (zoomScale - 1) * constraints.maxHeight
 
-                    val maxX = extraWidth/2
-                    val maxY = extraHeight/2
+                    val maxX = extraWidth / 2
+                    val maxY = extraHeight / 2
                     offSet = Offset(
                         x = (offSet.x + panChange.x).coerceIn(-maxX, maxX),
                         y = (offSet.y + panChange.y).coerceIn(-maxY, maxY)
@@ -177,8 +179,7 @@ fun ImagePreview(
                             translationX = offSet.x,
                             translationY = offSet.y
                         )
-                        .transformable(state = state)
-                    ,
+                        .transformable(state = state),
                     contentDescription = null,
                 )
             }
@@ -230,8 +231,8 @@ fun CameraPermissionDeniedDialog(
         onDismissRequest = onDismissRequest,
         icon = Res.drawable.ic_info_line_24,
         iconTint = theme.danger,
-        title = "Permission Denied",
-        content = "Camera permission is not granted, you can change the permission via settings",
+        title = stringResource(Res.string.label_permission_denied),
+        content = stringResource(Res.string.msg_camera_permission_denied),
         severity = Severity.DANGER,
         onClickCancel = {
             onCancel()

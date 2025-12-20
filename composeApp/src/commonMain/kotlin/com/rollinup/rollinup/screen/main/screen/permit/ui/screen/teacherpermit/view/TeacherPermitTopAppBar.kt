@@ -12,6 +12,9 @@ import com.rollinup.rollinup.screen.main.screen.permit.model.PermitTab
 import com.rollinup.rollinup.screen.main.screen.permit.model.teacherpermit.TeacherPermitCallback
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.uistate.TeacherPermitUiState
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.view.paging.TeacherPermitPagingActionSheet
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_permit
 
 @Composable
 fun TeacherPermitTopAppBar(
@@ -41,7 +44,7 @@ fun TeacherPermitTopAppBar(
         },
         menu = getMenu(uiState),
         onNavigateUp = onNavigateUp,
-        title = "Permit",
+        title = stringResource(Res.string.label_permit),
     )
     TeacherPermitFilterSheet(
         showSheet = showFilter,
@@ -58,7 +61,7 @@ fun TeacherPermitTopAppBar(
     )
     ExportAlertDialog(
         isShowDialog = showExportDialog,
-        fileName = "Permit",
+        fileName = stringResource(Res.string.label_permit),
         onDismissRequest = { showExportDialog = it },
         onConfirm = cb.onExportFile
     )

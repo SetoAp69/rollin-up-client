@@ -27,8 +27,15 @@ import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.main.screen.studentcenter.model.StudentCenterCallback
 import com.rollinup.rollinup.screen.main.screen.studentcenter.model.StudentCenterFilterData
 import com.rollinup.rollinup.screen.main.screen.studentcenter.ui.screen.studentcenterhome.uistate.StudentCenterUiState
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_print_line_24
+import rollin_up.composeapp.generated.resources.label_all
+import rollin_up.composeapp.generated.resources.label_class
+import rollin_up.composeapp.generated.resources.label_gender
+import rollin_up.composeapp.generated.resources.label_search
+import rollin_up.composeapp.generated.resources.label_student
+import rollin_up.composeapp.generated.resources.ph_search
 
 @Composable
 fun StudentCenterTableFilter(
@@ -48,10 +55,10 @@ fun StudentCenterTableFilter(
             modifier = Modifier.width(320.dp)
         ) {
             SearchTextField(
-                title = "Search",
+                title = stringResource(Res.string.label_search),
                 onValueChange = {},
                 value = uiState.searchQuery,
-                placeholder = "Search",
+                placeholder = stringResource(Res.string.ph_search),
                 onSearch = cb.onSearch
             )
         }
@@ -75,7 +82,7 @@ fun StudentCenterTableFilter(
 
     ExportAlertDialog(
         isShowDialog = showExportDialog,
-        fileName = "Student",
+        fileName = stringResource(Res.string.label_student),
         onDismissRequest = {showExportDialog = it},
         onConfirm = cb.onExportFile
     )
@@ -91,7 +98,7 @@ private fun StudentCenterTableFilterRow(
         showReset = uiState.filterData != StudentCenterFilterData()
     ) {
         MultiDropDownSelector(
-            title = "Class",
+            title = stringResource(Res.string.label_class),
             value = uiState.filterData.classX,
             options = uiState.classOptions,
             isLoading = uiState.isLoadingFilter,
@@ -102,11 +109,11 @@ private fun StudentCenterTableFilterRow(
                     )
                 )
             },
-            placeHolder = "All"
+            placeHolder = stringResource(Res.string.label_all)
         )
 
         MultiDropDownSelector(
-            title = "Gender",
+            title = stringResource(Res.string.label_gender),
             value = uiState.filterData.gender,
             options = uiState.genderOptions,
             onValueChange = {
@@ -116,7 +123,7 @@ private fun StudentCenterTableFilterRow(
                     )
                 )
             },
-            placeHolder = "All"
+            placeHolder = stringResource(Res.string.label_all)
         )
     }
 }

@@ -25,12 +25,15 @@ import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.textfield.TextError
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_enter_otp
 
 @Composable
 fun OTPTextField(
     value: String,
     length: Int = 5,
-    title: String = "Enter OTP Code",
+    title: String = stringResource(Res.string.label_enter_otp),
     onValueChange: (String) -> Unit,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(itemGap4),
     modifier: Modifier = Modifier,

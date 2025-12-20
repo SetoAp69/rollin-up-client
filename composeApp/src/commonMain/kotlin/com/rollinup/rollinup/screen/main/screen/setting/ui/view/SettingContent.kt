@@ -27,9 +27,13 @@ import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.topbar.TopBar
 import io.github.orioneee.AxerUIEntryPoint
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_exit_line_24
 import rollin_up.composeapp.generated.resources.ic_gear_line_24
+import rollin_up.composeapp.generated.resources.label_auto
+import rollin_up.composeapp.generated.resources.label_dark_mode
+import rollin_up.composeapp.generated.resources.label_light_mode
 
 @Composable
 fun SettingContent(
@@ -104,9 +108,9 @@ fun UiModeSetting(
     onValueChanges: (UiMode) -> Unit,
 ) {
     val title = when (value) {
-        UiMode.DARK -> "Dark Mode"
-        UiMode.AUTO -> "Auto"
-        UiMode.LIGHT -> "Light Mode"
+        UiMode.DARK -> stringResource(Res.string.label_dark_mode)
+        UiMode.AUTO -> stringResource(Res.string.label_auto)
+        UiMode.LIGHT -> stringResource(Res.string.label_light_mode)
     }
 
     Card {

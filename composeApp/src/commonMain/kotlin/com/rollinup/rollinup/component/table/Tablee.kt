@@ -17,7 +17,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,10 +28,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.rollinup.rollinup.component.theme.Style
+import com.rollinup.rollinup.component.theme.theme
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_drop_down_arrow_line_left_24
+import rollin_up.composeapp.generated.resources.label_rows_per_page
 
 // A fully customizable Jetpack Compose table component with:
 // - Pagination
@@ -143,7 +146,11 @@ fun <T> AdvancedTable(
             ) {
                 // Page Size Selector
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Rows per page: ")
+                    Text(
+                        text = stringResource(Res.string.label_rows_per_page),
+                        style = Style.body,
+                        color = theme.bodyText
+                    )
                     DropdownMenuLimitSelector(
                         options = pageSizes,
                         selected = pageSize,
@@ -206,22 +213,4 @@ fun DropdownMenuLimitSelector(
             }
         }
     }
-}
-@Preview
-@Composable
-fun ExampleTableScreen() {
-    val data = remember { (1..120).map { "Row $it" } }
-
-    AdvancedTable(
-        items = data,
-        columns = listOf(
-            TableColumn("ID", 1f) { Text(it) }
-        ),
-        headerContent = {
-            Text("Custom Header Area → Put filters/search here", fontWeight = FontWeight.Medium)
-        },
-        onSelectionChange = {
-            println("Selected items: $it")
-        }
-    )
 }

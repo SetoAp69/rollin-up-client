@@ -39,10 +39,15 @@ import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.utils.getScreenHeight
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_filter_line_24
 import rollin_up.composeapp.generated.resources.ic_minus_line_24
 import rollin_up.composeapp.generated.resources.ic_plus_line_24
+import rollin_up.composeapp.generated.resources.label_apply
+import rollin_up.composeapp.generated.resources.label_filter
+import rollin_up.composeapp.generated.resources.label_reset
+import rollin_up.composeapp.generated.resources.label_select_all
 
 @Composable
 fun FilterSelectorBottomSheet(
@@ -56,7 +61,7 @@ fun FilterSelectorBottomSheet(
     BottomSheet(
         isShowSheet = isShowSheet,
         onDismissRequest = onDismissRequest,
-        btnConfirmText = "Apply",
+        btnConfirmText = stringResource(Res.string.label_apply),
         onClickConfirm = onApply,
         modifier = Modifier
             .padding(horizontal = 12.dp)
@@ -91,14 +96,14 @@ private fun FilterBottomSheetHeader(
             modifier = Modifier.size(24.dp)
         )
         Text(
-            text = "Filter",
+            text = stringResource(Res.string.label_filter),
             style = Style.popupTitle,
             color = theme.textPrimary,
         )
         Spacer(modifier = Modifier.weight(1f))
         if (showReset) {
             Text(
-                text = "Reset",
+                text = stringResource(Res.string.label_reset),
                 style = Style.popupTitle,
                 color = theme.textPrimary,
                 modifier = Modifier.clickable {
@@ -156,7 +161,7 @@ private fun <T> FilterSelectorContent(
         verticalArrangement = Arrangement.spacedBy(itemGap8),
     ) {
         FilterSelectorItem(
-            label = "Select All",
+            label = stringResource(Res.string.label_select_all),
             isSelected = value.size == options.size,
             onSelect = { isSelected ->
                 if (isSelected) {

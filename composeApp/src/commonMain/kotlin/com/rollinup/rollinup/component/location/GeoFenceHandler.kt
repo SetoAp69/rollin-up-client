@@ -1,8 +1,4 @@
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import com.rollinup.rollinup.component.location.Geofence
 import com.rollinup.rollinup.component.location.LocationHandler
 import com.rollinup.rollinup.component.theme.LocalGlobalSetting
@@ -17,7 +13,7 @@ import kotlin.math.sqrt
 
 @Composable
 fun GeofenceHandler(
-    startTracking:Boolean,
+    startTracking: Boolean,
     onUpdateLocation: (Location?, Boolean) -> Unit,
 ) {
     val globalSetting = LocalGlobalSetting.current

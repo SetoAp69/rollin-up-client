@@ -10,6 +10,10 @@ import com.rollinup.rollinup.component.model.Menu
 import com.rollinup.rollinup.component.topbar.TopBar
 import com.rollinup.rollinup.screen.main.screen.studentcenter.model.StudentCenterCallback
 import com.rollinup.rollinup.screen.main.screen.studentcenter.ui.screen.studentcenterhome.uistate.StudentCenterUiState
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_student
+import rollin_up.composeapp.generated.resources.label_student_center
 
 @Composable
 fun StudentCenterTopBar(
@@ -35,7 +39,7 @@ fun StudentCenterTopBar(
         },
         onSearch = cb.onSearch,
         menu = listOf(Menu.PRINT, Menu.FILTER),
-        title = "Student Center",
+        title = stringResource(Res.string.label_student_center),
         onNavigateUp = onNavigateUp
     )
 
@@ -48,7 +52,7 @@ fun StudentCenterTopBar(
 
     ExportAlertDialog(
         isShowDialog = showExportDialog,
-        fileName = "Student",
+        fileName = stringResource(Res.string.label_student),
         onDismissRequest = { showExportDialog = it },
         onConfirm = cb.onExportFile
     )

@@ -21,6 +21,16 @@ import com.rollinup.rollinup.screen.main.screen.usercenter.model.UserCenterActio
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.UserCenterCallback
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.DeleteAlertDialog
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.uistate.UserCenterUiState
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_address
+import rollin_up.composeapp.generated.resources.label_class
+import rollin_up.composeapp.generated.resources.label_email
+import rollin_up.composeapp.generated.resources.label_full_name
+import rollin_up.composeapp.generated.resources.label_gender
+import rollin_up.composeapp.generated.resources.label_role
+import rollin_up.composeapp.generated.resources.label_user_data
+import rollin_up.composeapp.generated.resources.label_username
 
 @Composable
 fun UserCenterTable(
@@ -89,7 +99,7 @@ private fun TableHeaderContent(itemSelected: Int) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = "User data",
+            text = stringResource(Res.string.label_user_data),
             color = theme.bodyText,
             style = Style.title
         )
@@ -104,50 +114,51 @@ private fun TableHeaderContent(itemSelected: Int) {
 }
 
 
+@Composable
 private fun getColumn(): List<TableColumn<UserEntity>> {
     return listOf(
-        TableColumn("Username") {
+        TableColumn(stringResource(Res.string.label_username)) {
             Text(
                 text = it.userName.ifBlank { "-" },
                 color = theme.bodyText,
                 style = Style.body
             )
         },
-        TableColumn("Class", 0.7f) {
+        TableColumn(stringResource(Res.string.label_class), 0.7f) {
             Text(
                 text = it.classX.ifBlank { "-" },
                 color = theme.bodyText,
                 style = Style.body
             )
         },
-        TableColumn("Full Name") {
+        TableColumn(stringResource(Res.string.label_full_name)) {
             Text(
                 text = it.fullName.ifBlank { "-" },
                 color = theme.bodyText,
                 style = Style.body
             )
         },
-        TableColumn("Email") {
+        TableColumn(stringResource(Res.string.label_email)) {
             Text(
                 text = it.email.ifBlank { "-" },
                 color = theme.bodyText,
                 style = Style.body
             )
         },
-        TableColumn("Address") {
+        TableColumn(stringResource(Res.string.label_address)) {
             Text(
                 text = it.address.ifBlank { "-" },
                 color = theme.bodyText,
                 style = Style.body
             )
         },
-        TableColumn("Gender", 0.5f) {
+        TableColumn( stringResource(Res.string.label_gender), 0.5f) {
             Chip(
                 text = it.gender.label.ifBlank { "-" },
                 severity = Severity.SECONDARY
             )
         },
-        TableColumn("Role", 0.5f) {
+        TableColumn(stringResource(Res.string.label_role), 0.5f) {
             Chip(
                 text = it.role.ifBlank { "-" },
                 severity = Severity.SECONDARY

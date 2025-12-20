@@ -44,11 +44,14 @@ import com.rollinup.rollinup.component.utils.isCompact
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_eye_close_line_24
 import rollin_up.composeapp.generated.resources.ic_eye_open_line_24
 import rollin_up.composeapp.generated.resources.ic_phone_line_24
 import rollin_up.composeapp.generated.resources.ic_search_line_24
+import rollin_up.composeapp.generated.resources.label_toggle_show_password
+import rollin_up.composeapp.generated.resources.ph_search
 
 
 @Composable
@@ -126,10 +129,12 @@ fun TextFieldTitle(
     textStyle: TextStyle = Style.body,
     isRequired: Boolean = false,
     color: Color = theme.bodyText,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
 
     Column(
+        modifier = Modifier,
         verticalArrangement = Arrangement.spacedBy(itemGap4),
         horizontalAlignment = Alignment.Start
     ) {
@@ -296,7 +301,7 @@ fun SearchTextField(
     title: String = "",
     onValueChange: (String) -> Unit,
     value: String,
-    placeholder: String = "Enter keyword",
+    placeholder: String = stringResource(Res.string.ph_search),
     onSearch: (String) -> Unit,
 ) {
     var searchQuery by remember { mutableStateOf(value) }
@@ -397,7 +402,7 @@ fun PasswordTextField(
                         Icon(
                             painter = icon,
                             tint = iconColor,
-                            contentDescription = "toggle show password"
+                            contentDescription = stringResource(Res.string.label_toggle_show_password)
                         )
                     }
                 },

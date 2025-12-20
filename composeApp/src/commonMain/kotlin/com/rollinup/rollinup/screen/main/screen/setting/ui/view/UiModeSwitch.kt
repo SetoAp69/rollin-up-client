@@ -70,8 +70,6 @@ fun UiModeSwitch(
 
     LaunchedEffect(value) {
         if (anchoredDraggableState.settledValue != value) {
-            L.wtf { "switch value changes from launched effect" }
-            L.wtf { "$value" }
             scope.launch {
                 anchoredDraggableState.anchoredDrag(value) { _, _ ->
                     anchoredDraggableState

@@ -21,6 +21,11 @@ import com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.createed
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.uistate.UserCenterUiState
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.view.table.UserCenterTable
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.view.table.UserCenterTableFilter
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_user_center
+import rollin_up.composeapp.generated.resources.msg_delete_user_error
+import rollin_up.composeapp.generated.resources.msg_delete_user_success
 
 @Composable
 fun UserCenterContent(
@@ -33,15 +38,15 @@ fun UserCenterContent(
     var showDetail by remember { mutableStateOf(false) }
     HandleState(
         state = uiState.deleteUserState,
-        successMsg = "Success, user data successfully deleted",
-        errorMsg = "Error, failed to delete user data, please try again.",
+        successMsg = stringResource(Res.string.msg_delete_user_success),
+        errorMsg =  stringResource(Res.string.msg_delete_user_error),
         onDispose = { cb.onResetMessageState() },
         onSuccess = cb.onRefresh,
         onShowSnackBar = onShowSnackBar
     )
     Column(modifier = Modifier.padding(24.dp)) {
         Text(
-            text = "User Center",
+            text = stringResource(Res.string.label_user_center),
             style = Style.popupTitle,
             color = theme.textPrimary
 

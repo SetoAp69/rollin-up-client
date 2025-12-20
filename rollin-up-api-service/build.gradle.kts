@@ -2,7 +2,6 @@
 
 import org.gradle.util.internal.GUtil.loadProperties
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
-import org.jetbrains.kotlin.konan.properties.loadProperties
 import java.util.Properties
 
 plugins {
@@ -14,7 +13,7 @@ plugins {
 
 val envProperties = loadProperties(rootProject.file("env.properties"))
 
-val buildGenerator by tasks.registering(Sync::class){
+val buildGenerator by tasks.registering(Sync::class) {
     from(
         resources.text.fromString(
             """
@@ -26,8 +25,8 @@ val buildGenerator by tasks.registering(Sync::class){
                }
             """.trimIndent()
         )
-    ){
-        rename{"BuildConfig.kt"}
+    ) {
+        rename { "BuildConfig.kt" }
         into("com/rollinup/apiservice")
     }
     into(layout.buildDirectory.dir("generated-src/kotlin/"))
@@ -37,15 +36,6 @@ val buildGenerator by tasks.registering(Sync::class){
 kotlin {
 
     jvm()
-//    wasmJs(){
-//        browser()
-//        nodejs()
-//        d8()
-//    }
-
-    // Target declarations - add or remove as needed below. These define
-    // which platforms this KMP module supports.
-    // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
 
     group = "com.rollinup"
     androidLibrary {
@@ -96,7 +86,7 @@ kotlin {
     // common to share sources between related targets.
     // See: https://kotlinlang.org/docs/multiplatform-hierarchy.html
     sourceSets {
-        commonMain.configure{
+        commonMain.configure {
             kotlin.srcDir(buildGenerator.map { it.destinationDir })
         }
         commonMain {

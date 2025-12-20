@@ -27,6 +27,10 @@ import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.utils.getPlatform
 import kotlinx.datetime.LocalTime
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_end
+import rollin_up.composeapp.generated.resources.label_start
 import kotlin.time.ExperimentalTime
 
 @Composable
@@ -120,7 +124,7 @@ fun TimeDurationTextField(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = from?.toString() ?: "Start",
+                    text = from?.toString() ?: stringResource(Res.string.label_start),
                     style = Style.title,
                     color = textColor,
                     modifier = Modifier.padding(vertical = itemGap8)
@@ -144,7 +148,7 @@ fun TimeDurationTextField(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = to?.toString() ?: "End",
+                    text = to?.toString() ?: stringResource(Res.string.label_end),
                     style = Style.title,
                     color = textColor,
                     modifier = Modifier.padding(vertical = itemGap8)

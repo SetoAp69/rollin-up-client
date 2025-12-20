@@ -9,6 +9,9 @@ import com.rollinup.rollinup.component.model.Menu
 import com.rollinup.rollinup.component.topbar.TopBar
 import com.rollinup.rollinup.screen.main.screen.permit.model.studentpermit.StudentPermitCallback
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.studentpermit.uistate.StudentPermitUiState
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_permit
 
 @Composable
 fun StudentPermitTopBar(
@@ -20,7 +23,7 @@ fun StudentPermitTopBar(
     var showFilter by remember { mutableStateOf(false) }
 
     TopBar(
-        title = "Permit",
+        title = stringResource(Res.string.label_permit),
         onClickMenu = { menu ->
             when (menu) {
                 Menu.FILTER -> {

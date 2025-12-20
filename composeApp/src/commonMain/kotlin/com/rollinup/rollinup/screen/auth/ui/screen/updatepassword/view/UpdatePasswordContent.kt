@@ -12,7 +12,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +34,15 @@ import com.rollinup.rollinup.screen.auth.ui.screen.resetpassword.view.OTPTextFie
 import com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.uistate.UpdatePasswordUiState
 import kotlinx.coroutines.delay
 import kotlinx.datetime.LocalTime
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_new_password
+import rollin_up.composeapp.generated.resources.label_repeat_new_password
+import rollin_up.composeapp.generated.resources.label_resend_otp
+import rollin_up.composeapp.generated.resources.label_submit
+import rollin_up.composeapp.generated.resources.msg_otp_already_sent
+import rollin_up.composeapp.generated.resources.ph_new_password
+import rollin_up.composeapp.generated.resources.ph_reenter_new_password
 
 @Composable
 expect fun UpdatePasswordContent(
@@ -59,7 +67,7 @@ fun SubmitOtpForm(
         if (uiState.startTimer) {
             while (timeInSecond > 0) {
                 delay(1000)
-                timeInSecond -=1
+                timeInSecond -= 1
             }
         }
     }
@@ -94,7 +102,7 @@ fun SubmitOtpForm(
         }
         Spacer(14.dp)
         Text(
-            text = "We've already sent an OTP code to your email. You can request new otp after 2 minutes.",
+            text = stringResource(Res.string.msg_otp_already_sent),
             color = theme.textPrimary,
             textAlign = TextAlign.Center,
             style = Style.body,
@@ -109,7 +117,7 @@ fun SubmitOtpForm(
             )
         } else {
             Text(
-                text = "Re-send OTP",
+                text = stringResource(Res.string.label_resend_otp),
                 color = theme.textPrimary,
                 style = Style.title,
                 modifier = Modifier
@@ -147,8 +155,8 @@ fun UpdatePasswordForm(
                         )
                     )
                 },
-                title = "New Password",
-                placeholder = "Enter new password",
+                title = stringResource(Res.string.label_new_password),
+                placeholder = stringResource(Res.string.ph_new_password),
                 isError = formData.passwordOneError != null,
                 errorMsg = formData.passwordOneError
             )
@@ -164,8 +172,8 @@ fun UpdatePasswordForm(
                         )
                     )
                 },
-                title = "Repeat New Password",
-                placeholder = "Re-Enter new password",
+                title = stringResource(Res.string.label_repeat_new_password),
+                placeholder = stringResource(Res.string.ph_reenter_new_password),
                 isError = formData.passwordTwoError != null,
                 errorMsg = formData.passwordTwoError
             )
@@ -174,10 +182,11 @@ fun UpdatePasswordForm(
             onClick = {
                 onSubmit(formData)
             },
-            text = "Submit",
+            text = stringResource(Res.string.label_submit),
             modifier = Modifier.fillMaxWidth()
         )
     }
+
 }
 
 

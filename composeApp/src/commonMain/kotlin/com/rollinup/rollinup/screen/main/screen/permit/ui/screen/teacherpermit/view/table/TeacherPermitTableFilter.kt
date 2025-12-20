@@ -29,8 +29,15 @@ import com.rollinup.rollinup.screen.main.screen.permit.model.PermitFilterData
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitTab
 import com.rollinup.rollinup.screen.main.screen.permit.model.teacherpermit.TeacherPermitCallback
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.uistate.TeacherPermitUiState
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_print_line_24
+import rollin_up.composeapp.generated.resources.label_class
+import rollin_up.composeapp.generated.resources.label_date
+import rollin_up.composeapp.generated.resources.label_permit_type
+import rollin_up.composeapp.generated.resources.label_reason
+import rollin_up.composeapp.generated.resources.label_search
+import rollin_up.composeapp.generated.resources.label_status
 
 
 @Composable
@@ -38,7 +45,7 @@ fun TeacherPermitTableFilter(
     uiState: TeacherPermitUiState,
     cb: TeacherPermitCallback,
 ) {
-    var showExportDialog by remember{ mutableStateOf(false) }
+    var showExportDialog by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
@@ -53,7 +60,7 @@ fun TeacherPermitTableFilter(
     ) {
         Box(modifier = Modifier.width(320.dp)) {
             SearchTextField(
-                title = "Search",
+                title = stringResource(Res.string.label_search),
                 onValueChange = {},
                 value = uiState.searchQuery,
                 onSearch = cb.onSearch,
@@ -69,7 +76,7 @@ fun TeacherPermitTableFilter(
     }
     ExportAlertDialog(
         isShowDialog = showExportDialog,
-        fileName = "Permit",
+        fileName = stringResource(Res.string.label_reason),
         onDismissRequest = { showExportDialog = it },
         onConfirm = cb.onExportFile
     )
@@ -86,7 +93,7 @@ private fun TeacherPermitTableFilterRow(
     ) {
         Box(modifier = Modifier.width(145.dp)) {
             FilterDatePicker(
-                title = "Date",
+                title = stringResource(Res.string.label_date),
                 value = uiState.filterData.dateRange,
                 enabled = true,
                 onValueChange = {
@@ -99,7 +106,7 @@ private fun TeacherPermitTableFilterRow(
             )
         }
         SingleDropDownSelector(
-            title = "Class",
+            title = stringResource(Res.string.label_class),
             value = uiState.user.classX ?: "-",
             options = emptyList(),
             placeHolder = uiState.user.classX ?: "-",
@@ -108,7 +115,7 @@ private fun TeacherPermitTableFilterRow(
         )
         if (uiState.currentTab == PermitTab.INACTIVE) {
             MultiDropDownSelector(
-                title = "Status",
+                title = stringResource(Res.string.label_status),
                 value = uiState.filterData.status,
                 options = uiState.statusOptions,
                 onValueChange = {
@@ -121,7 +128,7 @@ private fun TeacherPermitTableFilterRow(
             )
         }
         MultiDropDownSelector(
-            title = "Type",
+            title = stringResource(Res.string.label_permit_type),
             value = uiState.filterData.type,
             options = uiState.typeOptions,
             onValueChange = {

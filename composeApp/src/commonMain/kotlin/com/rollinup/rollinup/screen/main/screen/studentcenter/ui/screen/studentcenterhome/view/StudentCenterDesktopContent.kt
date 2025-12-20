@@ -15,6 +15,9 @@ import com.rollinup.rollinup.screen.main.screen.studentcenter.model.StudentCente
 import com.rollinup.rollinup.screen.main.screen.studentcenter.ui.screen.studentcenterhome.uistate.StudentCenterUiState
 import com.rollinup.rollinup.screen.main.screen.studentcenter.ui.screen.studentcenterhome.view.table.StudentCenterTable
 import com.rollinup.rollinup.screen.main.screen.studentcenter.ui.screen.studentcenterhome.view.table.StudentCenterTableFilter
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_student_center
 
 @Composable
 fun StudentCenterDesktopContent(
@@ -29,7 +32,7 @@ fun StudentCenterDesktopContent(
                 .padding(24.dp)
         ) {
             Text(
-                text = "Student Center",
+                text = stringResource(Res.string.label_student_center),
                 style = Style.popupTitle,
                 color = theme.textPrimary
             )

@@ -14,6 +14,9 @@ import com.rollinup.rollinup.screen.main.screen.permit.model.teacherpermit.Teach
 import com.rollinup.rollinup.screen.main.screen.permit.model.teacherpermit.TeacherPermitCallback
 import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitapproval.view.PermitApprovalFormBottomSheet
 import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitdetail.view.PermitDetailDialog
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.msg_no_action_available
 
 @Composable
 fun TeacherPermitPagingActionSheet(
@@ -33,7 +36,7 @@ fun TeacherPermitPagingActionSheet(
     ) {
         if (actions.isEmpty()) {
             DropDownMenuItem(
-                label = "No action available",
+                label = stringResource(Res.string.msg_no_action_available),
                 onClick = { onDismissRequest(false) }
             )
         } else {
@@ -66,7 +69,7 @@ fun TeacherPermitPagingActionSheet(
     )
     items.firstOrNull()?.id?.let {
         PermitDetailDialog(
-            id =it,
+            id = it,
             showDialog = showDetail,
             onDismissRequest = { showDetail = false }
         )

@@ -21,9 +21,11 @@ import com.rollinup.rollinup.component.theme.Theme
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.utils.toAnnotatedString
 import com.rollinup.rollinup.navigation.NavigationHost
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_info_line_24
+import rollin_up.composeapp.generated.resources.msg_multiple_security_alert
 
 @Composable
 fun App(
@@ -108,13 +110,13 @@ fun SecurityAlertDialog(
 
 fun getAlertTitle(securityAlert: List<SecurityAlert>) =
     if (securityAlert.size == 1) "Security Alert : ${securityAlert.firstOrNull()?.title ?: ""}"
-    else "Multiple Security Alert"
+    else ""
 
 @Composable
 fun getAlertMessage(securityAlert: List<SecurityAlert>): AnnotatedString {
     return if (securityAlert.size == 1) {
         (securityAlert.firstOrNull()?.message ?: "").toAnnotatedString()
     } else {
-        "For security reasons, this application cannot continue running on this devices because multiple security issues including: **${securityAlert.fastForEach { it.title + "," }}**".toAnnotatedString()
+        stringResource(Res.string.msg_multiple_security_alert).toAnnotatedString()
     }
 }

@@ -54,9 +54,11 @@ import com.rollinup.rollinup.component.textfield.TextFieldDefaults
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_close_line_24
 import rollin_up.composeapp.generated.resources.ic_search_line_24
+import rollin_up.composeapp.generated.resources.ph_search
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -321,7 +323,7 @@ private fun TopBarSearchField(
                 placeholder = {
                     if (searchQuery.isBlank()) {
                         Text(
-                            text = "Search",
+                            text = stringResource(Res.string.ph_search),
                             color = theme.textFieldPlaceHolder,
                             style = Style.body
                         )
