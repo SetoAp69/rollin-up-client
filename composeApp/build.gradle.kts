@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlin.serialization)
 //    alias(libs.plugins.composeHotReload)
+    alias(libs.plugins.kotlinx.kover)
 }
 
 val envProperties = Properties()
@@ -184,6 +185,7 @@ kotlin {
         }
         androidUnitTest.dependencies {
             implementation(libs.permission.test)
+            implementation(libs.mockk)
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -270,6 +272,8 @@ android {
 }
 
 dependencies {
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.coroutine.test)
     debugImplementation(compose.uiTooling)
     coreLibraryDesugaring(libs.desugar.jdk)
 }
@@ -296,6 +300,24 @@ compose.desktop {
 
         buildTypes.release.proguard {
             configurationFiles.from(rootProject.file("desktopProguard.pro"))
+        }
+    }
+}
+
+kover{
+    val includePackage = listOf(
+        "*.model.*",
+        "*.viewmodel",
+    )
+
+    val exludePackage = listOf(
+        "*.test.*"
+    )
+    reports{
+        filters {
+            includes{
+                packages(includePackage)
+            }
         }
     }
 }

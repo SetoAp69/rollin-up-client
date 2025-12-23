@@ -23,6 +23,7 @@ fun AttendanceHomeScreen(
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val pagingData = viewModel.pagingData.collectAsLazyPagingItems()
     val localUser = localUser
+    val isMobile = getPlatform().isMobile()
 
     HandleState(
         state = uiState.exportState,
@@ -32,7 +33,7 @@ fun AttendanceHomeScreen(
         onShowSnackBar = onShowSnackBar ,
     )
     LaunchedEffect(Unit) {
-        viewModel.init(localUser)
+        viewModel.init(localUser, isMobile)
     }
     if (getPlatform().isMobile()) {
         AttendanceMobileContent(

@@ -60,7 +60,7 @@ fun SubmitOtpForm(
     var timeInSecond by remember { mutableStateOf(LocalTime(0, 1, 20).toSecondOfDay()) }
 
     LaunchedEffect(uiState.currentStep) {
-        cb.onResetForm()
+        cb.onResetOtp()
     }
 
     LaunchedEffect(uiState.startTimer) {

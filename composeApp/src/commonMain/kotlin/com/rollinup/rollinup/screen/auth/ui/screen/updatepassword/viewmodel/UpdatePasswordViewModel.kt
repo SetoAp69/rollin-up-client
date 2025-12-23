@@ -16,6 +16,8 @@ import com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.uistate.Update
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -43,7 +45,7 @@ class UpdatePasswordViewModel(
             onSubmitOtp = ::submitOTP,
             onUpdateOtp = ::updateOtp,
             onResendOtp = ::resendOtp,
-            onResetForm = ::resetForm,
+            onResetOtp = ::resetForm,
             onResetMessageState = ::resetMessageState
         )
 
@@ -121,7 +123,12 @@ class UpdatePasswordViewModel(
                     }
 
                     is Result.Error -> {
-                        _uiState.update { it.copy(isLoadingOverlay = false, submitOtpState = true) }
+                        _uiState.update {
+                            it.copy(
+                                isLoadingOverlay = false,
+                                submitOtpState = false
+                            )
+                        }
                     }
                 }
             }
@@ -129,9 +136,39 @@ class UpdatePasswordViewModel(
     }
 
     private fun submitUpdatePassword(formData: UpdatePasswordFormData) {
-        _uiState.update { it.copy(updatePasswordState = null) }
 
+        _uiState.update {
+            it.copy(isLoadingOverlay = true)
+        }
+//        updatePasswordAndVerificationUseCase(
+//            UpdatePasswordAndVerificationBody(
+//                formData.passwordOne,
+//                formData.deviceId,
+//                _uiState.value.token
+//            )
+//        ).onEach { result ->
+//            when (result) {
+//                is Result.Success -> {
+//                    _uiState.update {
+//                        it.copy(
+//                            isLoadingOverlay = false,
+//                            updatePasswordState = true
+//                        )
+//                    }
+//                }
+//
+//                is Result.Error->{
+//                    _uiState.update {
+//                        it.copy(
+//                            isLoadingOverlay = false,
+//                            updatePasswordState = false
+//                        )
+//                    }
+//                }
+//            }
+//        }.launchIn(viewModelScope)
         viewModelScope.launch {
+            _uiState.update { it.copy(updatePasswordState = null) }
             val body = UpdatePasswordAndVerificationBody(
                 password = formData.passwordOne,
                 deviceId = formData.deviceId,
@@ -139,12 +176,26 @@ class UpdatePasswordViewModel(
             )
             _uiState.update { it.copy(isLoadingOverlay = true) }
             updatePasswordAndVerificationUseCase(body).collectLatest { result ->
-                _uiState.update {
-                    it.copy(
-                        isLoadingOverlay = false,
-                        updatePasswordState = result is Result.Success
-                    )
-                }
+               when (result){
+                   is Result.Success->{
+                       _uiState.update {
+                           it.copy(
+                               isLoadingOverlay = false,
+                               updatePasswordState = true
+                           )
+                       }
+                   }
+
+                   is Result.Error->{
+                       _uiState.update {
+                           it.copy(
+                               isLoadingOverlay = false,
+                               updatePasswordState = false
+                           )
+                       }
+                   }
+               }
+
             }
         }
     }

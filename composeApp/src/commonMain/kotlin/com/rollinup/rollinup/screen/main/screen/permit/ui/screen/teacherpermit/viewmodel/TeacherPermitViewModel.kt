@@ -10,8 +10,6 @@ import com.rollinup.apiservice.model.common.Result
 import com.rollinup.apiservice.model.permit.PermitByClassEntity
 import com.rollinup.rollinup.component.date.DateFormatter
 import com.rollinup.rollinup.component.export.FileWriter
-import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
-import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitFilterData
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitTab
 import com.rollinup.rollinup.screen.main.screen.permit.model.teacherpermit.TeacherPermitCallback
@@ -33,11 +31,9 @@ class TeacherPermitViewModel(
     private val _pagingData = MutableStateFlow<PagingData<PermitByClassEntity>>(PagingData.empty())
     val pagingData = _pagingData.asStateFlow()
 
-    val isMobile = getPlatform().isMobile()
-
-    fun init(user: LoginEntity?) {
+    fun init(user: LoginEntity?, isMobile: Boolean) {
         if (user == null) return
-        _uiState.update { it.copy(user = user) }
+        _uiState.update { it.copy(user = user, isMobile = isMobile) }
         if (isMobile) {
             getItemPaging()
         } else {
@@ -84,7 +80,7 @@ class TeacherPermitViewModel(
     }
 
     private fun refresh() {
-        if (isMobile) {
+        if (uiState.value.isMobile) {
             getItemPaging()
         } else {
             getItemList()
@@ -133,7 +129,7 @@ class TeacherPermitViewModel(
     }
 
     private fun selectAll() {
-        if (isMobile) {
+        if (uiState.value.isMobile) {
             pagingSelectAll()
         } else {
             listSelectAll()

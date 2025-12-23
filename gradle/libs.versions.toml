@@ -42,6 +42,10 @@ talsec = "17.0.0"
 axer = "1.2.5"
 compottie="2.0.2"
 dataframe = "0.15.0"
+mockk = "1.14.7"
+junitJupiter = "5.8.1"
+kover = "0.9.2"
+
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -93,6 +97,9 @@ ktor-content-negotiation = { group = "io.ktor", name = "ktor-client-content-nego
 ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
 ktor-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+
+#mockk
+mockk ={group = "io.mockk", name="mockk",version.ref="mockk"}
 
 #paging
 androidx-paging-runtime-ktx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "androidx-paging" }
@@ -167,6 +174,10 @@ compass-geocoder-web-googlemaps = { module = "dev.jordond.compass:geocoder-web-g
 #webview
 compose-webview-multiplatform = { group = "io.github.kevinnzou", name = "compose-webview-multiplatform", version.ref = "webview" }
 
+#test
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
+coroutine-test = {group = "org.jetbrains.kotlinx",name = "kotlinx-coroutines-test", version.ref="kotlinx-coroutines"}
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -176,10 +187,7 @@ composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "k
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 androidKotlinMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 androidLint = { id = "com.android.lint", version.ref = "agp" }
+kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 
 #Serialization
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-
-#BUildconfig
-#Buld config
-build-config = { id = "com.github.gmazzo.buildconfig", version.ref = "buildConfig" }

@@ -2,7 +2,6 @@ package com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.michaelflisar.lumberjack.core.L
 import com.rollinup.apiservice.data.source.network.model.request.attendance.CheckInBody
 import com.rollinup.apiservice.data.source.network.model.request.attendance.GetAttendanceListByStudentQueryParams
 import com.rollinup.apiservice.domain.attendance.CheckInUseCase
@@ -81,9 +80,6 @@ class StudentDashboardViewmodel(
                                 attendanceList = result.data
                             )
                         }
-                        L.wtf {
-                            result.data.map { "${it.date} - ${it.status}\n" }.toString()
-                        }
                     }
 
                     is Result.Error -> {
@@ -121,7 +117,6 @@ class StudentDashboardViewmodel(
                 _uiState.update { it.copy(isLoadingHeader = false) }
             }
         }
-        L.w { _uiState.value.summary.toString() }
     }
 
     private fun refresh() {

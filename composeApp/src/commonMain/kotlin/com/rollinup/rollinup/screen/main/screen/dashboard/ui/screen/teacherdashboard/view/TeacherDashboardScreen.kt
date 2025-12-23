@@ -14,7 +14,7 @@ import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardContentMobile
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardStateHandler
-import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.viwmodel.TeacherDashboardViewModel
+import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.viewmodel.TeacherDashboardViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -27,9 +27,10 @@ fun TeacherDashboardScreen(
     val pagingData = viewModel.pagingData.collectAsLazyPagingItems()
     val cb = viewModel.getCallback()
     val user = localUser
+    val isMobile = getPlatform().isMobile()
 
     LaunchedEffect(Unit) {
-        viewModel.init(user)
+        viewModel.init(user, isMobile)
     }
 
     TeacherDashboardContent(

@@ -2,7 +2,6 @@ package com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.createe
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.michaelflisar.lumberjack.core.L
 import com.rollinup.apiservice.data.source.network.model.request.user.CheckEmailOrUsernameQueryParams
 import com.rollinup.apiservice.data.source.network.model.request.user.CreateEditUserBody
 import com.rollinup.apiservice.domain.user.CheckEmailOrUsernameUseCase
@@ -12,9 +11,8 @@ import com.rollinup.apiservice.domain.user.GetUserOptionsUseCase
 import com.rollinup.apiservice.domain.user.RegisterUserUseCase
 import com.rollinup.apiservice.model.common.Result
 import com.rollinup.apiservice.model.user.UserDetailEntity
-import com.rollinup.common.utils.Utils.toEpochMillis
 import com.rollinup.common.utils.Utils.parseToLocalDateTime
-import com.rollinup.rollinup.BuildConfig
+import com.rollinup.common.utils.Utils.toEpochMillis
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.CreateEditUserCallback
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.CreateEditUserFormData
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.createedituser.uistate.CreateEditUserUiState
@@ -94,7 +92,7 @@ class CreateEditUserViewModel(
             onToggleStay = ::toggleStay,
         )
 
-    fun resetUiState(){
+    fun resetUiState() {
         _uiState.update { CreateEditUserUiState() }
     }
 
@@ -149,8 +147,6 @@ class CreateEditUserViewModel(
                 roleError = formData.role == null,
             )
         }
-        L.wtf { formData.toString() }
-
         updateForm(formData)
         return formData.isValid()
     }
@@ -158,7 +154,7 @@ class CreateEditUserViewModel(
     private fun submit(formData: CreateEditUserFormData, isEdit: Boolean) {
         if (!validateForm(formData, isEdit)) return
 
-        val body = mapBodyFromForm(formData,isEdit)
+        val body = mapBodyFromForm(formData, isEdit)
         val domain =
             if (isEdit)
                 editUserUseCase(id = formData.id, body = body)
@@ -231,7 +227,10 @@ class CreateEditUserViewModel(
         )
     }
 
-    private fun mapBodyFromForm(formData: CreateEditUserFormData, isEdit:Boolean): CreateEditUserBody {
+    private fun mapBodyFromForm(
+        formData: CreateEditUserFormData,
+        isEdit: Boolean,
+    ): CreateEditUserBody {
         return CreateEditUserBody(
             username = formData.userName,
             firstName = formData.firstName,

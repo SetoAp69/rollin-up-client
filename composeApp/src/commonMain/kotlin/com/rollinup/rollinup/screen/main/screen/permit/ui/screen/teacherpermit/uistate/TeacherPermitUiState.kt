@@ -20,6 +20,7 @@ data class TeacherPermitUiState(
     val currentTab: PermitTab = PermitTab.ACTIVE,
     val filterData: PermitFilterData = PermitFilterData(),
     val exportState: Boolean? = null,
+    val isMobile:Boolean = false
 ) {
     val statusOptions
         get() = ApprovalStatus
@@ -44,7 +45,7 @@ data class TeacherPermitUiState(
         )
 
     val isAllSelected
-        get() = itemSelected.size == itemList.size
+        get() = itemSelected.size == itemList.size && itemSelected.isNotEmpty()
 
     val tabList
         get() = PermitTab.entries.map { it.title }

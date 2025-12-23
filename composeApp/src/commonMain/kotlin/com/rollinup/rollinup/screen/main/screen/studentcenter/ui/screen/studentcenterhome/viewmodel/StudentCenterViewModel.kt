@@ -33,11 +33,9 @@ class StudentCenterViewModel(
     private val _pagingData = MutableStateFlow<PagingData<UserEntity>>(PagingData.empty())
     val pagingData = _pagingData.asStateFlow()
 
-    val isMobile = getPlatform().isMobile()
-
-    fun init(user: LoginEntity?) {
+    fun init(user: LoginEntity?, isMobile: Boolean) {
         if (user == null) return
-        _uiState.value = _uiState.value.copy(user = user)
+        _uiState.value = _uiState.value.copy(user = user, isMobile = isMobile)
 
         if (isMobile) {
             getPagingData()
@@ -55,7 +53,7 @@ class StudentCenterViewModel(
         onResetMessageState = ::resetMessageState,
     )
 
-    fun getFilter() {
+    private fun getFilter() {
         _uiState.update { it.copy(isLoadingFilter = true) }
         viewModelScope.launch {
             getUserOptionUseCase().collectLatest { result ->
@@ -78,7 +76,7 @@ class StudentCenterViewModel(
     }
 
     private fun refresh() {
-        if (isMobile) {
+        if (_uiState.value.isMobile) {
             getPagingData()
         } else {
             getList()

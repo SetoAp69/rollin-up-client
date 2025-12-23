@@ -109,7 +109,6 @@ class GlobalSettingViewmodel(
 
     private fun validateForm(formData: GlobalSettingFormData): Boolean {
         var formData = formData
-        L.wtf { "Form data: $formData" }
         if ((formData.attendanceStart ?: 0) > (formData.attendanceEnd ?: 0)) {
             val errorMsg = "The start period cannot be later than the end period."
             formData = formData.copy(
@@ -130,9 +129,5 @@ class GlobalSettingViewmodel(
         }
 
         return formData.isValid
-    }
-
-    private fun Long.epochMilliToUtcSecond(): Long {
-        return this.toLocalTime().toUTCTime().toSecondOfDay().toLong()
     }
 }

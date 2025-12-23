@@ -6,5 +6,3 @@ data class LoginCallback(
     val onResetMessageState: () -> Unit = {},
 )
 
-
-class TestClass(){}

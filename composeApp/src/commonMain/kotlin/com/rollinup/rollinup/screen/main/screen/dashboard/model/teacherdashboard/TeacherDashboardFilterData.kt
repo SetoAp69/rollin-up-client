@@ -13,7 +13,7 @@ data class TeacherDashboardFilterData(
     val status: List<AttendanceStatus> = emptyList(),
 ) {
     fun toQueryParams() = GetAttendanceListByClassQueryParams(
-        search = searchQuery,
+        search = searchQuery.ifBlank { null },
         status = status.map { it.value }.toJsonString(),
         date = LocalDate.now().toEpochMilli().toString()
     )

@@ -6,7 +6,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.rollinup.rollinup.component.handlestate.HandleState
 import com.rollinup.rollinup.component.model.OnShowSnackBar
+import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.theme.localUser
+import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.screen.main.screen.studentcenter.ui.screen.studentcenterhome.viewmodel.StudentCenterViewModel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -25,9 +27,9 @@ fun StudentCenterScreen(
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val pagingData = viewModel.pagingData.collectAsLazyPagingItems()
     val localUser = localUser
-
+    val isMobile = getPlatform().isMobile()
     LaunchedEffect(localUser) {
-        viewModel.init(localUser)
+        viewModel.init(localUser, isMobile)
     }
     HandleState(
         state = uiState.exportState,
@@ -36,7 +38,7 @@ fun StudentCenterScreen(
         onDispose = cb.onResetMessageState,
         onShowSnackBar = onShowSnackBar,
     )
-    if (viewModel.isMobile) {
+    if (isMobile) {
         StudentCenterMobileContent(
             uiState = uiState,
             cb = cb,

@@ -17,8 +17,6 @@ import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.Result
 import com.rollinup.apiservice.utils.Utils.toJsonString
 import com.rollinup.rollinup.component.export.FileWriter
-import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
-import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.screen.main.screen.attendance.model.attendancehome.AttendanceCallback
 import com.rollinup.rollinup.screen.main.screen.attendance.model.attendancehome.AttendanceFilterData
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancehome.uistate.AttendanceUiState
@@ -37,8 +35,6 @@ class AttendanceViewModel(
     private val getExportAttendanceDataUseCase: GetExportAttendanceDataUseCase,
     private val fileWriter: FileWriter,
 ) : ViewModel() {
-    private val isMobile = getPlatform().isMobile()
-
     private val _uiState = MutableStateFlow(AttendanceUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -46,9 +42,9 @@ class AttendanceViewModel(
         MutableStateFlow<PagingData<AttendanceByClassEntity>>(PagingData.empty())
     val pagingData = _pagingData.asStateFlow()
 
-    fun init(localUser: LoginEntity?) {
+    fun init(localUser: LoginEntity?, isMobile: Boolean) {
         if (localUser == null) return
-        _uiState.update { it.copy(user = localUser) }
+        _uiState.update { it.copy(user = localUser, isMobile = isMobile) }
         if (isMobile) {
             getPagingData()
         } else {
@@ -130,7 +126,7 @@ class AttendanceViewModel(
                         _uiState.update {
                             it.copy(
                                 isLoadingOverlay = false,
-                                exportState = true
+                                exportState = false
                             )
                         }
                     }
@@ -143,7 +139,7 @@ class AttendanceViewModel(
     private fun getSummary() {
         _uiState.update { it.copy(isLoadingSummary = true) }
         val date = _uiState.value.filterData.date
-        val classKey = _uiState.value.user.classKey ?: 0
+        val classKey = _uiState.value.user.classKey ?: return
 
         viewModelScope.launch {
             getAttendanceByClassSummaryUseCase(classKey, date).collectLatest { result ->
@@ -212,7 +208,7 @@ class AttendanceViewModel(
     }
 
     private fun refresh() {
-        if (isMobile) {
+        if (uiState.value.isMobile) {
             getPagingData()
         } else {
             getAttendanceList()

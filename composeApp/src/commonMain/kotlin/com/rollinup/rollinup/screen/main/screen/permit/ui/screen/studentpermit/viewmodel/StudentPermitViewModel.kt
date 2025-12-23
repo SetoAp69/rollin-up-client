@@ -30,7 +30,7 @@ class StudentPermitViewModel(
     val pagingData = _pagingData.asStateFlow()
 
     fun init(user: LoginEntity?) {
-        if(user == null) return
+        if (user == null) return
         _uiState.update { it.copy(user = user) }
         getPermitPaging()
     }
@@ -41,7 +41,8 @@ class StudentPermitViewModel(
             onRefresh = ::getPermitPaging,
             onFilter = ::filter,
             onSearch = ::search,
-            onCancelPermit = ::cancelPermit
+            onCancelPermit = ::cancelPermit,
+            onResetMessageState = ::resetMessageState
         )
 
     private fun getPermitPaging() {

@@ -101,7 +101,6 @@ class PermitFormViewModel(
         formData: PermitFormData,
     ) {
         _uiState.update { it.copy(formData = formData) }
-        L.wtf{ "Attachment"+formData.attachment?.readBytes().toString()}
     }
 
     @Suppress("UNCHECKED_CAST")

@@ -32,8 +32,6 @@ class AttendanceByStudentViewModel(
     private val getAttendanceByIdUseCase: GetAttendanceByIdUseCase,
     private val fileWriter: FileWriter,
 ) : ViewModel() {
-    private val isMobile = getPlatform().isMobile()
-
     private val _uiState = MutableStateFlow(AttendanceByStudentUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -41,11 +39,11 @@ class AttendanceByStudentViewModel(
         MutableStateFlow<PagingData<AttendanceByStudentEntity>>(PagingData.empty())
     val pagingData = _pagingData.asStateFlow()
 
-    fun init(studentUserId: String) {
+    fun init(studentUserId: String, isMobile:Boolean) {
         if (studentUserId.isBlank()) return
 
         _uiState.update {
-            it.copy(studentUserId = studentUserId)
+            it.copy(studentUserId = studentUserId, isMobile =isMobile)
         }
 
         if (isMobile) {
@@ -70,7 +68,7 @@ class AttendanceByStudentViewModel(
     )
 
     private fun refresh() {
-        if (isMobile) {
+        if (uiState.value.isMobile) {
             getPaging()
         } else {
             getItemList()

@@ -49,7 +49,6 @@ class UserCenterViewmodel(
                 when (result) {
                     is Result.Success -> {
                         _uiState.update { state ->
-                            L.wtf{result.data.toString()}
                             state.copy(
                                 filterOptions = state.filterOptions.copy(
                                     roleOptions = result.data.roleOptions,

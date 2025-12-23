@@ -6,6 +6,6 @@ data class UpdatePasswordCallback(
     val onSubmitOtp: (String) -> Unit = {},
     val onUpdateOtp: (String) -> Unit = {},
     val onResendOtp: () -> Unit = {},
-    val onResetForm: () -> Unit = {},
+    val onResetOtp: () -> Unit = {},
     val onResetMessageState: () -> Unit = {},
 )

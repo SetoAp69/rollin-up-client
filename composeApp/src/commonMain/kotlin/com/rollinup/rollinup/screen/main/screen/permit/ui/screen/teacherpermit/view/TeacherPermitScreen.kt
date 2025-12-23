@@ -26,10 +26,12 @@ fun TeacherPermitScreen(
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val cb = viewModel.getCallback()
     val localUser = localUser
+    val isMobile = getPlatform().isMobile()
 
     LaunchedEffect(localUser) {
-        viewModel.init(localUser)
+        viewModel.init(localUser, isMobile)
     }
+
     HandleState(
         state = uiState.exportState,
         successMsg = stringResource(Res.string.msg_export_success),
