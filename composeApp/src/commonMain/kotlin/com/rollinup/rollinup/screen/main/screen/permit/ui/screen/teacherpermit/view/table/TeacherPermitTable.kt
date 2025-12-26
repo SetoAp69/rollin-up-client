@@ -1,6 +1,5 @@
 package com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.view.table
 
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -117,7 +116,7 @@ private fun getColumn(): List<TableColumn<PermitByClassEntity>> {
                 color = theme.bodyText
             )
         },
-        TableColumn(stringResource(Res.string.label_class),0.5f) {
+        TableColumn(stringResource(Res.string.label_class), 0.5f) {
             Text(
                 text = it.student.xClass,
                 style = Style.body,

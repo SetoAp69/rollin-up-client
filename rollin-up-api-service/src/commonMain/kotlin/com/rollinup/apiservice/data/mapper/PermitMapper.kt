@@ -8,7 +8,6 @@ import com.rollinup.apiservice.model.permit.PermitByClassEntity
 import com.rollinup.apiservice.model.permit.PermitByStudentEntity
 import com.rollinup.apiservice.model.permit.PermitDetailEntity
 import com.rollinup.apiservice.model.permit.PermitType
-import com.rollinup.apiservice.utils.Utils
 import com.rollinup.apiservice.utils.Utils.getFileLink
 
 class PermitMapper {

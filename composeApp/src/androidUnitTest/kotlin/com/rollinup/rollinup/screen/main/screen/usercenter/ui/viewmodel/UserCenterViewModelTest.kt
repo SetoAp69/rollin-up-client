@@ -139,7 +139,7 @@ class UserCenterViewModelTest {
 
         arrangeGetUserList(queryParams, Result.Error(NetworkError.RESPONSE_ERROR))
 //        arrangeGetUserOptions(Result.Error(NetworkError.RESPONSE_ERROR))
-        coEvery { getUserOptionUseCase()  } returns flowOf(Result.Error(NetworkError.RESPONSE_ERROR))
+        coEvery { getUserOptionUseCase() } returns flowOf(Result.Error(NetworkError.RESPONSE_ERROR))
 
         //Act
         viewModel.init()

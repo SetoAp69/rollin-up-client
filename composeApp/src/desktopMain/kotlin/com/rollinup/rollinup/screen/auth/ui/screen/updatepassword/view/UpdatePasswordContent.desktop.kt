@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.rollinup.rollinup.component.handlestate.HandleState
 import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.theme.Style
@@ -49,7 +48,7 @@ actual fun UpdatePasswordContent(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    when(uiState.currentStep){
+                    when (uiState.currentStep) {
                         UpdatePasswordStep.OTP -> {
                             SubmitOtpForm(
                                 uiState = uiState,
@@ -57,6 +56,7 @@ actual fun UpdatePasswordContent(
                                 cb = cb,
                             )
                         }
+
                         UpdatePasswordStep.UPDATE_PASSWORD -> {
                             Text(
                                 text = "Update Password",

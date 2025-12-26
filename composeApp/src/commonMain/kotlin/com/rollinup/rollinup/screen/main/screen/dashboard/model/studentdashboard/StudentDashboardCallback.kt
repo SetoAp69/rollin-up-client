@@ -7,8 +7,8 @@ import dev.jordond.compass.Location
 data class StudentDashboardCallback(
     val onRefresh: () -> Unit = {},
     val onShowAttendanceDetail: (String) -> Unit = {},
-    val onUpdateLocation: (Location?, Boolean) -> Unit = {_,_,->},
+    val onUpdateLocation: (Location?, Boolean) -> Unit = { _, _ -> },
     val onCheckIn: (MultiPlatformFile, Location) -> Unit = { _, _ -> },
     val onUpdateDateRangeSelected: (List<Long>) -> Unit = {},
-    val onUpdateLoginData:(LoginEntity)->Unit = {}
+    val onUpdateLoginData: (LoginEntity) -> Unit = {},
 )

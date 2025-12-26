@@ -34,8 +34,7 @@ fun ShimmerEffect(
             .clip(RoundedCornerShape(cornerRad))
             .width(width)
             .height(height)
-            .then(modifier)
-        ,
+            .then(modifier),
         durationMillis = durationMillis
     )
 }
@@ -60,7 +59,6 @@ fun ShimmerEffect(
         ),
         label = "shimmerColor"
     )
-
 
 
     val brush = SolidColor(

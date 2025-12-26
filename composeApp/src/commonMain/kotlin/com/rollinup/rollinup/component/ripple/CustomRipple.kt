@@ -1,6 +1,5 @@
 package com.rollinup.rollinup.component.ripple
 
-import androidx.compose.material.ripple.RippleAlpha
 import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.RippleConfiguration
 import androidx.compose.runtime.Composable

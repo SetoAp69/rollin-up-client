@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,7 +19,6 @@ import androidx.paging.compose.LazyPagingItems
 import com.rollinup.rollinup.component.empty.EmptyRecord
 import com.rollinup.rollinup.component.pullrefresh.PullRefresh
 import com.rollinup.rollinup.component.spacer.itemGap4
-import com.rollinup.rollinup.component.spacer.screenPaddingValues
 import com.rollinup.rollinup.component.theme.theme
 
 @Composable
@@ -45,12 +43,12 @@ fun <T : Any> PagingColumn(
                 repeat(5) {
                     item { loadingContent() }
                 }
-            }else{
-                if(pagingData.loadState.isIdle && pagingData.itemCount == 0){
+            } else {
+                if (pagingData.loadState.isIdle && pagingData.itemCount == 0) {
                     item {
                         EmptyRecord()
                     }
-                }else{
+                } else {
                     items(pagingData.itemCount) { index ->
                         pagingData[index]?.let {
                             itemContent(it)

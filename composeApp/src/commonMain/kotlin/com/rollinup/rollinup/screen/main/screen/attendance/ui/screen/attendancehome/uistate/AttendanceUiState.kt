@@ -17,7 +17,7 @@ data class AttendanceUiState(
     val isLoadingDetail: Boolean = false,
     val isLoadingOverlay: Boolean = false,
     val user: LoginEntity = LoginEntity(),
-    val isMobile:Boolean = false,
+    val isMobile: Boolean = false,
     val filterData: AttendanceFilterData = AttendanceFilterData(),
     val searchQuery: String = "",
     val attendanceDetail: AttendanceDetailEntity = AttendanceDetailEntity(),

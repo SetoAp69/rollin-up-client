@@ -12,7 +12,6 @@ import androidx.compose.ui.unit.dp
 import com.rollinup.common.model.OptionData
 import com.rollinup.rollinup.component.dropdown.DropDownMenu
 import com.rollinup.rollinup.component.theme.theme
-import com.rollinup.rollinup.component.utils.getScreenHeight
 
 @Composable
 actual fun <T> MultiSelector(

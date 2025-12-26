@@ -8,14 +8,12 @@ import com.rollinup.apiservice.data.source.network.model.request.permit.GetPermi
 import com.rollinup.apiservice.data.source.network.model.response.ApiResponse
 import com.rollinup.apiservice.data.source.network.model.response.permit.GetPermitListByClassResponse
 import com.rollinup.apiservice.model.permit.ApprovalStatus
-import com.rollinup.apiservice.model.permit.PermitByClassEntity
 import com.rollinup.apiservice.model.permit.PermitType
 import com.rollinup.apiservice.utils.Utils
 import io.ktor.http.HttpStatusCode
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import kotlinx.coroutines.test.runTest
@@ -40,7 +38,7 @@ class GetPermitByClassPagingSourceTest {
     fun setup() {
         MockKAnnotations.init(this)
         mockkObject(Utils)
-        
+
         mapper = PermitMapper()
         pagingSource = GetPermitByClassPagingSource(
             datasource = dataSource,
@@ -96,7 +94,7 @@ class GetPermitByClassPagingSourceTest {
         // Assert
         assertTrue(result is PagingSource.LoadResult.Page)
         assertEquals(1, result.data.size)
-        
+
         val item = result.data[0]
         assertEquals("p1", item.id)
         assertEquals(ApprovalStatus.APPROVED, item.approvalStatus) // "Disetujui" -> APPROVED
@@ -121,7 +119,11 @@ class GetPermitByClassPagingSourceTest {
                 approvalStatus = "APPROVAL_PENDING",
                 type = "ABSENCE",
                 endTime = "10:00",
-                student = GetPermitListByClassResponse.Data.User(id = "s$it", name = "Name", xClass = "10A"),
+                student = GetPermitListByClassResponse.Data.User(
+                    id = "s$it",
+                    name = "Name",
+                    xClass = "10A"
+                ),
                 createdAt = "now"
             )
         }

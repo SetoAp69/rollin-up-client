@@ -357,7 +357,7 @@ class TeacherPermitViewModelTest {
     }
 
     @Test
-    fun `selectAll() on mobile should success fetch all permit list`() = runTest{
+    fun `selectAll() on mobile should success fetch all permit list`() = runTest {
         //Arrange
         val user = LoginEntity(classKey = 12)
         val mockList = listOf(PermitByClassEntity(id = "123"))

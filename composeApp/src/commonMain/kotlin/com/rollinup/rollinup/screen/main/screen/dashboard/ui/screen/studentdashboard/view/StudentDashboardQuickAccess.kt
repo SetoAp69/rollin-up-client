@@ -10,8 +10,8 @@ import com.rollinup.apiservice.model.attendance.AttendanceStatus
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.textfield.TextFieldTitle
 import com.rollinup.rollinup.component.theme.Style
-import com.rollinup.rollinup.screen.main.screen.dashboard.model.studentdashboard.StudentDashboardQuickAccessCallback
 import com.rollinup.rollinup.screen.dashboard.ui.component.DashBoardButton
+import com.rollinup.rollinup.screen.main.screen.dashboard.model.studentdashboard.StudentDashboardQuickAccessCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.uistate.StudentDashboardUiState
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_location_circled_bottom_line_24
@@ -48,7 +48,7 @@ fun StudentDashboardQuickAccess(
             DashBoardButton(
                 text = "Check In",
                 icon = Res.drawable.ic_location_circled_bottom_line_24,
-                isEnabled = uiState.isLocationValid == true && uiState.currentStatus== AttendanceStatus.NO_DATA,
+                isEnabled = uiState.isLocationValid == true && uiState.currentStatus == AttendanceStatus.NO_DATA,
                 onClick = cb.onCheckIn
             )
             DashBoardButton(

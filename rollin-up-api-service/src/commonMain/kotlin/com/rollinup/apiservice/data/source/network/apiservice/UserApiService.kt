@@ -1,6 +1,5 @@
 package com.rollinup.apiservice.data.source.network.apiservice
 
-import com.rollinup.apiservice.data.source.network.model.request.user.UpdatePasswordAndVerificationBody
 import com.rollinup.apiservice.data.source.network.model.request.user.CreateEditUserBody
 import com.rollinup.apiservice.data.source.network.model.request.user.CreateResetPasswordRequestBody
 import com.rollinup.apiservice.data.source.network.model.request.user.DeleteUserBody
@@ -8,6 +7,7 @@ import com.rollinup.apiservice.data.source.network.model.request.user.GetUserQue
 import com.rollinup.apiservice.data.source.network.model.request.user.SubmitResetPasswordBody
 import com.rollinup.apiservice.data.source.network.model.request.user.SubmitResetPasswordOTPBody
 import com.rollinup.apiservice.data.source.network.model.request.user.SubmitVerificationOTPBody
+import com.rollinup.apiservice.data.source.network.model.request.user.UpdatePasswordAndVerificationBody
 import com.rollinup.apiservice.data.source.network.model.response.ApiResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.GetUserByIdResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.GetUserListResponse

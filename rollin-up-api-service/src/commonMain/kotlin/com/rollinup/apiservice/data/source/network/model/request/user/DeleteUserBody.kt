@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DeleteUserBody(
     @SerialName("listId")
-    val listId:List<String> = emptyList()
+    val listId: List<String> = emptyList(),
 )

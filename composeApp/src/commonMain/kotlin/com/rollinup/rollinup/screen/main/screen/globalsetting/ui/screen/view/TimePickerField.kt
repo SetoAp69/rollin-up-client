@@ -10,9 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.rollinup.rollinup.component.date.DateFormatter
-import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.textfield.BaseTextField
 import com.rollinup.rollinup.component.textfield.TextError
 import com.rollinup.rollinup.component.textfield.TextFieldTitle

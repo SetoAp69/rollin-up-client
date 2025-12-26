@@ -16,7 +16,7 @@ import com.rollinup.rollinup.screen.main.screen.studentcenter.ui.screen.studentc
 fun StudentCenterPaging(
     pagingData: LazyPagingItems<UserEntity>,
     cb: StudentCenterCallback,
-    onNavigateTo:(String)->Unit
+    onNavigateTo: (String) -> Unit,
 ) {
     var showAction by remember { mutableStateOf(false) }
     var selectedItem: UserEntity? by remember { mutableStateOf(null) }
@@ -38,11 +38,11 @@ fun StudentCenterPaging(
         },
         onRefresh = cb.onRefresh
     )
-    selectedItem?.let {item->
+    selectedItem?.let { item ->
         StudentCenterActionSheet(
             showSheet = showAction,
-            item =item,
-            onDismissRequest ={showAction = it},
+            item = item,
+            onDismissRequest = { showAction = it },
             onNavigateTo = onNavigateTo
         )
     }

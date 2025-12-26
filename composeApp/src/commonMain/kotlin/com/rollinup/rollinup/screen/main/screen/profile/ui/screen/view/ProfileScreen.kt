@@ -8,10 +8,10 @@ import com.rollinup.rollinup.component.theme.localUser
 
 @Composable
 fun ProfileScreen(
-    onShowSnackBar: OnShowSnackBar
+    onShowSnackBar: OnShowSnackBar,
 ) {
     val id = localUser?.id ?: ""
-    Scaffold{
+    Scaffold {
         ProfileScreen(
             id = id,
             showEdit = true,

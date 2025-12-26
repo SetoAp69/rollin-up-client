@@ -6,11 +6,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
-import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardStateHandler
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.table.AttendanceTable
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.table.AttendanceTableHeader
 

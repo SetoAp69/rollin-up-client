@@ -21,7 +21,6 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -72,6 +71,7 @@ class GlobalSettingApiDataSourceTest {
                                 }
                             )
                         }
+
                         else -> {
                             respond(content = "Not found", status = HttpStatusCode.NotFound)
                         }
@@ -99,34 +99,9 @@ class GlobalSettingApiDataSourceTest {
     }
 
     @After
-    fun tearDown(){
+    fun tearDown() {
         unmockkAll()
     }
-
-//    @Test
-//    fun `listen() should emit Success when global-setting-update event received`() = runTest {
-//        //Arrange
-//        val sseContent = """
-//            event: global-setting-update
-//            data: {}
-//
-//        """.trimIndent()
-//
-//        response = HttpResponseData(
-//            content = sseContent,
-//            status = HttpStatusCode.OK,
-//            contentType = ContentType.Text.EventStream
-//        )
-//        method = HttpMethod.Get
-//        baseUrl = MockUrl.SSE
-//
-//        //Act
-//        val result = dataSource.listen().first()
-//
-//        //Assert
-//        assertTrue { result is ApiResponse.Success }
-//        assertEquals(Unit, (result as ApiResponse.Success).data)
-//    }
 
     @Test
     fun `getGlobalSetting() should return ApiResponse Success`() = runTest {

@@ -6,7 +6,7 @@ import kotlinx.cinterop.*
 
 @OptIn(ExperimentalForeignApi::class)
 class IOSFile(
-    val nsurl: NSURL
+    val nsurl: NSURL,
 ) : MultiPlatformFile {
     override val name: String
         get() = ""

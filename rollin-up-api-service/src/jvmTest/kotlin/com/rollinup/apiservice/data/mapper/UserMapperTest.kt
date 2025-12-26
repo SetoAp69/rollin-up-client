@@ -140,7 +140,12 @@ class UserMapperTest {
         val response = GetUserOptionsResponse.Data(
             rolesOptions = listOf(GetUserOptionsResponse.Data.Data(label = "Student", value = 1)),
             classOptions = listOf(GetUserOptionsResponse.Data.Data(label = "10A", value = 1)),
-            rolesIdOptions = listOf(GetUserOptionsResponse.Data.Data(label = "Student", value = "1")),
+            rolesIdOptions = listOf(
+                GetUserOptionsResponse.Data.Data(
+                    label = "Student",
+                    value = "1"
+                )
+            ),
             classIdOptions = listOf(GetUserOptionsResponse.Data.Data(label = "10A", value = "101"))
         )
 

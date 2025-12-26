@@ -94,8 +94,7 @@ fun DashBoardButton(
                         Icon(
                             modifier = Modifier
                                 .padding(itemGap4)
-                                .fillMaxSize()
-                            ,
+                                .fillMaxSize(),
                             painter = painterResource(icon),
                             tint = contentColor,
                             contentDescription = null

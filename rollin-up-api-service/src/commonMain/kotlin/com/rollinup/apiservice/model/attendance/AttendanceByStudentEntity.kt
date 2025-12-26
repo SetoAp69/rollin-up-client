@@ -17,7 +17,7 @@ data class AttendanceByStudentEntity(
         val type: PermitType = PermitType.ABSENCE,
         val start: String = "",
         val end: String = "",
-    ){
+    ) {
         val durationString: String
             get() {
                 val from = start.parseToLocalDateTime()

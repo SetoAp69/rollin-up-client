@@ -12,7 +12,7 @@ data class CreateEditUserUiState(
     val formData: CreateEditUserFormData = CreateEditUserFormData(),
     val submitState: Boolean? = null,
     val isStay: Boolean = false,
-    val initialDetail:UserDetailEntity = UserDetailEntity(),
+    val initialDetail: UserDetailEntity = UserDetailEntity(),
     val formOptions: CreateEditUserFormOption = CreateEditUserFormOption(),
 )
 

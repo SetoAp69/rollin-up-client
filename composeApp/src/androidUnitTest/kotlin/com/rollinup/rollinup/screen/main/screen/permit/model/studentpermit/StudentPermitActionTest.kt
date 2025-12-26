@@ -24,7 +24,7 @@ class StudentPermitActionTest {
 
         // Show Logic: Only visible if pending
         assertTrue(action.show(ApprovalStatus.APPROVAL_PENDING))
-        
+
         assertFalse(action.show(ApprovalStatus.APPROVED))
         assertFalse(action.show(ApprovalStatus.DECLINED))
     }
@@ -41,7 +41,7 @@ class StudentPermitActionTest {
 
         // Show Logic: Only visible if pending
         assertTrue(action.show(ApprovalStatus.APPROVAL_PENDING))
-        
+
         assertFalse(action.show(ApprovalStatus.APPROVED))
         assertFalse(action.show(ApprovalStatus.DECLINED))
     }

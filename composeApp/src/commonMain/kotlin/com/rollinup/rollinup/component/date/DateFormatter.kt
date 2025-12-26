@@ -23,7 +23,7 @@ object DateFormatter {
     fun formateDateTimeFromString(
         dateTime: String,
         timeZone: TimeZone = TimeZone.currentSystemDefault(),
-    ):String {
+    ): String {
         val dt = dateTime.parseToLocalDateTime(timeZone)
         return formatDateTime(dt)
     }

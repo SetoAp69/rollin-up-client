@@ -45,7 +45,7 @@ interface AttendanceApiService {
 
     suspend fun getDashboardData(
         id: String,
-        query:Map<String,String?>
+        query: Map<String, String?>,
     ): ApiResponse<GetDashboardDataResponse>
 
     suspend fun editAttendance(

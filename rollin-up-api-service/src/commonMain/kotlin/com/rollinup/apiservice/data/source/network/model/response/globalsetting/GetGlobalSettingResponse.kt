@@ -10,7 +10,7 @@ data class GetGlobalSettingResponse(
     @SerialName("message")
     val message: String = "",
     @SerialName("data")
-    val `data`: Data = Data()
+    val `data`: Data = Data(),
 ) {
     @Serializable
     data class Data(
@@ -35,14 +35,14 @@ data class GetGlobalSettingResponse(
         @SerialName("radius")
         val radius: Double = 0.0,
         @SerialName("modifiedBY")
-        val modifiedBY: ModifiedBY = ModifiedBY()
+        val modifiedBY: ModifiedBY = ModifiedBY(),
     ) {
         @Serializable
         data class ModifiedBY(
             @SerialName("id")
             val id: String = "",
             @SerialName("name")
-            val name: String = ""
+            val name: String = "",
         )
     }
 }

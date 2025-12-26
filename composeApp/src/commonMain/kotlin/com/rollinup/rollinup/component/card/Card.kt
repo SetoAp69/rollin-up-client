@@ -117,8 +117,7 @@ fun Card(
                         }
                         .background(
                             color = theme.popUpBgSelected,
-                        )
-                        ,
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(

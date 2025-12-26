@@ -79,7 +79,7 @@ object DomainModule {
         singleOf(::GetCachedGlobalSettingUseCase)
         singleOf(::GetGlobalSettingUseCase)
         singleOf(::EditGlobalSettingUseCase)
-        singleOf(::UpdateCachedGlobalSettingUseCase )
+        singleOf(::UpdateCachedGlobalSettingUseCase)
     }
 
     private fun Module.userDomain() {

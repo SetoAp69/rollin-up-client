@@ -1,6 +1,5 @@
 package com.rollinup.apiservice.di
 
-import com.michaelflisar.lumberjack.core.L
 import com.rollinup.apiservice.BuildConfig
 import com.rollinup.apiservice.Constant
 import com.rollinup.apiservice.data.source.datastore.LocalDataStore
@@ -66,7 +65,7 @@ private fun getSSEClient(localDataStore: LocalDataStore) = HttpClient {
 
     install(Auth) {
         bearer {
-            sendWithoutRequest{true}
+            sendWithoutRequest { true }
             loadTokens {
                 val accessToken = localDataStore.getToken()
                 val refreshToken = localDataStore.getRefreshToken()
@@ -138,7 +137,7 @@ private fun getClient(localDataStore: LocalDataStore) = HttpClient {
 
     install(Auth) {
         bearer {
-            sendWithoutRequest{true}
+            sendWithoutRequest { true }
             loadTokens {
                 val accessToken = localDataStore.getToken()
                 val refreshToken = localDataStore.getRefreshToken()
@@ -171,7 +170,7 @@ private fun getClient(localDataStore: LocalDataStore) = HttpClient {
         }
     }
 
-    install(Axer.ktorPlugin){
+    install(Axer.ktorPlugin) {
     }
 }
 

@@ -11,23 +11,23 @@ import kotlinx.coroutines.launch
 @Composable
 fun CreateEditUserStateHandler(
     uiState: CreateEditUserUiState,
-    onResetMessageState:()->Unit,
-    onResetForm:()->Unit,
+    onResetMessageState: () -> Unit,
+    onResetForm: () -> Unit,
     onShowSnackBar: OnShowSnackBar,
     onDismissRequest: (Boolean) -> Unit,
-    onSuccess:()->Unit,
+    onSuccess: () -> Unit,
 ) {
     val successMessage =
-        if(uiState.isEdit){
+        if (uiState.isEdit) {
             "Success, User data successfully edited"
-        }else{
+        } else {
             "Success, User data successfully created"
         }
 
     val errorMessage =
-        if(uiState.isEdit){
+        if (uiState.isEdit) {
             "Error, failed to edit user data"
-        }else{
+        } else {
             "Error, failed to create user data"
         }
 
@@ -38,8 +38,8 @@ fun CreateEditUserStateHandler(
         successMsg = successMessage,
         errorMsg = errorMessage,
         onDispose = onResetMessageState,
-        onSuccess ={
-            scope.launch{
+        onSuccess = {
+            scope.launch {
                 onSuccess()
                 if (!uiState.isStay) {
                     delay(1000)
@@ -47,7 +47,7 @@ fun CreateEditUserStateHandler(
                 }
                 onResetForm()
             }
-        } ,
+        },
         onShowSnackBar = onShowSnackBar
     )
 }

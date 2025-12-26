@@ -41,7 +41,7 @@ class UserMapper {
             },
             email = data.email,
             fullName = data.firstName + " " + data.lastName,
-            studentId = data.studentId?:"-",
+            studentId = data.studentId ?: "-",
             address = data.address,
             gender = Gender.fromValue(data.gender),
             phoneNumber = data.phoneNumber ?: "",

@@ -11,7 +11,7 @@ import com.rollinup.common.model.OptionData
 import com.rollinup.rollinup.screen.main.screen.attendance.model.attendancebystudent.AttendanceByStudentFilterData
 
 data class AttendanceByStudentUiState(
-    val isMobile:Boolean = false,
+    val isMobile: Boolean = false,
     val isLoading: Boolean = false,
     val isLoadingProfile: Boolean = false,
     val isLoadingDetail: Boolean = false,

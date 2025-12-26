@@ -52,10 +52,10 @@ class PermitRepositoryTest {
     @Before
     fun init() {
         MockKAnnotations.init(this)
-        
+
         mockkObject(Utils)
         every { any<String>().getFileLink() } returns "http://mock.url/file.jpg"
-        
+
         repository = PermitRepositoryImpl(
             dataSource = dataSource,
             mapper = mapper,
@@ -74,16 +74,26 @@ class PermitRepositoryTest {
         // Arrange
         val classKey = 10
         val queryParams = GetPermitListQueryParams()
-        
+
         val mockResponse = GetPermitListByClassResponse(
             status = 200, message = "OK",
             data = GetPermitListByClassResponse.Data(
                 record = 1, page = 1,
                 data = listOf(
                     GetPermitListByClassResponse.Data.PermitListDTO(
-                        id = "p1", name = "Sakit", date = "2024-01-01", startTime = "07:00",
-                        reason = "Fever", approvalStatus = "APPROVED", type = "ABSENCE", endTime = "15:00",
-                        student = GetPermitListByClassResponse.Data.User(id = "s1", name = "John", xClass = "10A"),
+                        id = "p1",
+                        name = "Sakit",
+                        date = "2024-01-01",
+                        startTime = "07:00",
+                        reason = "Fever",
+                        approvalStatus = "APPROVED",
+                        type = "ABSENCE",
+                        endTime = "15:00",
+                        student = GetPermitListByClassResponse.Data.User(
+                            id = "s1",
+                            name = "John",
+                            xClass = "10A"
+                        ),
                         createdAt = "2023-12-31"
                     )
                 )
@@ -92,15 +102,21 @@ class PermitRepositoryTest {
 
         val expectedEntity = listOf(
             PermitByClassEntity(
-                id = "p1", name = "Sakit", date = "2024-01-01", startTime = "07:00",
-                reason = "Fever", approvalStatus = ApprovalStatus.APPROVED, type = PermitType.ABSENCE, endTime = "15:00",
+                id = "p1",
+                name = "Sakit",
+                date = "2024-01-01",
+                startTime = "07:00",
+                reason = "Fever",
+                approvalStatus = ApprovalStatus.APPROVED,
+                type = PermitType.ABSENCE,
+                endTime = "15:00",
                 student = PermitByClassEntity.User(id = "s1", name = "John", xClass = "10A"),
                 createdAt = "2023-12-31"
             )
         )
 
-        coEvery { 
-            dataSource.getPermitListByClass(classKey, queryParams.toQueryMap()) 
+        coEvery {
+            dataSource.getPermitListByClass(classKey, queryParams.toQueryMap())
         } returns ApiResponse.Success(mockResponse, HttpStatusCode.OK)
 
         // Act
@@ -117,9 +133,9 @@ class PermitRepositoryTest {
         // Arrange
         val classKey = 10
         val queryParams = GetPermitListQueryParams()
-        
-        coEvery { 
-            dataSource.getPermitListByClass(classKey, queryParams.toQueryMap()) 
+
+        coEvery {
+            dataSource.getPermitListByClass(classKey, queryParams.toQueryMap())
         } returns ApiResponse.Error(Exception("API Error"))
 
         // Act
@@ -131,22 +147,23 @@ class PermitRepositoryTest {
     }
 
     @Test
-    fun `getPermitListByClass should return Result Error Flow when exception is thrown`() = runTest {
-        // Arrange
-        val classKey = 10
-        val queryParams = GetPermitListQueryParams()
-        
-        coEvery { 
-            dataSource.getPermitListByClass(classKey, queryParams.toQueryMap()) 
-        } throws RuntimeException("Crash")
+    fun `getPermitListByClass should return Result Error Flow when exception is thrown`() =
+        runTest {
+            // Arrange
+            val classKey = 10
+            val queryParams = GetPermitListQueryParams()
 
-        // Act
-        val result = repository.getPermitListByClass(classKey, queryParams).first()
+            coEvery {
+                dataSource.getPermitListByClass(classKey, queryParams.toQueryMap())
+            } throws RuntimeException("Crash")
 
-        // Assert
-        coVerify { dataSource.getPermitListByClass(classKey, queryParams.toQueryMap()) }
-        assertTrue(result is Result.Error)
-    }
+            // Act
+            val result = repository.getPermitListByClass(classKey, queryParams).first()
+
+            // Assert
+            coVerify { dataSource.getPermitListByClass(classKey, queryParams.toQueryMap()) }
+            assertTrue(result is Result.Error)
+        }
     //endregion
 
     //region GetPermitListByStudent
@@ -155,7 +172,7 @@ class PermitRepositoryTest {
         // Arrange
         val studentId = "s1"
         val queryParams = GetPermitListQueryParams()
-        
+
         val mockResponse = GetPermitListByStudentResponse(
             status = 200, message = "OK",
             data = GetPermitListByStudentResponse.Data(
@@ -172,14 +189,21 @@ class PermitRepositoryTest {
 
         val expectedEntity = listOf(
             PermitByStudentEntity(
-                id = "p1", studentId = "123", name = "Sakit", date = "2024-01-01",
-                startTime = "07:00", reason = "Sick", approvalStatus = ApprovalStatus.APPROVAL_PENDING,
-                type = PermitType.ABSENCE, endTime = "15:00", createdAt = "2023-12-31"
+                id = "p1",
+                studentId = "123",
+                name = "Sakit",
+                date = "2024-01-01",
+                startTime = "07:00",
+                reason = "Sick",
+                approvalStatus = ApprovalStatus.APPROVAL_PENDING,
+                type = PermitType.ABSENCE,
+                endTime = "15:00",
+                createdAt = "2023-12-31"
             )
         )
 
-        coEvery { 
-            dataSource.getPermitListByStudent(studentId, queryParams.toQueryMap()) 
+        coEvery {
+            dataSource.getPermitListByStudent(studentId, queryParams.toQueryMap())
         } returns ApiResponse.Success(mockResponse, HttpStatusCode.OK)
 
         // Act
@@ -196,9 +220,9 @@ class PermitRepositoryTest {
         // Arrange
         val studentId = "s1"
         val queryParams = GetPermitListQueryParams()
-        
-        coEvery { 
-            dataSource.getPermitListByStudent(studentId, queryParams.toQueryMap()) 
+
+        coEvery {
+            dataSource.getPermitListByStudent(studentId, queryParams.toQueryMap())
         } returns ApiResponse.Error(Exception("Network"))
 
         // Act
@@ -210,22 +234,23 @@ class PermitRepositoryTest {
     }
 
     @Test
-    fun `getPermitListByStudent should return Result Error Flow when exception is thrown`() = runTest {
-        // Arrange
-        val studentId = "s1"
-        val queryParams = GetPermitListQueryParams()
-        
-        coEvery { 
-            dataSource.getPermitListByStudent(studentId, queryParams.toQueryMap()) 
-        } throws RuntimeException("Unknown")
+    fun `getPermitListByStudent should return Result Error Flow when exception is thrown`() =
+        runTest {
+            // Arrange
+            val studentId = "s1"
+            val queryParams = GetPermitListQueryParams()
 
-        // Act
-        val result = repository.getPermitListByStudent(studentId, queryParams).first()
+            coEvery {
+                dataSource.getPermitListByStudent(studentId, queryParams.toQueryMap())
+            } throws RuntimeException("Unknown")
 
-        // Assert
-        coVerify { dataSource.getPermitListByStudent(studentId, queryParams.toQueryMap()) }
-        assertTrue(result is Result.Error)
-    }
+            // Act
+            val result = repository.getPermitListByStudent(studentId, queryParams).first()
+
+            // Assert
+            coVerify { dataSource.getPermitListByStudent(studentId, queryParams.toQueryMap()) }
+            assertTrue(result is Result.Error)
+        }
     //endregion
 
     //region GetPermitById
@@ -233,31 +258,64 @@ class PermitRepositoryTest {
     fun `getPermitById should return Result Success Flow with mapped data`() = runTest {
         // Arrange
         val id = "p1"
-        
+
         val mockResponse = GetPermitByIdResponse(
             status = 200, message = "OK",
             data = GetPermitByIdResponse.Data(
                 id = "p1", date = "2024-01-01", name = "Sakit",
-                student = GetPermitByIdResponse.Data.User(id = "s1", name = "John", username = "john_d", studentId = "123", xClass = "10A"),
+                student = GetPermitByIdResponse.Data.User(
+                    id = "s1",
+                    name = "John",
+                    username = "john_d",
+                    studentId = "123",
+                    xClass = "10A"
+                ),
                 startTime = "07:00", endTime = "15:00", attachment = "file.jpg", note = "Note",
                 reason = "Reason", createdAt = "now", updatedAt = "now",
                 approvalStatus = "APPROVED", approvalNote = "OK",
-                approvedBy = GetPermitByIdResponse.Data.User(id = "t1", name = "Teacher", username = "teach", xClass = null),
+                approvedBy = GetPermitByIdResponse.Data.User(
+                    id = "t1",
+                    name = "Teacher",
+                    username = "teach",
+                    xClass = null
+                ),
                 approvedAt = "later"
             )
         )
 
         val expectedEntity = PermitDetailEntity(
-            id = "p1", date = "2024-01-01", name = "Sakit",
-            student = PermitDetailEntity.User(id = "s1", name = "John", username = "john_d", studentId = "123", xClass = "10A"),
-            startTime = "07:00", endTime = "15:00", attachment = "http://mock.url/file.jpg", note = "Note",
-            reason = "Reason", createdAt = "now", updatedAt = "now",
-            approvalStatus = ApprovalStatus.APPROVED, approvalNote = "OK",
-            approvedBy = PermitDetailEntity.User(id = "t1", name = "Teacher", username = "teach", xClass = null),
+            id = "p1",
+            date = "2024-01-01",
+            name = "Sakit",
+            student = PermitDetailEntity.User(
+                id = "s1",
+                name = "John",
+                username = "john_d",
+                studentId = "123",
+                xClass = "10A"
+            ),
+            startTime = "07:00",
+            endTime = "15:00",
+            attachment = "http://mock.url/file.jpg",
+            note = "Note",
+            reason = "Reason",
+            createdAt = "now",
+            updatedAt = "now",
+            approvalStatus = ApprovalStatus.APPROVED,
+            approvalNote = "OK",
+            approvedBy = PermitDetailEntity.User(
+                id = "t1",
+                name = "Teacher",
+                username = "teach",
+                xClass = null
+            ),
             approvedAt = "later"
         )
 
-        coEvery { dataSource.getPermitById(id) } returns ApiResponse.Success(mockResponse, HttpStatusCode.OK)
+        coEvery { dataSource.getPermitById(id) } returns ApiResponse.Success(
+            mockResponse,
+            HttpStatusCode.OK
+        )
 
         // Act
         val result = repository.getPermitById(id).first()
@@ -301,7 +359,8 @@ class PermitRepositoryTest {
     @Test
     fun `doApproval should return Result Success Unit`() = runTest {
         // Arrange
-        val body = PermitApprovalBody(listId =listOf( "p1"), approvalNote = "Disetujui", isApproved = true)
+        val body =
+            PermitApprovalBody(listId = listOf("p1"), approvalNote = "Disetujui", isApproved = true)
 
         coEvery { dataSource.doApproval(body) } returns ApiResponse.Success(Unit, HttpStatusCode.OK)
 
@@ -317,7 +376,8 @@ class PermitRepositoryTest {
     @Test
     fun `doApproval should return Result Error Flow`() = runTest {
         // Arrange
-        val body = PermitApprovalBody(listId =listOf( "p1"), approvalNote = "Disetujui", isApproved = true)
+        val body =
+            PermitApprovalBody(listId = listOf("p1"), approvalNote = "Disetujui", isApproved = true)
 
         coEvery { dataSource.doApproval(body) } returns ApiResponse.Error(Exception("Failed"))
 
@@ -332,7 +392,8 @@ class PermitRepositoryTest {
     @Test
     fun `doApproval should return Result Error Flow when exception is thrown`() = runTest {
         // Arrange
-        val body = PermitApprovalBody(listId =listOf( "p1"), approvalNote = "Disetujui", isApproved = true)
+        val body =
+            PermitApprovalBody(listId = listOf("p1"), approvalNote = "Disetujui", isApproved = true)
         coEvery { dataSource.doApproval(body) } throws RuntimeException("Error")
 
         // Act
@@ -349,7 +410,10 @@ class PermitRepositoryTest {
     fun `createPermit should return Result Success Unit`() = runTest {
         // Arrange
         val body = CreateEditPermitBody(studentId = "s1", type = PermitType.ABSENCE)
-        coEvery { dataSource.createPermit(body) } returns ApiResponse.Success(Unit, HttpStatusCode.Created)
+        coEvery { dataSource.createPermit(body) } returns ApiResponse.Success(
+            Unit,
+            HttpStatusCode.Created
+        )
 
         // Act
         val result = repository.createPermit(body).first()
@@ -395,7 +459,10 @@ class PermitRepositoryTest {
         // Arrange
         val id = "p1"
         val body = CreateEditPermitBody(studentId = "s1", type = PermitType.ABSENCE)
-        coEvery { dataSource.editPermit(id, body) } returns ApiResponse.Success(Unit, HttpStatusCode.OK)
+        coEvery { dataSource.editPermit(id, body) } returns ApiResponse.Success(
+            Unit,
+            HttpStatusCode.OK
+        )
 
         // Act
         val result = repository.editPermit(id, body).first()
@@ -411,7 +478,12 @@ class PermitRepositoryTest {
         // Arrange
         val id = "p1"
         val body = CreateEditPermitBody(studentId = "s1", type = PermitType.ABSENCE)
-        coEvery { dataSource.editPermit(id, body) } returns ApiResponse.Error(Exception("Bad Request"))
+        coEvery {
+            dataSource.editPermit(
+                id,
+                body
+            )
+        } returns ApiResponse.Error(Exception("Bad Request"))
 
         // Act
         val result = repository.editPermit(id, body).first()
@@ -442,7 +514,10 @@ class PermitRepositoryTest {
     fun `cancelPermit should return Result Success Unit`() = runTest {
         // Arrange
         val id = "p1"
-        coEvery { dataSource.cancelPermitRequest(id) } returns ApiResponse.Success(Unit, HttpStatusCode.OK)
+        coEvery { dataSource.cancelPermitRequest(id) } returns ApiResponse.Success(
+            Unit,
+            HttpStatusCode.OK
+        )
 
         // Act
         val result = repository.cancelPermit(id).first()

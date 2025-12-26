@@ -1,4 +1,3 @@
-
 package com.rollinup.rollinup
 
 import kotlinx.coroutines.Dispatchers
@@ -11,9 +10,9 @@ import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 
 @ExperimentalCoroutinesApi
-class CoroutineTestRule (
-    val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
-): TestWatcher(){
+class CoroutineTestRule(
+    val testDispatcher: TestDispatcher = UnconfinedTestDispatcher(),
+) : TestWatcher() {
     override fun starting(description: Description?) {
         Dispatchers.setMain(testDispatcher)
     }

@@ -6,5 +6,5 @@ import com.rollinup.rollinup.component.utils.getCurrentDateAsList
 
 data class AttendanceFilterData(
     val status: List<AttendanceStatus> = emptyList(),
-    val date:Long? = getCurrentDateAsList().firstOrNull()?.toEpochMillis(),
+    val date: Long? = getCurrentDateAsList().firstOrNull()?.toEpochMillis(),
 )

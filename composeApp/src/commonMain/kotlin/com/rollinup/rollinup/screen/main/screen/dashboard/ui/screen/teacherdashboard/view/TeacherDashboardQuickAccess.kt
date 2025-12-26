@@ -19,7 +19,7 @@ import rollin_up.composeapp.generated.resources.ic_user_line_24
 fun TeacherDashboardQuickAccess(
     onPermit: () -> Unit,
     onStudent: () -> Unit,
-    onStudentAttendance:()->Unit
+    onStudentAttendance: () -> Unit,
 ) {
     TextFieldTitle(
         title = "Quick Access",

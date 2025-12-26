@@ -48,7 +48,7 @@ class AuthRepositoryTest {
     @Before
     fun init() {
         MockKAnnotations.init(this)
-        
+
         // Mock Utils for error handling
         mockkObject(Utils)
         every { Utils.handleApiError(any<Exception>()) } returns Result.Error(NetworkError.RESPONSE_ERROR)
@@ -70,7 +70,7 @@ class AuthRepositoryTest {
     fun `login should return Result Success Flow with mapped entity`() = runTest {
         // Arrange
         val body = LoginBody(email = "test@mail.com", password = "password")
-        
+
         // Constructing complex nested response based on AuthMapper usage
         val mockUser = LoginResponse.Data.UserData(
             id = "u1",
@@ -86,7 +86,7 @@ class AuthRepositoryTest {
             classKey = 101,
             isVerified = true
         )
-        
+
         val mockResponseData = LoginResponse.Data(
             data = mockUser,
             refreshToken = "refresh_token",
@@ -94,7 +94,7 @@ class AuthRepositoryTest {
         )
 
         val mockApiResponse = LoginResponse(
-            status = 200, 
+            status = 200,
             message = "OK",
             data = mockResponseData
         )
@@ -116,7 +116,10 @@ class AuthRepositoryTest {
             isVerified = true
         )
 
-        coEvery { dataSource.login(body) } returns ApiResponse.Success(mockApiResponse, HttpStatusCode.OK)
+        coEvery { dataSource.login(body) } returns ApiResponse.Success(
+            mockApiResponse,
+            HttpStatusCode.OK
+        )
 
         // Act
         val result = repository.login(body).first()
@@ -161,7 +164,7 @@ class AuthRepositoryTest {
     fun `loginJWT should return Result Success Flow with mapped entity`() = runTest {
         // Arrange
         val token = "valid_token"
-        
+
         // Reuse similar mock structure
         val mockUser = LoginResponse.Data.UserData(
             id = "u1", deviceId = "dev1", userName = "john", email = "test@mail.com",
@@ -180,7 +183,10 @@ class AuthRepositoryTest {
             classX = "10A", classId = "c1", classKey = 101, isVerified = true
         )
 
-        coEvery { dataSource.loginJWT(token) } returns ApiResponse.Success(mockApiResponse, HttpStatusCode.OK)
+        coEvery { dataSource.loginJWT(token) } returns ApiResponse.Success(
+            mockApiResponse,
+            HttpStatusCode.OK
+        )
 
         // Act
         val result = repository.loginJWT(token).first()
@@ -227,9 +233,9 @@ class AuthRepositoryTest {
         val id = "u1"
         val token = "token"
         val body = UpdatePasswordAndVerificationBody(password = "newPass", token = "1234")
-        
-        coEvery { 
-            dataSource.updatePasswordAndDevice(id, token, body) 
+
+        coEvery {
+            dataSource.updatePasswordAndDevice(id, token, body)
         } returns ApiResponse.Success(Unit, HttpStatusCode.OK)
 
         // Act
@@ -247,9 +253,9 @@ class AuthRepositoryTest {
         val id = "u1"
         val token = "token"
         val body = UpdatePasswordAndVerificationBody(password = "newPass")
-        
-        coEvery { 
-            dataSource.updatePasswordAndDevice(id, token, body) 
+
+        coEvery {
+            dataSource.updatePasswordAndDevice(id, token, body)
         } returns ApiResponse.Error(Exception("Failed"))
 
         // Act
@@ -260,22 +266,23 @@ class AuthRepositoryTest {
     }
 
     @Test
-    fun `updatePasswordAndDevice should return Result Error Flow when exception is thrown`() = runTest {
-        // Arrange
-        val id = "u1"
-        val token = "token"
-        val body = UpdatePasswordAndVerificationBody(password = "newPass")
-        
-        coEvery { 
-            dataSource.updatePasswordAndDevice(id, token, body) 
-        } throws RuntimeException("Error")
+    fun `updatePasswordAndDevice should return Result Error Flow when exception is thrown`() =
+        runTest {
+            // Arrange
+            val id = "u1"
+            val token = "token"
+            val body = UpdatePasswordAndVerificationBody(password = "newPass")
 
-        // Act
-        val result = repository.updatePasswordAndDevice(id, body, token).first()
+            coEvery {
+                dataSource.updatePasswordAndDevice(id, token, body)
+            } throws RuntimeException("Error")
 
-        // Assert
-        assertTrue(result is Result.Error)
-    }
+            // Act
+            val result = repository.updatePasswordAndDevice(id, body, token).first()
+
+            // Assert
+            assertTrue(result is Result.Error)
+        }
     //endregion
 
     //region ClearClientToken

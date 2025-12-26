@@ -6,7 +6,6 @@ import com.rollinup.apiservice.data.source.network.apiservice.GlobalSettingApiSe
 import com.rollinup.apiservice.data.source.network.model.request.globalsetting.EditGlobalSettingBody
 import com.rollinup.apiservice.data.source.network.model.response.ApiResponse
 import com.rollinup.apiservice.data.source.network.model.response.globalsetting.GetGlobalSettingResponse
-import com.rollinup.apiservice.data.source.network.model.response.sse.GeneralSettingResponse
 import com.rollinup.apiservice.model.common.GlobalSetting
 import com.rollinup.apiservice.model.common.NetworkError
 import com.rollinup.apiservice.model.common.Result

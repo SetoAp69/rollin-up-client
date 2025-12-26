@@ -94,26 +94,29 @@ actual fun CameraHandler(
     ) {
         ShutterButton(size = 70.dp, color = Color.White) {
             val settings = AVCapturePhotoSettings.photoSettings()
-            output.capturePhotoWithSettings(settings, delegate = object : NSObject(), AVCapturePhotoCaptureDelegateProtocol {
-                override fun captureOutput(
-                    output: AVCapturePhotoOutput,
-                    didFinishProcessingPhoto: AVCapturePhoto,
-                    error: NSError?
-                ) {
-                    if (error != null) {
-                        onError()
-                        return
+            output.capturePhotoWithSettings(
+                settings,
+                delegate = object : NSObject(), AVCapturePhotoCaptureDelegateProtocol {
+                    override fun captureOutput(
+                        output: AVCapturePhotoOutput,
+                        didFinishProcessingPhoto: AVCapturePhoto,
+                        error: NSError?,
+                    ) {
+                        if (error != null) {
+                            onError()
+                            return
+                        }
+
+                        val imageData =
+                            didFinishProcessingPhoto.fileDataRepresentation() ?: return onError()
+                        val filePath = "${NSTemporaryDirectory()}image-captured.jpg"
+                        val fileUrl = NSURL.fileURLWithPath(filePath)
+                        imageData.writeToURL(fileUrl, atomically = true)
+
+                        val file = IOSFile(fileUrl)
+                        onCapture(file)
                     }
-
-                    val imageData = didFinishProcessingPhoto.fileDataRepresentation() ?: return onError()
-                    val filePath = "${NSTemporaryDirectory()}image-captured.jpg"
-                    val fileUrl = NSURL.fileURLWithPath(filePath)
-                    imageData.writeToURL(fileUrl, atomically = true)
-
-                    val file = IOSFile(fileUrl)
-                    onCapture(file)
-                }
-            })
+                })
         }
     }
 

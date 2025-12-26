@@ -13,7 +13,7 @@ data class UpdatePasswordUiState(
     val updatePasswordState: Boolean? = null,
     val submitOtpState: Boolean? = null,
     val requestOtpState: Boolean? = null,
-    val startTimer:Boolean = false,
+    val startTimer: Boolean = false,
     val currentStep: UpdatePasswordStep = UpdatePasswordStep.OTP,
     val token: String = "",
 )

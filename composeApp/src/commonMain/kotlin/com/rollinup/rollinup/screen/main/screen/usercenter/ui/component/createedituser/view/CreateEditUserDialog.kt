@@ -11,7 +11,7 @@ import com.rollinup.rollinup.component.utils.getScreenHeight
 fun CreateEditUserDialog(
     showDialog: Boolean,
     onDismissRequest: (Boolean) -> Unit,
-    onSuccess:()->Unit,
+    onSuccess: () -> Unit,
     id: String? = null,
 ) {
     val maxHeight = getScreenHeight() * 0.8f

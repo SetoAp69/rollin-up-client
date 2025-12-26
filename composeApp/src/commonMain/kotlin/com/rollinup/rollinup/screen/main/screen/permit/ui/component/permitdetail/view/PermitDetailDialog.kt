@@ -1,7 +1,6 @@
 package com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitdetail.view
 
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -10,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rollinup.rollinup.component.dialog.Dialog
 import com.rollinup.rollinup.component.spacer.screenPadding
-import com.rollinup.rollinup.component.utils.getScreenHeight
 import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitdetail.viewmodel.PermitDetailViewModel
 import org.koin.compose.viewmodel.koinViewModel
 

@@ -1,9 +1,9 @@
 package com.rollinup.rollinup.screen.main.screen.usercenter.ui.uistate
 
-import com.rollinup.apiservice.utils.Utils.toJsonString
 import com.rollinup.apiservice.data.source.network.model.request.user.GetUserQueryParams
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.user.UserEntity
+import com.rollinup.apiservice.utils.Utils.toJsonString
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.UserCenterFilterData
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.UserCenterFilterOption
 

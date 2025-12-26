@@ -8,7 +8,6 @@ import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.module.Module
 import rollin_up.composeapp.generated.resources.Res
-import rollin_up.composeapp.generated.resources.allStringResources
 import rollin_up.composeapp.generated.resources.ic_file_export_line_24
 import rollin_up.composeapp.generated.resources.label_cancel
 import rollin_up.composeapp.generated.resources.label_confirm
@@ -29,7 +28,7 @@ fun ExportAlertDialog(
     onConfirm: (String) -> Unit,
 ) {
     val exportedFileName = "$fileName-${LocalDate.now()}"
-    val string = stringResource(Res.string.welcome_message, exportedFileName )
+    val string = stringResource(Res.string.welcome_message, exportedFileName)
     AlertDialog(
         title = "Export File",
         icon = Res.drawable.ic_file_export_line_24,

@@ -2,7 +2,6 @@ package com.rollinup.apiservice.model.attendance
 
 import com.rollinup.apiservice.model.permit.PermitType
 import com.rollinup.common.utils.Utils.parseToLocalDateTime
-import kotlinx.serialization.Serializable
 
 data class AttendanceByClassEntity(
     val student: Student = Student(),

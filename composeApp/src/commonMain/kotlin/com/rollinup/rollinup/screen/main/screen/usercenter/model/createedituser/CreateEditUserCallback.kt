@@ -5,7 +5,7 @@ data class CreateEditUserCallback(
     val onResetForm: () -> Unit = {},
     val onResetMessageState: () -> Unit = {},
     val onSubmit: (CreateEditUserFormData, Boolean) -> Unit = { _, _ -> },
-    val onValidateForm: (CreateEditUserFormData, Boolean) -> Boolean = { _, _ -> false},
+    val onValidateForm: (CreateEditUserFormData, Boolean) -> Boolean = { _, _ -> false },
     val onCheckEmail: (String) -> Unit = {},
     val onCheckUserName: (String) -> Unit = {},
     val onToggleStay: (Boolean) -> Unit = {},

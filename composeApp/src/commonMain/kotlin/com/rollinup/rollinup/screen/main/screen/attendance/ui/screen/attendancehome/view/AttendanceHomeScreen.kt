@@ -30,7 +30,7 @@ fun AttendanceHomeScreen(
         successMsg = "Success, data successfully exported.",
         errorMsg = "Error, failed to export data, please try again.",
         onDispose = cb.onResetMessageState,
-        onShowSnackBar = onShowSnackBar ,
+        onShowSnackBar = onShowSnackBar,
     )
     LaunchedEffect(Unit) {
         viewModel.init(localUser, isMobile)
@@ -43,7 +43,7 @@ fun AttendanceHomeScreen(
             onNavigateTo = onNavigateTo,
             onNavigateUp = onNavigateUp
         )
-    }else{
+    } else {
         AttendanceDesktopContent(
             uiState = uiState,
             cb = cb,

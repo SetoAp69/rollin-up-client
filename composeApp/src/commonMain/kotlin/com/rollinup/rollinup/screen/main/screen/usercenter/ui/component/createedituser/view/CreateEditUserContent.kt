@@ -256,7 +256,7 @@ private fun SelectorSection(
     formData: CreateEditUserFormData,
     onUpdateForm: (CreateEditUserFormData) -> Unit,
 ) {
-    val adminRole = options.role.find { it.label.equals("admin",true) }
+    val adminRole = options.role.find { it.label.equals("admin", true) }
     val isAdmin = formData.role == adminRole?.value
 
     FlowRow(
@@ -308,8 +308,8 @@ private fun SelectorSection(
             },
         )
 
-        if(!isAdmin){
-            LaunchedEffect(Unit){
+        if (!isAdmin) {
+            LaunchedEffect(Unit) {
                 onUpdateForm(
                     formData.copy(
                         classId = null,

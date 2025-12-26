@@ -24,14 +24,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
 import com.rollinup.apiservice.model.permit.PermitType
+import com.rollinup.common.model.OptionData
+import com.rollinup.common.utils.Utils.now
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.rollinup.component.bottomsheet.BottomSheet
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.chip.Chip
 import com.rollinup.rollinup.component.dialog.Dialog
 import com.rollinup.rollinup.component.loading.ShimmerEffect
-import com.rollinup.common.model.OptionData
-import com.rollinup.common.utils.Utils.now
-import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.permitform.view.PermitFormContent
 import com.rollinup.rollinup.component.selector.SingleSelector
@@ -106,8 +106,8 @@ fun TeacherDashboardEditAttendanceContent(
     var showDialog by remember { mutableStateOf(false) }
     val generalSetting = LocalGlobalSetting.current
 
-    LaunchedEffect(uiState.submitEditAttendanceState){
-        if(uiState.submitEditAttendanceState == true) onDismissRequest(false)
+    LaunchedEffect(uiState.submitEditAttendanceState) {
+        if (uiState.submitEditAttendanceState == true) onDismissRequest(false)
     }
 
     LaunchedEffect(uiState.attendanceDetail) {
@@ -226,7 +226,7 @@ private fun Header(
         if (isLoading) {
             ShimmerEffect(60.dp, 24.dp)
         } else {
-            Box{
+            Box {
                 Chip(
                     text = formData.status.label,
                     trailingIcon = Res.drawable.ic_edit_line_24,
@@ -301,12 +301,12 @@ private fun PermitFormContent(
     onUpdateFormData: (EditAttendanceFormData) -> Unit,
 ) {
     val duration = formData.permitFormData.duration
-    LaunchedEffect(duration){
-        if(duration.isNotEmpty()){
+    LaunchedEffect(duration) {
+        if (duration.isNotEmpty()) {
             val from = duration.first()!!.parseToLocalDateTime()
             val to = duration.last()!!.parseToLocalDateTime()
-            val today = LocalDateTime(LocalDate.now(), LocalTime(0,0,0))
-            if(today !in from..to){
+            val today = LocalDateTime(LocalDate.now(), LocalTime(0, 0, 0))
+            if (today !in from..to) {
                 onUpdateFormData(
                     formData.copy(
                         permitFormData = formData.permitFormData.copy(

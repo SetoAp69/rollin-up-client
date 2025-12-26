@@ -42,7 +42,7 @@ fun StudentDashboardContent(
     uiState: StudentDashboardUiState,
     cb: StudentDashboardCallback,
     onNavigateTo: (String) -> Unit,
-    onRefreshSetting:()->Unit,
+    onRefreshSetting: () -> Unit,
 ) {
     val generalSetting = LocalGlobalSetting.current
 

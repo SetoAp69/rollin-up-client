@@ -1,7 +1,7 @@
 package com.rollinup.rollinup.screen.auth.model.updatepassword
 
 data class UpdatePasswordFormData(
-    val userId:String = "",
+    val userId: String = "",
     val passwordOne: String = "",
     val passwordTwo: String = "",
     val deviceId: String? = null,

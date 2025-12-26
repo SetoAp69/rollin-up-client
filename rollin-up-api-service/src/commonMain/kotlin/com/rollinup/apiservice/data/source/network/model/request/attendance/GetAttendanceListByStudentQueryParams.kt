@@ -4,7 +4,7 @@ data class GetAttendanceListByStudentQueryParams(
     val search: String? = null,
     val limit: Int? = null,
     val page: Int? = null,
-    val status:String? = null,
+    val status: String? = null,
     val dateRange: String? = null,
 ) {
     fun toQueryMap(): Map<String, String?> {

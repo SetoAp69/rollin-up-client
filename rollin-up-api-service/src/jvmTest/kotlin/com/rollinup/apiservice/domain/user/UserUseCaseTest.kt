@@ -156,7 +156,7 @@ class UserUseCaseTest {
     @Test
     fun `DeleteUserUseCase should call repository`() {
         val useCase = DeleteUserUseCase(repository)
-        val body = DeleteUserBody(listId =listOf("u1"))
+        val body = DeleteUserBody(listId = listOf("u1"))
         val expected = flowOf(Result.Success(Unit))
         every { repository.deleteUser(body) } returns expected
 

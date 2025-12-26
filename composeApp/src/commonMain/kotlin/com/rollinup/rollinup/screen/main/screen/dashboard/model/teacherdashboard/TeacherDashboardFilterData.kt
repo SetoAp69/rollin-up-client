@@ -1,8 +1,8 @@
 package com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard
 
-import com.rollinup.apiservice.utils.Utils.toJsonString
 import com.rollinup.apiservice.data.source.network.model.request.attendance.GetAttendanceListByClassQueryParams
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
+import com.rollinup.apiservice.utils.Utils.toJsonString
 import com.rollinup.common.utils.Utils.now
 import com.rollinup.common.utils.Utils.toEpochMilli
 import kotlinx.datetime.LocalDate

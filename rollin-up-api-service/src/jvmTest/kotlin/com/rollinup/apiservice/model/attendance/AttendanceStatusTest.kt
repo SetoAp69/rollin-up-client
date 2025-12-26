@@ -12,7 +12,10 @@ class AttendanceStatusTest {
         assertEquals(AttendanceStatus.LATE, AttendanceStatus.fromValue("late"))
         assertEquals(AttendanceStatus.ABSENT, AttendanceStatus.fromValue("absent"))
         assertEquals(AttendanceStatus.EXCUSED, AttendanceStatus.fromValue("excused"))
-        assertEquals(AttendanceStatus.APPROVAL_PENDING, AttendanceStatus.fromValue("approval_pending"))
+        assertEquals(
+            AttendanceStatus.APPROVAL_PENDING,
+            AttendanceStatus.fromValue("approval_pending")
+        )
         assertEquals(AttendanceStatus.NO_DATA, AttendanceStatus.fromValue("no_data"))
     }
 

@@ -7,14 +7,11 @@ import com.rollinup.apiservice.data.source.network.apiservice.AttendanceApiServi
 import com.rollinup.apiservice.data.source.network.model.request.attendance.GetAttendanceListByStudentQueryParams
 import com.rollinup.apiservice.data.source.network.model.response.ApiResponse
 import com.rollinup.apiservice.data.source.network.model.response.attendance.GetAttendanceListByStudentResponse
-import com.rollinup.apiservice.model.attendance.AttendanceByStudentEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
 import com.rollinup.apiservice.utils.Utils
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import kotlinx.coroutines.test.runTest
@@ -64,7 +61,7 @@ class GetAttendanceListByStudentPagingSourceTest {
                 id = "2", status = "Alpa", date = "2024-01-02"
             )
         )
-        
+
         val mockResponseData = GetAttendanceListByStudentResponse.Data(
             record = 20,
             page = 1,
@@ -76,8 +73,8 @@ class GetAttendanceListByStudentPagingSourceTest {
             status = 200, message = "OK", data = mockResponseData
         )
 
-        coEvery { 
-            dataSource.getAttendanceListByStudent(studentId, any()) 
+        coEvery {
+            dataSource.getAttendanceListByStudent(studentId, any())
         } returns ApiResponse.Success(mockApiResponse, io.ktor.http.HttpStatusCode.OK)
 
         // Act
@@ -91,12 +88,12 @@ class GetAttendanceListByStudentPagingSourceTest {
 
         // Assert
         assertTrue(result is PagingSource.LoadResult.Page)
-        
+
         // Verify Data Mapping
         assertEquals(2, result.data.size)
         assertEquals("1", result.data[0].id)
         assertEquals(AttendanceStatus.ON_TIME, result.data[0].status)
-        
+
         // Verify Keys
         assertEquals(null, result.prevKey)
         assertEquals(null, result.nextKey)
@@ -113,8 +110,8 @@ class GetAttendanceListByStudentPagingSourceTest {
             status = 200, message = "OK", data = mockResponseData
         )
 
-        coEvery { 
-            dataSource.getAttendanceListByStudent(studentId, any()) 
+        coEvery {
+            dataSource.getAttendanceListByStudent(studentId, any())
         } returns ApiResponse.Success(mockApiResponse, io.ktor.http.HttpStatusCode.OK)
 
         // Act
@@ -127,7 +124,7 @@ class GetAttendanceListByStudentPagingSourceTest {
         assertTrue(result.data.isEmpty())
         assertEquals(null, result.nextKey) // No more data
     }
-    
+
     @Test
     fun `load returns Page with null nextKey when data size less than limit`() = runTest {
         // Arrange
@@ -136,12 +133,15 @@ class GetAttendanceListByStudentPagingSourceTest {
         )
         // Only 1 item returned, but limit is 10
         val mockResponseData = GetAttendanceListByStudentResponse.Data(
-            record = 1, page = 1, summary = GetAttendanceListByStudentResponse.Data.Summary(), data = mockDtoList
+            record = 1,
+            page = 1,
+            summary = GetAttendanceListByStudentResponse.Data.Summary(),
+            data = mockDtoList
         )
         val mockApiResponse = GetAttendanceListByStudentResponse(200, "OK", mockResponseData)
 
-        coEvery { 
-            dataSource.getAttendanceListByStudent(studentId, any()) 
+        coEvery {
+            dataSource.getAttendanceListByStudent(studentId, any())
         } returns ApiResponse.Success(mockApiResponse, io.ktor.http.HttpStatusCode.OK)
 
         // Act
@@ -158,8 +158,8 @@ class GetAttendanceListByStudentPagingSourceTest {
     fun `load returns Error on API error`() = runTest {
         // Arrange
         val exception = Exception("Network Error")
-        coEvery { 
-            dataSource.getAttendanceListByStudent(studentId, any()) 
+        coEvery {
+            dataSource.getAttendanceListByStudent(studentId, any())
         } returns ApiResponse.Error(exception)
 
         // Act
@@ -174,8 +174,8 @@ class GetAttendanceListByStudentPagingSourceTest {
 
     @Test(expected = RuntimeException::class)
     fun `load throws exception if generic exception occurs during call`() = runTest {
-        coEvery { 
-            dataSource.getAttendanceListByStudent(studentId, any()) 
+        coEvery {
+            dataSource.getAttendanceListByStudent(studentId, any())
         } throws RuntimeException("Crash")
 
         // Act

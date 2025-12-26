@@ -15,7 +15,7 @@ interface AuthRepository {
     fun updatePasswordAndDevice(
         id: String,
         body: UpdatePasswordAndVerificationBody,
-        token:String,
+        token: String,
     ): Flow<Result<Unit, NetworkError>>
 
     suspend fun clearClientToken()

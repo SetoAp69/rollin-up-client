@@ -14,7 +14,6 @@ import io.ktor.http.HttpStatusCode
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import kotlinx.coroutines.test.runTest
@@ -39,7 +38,7 @@ class GetPermitByStudentPagingSourceTest {
     fun setup() {
         MockKAnnotations.init(this)
         mockkObject(Utils)
-        
+
         mapper = PermitMapper()
         pagingSource = GetPermitByStudentPagingSource(
             datasource = dataSource,
@@ -93,7 +92,7 @@ class GetPermitByStudentPagingSourceTest {
         // Assert
         assertTrue(result is PagingSource.LoadResult.Page)
         assertEquals(1, result.data.size)
-        
+
         // Verify Mapping
         val item = result.data[0]
         assertEquals("p1", item.id)

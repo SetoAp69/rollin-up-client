@@ -62,7 +62,7 @@ fun LottieAnimation() {
             composition = lottieAnimation,
             iteration = Compottie.IterateForever,
             iterations = Compottie.IterateForever,
-            continueFromPreviousAnimate = true ,
+            continueFromPreviousAnimate = true,
         )
     }
 

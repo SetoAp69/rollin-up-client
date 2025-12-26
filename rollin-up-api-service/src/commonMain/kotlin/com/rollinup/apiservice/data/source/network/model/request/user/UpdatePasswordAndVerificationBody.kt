@@ -10,5 +10,5 @@ data class UpdatePasswordAndVerificationBody(
     @SerialName("deviceId")
     val deviceId: String? = null,
     @SerialName("token")
-    val token:String = ""
+    val token: String = "",
 )

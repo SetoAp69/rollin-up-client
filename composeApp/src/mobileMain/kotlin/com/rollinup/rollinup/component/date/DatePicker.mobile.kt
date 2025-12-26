@@ -104,7 +104,7 @@ private fun DatePickerBottomSheet(
     onDismissRequest: (Boolean) -> Unit,
     onClickConfirm: () -> Unit,
     onClickReset: () -> Unit,
-    title:String = "",
+    title: String = "",
     content: @Composable () -> Unit,
 ) {
     BottomSheet(
@@ -120,7 +120,7 @@ private fun DatePickerBottomSheet(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(16.dp)
-            if(title.isNotBlank()){
+            if (title.isNotBlank()) {
                 Text(
                     text = title,
                     color = theme.bodyText,

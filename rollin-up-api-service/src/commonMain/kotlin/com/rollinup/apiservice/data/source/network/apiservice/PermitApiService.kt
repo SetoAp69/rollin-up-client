@@ -14,12 +14,12 @@ interface PermitApiService {
     ): ApiResponse<GetPermitListByStudentResponse>
 
     suspend fun cancelPermitRequest(
-        id:String,
+        id: String,
     ): ApiResponse<Unit>
 
     suspend fun getPermitListByClass(
         classKey: Int,
-        queryParams: Map<String,String?>,
+        queryParams: Map<String, String?>,
     ): ApiResponse<GetPermitListByClassResponse>
 
     suspend fun getPermitById(id: String): ApiResponse<GetPermitByIdResponse>

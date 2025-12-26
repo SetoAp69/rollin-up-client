@@ -48,7 +48,7 @@ object Style {
         ) else generateStyle(12, FontWeight.W400)
 
     val label
-        @Composable get() = if(isCompact) generateStyle(
+        @Composable get() = if (isCompact) generateStyle(
             14,
             FontWeight.W500
         ) else generateStyle(16, FontWeight.W500)

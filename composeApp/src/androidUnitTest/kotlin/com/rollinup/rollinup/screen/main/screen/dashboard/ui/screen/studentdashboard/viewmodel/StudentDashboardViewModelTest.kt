@@ -136,7 +136,8 @@ class StudentDashboardViewModelTest {
     fun `init() with valid user should fetch list and summary successfully`() = runTest {
         // Arrange
         val user = LoginEntity(id = "student1")
-        val expectedList = listOf(AttendanceByStudentEntity(id = "1", status = AttendanceStatus.ON_TIME))
+        val expectedList =
+            listOf(AttendanceByStudentEntity(id = "1", status = AttendanceStatus.ON_TIME))
         val expectedSummary = DashboardDataEntity(
             attendanceStatus = AttendanceStatus.ON_TIME,
             summary = AttendanceSummaryEntity(

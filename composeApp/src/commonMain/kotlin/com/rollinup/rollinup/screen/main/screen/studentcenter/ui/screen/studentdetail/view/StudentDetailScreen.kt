@@ -16,7 +16,7 @@ import rollin_up.composeapp.generated.resources.label_student_profile
 fun StudentProfileScreen(
     id: String,
     onNavigateUp: () -> Unit,
-    onShowSnackBar: OnShowSnackBar
+    onShowSnackBar: OnShowSnackBar,
 ) {
     Scaffold(
         topBar = {
@@ -31,7 +31,7 @@ fun StudentProfileScreen(
         Column(modifier = Modifier.fillMaxSize()) {
             ProfileScreen(
                 id = id,
-                showEdit =false,
+                showEdit = false,
                 onShowSnackBar = onShowSnackBar
             )
         }

@@ -225,7 +225,9 @@ fun generateDummyPermitDetail(): PermitDetailEntity {
 
     return PermitDetailEntity(
         id = "permit-detail-${(1..999).random()}",
-        date = "2025-${(1..12).random().toString().padStart(2, '0')}-${(1..28).random().toString().padStart(2, '0')}",
+        date = "2025-${(1..12).random().toString().padStart(2, '0')}-${
+            (1..28).random().toString().padStart(2, '0')
+        }",
         name = studentName,
         type = PermitType.entries.random(),
         startTime = "${(7..10).random()}:00",

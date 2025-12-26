@@ -1,7 +1,6 @@
 package com.rollinup.rollinup.component.location
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.dialog.AlertDialog
 import com.rollinup.rollinup.component.theme.theme

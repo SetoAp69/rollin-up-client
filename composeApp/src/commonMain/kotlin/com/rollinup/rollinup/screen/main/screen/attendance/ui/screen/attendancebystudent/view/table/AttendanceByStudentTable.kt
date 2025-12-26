@@ -59,7 +59,7 @@ private fun getColumn(): List<TableColumn<AttendanceByStudentEntity>> =
         TableColumn("Date") {
             DateText(it.date)
         },
-        TableColumn("Status",0.5f) {
+        TableColumn("Status", 0.5f) {
             Chip(
                 text = it.status.label,
                 severity = it.status.severity

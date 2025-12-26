@@ -152,7 +152,7 @@ private fun getColumn(): List<TableColumn<UserEntity>> {
                 style = Style.body
             )
         },
-        TableColumn( stringResource(Res.string.label_gender), 0.5f) {
+        TableColumn(stringResource(Res.string.label_gender), 0.5f) {
             Chip(
                 text = it.gender.label.ifBlank { "-" },
                 severity = Severity.SECONDARY

@@ -27,7 +27,7 @@ fun NavGraphBuilder.mainGraph(
     onNavigateTo: (String) -> Unit,
     onShowSnackBar: (String, Boolean) -> Unit,
     onNavigateUp: () -> Unit,
-    onRefreshSetting:()->Unit,
+    onRefreshSetting: () -> Unit,
 ) {
     composable(
         route = MainRoute.DashBoardRoute.route,

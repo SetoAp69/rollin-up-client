@@ -33,6 +33,7 @@ import kotlin.test.assertTrue
 class LoginViewModelTest {
     @get:Rule
     val coroutineRule = CoroutineTestRule()
+
     @MockK
     private val loginUseCase: LoginUseCase = mockk()
 
@@ -181,6 +182,6 @@ class LoginViewModelTest {
         val state = loginViewModel.uiState.value
         assertTrue(state.loginState == false)
         assertFalse(state.isLoadingOverlay)
-        assertNull( state.loginData)
+        assertNull(state.loginData)
     }
 }

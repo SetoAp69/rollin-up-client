@@ -6,14 +6,11 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.rollinup.apiservice.Constant
-import com.rollinup.apiservice.data.source.datastore.LocalDataStore
 import com.rollinup.apiservice.model.common.GlobalSetting
 import com.rollinup.common.model.UiMode
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import okio.Path.Companion.toPath
 import java.io.File
@@ -74,7 +71,7 @@ class JVMLocalDataStore : LocalDataStore {
         val key = stringPreferencesKey(Constant.GLOBAL_SETTING_KEY)
         val setting = dataStore.data.map { datastore -> datastore[key] }
 
-        return setting.firstOrNull()?.let { data->
+        return setting.firstOrNull()?.let { data ->
             Json.decodeFromString<GlobalSetting>(data)
         }
     }
@@ -102,7 +99,7 @@ class JVMLocalDataStore : LocalDataStore {
 
     override suspend fun updateLocalUiModeSetting(uiMode: UiMode) {
         val key = stringPreferencesKey(Constant.UI_MODE_KEY)
-        dataStore.edit { prefs->
+        dataStore.edit { prefs ->
             prefs[key] = uiMode.name
         }
     }

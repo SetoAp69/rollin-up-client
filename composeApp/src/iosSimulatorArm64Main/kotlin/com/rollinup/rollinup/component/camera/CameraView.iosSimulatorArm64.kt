@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import com.rollinup.apiservice.model.common.MultiPlatformFile
 
 actual fun ByteArray.toImageBitmap(): ImageBitmap {
-    return ImageBitmap(0,0)
+    return ImageBitmap(0, 0)
 }
 
 @Composable

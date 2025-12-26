@@ -3,7 +3,6 @@ package com.rollinup.rollinup.component.profile.profilepopup.viemodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rollinup.apiservice.data.source.network.model.request.user.CreateEditUserBody
-import com.rollinup.apiservice.domain.user.CheckEmailOrUsernameUseCase
 import com.rollinup.apiservice.domain.user.EditUserUseCase
 import com.rollinup.apiservice.domain.user.GetUserByIdUseCase
 import com.rollinup.apiservice.model.common.Result

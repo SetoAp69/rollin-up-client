@@ -10,7 +10,7 @@ import com.rollinup.rollinup.screen.main.screen.studentcenter.model.StudentCente
 
 data class StudentCenterUiState(
     val user: LoginEntity = LoginEntity(),
-    val isMobile:Boolean = false,
+    val isMobile: Boolean = false,
     val searchQuery: String = "",
     val isLoading: Boolean = false,
     val isLoadingFilter: Boolean = false,

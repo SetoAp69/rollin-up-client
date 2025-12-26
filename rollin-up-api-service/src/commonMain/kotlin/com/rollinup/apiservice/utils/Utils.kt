@@ -1,6 +1,5 @@
 package com.rollinup.apiservice.utils
 
-import com.michaelflisar.lumberjack.core.L
 import com.rollinup.apiservice.BuildConfig
 import com.rollinup.apiservice.model.common.MultiPlatformFile
 import com.rollinup.apiservice.model.common.NetworkError
@@ -47,12 +46,12 @@ object Utils {
                 append(HttpHeaders.ContentDisposition, "filename=${file.name}")
                 append(HttpHeaders.ContentType, contentType)
             }
-        ){
+        ) {
             buildPacket { writeFully(file.readBytes()) }
         }
     }
 
-    fun String.getFileLink():String{
+    fun String.getFileLink(): String {
         return "${BuildConfig.FILE_URL}$this"
     }
 }

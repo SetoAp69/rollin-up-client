@@ -36,7 +36,7 @@ class TeacherDashboardActionTest {
 
     // 2. Test Logic: EDIT_DATA
     // Logic: status.size == 1 && status.first() != AttendanceStatus.APPROVAL_PENDING
-    
+
     @Test
     fun `EDIT_DATA show returns true when single item is NOT Approval Pending`() {
         val action = TeacherDashboardAction.EDIT_DATA
@@ -51,7 +51,7 @@ class TeacherDashboardActionTest {
     @Test
     fun `EDIT_DATA show returns false when single item IS Approval Pending`() {
         val action = TeacherDashboardAction.EDIT_DATA
-        
+
         // Should hide because we can't edit pending approvals (likely handled by Approval action)
         assertFalse(action.show(listOf(AttendanceStatus.APPROVAL_PENDING)))
     }
@@ -59,7 +59,7 @@ class TeacherDashboardActionTest {
     @Test
     fun `EDIT_DATA show returns false when list is empty`() {
         val action = TeacherDashboardAction.EDIT_DATA
-        
+
         // Size != 1 (Short-circuits before calling .first(), preventing crash)
         assertFalse(action.show(emptyList()))
     }
@@ -67,23 +67,30 @@ class TeacherDashboardActionTest {
     @Test
     fun `EDIT_DATA show returns false when multiple items selected`() {
         val action = TeacherDashboardAction.EDIT_DATA
-        
+
         // Size > 1
         assertFalse(action.show(listOf(AttendanceStatus.LATE, AttendanceStatus.LATE)))
     }
 
     // 3. Test Logic: APPROVAL
     // Logic: status.all { it == AttendanceStatus.APPROVAL_PENDING }
-    
+
     @Test
     fun `APPROVAL show returns true when ALL items are Approval Pending`() {
         val action = TeacherDashboardAction.APPROVAL
 
         // Single item
         assertTrue(action.show(listOf(AttendanceStatus.APPROVAL_PENDING)))
-        
+
         // Multiple items (Batch approval)
-        assertTrue(action.show(listOf(AttendanceStatus.APPROVAL_PENDING, AttendanceStatus.APPROVAL_PENDING)))
+        assertTrue(
+            action.show(
+                listOf(
+                    AttendanceStatus.APPROVAL_PENDING,
+                    AttendanceStatus.APPROVAL_PENDING
+                )
+            )
+        )
     }
 
     @Test
@@ -92,7 +99,7 @@ class TeacherDashboardActionTest {
 
         // Single valid item
         assertFalse(action.show(listOf(AttendanceStatus.LATE)))
-        
+
         // Mixed list (One pending, one not)
         assertFalse(action.show(listOf(AttendanceStatus.APPROVAL_PENDING, AttendanceStatus.LATE)))
     }
@@ -100,7 +107,7 @@ class TeacherDashboardActionTest {
     @Test
     fun `APPROVAL show returns true for empty list`() {
         val action = TeacherDashboardAction.APPROVAL
-        
+
         // Standard Kotlin behavior: emptyList().all { predicate } is true.
         // This validates the code behavior "as written".
         assertTrue(action.show(emptyList()))
@@ -108,7 +115,7 @@ class TeacherDashboardActionTest {
 
     // 4. Test Logic: DETAIL
     // Logic: status.size == 1
-    
+
     @Test
     fun `DETAIL show returns true when exactly one item is selected`() {
         val action = TeacherDashboardAction.DETAIL

@@ -395,7 +395,8 @@ fun PermitLoadingContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        val title = if (isEdit) stringResource(Res.string.label_edit_permit_request) else  stringResource(Res.string.label_create_permit_request)
+        val title =
+            if (isEdit) stringResource(Res.string.label_edit_permit_request) else stringResource(Res.string.label_create_permit_request)
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.Top,

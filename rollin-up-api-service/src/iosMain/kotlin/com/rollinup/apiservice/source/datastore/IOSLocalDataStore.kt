@@ -75,7 +75,7 @@ class IOSLocalDataStore : LocalDataStore {
         val key = stringPreferencesKey(Constant.GLOBAL_SETTING_KEY)
         val setting = dataStore.data.map { datastore -> datastore[key] }
 
-        return setting.let {flow->
+        return setting.let { flow ->
             flow.map { value ->
                 value?.let {
                     Json.decodeFromString<GlobalSetting>(it)

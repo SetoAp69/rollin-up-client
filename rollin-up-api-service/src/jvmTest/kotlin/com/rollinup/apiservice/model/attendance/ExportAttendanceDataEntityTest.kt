@@ -3,8 +3,8 @@ package com.rollinup.apiservice.model.attendance
 import kotlinx.datetime.LocalDate
 import org.junit.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 
 class ExportAttendanceDataEntityTest {
 

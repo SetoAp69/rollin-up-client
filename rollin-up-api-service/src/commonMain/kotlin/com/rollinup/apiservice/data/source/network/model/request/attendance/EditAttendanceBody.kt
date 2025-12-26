@@ -42,7 +42,7 @@ data class EditAttendanceBody(
                         }
                     )
                 }
-                date?.let{
+                date?.let {
                     append(
                         key = "date",
                         value = it

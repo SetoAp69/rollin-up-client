@@ -83,7 +83,7 @@ fun StudentCenterTableFilter(
     ExportAlertDialog(
         isShowDialog = showExportDialog,
         fileName = stringResource(Res.string.label_student),
-        onDismissRequest = {showExportDialog = it},
+        onDismissRequest = { showExportDialog = it },
         onConfirm = cb.onExportFile
     )
 }

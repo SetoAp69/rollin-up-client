@@ -3,8 +3,8 @@ package com.rollinup.rollinup.screen.auth.ui.screen.loginscreen.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rollinup.apiservice.data.source.network.model.request.auth.LoginBody
-import com.rollinup.apiservice.domain.auth.LoginUseCase
 import com.rollinup.apiservice.domain.auth.ClearClientTokenUseCase
+import com.rollinup.apiservice.domain.auth.LoginUseCase
 import com.rollinup.apiservice.model.common.Result
 import com.rollinup.rollinup.screen.auth.model.login.LoginCallback
 import com.rollinup.rollinup.screen.auth.model.login.LoginFormData

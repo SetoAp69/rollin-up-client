@@ -4,5 +4,5 @@ import com.rollinup.apiservice.model.permit.PermitDetailEntity
 
 data class PermitDetailUiState(
     val isLoading: Boolean = false,
-    val detail: PermitDetailEntity = PermitDetailEntity() ,
+    val detail: PermitDetailEntity = PermitDetailEntity(),
 )

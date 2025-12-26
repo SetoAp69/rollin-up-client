@@ -16,7 +16,7 @@ interface LocalDataStore {
     suspend fun updateGlobalSetting(globalSetting: GlobalSetting)
     suspend fun clearGlobalSetting()
 
-    suspend fun getLocalUiModeSetting():UiMode
+    suspend fun getLocalUiModeSetting(): UiMode
     suspend fun updateLocalUiModeSetting(uiMode: UiMode)
 }
 

@@ -22,41 +22,43 @@ fun CalendarContent(
 ) {
     val state = rememberCalendarState()
     HorizontalCalendar(
-        state = state ,
-        calendarScrollPaged = true ,
+        state = state,
+        calendarScrollPaged = true,
         userScrollEnabled = true,
-        reverseLayout = false ,
+        reverseLayout = false,
         modifier = Modifier.fillMaxWidth(),
 //        contentPadding = ,
 //        contentHeightMode = ,
-        dayContent ={
+        dayContent = {
             Text(
                 text = it.date.day.toString(),
                 style = Style.title,
                 color = theme.bodyText
             )
-        } ,
-        monthHeader ={
+        },
+        monthHeader = {
             Text(
                 text = it.yearMonth.month.name,
                 style = Style.header,
                 color = theme.bodyText
             )
-        } ,
-        monthBody = { month, content->
+        },
+        monthBody = { month, content ->
 
-            LaunchedEffect(month){
+            LaunchedEffect(month) {
                 L.wtf { "moth changes: $month" }
             }
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .background(theme.primary)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(theme.primary)
+            ) {
                 content()
             }
         },
         monthFooter = {},
-        monthContainer ={ month,content->
-            LaunchedEffect(month){
+        monthContainer = { month, content ->
+            LaunchedEffect(month) {
                 L.w {
                     "month changes from container: $month"
                 }

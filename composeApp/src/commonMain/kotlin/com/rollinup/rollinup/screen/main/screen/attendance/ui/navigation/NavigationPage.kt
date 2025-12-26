@@ -11,7 +11,7 @@ import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendanceh
 fun NavGraphBuilder.attendanceGraph(
     onNavigateTo: (String) -> Unit,
     onNavigateUp: () -> Unit,
-    onShowSnackBar: OnShowSnackBar
+    onShowSnackBar: OnShowSnackBar,
 ) {
     composable(AttendanceRoute.AttendanceHomeRoute.route) {
         AttendanceHomeScreen(

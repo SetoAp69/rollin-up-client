@@ -20,7 +20,7 @@ data class TeacherPermitUiState(
     val currentTab: PermitTab = PermitTab.ACTIVE,
     val filterData: PermitFilterData = PermitFilterData(),
     val exportState: Boolean? = null,
-    val isMobile:Boolean = false
+    val isMobile: Boolean = false,
 ) {
     val statusOptions
         get() = ApprovalStatus

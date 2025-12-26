@@ -225,23 +225,23 @@ private fun AttendanceDetailRecordSection(
         }
         detail.permit?.let { permit ->
             RecordField(
-                title =  stringResource(Res.string.label_duration),
+                title = stringResource(Res.string.label_duration),
                 content = getDuration(permit)
             )
             RecordField(
-                title =  stringResource(Res.string.label_permit_attachment)
+                title = stringResource(Res.string.label_permit_attachment)
             ) {
                 AttachmentButton(permit.attachment)
             }
             permit.reason?.let {
                 RecordField(
-                    title =  stringResource(Res.string.label_reason),
+                    title = stringResource(Res.string.label_reason),
                     content = it
                 )
             }
         }
         RecordField(
-            title =  stringResource(Res.string.label_created_at),
+            title = stringResource(Res.string.label_created_at),
         ) {
             DateText(detail.createdAt)
         }

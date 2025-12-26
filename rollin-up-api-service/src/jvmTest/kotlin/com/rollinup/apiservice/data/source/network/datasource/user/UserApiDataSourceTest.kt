@@ -102,7 +102,7 @@ class UserApiDataSourceTest {
     }
 
     @After
-    fun tearDown(){
+    fun tearDown() {
         unmockkAll()
     }
 

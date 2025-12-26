@@ -84,8 +84,8 @@ fun DashboardCalendar(
                 calendarScrollPaged = false,
                 userScrollEnabled = false,
                 reverseLayout = false,
-                monthFooter = {_->
-                  Spacer(itemGap8)
+                monthFooter = { _ ->
+                    Spacer(itemGap8)
                 },
                 dayContent = {
                     DayContent(
@@ -118,8 +118,7 @@ fun DashboardCalendar(
                                 width = 1.dp,
                                 color = theme.primary,
                                 shape = RoundedCornerShape(12.dp)
-                            )
-                        ,
+                            ),
                         contentAlignment = Alignment.Center
                     ) {
                         content()

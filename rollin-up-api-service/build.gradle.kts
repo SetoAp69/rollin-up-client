@@ -146,7 +146,7 @@ kotlin {
         }
 
         getByName("jvmTest") {
-            dependencies{
+            dependencies {
                 implementation(libs.mockk)
                 implementation(libs.kotlin.test)
                 implementation(libs.coroutine.test)
@@ -177,12 +177,12 @@ kover {
         "com.rollinup.apiservice.data.source.datastore"
     )
 
-    reports{
-        filters{
+    reports {
+        filters {
             includes {
                 packages(includedPackages)
             }
-            excludes{
+            excludes {
                 packages(excludedPackages)
             }
         }

@@ -24,7 +24,7 @@ fun SubmitAttendanceEditDialog(
             "This action will update current attendance data and cancel future permit(s), are you sure you want to continue?"
         }
 
-        status == AttendanceStatus.NO_DATA ->{
+        status == AttendanceStatus.NO_DATA -> {
             "This action will delete current attendance data, are you sure you want to continue?"
         }
 

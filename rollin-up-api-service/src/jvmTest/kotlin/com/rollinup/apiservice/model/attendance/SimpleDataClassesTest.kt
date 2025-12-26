@@ -32,17 +32,17 @@ class SimpleDataClassesTest {
     @Test
     fun `AttendanceDetailEntity defaults and nested objects`() {
         val entity = AttendanceDetailEntity()
-        
+
         // Defaults
         assertEquals("", entity.id)
         assertEquals(AttendanceStatus.NO_DATA, entity.status)
         assertNotNull(entity.student)
         assertNull(entity.permit)
-        
+
         // Nested User
         assertEquals("", entity.student.name)
     }
-    
+
     @Test
     fun `AttendanceDetailEntity Permit structure`() {
         val permit = AttendanceDetailEntity.Permit(
@@ -50,7 +50,7 @@ class SimpleDataClassesTest {
             type = PermitType.ABSENCE,
             attachment = "link"
         )
-        
+
         assertEquals("p1", permit.id)
         assertEquals(PermitType.ABSENCE, permit.type)
         assertEquals("link", permit.attachment)

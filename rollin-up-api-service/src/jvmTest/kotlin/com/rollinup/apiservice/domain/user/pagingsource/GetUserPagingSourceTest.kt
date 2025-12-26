@@ -7,7 +7,6 @@ import com.rollinup.apiservice.data.source.network.apiservice.UserApiService
 import com.rollinup.apiservice.data.source.network.model.request.user.GetUserQueryParams
 import com.rollinup.apiservice.data.source.network.model.response.ApiResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.GetUserListResponse
-import com.rollinup.apiservice.model.user.UserEntity
 import io.ktor.http.HttpStatusCode
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -85,7 +84,7 @@ class GetUserPagingSourceTest {
         // Assert
         assertTrue(result is PagingSource.LoadResult.Page)
         assertEquals(1, result.data.size)
-        
+
         // Verify Mapping
         val item = result.data[0]
         assertEquals("u1", item.id)

@@ -139,7 +139,7 @@ fun <T> Table(
 
             if (!isLoading) {
                 val tableItems = tableState.getPagedData(items)
-                if(tableItems.isNotEmpty()){
+                if (tableItems.isNotEmpty()) {
                     items(tableItems) { item ->
                         val isSelected = item in itemSelected
                         TableRow(
@@ -157,7 +157,7 @@ fun <T> Table(
                             },
                         )
                     }
-                }else{
+                } else {
                     item {
                         EmptyRecord()
                     }

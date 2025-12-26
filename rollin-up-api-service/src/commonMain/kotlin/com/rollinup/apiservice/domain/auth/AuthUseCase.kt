@@ -25,6 +25,6 @@ class UpdatePasswordAndDeviceUseCase(private val repository: AuthRepository) {
         repository.updatePasswordAndDevice(id, body, token)
 }
 
-class ClearClientTokenUseCase(private val repository: AuthRepository){
+class ClearClientTokenUseCase(private val repository: AuthRepository) {
     suspend operator fun invoke() = repository.clearClientToken()
 }

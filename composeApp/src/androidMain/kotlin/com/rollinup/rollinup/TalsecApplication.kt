@@ -40,7 +40,7 @@ class TalsecApplication() : ComponentActivity(), ThreatListener.ThreatDetected {
         Talsec.start(this, config)
     }
 
-    private fun initKoin(){
+    private fun initKoin() {
         startKoin {
             androidContext(this@TalsecApplication)
             modules(
@@ -49,7 +49,7 @@ class TalsecApplication() : ComponentActivity(), ThreatListener.ThreatDetected {
         }
     }
 
-    private fun initLogger(){
+    private fun initLogger() {
         L.init(LumberjackLogger)
         L.plant(ConsoleLogger())
     }

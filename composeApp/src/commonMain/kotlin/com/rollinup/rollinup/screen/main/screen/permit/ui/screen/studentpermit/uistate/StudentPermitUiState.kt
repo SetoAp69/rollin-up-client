@@ -1,10 +1,10 @@
 package com.rollinup.rollinup.screen.main.screen.permit.ui.screen.studentpermit.uistate
 
-import com.rollinup.apiservice.utils.Utils.toJsonString
 import com.rollinup.apiservice.data.source.network.model.request.permit.GetPermitListQueryParams
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.permit.ApprovalStatus
 import com.rollinup.apiservice.model.permit.PermitType
+import com.rollinup.apiservice.utils.Utils.toJsonString
 import com.rollinup.common.model.OptionData
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitFilterData
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitTab

@@ -44,7 +44,7 @@ fun IconButton(
             .padding(4.dp)
             .size(size),
         contentAlignment = Alignment.Center
-    ){
+    ) {
         Icon(
             painter = painterResource(icon),
             tint = color.contentColor,

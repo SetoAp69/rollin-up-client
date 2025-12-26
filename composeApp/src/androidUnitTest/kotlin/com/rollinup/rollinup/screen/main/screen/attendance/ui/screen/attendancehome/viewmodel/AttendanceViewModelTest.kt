@@ -200,11 +200,11 @@ class AttendanceViewModelTest {
     }
 
     @Test
-    fun `init() with classKey null should do nothing on desktop`(){
-        val user = LoginEntity(classKey =  null)
+    fun `init() with classKey null should do nothing on desktop`() {
+        val user = LoginEntity(classKey = null)
 
         //Act
-        viewModel.init(user,false)
+        viewModel.init(user, false)
 
         //Assert
         coVerify(exactly = 0) {
@@ -213,17 +213,17 @@ class AttendanceViewModelTest {
         }
 
         val state = viewModel.uiState.value
-        assertEquals(AttendanceSummaryEntity(),state.summary)
-        assertEquals(emptyList<AttendanceByClassEntity>(),state.attendanceList)
+        assertEquals(AttendanceSummaryEntity(), state.summary)
+        assertEquals(emptyList<AttendanceByClassEntity>(), state.attendanceList)
     }
 
 
     @Test
-    fun `init() with classKey null should do nothing on mobile`(){
-        val user = LoginEntity(classKey =  null)
+    fun `init() with classKey null should do nothing on mobile`() {
+        val user = LoginEntity(classKey = null)
 
         //Act
-        viewModel.init(user,true)
+        viewModel.init(user, true)
 
         //Assert
         coVerify(exactly = 0) {
@@ -232,7 +232,7 @@ class AttendanceViewModelTest {
         }
 
         val state = viewModel.uiState.value
-        assertEquals(AttendanceSummaryEntity(),state.summary)
+        assertEquals(AttendanceSummaryEntity(), state.summary)
     }
 
     @Test
@@ -522,7 +522,6 @@ class AttendanceViewModelTest {
             fileWriter.writeExcel("attendance.xlsx", any())
         }
     }
-
 
 
     @Test

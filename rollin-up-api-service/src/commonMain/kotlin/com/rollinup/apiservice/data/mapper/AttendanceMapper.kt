@@ -9,10 +9,10 @@ import com.rollinup.apiservice.data.source.network.model.response.attendance.Get
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.model.attendance.AttendanceByStudentEntity
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
-import com.rollinup.apiservice.model.attendance.ExportAttendanceDataEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
 import com.rollinup.apiservice.model.attendance.AttendanceSummaryEntity
 import com.rollinup.apiservice.model.attendance.DashboardDataEntity
+import com.rollinup.apiservice.model.attendance.ExportAttendanceDataEntity
 import com.rollinup.apiservice.model.permit.PermitType
 import com.rollinup.apiservice.utils.Utils.getFileLink
 
@@ -39,7 +39,7 @@ class AttendanceMapper {
 
     fun mapDashboardData(data: GetDashboardDataResponse.Data): DashboardDataEntity {
         return DashboardDataEntity(
-            attendanceStatus = AttendanceStatus.fromValue(data.status?:""),
+            attendanceStatus = AttendanceStatus.fromValue(data.status ?: ""),
             summary = with(data.summary) {
                 AttendanceSummaryEntity(
                     checkedIn = checkedIn,

@@ -66,6 +66,7 @@ class AuthApiDataSourceTest {
                                 }
                             )
                         }
+
                         else -> {
                             respond(content = "Not found", status = HttpStatusCode.NotFound)
                         }
@@ -90,7 +91,7 @@ class AuthApiDataSourceTest {
     }
 
     @After
-    fun tearDown(){
+    fun tearDown() {
         unmockkAll()
     }
 
@@ -120,7 +121,7 @@ class AuthApiDataSourceTest {
                 )
             )
         )
-        
+
         response = HttpResponseData(
             content = Json.encodeToString(LoginResponse.serializer(), expected),
             status = HttpStatusCode.OK,
@@ -220,7 +221,7 @@ class AuthApiDataSourceTest {
     fun `updatePasswordAndDevice() should return ApiResponse Success`() = runTest {
         //Arrange
         val body = UpdatePasswordAndVerificationBody()
-        
+
         response = HttpResponseData(
             content = Unit.toString(),
             status = HttpStatusCode.OK
@@ -240,7 +241,7 @@ class AuthApiDataSourceTest {
     fun `updatePasswordAndDevice() should return ApiResponse Error`() = runTest {
         //Arrange
         val body = UpdatePasswordAndVerificationBody()
-        
+
         response = HttpResponseData(
             content = "Error",
             status = HttpStatusCode.BadRequest

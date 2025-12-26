@@ -263,7 +263,7 @@ fun TimePickerDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = screenPadding),
-                    text =stringResource(Res.string.label_apply)
+                    text = stringResource(Res.string.label_apply)
                 ) {
                     onValueChange(tempValue)
                     onDismissRequest(false)
@@ -303,7 +303,7 @@ fun TimePickerBottomSheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            text =stringResource(Res.string.label_apply)
+            text = stringResource(Res.string.label_apply)
         ) {
             onValueChange(tempValue)
             onDismissRequest(false)

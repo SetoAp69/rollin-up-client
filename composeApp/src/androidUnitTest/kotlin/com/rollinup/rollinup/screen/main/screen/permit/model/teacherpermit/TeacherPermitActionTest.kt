@@ -65,7 +65,7 @@ class TeacherPermitActionTest {
 
         // Size 0
         assertFalse(action.show(emptyList, true))
-        
+
         // Size 2
         assertFalse(action.show(multiList, true))
     }

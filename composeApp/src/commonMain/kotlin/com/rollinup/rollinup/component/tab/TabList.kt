@@ -150,12 +150,12 @@ private fun Tab(
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(50))
-                .clickable{
+                .clickable {
                     onClick()
                 }
                 .background(color = color.containerColor)
                 .padding(vertical = 8.dp, horizontal = 12.dp)
-        ){
+        ) {
             Text(
                 text = label,
                 color = color.contentColor,

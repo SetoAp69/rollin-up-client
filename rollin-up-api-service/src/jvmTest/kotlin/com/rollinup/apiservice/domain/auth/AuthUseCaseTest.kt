@@ -76,7 +76,7 @@ class AuthUseCaseTest {
         val token = "token_abc"
         val body = UpdatePasswordAndVerificationBody(password = "newPass")
         val expectedFlow = flowOf(Result.Success(Unit))
-        
+
         every { repository.updatePasswordAndDevice(id, body, token) } returns expectedFlow
 
         // Act

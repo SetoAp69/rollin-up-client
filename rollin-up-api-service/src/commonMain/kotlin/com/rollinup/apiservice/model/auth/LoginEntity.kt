@@ -14,10 +14,10 @@ data class LoginEntity(
     val gender: Gender = Gender.MALE,
     val accessToken: String = "",
     val refreshToken: String = "",
-    val classX:String? = null,
-    val classId:String? = null,
-    val classKey:Int? = null,
-    val isVerified:Boolean = false,
+    val classX: String? = null,
+    val classId: String? = null,
+    val classKey: Int? = null,
+    val isVerified: Boolean = false,
 ) {
     val fullName
         get() = "$firstName $lastName"

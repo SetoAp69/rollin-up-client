@@ -3,7 +3,6 @@ package com.rollinup.rollinup.component.pagination
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -41,7 +40,7 @@ fun Pagination(
                 onClick = {
                     onPageChange(currentPage - 1)
                 },
-                enabled = currentPage!=1,
+                enabled = currentPage != 1,
                 size = 16.dp
             )
             Spacer(4.dp)
@@ -114,7 +113,7 @@ fun Pagination(
                 onClick = {
                     onPageChange(currentPage + 1)
                 },
-                enabled = currentPage!=totalPage,
+                enabled = currentPage != totalPage,
                 size = 16.dp
             )
         }

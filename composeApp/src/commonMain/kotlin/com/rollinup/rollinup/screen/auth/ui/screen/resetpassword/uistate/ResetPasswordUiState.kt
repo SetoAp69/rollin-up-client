@@ -13,5 +13,5 @@ data class ResetPasswordUiState(
     val otpError: String? = null,
     val actualEmail: String? = null,
     val newPassword: String = "",
-    val resetToken:String = ""
+    val resetToken: String = "",
 )

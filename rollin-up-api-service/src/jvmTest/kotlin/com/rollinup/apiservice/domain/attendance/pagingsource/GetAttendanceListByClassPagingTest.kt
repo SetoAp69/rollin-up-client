@@ -7,12 +7,10 @@ import com.rollinup.apiservice.data.source.network.apiservice.AttendanceApiServi
 import com.rollinup.apiservice.data.source.network.model.request.attendance.GetAttendanceListByClassQueryParams
 import com.rollinup.apiservice.data.source.network.model.response.ApiResponse
 import com.rollinup.apiservice.data.source.network.model.response.attendance.GetAttendanceListByClassResponse
-import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.utils.Utils
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import kotlinx.coroutines.test.runTest
@@ -38,7 +36,7 @@ class GetAttendanceListByClassPagingTest {
         MockKAnnotations.init(this)
         mockkObject(Utils)
         mapper = AttendanceMapper()
-        
+
         pagingSource = GetAttendanceListByClassPaging(
             classKey = classKey,
             mapper = mapper,
@@ -57,24 +55,33 @@ class GetAttendanceListByClassPagingTest {
         // Arrange
         val mockDataList = listOf(
             GetAttendanceListByClassResponse.Data.Data(
-                student = GetAttendanceListByClassResponse.Data.User(id = "s1", name = "John", studentId = "123"),
-                attendance = GetAttendanceListByClassResponse.Data.Attendance(id = "a1", status = "Hadir", checkedInAt = "07:00", date = "2024-01-01"),
+                student = GetAttendanceListByClassResponse.Data.User(
+                    id = "s1",
+                    name = "John",
+                    studentId = "123"
+                ),
+                attendance = GetAttendanceListByClassResponse.Data.Attendance(
+                    id = "a1",
+                    status = "Hadir",
+                    checkedInAt = "07:00",
+                    date = "2024-01-01"
+                ),
                 permit = null
             )
         )
-        
+
         val mockResponseData = GetAttendanceListByClassResponse.Data(
-            record = 20, page = 1, 
+            record = 20, page = 1,
             summary = GetAttendanceListByClassResponse.Data.Summary(),
             data = mockDataList
         )
-        
+
         val mockApiResponse = GetAttendanceListByClassResponse(
             status = 200, message = "OK", data = mockResponseData
         )
 
-        coEvery { 
-            dataSource.getAttendanceListByClass(classKey, any()) 
+        coEvery {
+            dataSource.getAttendanceListByClass(classKey, any())
         } returns ApiResponse.Success(mockApiResponse, io.ktor.http.HttpStatusCode.OK)
 
         // Act
@@ -88,7 +95,7 @@ class GetAttendanceListByClassPagingTest {
         assertEquals("s1", result.data[0].student.id)
         assertEquals(null, result.prevKey)
         assertEquals(null, result.nextKey)
-        assertEquals(null, result.nextKey) 
+        assertEquals(null, result.nextKey)
     }
 
     @Test
@@ -103,14 +110,14 @@ class GetAttendanceListByClassPagingTest {
         }
 
         val mockResponseData = GetAttendanceListByClassResponse.Data(
-            record = 20, page = 1, 
+            record = 20, page = 1,
             summary = GetAttendanceListByClassResponse.Data.Summary(),
             data = mockDataList
         )
         val mockApiResponse = GetAttendanceListByClassResponse(200, "OK", mockResponseData)
 
-        coEvery { 
-            dataSource.getAttendanceListByClass(classKey, any()) 
+        coEvery {
+            dataSource.getAttendanceListByClass(classKey, any())
         } returns ApiResponse.Success(mockApiResponse, io.ktor.http.HttpStatusCode.OK)
 
         // Act
@@ -128,8 +135,8 @@ class GetAttendanceListByClassPagingTest {
     fun `load returns Error on API error`() = runTest {
         // Arrange
         val exception = Exception("API Failed")
-        coEvery { 
-            dataSource.getAttendanceListByClass(classKey, any()) 
+        coEvery {
+            dataSource.getAttendanceListByClass(classKey, any())
         } returns ApiResponse.Error(exception)
 
         // Act

@@ -94,7 +94,7 @@ private fun ProfileDialogHeader(
                 .background(color = theme.primary, shape = CircleShape)
                 .size(44.dp),
             contentAlignment = Alignment.Center
-        ){
+        ) {
             Text(
                 text = userDetail.fullName.take(1),
                 style = Style.title,

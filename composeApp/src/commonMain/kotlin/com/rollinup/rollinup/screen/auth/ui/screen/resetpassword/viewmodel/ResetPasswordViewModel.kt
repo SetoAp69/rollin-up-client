@@ -3,8 +3,8 @@ package com.rollinup.rollinup.screen.auth.ui.screen.resetpassword.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rollinup.apiservice.data.source.network.model.request.user.CreateResetPasswordRequestBody
-import com.rollinup.apiservice.data.source.network.model.request.user.SubmitResetPasswordOTPBody
 import com.rollinup.apiservice.data.source.network.model.request.user.SubmitResetPasswordBody
+import com.rollinup.apiservice.data.source.network.model.request.user.SubmitResetPasswordOTPBody
 import com.rollinup.apiservice.domain.user.CreateResetPasswordRequestUseCase
 import com.rollinup.apiservice.domain.user.SubmitResetOtpUseCase
 import com.rollinup.apiservice.domain.user.SubmitResetPasswordUseCase

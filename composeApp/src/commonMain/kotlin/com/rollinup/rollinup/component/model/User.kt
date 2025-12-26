@@ -12,7 +12,7 @@ data class User(
     val phoneNumber: String = "",
     val accessToken: String = "",
     val studentId: String? = null,
-    val address:String? = null,
+    val address: String? = null,
 ) {
     data class Class(
         val id: String = "",

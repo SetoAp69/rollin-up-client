@@ -57,7 +57,7 @@ fun TeacherPermitMobileContent(
         cb.onTabChange(pagerState.currentPage)
     }
 
-    LaunchedEffect(uiState.currentTabIndex){
+    LaunchedEffect(uiState.currentTabIndex) {
         pagerState.scrollToPage(uiState.currentTabIndex)
     }
 

@@ -31,10 +31,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
-import com.michaelflisar.lumberjack.core.L
 import com.rollinup.common.model.UiMode
 import com.rollinup.rollinup.component.theme.theme
-import com.rollinup.rollinup.screen.main.screen.setting.ui.view.SwitchIcon
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import rollin_up.composeapp.generated.resources.Res
@@ -135,8 +133,7 @@ private fun SwitchIcon(
                 onClick(uiMode)
             }
             .size(size)
-            .padding(4.dp)
-        ,
+            .padding(4.dp),
         painter = painterResource(icon),
         tint = theme.textFieldText,
         contentDescription = null

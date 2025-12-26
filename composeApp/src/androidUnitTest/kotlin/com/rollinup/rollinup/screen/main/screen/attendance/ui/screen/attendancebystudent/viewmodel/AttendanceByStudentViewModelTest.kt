@@ -437,7 +437,7 @@ class AttendanceByStudentViewModelTest {
         cb.onExportFile(fileName)
 
         //Assert
-        coVerify{
+        coVerify {
             getAttendanceByStudentListUseCase(id, GetAttendanceListByStudentQueryParams())
             fileWriter.writeExcel(fileName, any())
         }

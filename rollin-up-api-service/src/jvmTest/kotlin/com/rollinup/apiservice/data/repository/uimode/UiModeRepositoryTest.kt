@@ -36,7 +36,7 @@ class UiModeRepositoryTest {
     fun `getUiMode should return mode from local data store`() = runTest {
         // Arrange
         // Assuming UiMode is an enum or sealed class you have defined
-        val expectedMode = UiMode.DARK 
+        val expectedMode = UiMode.DARK
         coEvery { localDataStore.getLocalUiModeSetting() } returns expectedMode
 
         // Act

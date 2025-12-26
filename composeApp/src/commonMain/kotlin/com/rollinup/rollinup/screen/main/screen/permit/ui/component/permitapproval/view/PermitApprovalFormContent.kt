@@ -47,7 +47,7 @@ fun PermitApprovalFormContent(
     cb: PermitApprovalCallback,
     onDismissRequest: (Boolean) -> Unit,
     onShowSnackBar: OnShowSnackBar,
-    onSuccess:()->Unit
+    onSuccess: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
 

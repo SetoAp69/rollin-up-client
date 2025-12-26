@@ -9,7 +9,7 @@ class AuthMapper {
     fun mapLoginResponse(data: LoginResponse.Data): LoginEntity {
         return LoginEntity(
             id = data.data.id,
-            deviceId = data.data.deviceId?:"",
+            deviceId = data.data.deviceId ?: "",
             userName = data.data.userName,
             email = data.data.email,
             firstName = data.data.firstName,

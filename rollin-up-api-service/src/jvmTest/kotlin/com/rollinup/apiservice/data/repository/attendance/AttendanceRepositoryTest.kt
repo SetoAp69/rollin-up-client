@@ -854,7 +854,7 @@ class AttendanceRepositoryTest {
         val id = "att1"
         val body = EditAttendanceBody(status = AttendanceStatus.NO_DATA)
 
-        coEvery { dataSource.editAttendance(id, body) } coAnswers { throw Exception()}
+        coEvery { dataSource.editAttendance(id, body) } coAnswers { throw Exception() }
 
         val result = repository.editAttendanceData(id, body).first()
 
@@ -920,7 +920,9 @@ class AttendanceRepositoryTest {
         //Arrange
         val queryParams = GetExportAttendanceDataQueryParams()
 
-        coEvery { dataSource.getExportData(queryParams.toQueryMap()) } returns ApiResponse.Error(Exception())
+        coEvery { dataSource.getExportData(queryParams.toQueryMap()) } returns ApiResponse.Error(
+            Exception()
+        )
 
         //Act
         val result = repository.getAttendanceExportData(queryParams).first()
@@ -933,20 +935,21 @@ class AttendanceRepositoryTest {
     }
 
     @Test
-    fun `getAttendanceExportData should return Result Error flow when catch an exception`() = runTest {
-        //Arrange
-        val queryParams = GetExportAttendanceDataQueryParams()
+    fun `getAttendanceExportData should return Result Error flow when catch an exception`() =
+        runTest {
+            //Arrange
+            val queryParams = GetExportAttendanceDataQueryParams()
 
-        coEvery { dataSource.getExportData(queryParams.toQueryMap()) } coAnswers {throw Exception()}
+            coEvery { dataSource.getExportData(queryParams.toQueryMap()) } coAnswers { throw Exception() }
 
-        //Act
-        val result = repository.getAttendanceExportData(queryParams).first()
+            //Act
+            val result = repository.getAttendanceExportData(queryParams).first()
 
-        //Assert
-        coVerify {
-            dataSource.getExportData(queryParams.toQueryMap())
+            //Assert
+            coVerify {
+                dataSource.getExportData(queryParams.toQueryMap())
+            }
+            assertTrue(result is Result.Error)
         }
-        assertTrue(result is Result.Error)
-    }
 
 }

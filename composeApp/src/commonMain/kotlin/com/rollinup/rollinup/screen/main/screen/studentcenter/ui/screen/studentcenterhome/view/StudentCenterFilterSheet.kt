@@ -12,7 +12,6 @@ import com.rollinup.rollinup.screen.main.screen.studentcenter.model.StudentCente
 import com.rollinup.rollinup.screen.main.screen.studentcenter.ui.screen.studentcenterhome.uistate.StudentCenterUiState
 import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
-import rollin_up.composeapp.generated.resources.label_cancel
 import rollin_up.composeapp.generated.resources.label_class
 import rollin_up.composeapp.generated.resources.label_gender
 

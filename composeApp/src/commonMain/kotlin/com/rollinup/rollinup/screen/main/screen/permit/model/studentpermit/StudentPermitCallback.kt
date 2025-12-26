@@ -8,5 +8,5 @@ data class StudentPermitCallback(
     val onFilter: (PermitFilterData) -> Unit = {},
     val onSearch: (String) -> Unit = {},
     val onCancelPermit: (String) -> Unit = {},
-    val onResetMessageState:()->Unit = {}
+    val onResetMessageState: () -> Unit = {},
 )

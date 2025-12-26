@@ -27,7 +27,7 @@ fun StudentCenterPagingItem(
 ) {
     Card(
         showAction = true,
-        onClickAction = {onAction(item)}
+        onClickAction = { onAction(item) }
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
@@ -51,7 +51,7 @@ fun StudentCenterPagingItem(
                     color = theme.bodyText
                 )
                 Text(
-                    text = item.studentId.ifBlank {  "-"},
+                    text = item.studentId.ifBlank { "-" },
                     style = Style.body,
                     color = theme.bodyText
                 )
@@ -70,7 +70,7 @@ fun StudentCenterPagingItemLoading() {
                     .background(color = theme.primary, shape = CircleShape)
                     .size(40.dp),
 
-            )
+                )
             Spacer(itemGap8)
             Column {
                 ShimmerEffect(150.dp)

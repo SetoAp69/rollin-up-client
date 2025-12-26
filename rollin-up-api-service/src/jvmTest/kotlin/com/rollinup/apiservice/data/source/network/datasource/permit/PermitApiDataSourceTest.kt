@@ -68,6 +68,7 @@ class PermitApiDataSourceTest {
                                 }
                             )
                         }
+
                         else -> {
                             respond(content = "Not found", status = HttpStatusCode.NotFound)
                         }
@@ -92,7 +93,7 @@ class PermitApiDataSourceTest {
     }
 
     @After
-    fun tearDown(){
+    fun tearDown() {
         unmockkAll()
     }
 

@@ -8,14 +8,14 @@ import com.rollinup.rollinup.screen.main.screen.usercenter.ui.viewmodel.UserCent
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun UserCenterScreen (
-    onShowSnackBar: OnShowSnackBar
+fun UserCenterScreen(
+    onShowSnackBar: OnShowSnackBar,
 ) {
     val viewModel: UserCenterViewmodel = koinViewModel()
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val cb = viewModel.getCallback()
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         viewModel.init()
     }
 

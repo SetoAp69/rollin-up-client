@@ -39,7 +39,7 @@ fun UserCenterContent(
     HandleState(
         state = uiState.deleteUserState,
         successMsg = stringResource(Res.string.msg_delete_user_success),
-        errorMsg =  stringResource(Res.string.msg_delete_user_error),
+        errorMsg = stringResource(Res.string.msg_delete_user_error),
         onDispose = { cb.onResetMessageState() },
         onSuccess = cb.onRefresh,
         onShowSnackBar = onShowSnackBar

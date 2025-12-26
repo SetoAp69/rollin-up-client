@@ -9,7 +9,7 @@ data class AuthUiState(
     sealed class LoginState() {
         object Login : LoginState()
         object Logout : LoginState()
-        object Unverified:LoginState()
+        object Unverified : LoginState()
     }
 }
 

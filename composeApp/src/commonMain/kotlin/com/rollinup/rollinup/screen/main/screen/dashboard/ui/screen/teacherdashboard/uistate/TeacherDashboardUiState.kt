@@ -21,7 +21,7 @@ data class TeacherDashboardUiState(
     val isLoadingDetail: Boolean = false,
     val isLoadingList: Boolean = false,
     val isAllSelected: Boolean = false,
-    val isMobile:Boolean = false,
+    val isMobile: Boolean = false,
     val itemSelected: List<AttendanceByClassEntity> = emptyList(),
     val attendanceList: List<AttendanceByClassEntity> = emptyList(),
     val submitApprovalState: Boolean? = null,

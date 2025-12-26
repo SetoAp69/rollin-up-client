@@ -51,7 +51,7 @@ class AuthMapperTest {
         assertEquals("jdoe@example.com", result.email)
         assertEquals("John", result.firstName)
         assertEquals("Doe", result.lastName)
-        assertEquals(Role.STUDENT, result.role) 
+        assertEquals(Role.STUDENT, result.role)
         assertEquals(Gender.MALE, result.gender)
         assertEquals("refresh_token_xyz", result.refreshToken)
         assertEquals("access_token_abc", result.accessToken)
@@ -102,7 +102,7 @@ class AuthMapperTest {
             email = "jdoe@example.com",
             firstName = "John",
             lastName = "Doe",
-            role = "admin", 
+            role = "admin",
             gender = "Perempuan",
             classX = null, // Testing nulls
             classId = null,

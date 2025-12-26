@@ -6,9 +6,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CreateAttendanceBody(
     @SerialName("id")
-    val id:String = "",
+    val id: String = "",
     @SerialName("date")
-    val date:String = "",
+    val date: String = "",
     @SerialName("checkInAt")
-    val checkInAt:Long = 0L
+    val checkInAt: Long = 0L,
 )

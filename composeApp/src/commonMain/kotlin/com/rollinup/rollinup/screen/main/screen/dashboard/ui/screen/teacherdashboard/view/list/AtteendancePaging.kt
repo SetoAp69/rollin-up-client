@@ -20,7 +20,7 @@ fun AttendancePaging(
     uiState: TeacherDashboardUiState,
     onClickAction: (AttendanceByClassEntity) -> Unit,
 ) {
-    if(uiState.itemSelected.isNotEmpty()){
+    if (uiState.itemSelected.isNotEmpty()) {
         BackHandler {
             cb.onResetSelection()
         }

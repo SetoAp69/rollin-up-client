@@ -326,7 +326,7 @@ class TeacherDashboardViewModelTest {
         // Arrange
         // User with null classKey
         val user = LoginEntity(id = "T1", classKey = null)
-        viewModel.init(user,true)
+        viewModel.init(user, true)
         val cb = viewModel.getCallback()
 
         // Act
@@ -541,7 +541,7 @@ class TeacherDashboardViewModelTest {
                     )
                 )
             ),
-            sDateRange = listOf("2003-04-07","2003-08-06")
+            sDateRange = listOf("2003-04-07", "2003-08-06")
         )
 
         coEvery { getExportAttendanceDataUseCase(any()) } returns flowOf(Result.Success(exportEntity))

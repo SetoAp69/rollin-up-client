@@ -15,10 +15,10 @@ actual fun CameraHandler(
 actual fun CameraPermissionHandler(
     onGranted: () -> Unit,
     onDenied: () -> Unit,
-    onDismissRequest: (Boolean) -> Unit
+    onDismissRequest: (Boolean) -> Unit,
 ) {
 }
 
 actual fun ByteArray.toImageBitmap(): ImageBitmap {
-    return ImageBitmap(0,0)
+    return ImageBitmap(0, 0)
 }

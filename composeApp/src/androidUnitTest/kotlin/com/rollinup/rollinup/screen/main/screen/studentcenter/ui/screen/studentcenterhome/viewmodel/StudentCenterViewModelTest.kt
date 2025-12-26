@@ -140,7 +140,7 @@ class StudentCenterViewModelTest {
         //Assert
         val state = viewModel.uiState.value
         assertEquals(emptyList<UserEntity>(), state.itemList)
-        assertEquals(emptyList<OptionData<Int>>(), state.classOptions )
+        assertEquals(emptyList<OptionData<Int>>(), state.classOptions)
     }
 
     @Test
