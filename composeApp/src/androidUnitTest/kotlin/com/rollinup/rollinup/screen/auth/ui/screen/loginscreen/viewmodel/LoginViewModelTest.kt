@@ -165,8 +165,6 @@ class LoginViewModelTest {
             password = "Password"
         )
 
-        val expectedResult = LoginEntity()
-
         arrangeLoginUseCase(
             body = body,
             result = Result.Error(NetworkError.RESPONSE_ERROR)

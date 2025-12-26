@@ -19,7 +19,7 @@ data class GetUserByIdResponse(
         @SerialName("username")
         val username: String = "",
         @SerialName("firstName")
-        val firsName: String = "",
+        val firstName: String = "",
         @SerialName("lastName")
         val lastName: String = "",
         @SerialName("studentId")

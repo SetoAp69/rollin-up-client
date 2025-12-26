@@ -12,12 +12,11 @@ import com.rollinup.rollinup.screen.auth.navigation.AuthNavigationRoute
 @Composable
 fun NavigationHost(
     onRefreshSetting: () -> Unit,
+    onLogout:()->Unit,
 ) {
     val navController = rememberNavController()
-
     val loginState = LocalAuthViewmodel.current.uiState.value.loginState
     val loginData = localUser
-    val authViewmodel = LocalAuthViewmodel.current
 
     AppNavHost(
         navController = navController,
@@ -26,15 +25,8 @@ fun NavigationHost(
             loginData = loginData
         ),
         loginData = loginData,
-        {
-            authViewmodel.logout()
-            navController.navigate(NavigationRoute.Auth.route)
-            navController.popBackStack(
-                inclusive = true,
-                route = navController.previousBackStackEntry?.destination?.route ?: ""
-            )
-        },
-        onRefreshSetting = onRefreshSetting
+        onRefreshSetting = onRefreshSetting,
+        onLogout = onLogout
     )
 }
 

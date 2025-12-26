@@ -391,7 +391,7 @@ class AttendanceViewModelTest {
 
         // Assert
         val detail = viewModel.uiState.value.attendanceDetail
-        assertEquals(AttendanceStatus.NO_DATA, detail?.status)
+        assertEquals(AttendanceStatus.NO_DATA, detail.status)
     }
 
     @Test

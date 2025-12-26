@@ -34,6 +34,6 @@ plugins {
 
 include(":composeApp")
 //includeBuild("../rollin-up-server")
-includeBuild("../fue-component")
+//includeBuild("../fue-component")
 include(":rollin-up-api-service")
 include(":common")

@@ -154,7 +154,7 @@ class CreateEditUserViewModel(
     private fun submit(formData: CreateEditUserFormData, isEdit: Boolean) {
         if (!validateForm(formData, isEdit)) return
 
-        val body = mapBodyFromForm(formData, isEdit)
+        val body = mapBodyFromForm(formData)
         val domain =
             if (isEdit)
                 editUserUseCase(id = formData.id, body = body)
@@ -229,7 +229,6 @@ class CreateEditUserViewModel(
 
     private fun mapBodyFromForm(
         formData: CreateEditUserFormData,
-        isEdit: Boolean,
     ): CreateEditUserBody {
         return CreateEditUserBody(
             username = formData.userName,

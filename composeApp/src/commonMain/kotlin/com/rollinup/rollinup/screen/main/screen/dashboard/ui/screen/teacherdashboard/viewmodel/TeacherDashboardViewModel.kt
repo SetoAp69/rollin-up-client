@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
-import com.michaelflisar.lumberjack.core.L
 import com.rollinup.apiservice.data.source.network.model.request.attendance.CreateAttendanceBody
 import com.rollinup.apiservice.data.source.network.model.request.attendance.EditAttendanceBody
 import com.rollinup.apiservice.data.source.network.model.request.attendance.GetExportAttendanceDataQueryParams
@@ -31,8 +30,6 @@ import com.rollinup.apiservice.utils.Utils.toJsonString
 import com.rollinup.common.utils.Utils.now
 import com.rollinup.common.utils.Utils.toEpochMillis
 import com.rollinup.rollinup.component.export.FileWriter
-import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
-import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.screen.dashboard.getAttendanceByClassDummy
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.EditAttendanceFormData
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardApprovalFormData
@@ -67,7 +64,7 @@ class TeacherDashboardViewModel(
 
     fun init(
         user: LoginEntity? = null,
-        isMobile:Boolean = false
+        isMobile: Boolean = false,
     ) {
         if (user == null) return
         _uiState.update {

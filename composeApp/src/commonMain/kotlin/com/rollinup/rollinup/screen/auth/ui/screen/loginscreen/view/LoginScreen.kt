@@ -66,7 +66,6 @@ fun LoginScreen(
         onNavigateTo = onNavigateTo,
         uiState = uiState,
         cb = cb,
-        onShowSnackBar = onShowSnackBar
     )
 
     UnauthorizedDeviceDialog(

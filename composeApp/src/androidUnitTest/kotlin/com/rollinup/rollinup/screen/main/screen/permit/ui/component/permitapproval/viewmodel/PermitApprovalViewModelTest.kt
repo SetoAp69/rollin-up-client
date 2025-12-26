@@ -1,10 +1,5 @@
 @file:OptIn(ExperimentalCoroutinesApi::class)
-
 package com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitapproval.viewmodel
-
-import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitapproval.uistate.PermitApprovalUiState
-import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitapproval.viewmodel.PermitApprovalViewModel
-
 
 import com.rollinup.apiservice.data.source.network.model.request.permit.PermitApprovalBody
 import com.rollinup.apiservice.domain.permit.DoApprovalUseCase
@@ -14,6 +9,7 @@ import com.rollinup.apiservice.model.common.Result
 import com.rollinup.apiservice.model.permit.PermitDetailEntity
 import com.rollinup.rollinup.CoroutineTestRule
 import com.rollinup.rollinup.screen.main.screen.permit.model.permitapproval.PermitApprovalFormData
+import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitapproval.uistate.PermitApprovalUiState
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -24,11 +20,15 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@Suppress("UnusedFlow")
 class PermitApprovalViewModelTest {
 
     private lateinit var viewModel: PermitApprovalViewModel
@@ -46,7 +46,7 @@ class PermitApprovalViewModelTest {
 
     private fun arrangeGetPermitById(
         id: String,
-        result: Result<PermitDetailEntity, NetworkError>
+        result: Result<PermitDetailEntity, NetworkError>,
     ) {
         coEvery {
             getPermitByIdUseCase(id)
@@ -55,7 +55,7 @@ class PermitApprovalViewModelTest {
 
     private fun arrangeDoApproval(
         body: PermitApprovalBody,
-        result: Result<Unit, NetworkError>
+        result: Result<Unit, NetworkError>,
     ) {
         coEvery {
             doApprovalUseCase(body)
@@ -133,7 +133,7 @@ class PermitApprovalViewModelTest {
         // Assert
         val state = viewModel.uiState.value
         assertFalse(state.isLoading)
-        assertEquals(PermitDetailEntity(),state.detail)
+        assertEquals(PermitDetailEntity(), state.detail)
     }
 
     @Test
@@ -247,7 +247,7 @@ class PermitApprovalViewModelTest {
     @Test
     fun `reset() should reset uiState to default`() = runTest {
         // Arrange
-        arrangeGetPermitById("1",Result.Success(PermitDetailEntity("1")))
+        arrangeGetPermitById("1", Result.Success(PermitDetailEntity("1")))
         viewModel.init(listOf("1"))
 
         // Act

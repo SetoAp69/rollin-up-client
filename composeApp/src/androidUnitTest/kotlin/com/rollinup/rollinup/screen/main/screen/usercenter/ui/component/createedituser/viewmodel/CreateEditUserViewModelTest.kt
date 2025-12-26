@@ -14,8 +14,6 @@ import com.rollinup.apiservice.model.common.Result
 import com.rollinup.apiservice.model.user.UserDetailEntity
 import com.rollinup.apiservice.model.user.UserOptionEntity
 import com.rollinup.common.model.OptionData
-import com.rollinup.common.utils.Utils.parseToLocalDateTime
-import com.rollinup.common.utils.Utils.toEpochMillis
 import com.rollinup.rollinup.CoroutineTestRule
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.CreateEditUserFormData
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.createedituser.uistate.CreateEditUserUiState
@@ -31,7 +29,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -80,7 +77,7 @@ class CreateEditUserViewModelTest {
 
     private fun arrangeCheckEmailOrUsername(
         query: CheckEmailOrUsernameQueryParams,
-        result: Result<Unit, NetworkError>
+        result: Result<Unit, NetworkError>,
     ) {
         coEvery { checkEmailOrUsernameUseCase(query) } returns flowOf(result)
     }
@@ -158,7 +155,7 @@ class CreateEditUserViewModelTest {
         assertEquals(userDetail, state.initialDetail)
         assertEquals("John", state.formData.firstName)
         assertEquals("jdoe", state.formData.userName)
-        coVerify { 
+        coVerify {
             getUserOptionUseCase()
             getUserByIdUseCase(userId)
         }
@@ -241,7 +238,7 @@ class CreateEditUserViewModelTest {
     fun `resetUiState() should reset entire state`() {
         // Arrange
         viewModel.init("123") // Dirties the state
-        
+
         // Act
         viewModel.resetUiState()
 
@@ -259,7 +256,7 @@ class CreateEditUserViewModelTest {
         arrangeRegisterUser(Result.Success(Unit))
         viewModel.getCallback().onSubmit(formData, false)
         advanceUntilIdle()
-        
+
         assertTrue(viewModel.uiState.value.submitState == true)
 
         // Act
@@ -285,7 +282,10 @@ class CreateEditUserViewModelTest {
         val state = viewModel.uiState.value.formData
         assertEquals("Username can't be empty", state.userNameError)
         assertEquals("Last name can't be empty", state.lastNameError)
-        assertEquals("First bane can't be empty", state.firstNameError) // Typo "bane" matches source code
+        assertEquals(
+            "First bane can't be empty",
+            state.firstNameError
+        ) // Typo "bane" matches source code
         assertEquals("Email can't be empty", state.emailError)
         assertTrue(state.genderError == true)
         assertTrue(state.roleError == true)
@@ -373,7 +373,7 @@ class CreateEditUserViewModelTest {
         val cb = viewModel.getCallback()
         val formData = CreateEditUserFormData(
             userName = "u", firstName = "f", lastName = "l", email = "e",
-            role = "123", gender ="123", birthDay = 100L
+            role = "123", gender = "123", birthDay = 100L
         )
         arrangeRegisterUser(Result.Success(Unit))
 
@@ -416,7 +416,7 @@ class CreateEditUserViewModelTest {
         cb.onSubmit(invalidForm, false)
 
         // Assert
-        coVerify(exactly = 0) { 
+        coVerify(exactly = 0) {
             registerUserUseCase(any())
             editUserUseCase(any(), any())
         }

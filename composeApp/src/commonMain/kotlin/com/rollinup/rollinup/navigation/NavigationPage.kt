@@ -10,14 +10,12 @@ import com.rollinup.rollinup.screen.auth.navigation.authGraph
 import com.rollinup.rollinup.screen.main.navigation.MainRoute
 import com.rollinup.rollinup.screen.main.navigation.mainGraph
 import com.rollinup.rollinup.screen.splashscreen.SplashScreen
-import com.rollinup.rollinup.screen.test.ui.view.TestScreen
 
 
 fun NavGraphBuilder.appGraph(
     navController: NavHostController,
     onShowSnackBar: (String, Boolean) -> Unit,
-    onRefreshSetting:()->Unit,
-    onLogout: () -> Unit,
+    onRefreshSetting: () -> Unit,
 ) {
     fun navigateTo(route: String) {
         navController.navigate(route)
@@ -62,26 +60,6 @@ fun NavGraphBuilder.appGraph(
             onShowSnackBar = onShowSnackBar,
             onNavigateUp = ::navigateUp,
             onRefreshSetting = onRefreshSetting
-        )
-    }
-
-//    composable(NavigationRoute.MainRoute.route) {
-//        val loginData = localUser
-//
-//        MainNavHost(
-////            navController = navController,
-//            loginData = loginData,
-//            onLogout = onLogout
-//        )
-//    }
-
-
-    composable(NavigationRoute.TestRoute.route) {
-        TestScreen(
-            onShowSnackBar = onShowSnackBar,
-            onNavigateUp = { navController.popBackStack() },
-            navController = navController,
-            onUpdateLoginData = { onLogout() }
         )
     }
 

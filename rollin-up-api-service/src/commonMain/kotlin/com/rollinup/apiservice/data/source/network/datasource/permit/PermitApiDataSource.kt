@@ -1,7 +1,6 @@
 package com.rollinup.apiservice.data.source.network.datasource.permit
 
 import com.rollinup.apiservice.data.source.network.apiservice.PermitApiService
-import com.rollinup.apiservice.data.source.network.httpclient.NetworkClient
 import com.rollinup.apiservice.data.source.network.model.request.permit.CreateEditPermitBody
 import com.rollinup.apiservice.data.source.network.model.request.permit.PermitApprovalBody
 import com.rollinup.apiservice.data.source.network.model.response.ApiResponse

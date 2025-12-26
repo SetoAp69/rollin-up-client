@@ -219,8 +219,8 @@ class TeacherDashboardViewModelTest {
         // Assert
         val detail = viewModel.uiState.value.attendanceDetail
         assertNotNull(detail)
-        assertEquals(student.id, detail?.student?.id)
-        assertEquals(AttendanceStatus.NO_DATA, detail?.status)
+        assertEquals(student.id, detail.student.id)
+        assertEquals(AttendanceStatus.NO_DATA, detail.status)
         coVerify(exactly = 0) { getAttendanceByIdUseCase(any()) }
     }
 

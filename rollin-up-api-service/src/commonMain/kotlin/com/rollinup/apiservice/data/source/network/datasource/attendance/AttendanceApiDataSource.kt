@@ -40,6 +40,7 @@ class AttendanceApiDataSource(
             val body = response.body<GetAttendanceListByStudentResponse>()
             ApiResponse.Success(data = body, statusCode = response.status)
         } catch (e: Exception) {
+            e.printStackTrace()
             ApiResponse.Error(e)
         }
     }

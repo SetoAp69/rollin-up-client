@@ -6,8 +6,6 @@ import com.rollinup.apiservice.data.repository.auth.AuthRepository
 import com.rollinup.apiservice.data.repository.auth.AuthRepositoryImpl
 import com.rollinup.apiservice.data.repository.generalsetting.GlobalSettingRepository
 import com.rollinup.apiservice.data.repository.generalsetting.GlobalSettingRepositoryImpl
-import com.rollinup.apiservice.data.repository.pagging.PagingDummyRepository
-import com.rollinup.apiservice.data.repository.pagging.PagingDummyRepositoryImpl
 import com.rollinup.apiservice.data.repository.permit.PermitRepository
 import com.rollinup.apiservice.data.repository.permit.PermitRepositoryImpl
 import com.rollinup.apiservice.data.repository.token.TokenRepository
@@ -44,13 +42,6 @@ object RepositoryModule {
             )
         }
 
-        single<PagingDummyRepository> {
-            PagingDummyRepositoryImpl(
-                dataSource = get(),
-                ioDispatcher = get()
-            )
-        }
-
         single<PermitRepository> {
             PermitRepositoryImpl(
                 dataSource = get(),
@@ -67,11 +58,11 @@ object RepositoryModule {
             )
         }
 
-        single<TokenRepository>{
+        single<TokenRepository> {
             TokenRepositoryImpl(get())
         }
 
-        single<UiModeRepository>{
+        single<UiModeRepository> {
             UiModeRepositoryImpl(get())
         }
     }

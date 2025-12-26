@@ -30,7 +30,7 @@ class UserMapper {
         return UserDetailEntity(
             id = data.id,
             userName = data.username,
-            firstName = data.firsName,
+            firstName = data.firstName,
             lastName = data.lastName,
             classX = data.classX?.let {
                 UserDetailEntity.Data(
@@ -40,7 +40,7 @@ class UserMapper {
                 )
             },
             email = data.email,
-            fullName = data.firsName + " " + data.lastName,
+            fullName = data.firstName + " " + data.lastName,
             studentId = data.studentId?:"-",
             address = data.address,
             gender = Gender.fromValue(data.gender),

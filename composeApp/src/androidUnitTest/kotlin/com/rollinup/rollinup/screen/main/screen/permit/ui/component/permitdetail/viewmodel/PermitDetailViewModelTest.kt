@@ -18,11 +18,13 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@Suppress("UnusedFlow")
 class PermitDetailViewModelTest {
 
     private lateinit var viewModel: PermitDetailViewModel
@@ -37,7 +39,7 @@ class PermitDetailViewModelTest {
 
     private fun arrangeGetPermitById(
         id: String,
-        result: Result<PermitDetailEntity, NetworkError>
+        result: Result<PermitDetailEntity, NetworkError>,
     ) {
         coEvery {
             getPermitByIdUseCase(id)
@@ -115,7 +117,7 @@ class PermitDetailViewModelTest {
         // Assert
         val state = viewModel.uiState.value
         assertFalse(state.isLoading)
-        assertEquals(PermitDetailEntity(),state.detail)
+        assertEquals(PermitDetailEntity(), state.detail)
 
         coVerify(exactly = 1) {
             getPermitByIdUseCase(id)

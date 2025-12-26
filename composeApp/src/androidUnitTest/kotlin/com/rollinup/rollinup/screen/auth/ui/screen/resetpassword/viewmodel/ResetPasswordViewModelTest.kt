@@ -21,7 +21,6 @@ import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -231,7 +230,7 @@ class ResetPasswordViewModelTest {
         arrangeResetPasswordUseCase(body, Result.Error(NetworkError.RESPONSE_ERROR))
 
         cb.onSubmitNewPassword(password)
-                                                                         //Act
+        //Act
         cb.onResetMessageState()
 
         //Assert

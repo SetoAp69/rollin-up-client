@@ -1,6 +1,5 @@
 package com.rollinup.rollinup.screen.auth.ui.screen.loginscreen.view
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,7 +25,6 @@ import com.rollinup.rollinup.component.textfield.PasswordTextField
 import com.rollinup.rollinup.component.textfield.TextField
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
-import com.rollinup.rollinup.navigation.NavigationRoute
 import com.rollinup.rollinup.screen.auth.model.login.LoginCallback
 import com.rollinup.rollinup.screen.auth.model.login.LoginFormData
 import com.rollinup.rollinup.screen.auth.navigation.AuthNavigationRoute
@@ -66,22 +64,6 @@ fun LoginContentWide(
                     onSubmit = cb.onLogin,
                     onNavigateTo = onNavigateTo
                 )
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxSize()
-                        .background(color = theme.primary)
-                ) {
-                    Text(
-                        text = "To Test Screen",
-                        color = theme.bodyText,
-                        style = Style.title,
-                        modifier = Modifier.clickable() {
-                            onNavigateTo(NavigationRoute.TestRoute.route)
-                        }
-
-                    )
-                }
             }
         }
     }
@@ -136,7 +118,7 @@ fun RowScope.LoginForm(
                     )
                 )
             },
-            placeholder =stringResource(Res.string.ph_password),
+            placeholder = stringResource(Res.string.ph_password),
             modifier = Modifier.fillMaxWidth(),
             isError = formData.passwordError != null,
             errorMsg = formData.passwordError,

@@ -15,7 +15,6 @@ data class AttendanceByClassEntity(
         val studentId: String = "",
     )
 
-    @Serializable
     data class Attendance(
         val id: String = "",
         val checkedInAt: String? = null,

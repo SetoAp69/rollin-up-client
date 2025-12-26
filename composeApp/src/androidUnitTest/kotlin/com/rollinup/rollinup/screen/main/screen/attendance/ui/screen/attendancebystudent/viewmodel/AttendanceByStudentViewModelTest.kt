@@ -25,6 +25,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import io.mockk.unmockkAll
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -57,6 +58,7 @@ class AttendanceByStudentViewModelTest {
     @MockK
     private lateinit var fileWriter: FileWriter
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @get:Rule
     val coroutineRule = CoroutineTestRule()
 

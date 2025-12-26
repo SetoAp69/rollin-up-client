@@ -2,7 +2,6 @@ package com.rollinup.rollinup.component.permitform.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.michaelflisar.lumberjack.core.L
 import com.rollinup.apiservice.data.source.network.model.request.permit.CreateEditPermitBody
 import com.rollinup.apiservice.domain.permit.CreatePermitUseCase
 import com.rollinup.apiservice.domain.permit.EditPermitUseCase
@@ -10,8 +9,8 @@ import com.rollinup.apiservice.domain.permit.GetPermitByIdUseCase
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.Result
 import com.rollinup.apiservice.model.permit.PermitType
-import com.rollinup.common.utils.Utils.toEpochMillis
 import com.rollinup.common.utils.Utils.parseToLocalDateTime
+import com.rollinup.common.utils.Utils.toEpochMillis
 import com.rollinup.rollinup.component.permitform.model.PermitFormCallback
 import com.rollinup.rollinup.component.permitform.model.PermitFormData
 import com.rollinup.rollinup.component.permitform.uistate.PermitFormUiState
@@ -31,7 +30,7 @@ class PermitFormViewModel(
 
     fun init(
         id: String?,
-        user: LoginEntity?
+        user: LoginEntity?,
     ) {
         _uiState.update {
             it.copy(
@@ -89,7 +88,7 @@ class PermitFormViewModel(
         if (formData.reason.isNullOrBlank() && formData.type == PermitType.ABSENCE && !_uiState.value.isEdit)
             formData = formData.copy(reasonError = "Please select a reason")
 
-        if (formData.attachment ==null && !_uiState.value.isEdit)
+        if (formData.attachment == null && !_uiState.value.isEdit)
             formData = formData.copy(reasonError = "Please put an attachment")
 
         _uiState.update { it.copy(formData = formData) }

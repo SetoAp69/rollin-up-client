@@ -62,20 +62,6 @@ fun LoginContentCompact(
                 color = theme.textPrimary
             )
         }
-        Box(
-            modifier = Modifier
-                .clickable() {
-                    onNavigateTo(com.rollinup.rollinup.navigation.NavigationRoute.TestRoute.route)
-                }
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "Go to Test Screen",
-                style = Style.body,
-                color = theme.textPrimary
-            )
-        }
     }
 }
 

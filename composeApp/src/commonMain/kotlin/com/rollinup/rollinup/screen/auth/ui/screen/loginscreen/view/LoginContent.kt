@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.model.Platform
 import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.utils.getPlatform
@@ -14,11 +13,12 @@ import com.rollinup.rollinup.screen.auth.ui.screen.loginscreen.uistate.LoginUiSt
 
 @Composable
 fun LoginContent(
-    onNavigateTo: (String) -> Unit,
     uiState: LoginUiState,
     cb: LoginCallback,
-    onShowSnackBar: OnShowSnackBar,
+    onNavigateTo: (String) -> Unit,
 ) {
+    val platform = getPlatform()
+
     Scaffold(
         topBar = {
             LoginTopAppBar(
@@ -27,43 +27,28 @@ fun LoginContent(
         },
         showLoadingOverlay = uiState.isLoadingOverlay
     ) {
-        LoginContent(
-            uiState = uiState,
-            cb = cb,
-            onNavigateTo = onNavigateTo
-        )
-    }
-}
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            when (platform) {
+                Platform.ANDROID, Platform.IOS -> {
+                    LoginContentCompact(
+                        onNavigateTo = onNavigateTo,
+                        uiState = uiState,
+                        cb = cb
+                    )
+                }
 
+                else -> {
+                    LoginContentWide(
+                        uiState = uiState,
+                        cb = cb,
+                        onNavigateTo = onNavigateTo
+                    )
+                }
 
-@Composable
-fun LoginContent(
-    uiState: LoginUiState,
-    cb: LoginCallback,
-    onNavigateTo: (String) -> Unit,
-) {
-    val platform = getPlatform()
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        when (platform) {
-            Platform.ANDROID, Platform.IOS -> {
-                LoginContentCompact(
-                    onNavigateTo = onNavigateTo,
-                    uiState = uiState,
-                    cb = cb
-                )
             }
-
-            else -> {
-                LoginContentWide(
-                    uiState = uiState,
-                    cb = cb,
-                    onNavigateTo = onNavigateTo
-                )
-            }
-
         }
     }
 }

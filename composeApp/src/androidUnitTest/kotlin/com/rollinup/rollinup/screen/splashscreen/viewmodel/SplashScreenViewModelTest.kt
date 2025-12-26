@@ -7,6 +7,7 @@ import com.rollinup.apiservice.domain.token.GetTokenUseCase
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.NetworkError
 import com.rollinup.apiservice.model.common.Result
+import com.rollinup.apiservice.model.common.Result.Success
 import com.rollinup.rollinup.CoroutineTestRule
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -14,17 +15,10 @@ import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.unmockkAll
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.advanceTimeBy
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import kotlinx.coroutines.time.delay
-import okhttp3.Dispatcher
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -122,7 +116,6 @@ class SplashScreenViewModelTest {
 
     @Test
     fun `auth( should set login state to false when token is blank`() = runTest {
-        val loginDataMockk = LoginEntity(id = "mockk")
         val token = ""
 
         arrangeGetToken(token)
@@ -142,7 +135,6 @@ class SplashScreenViewModelTest {
 
     @Test
     fun `auth should return Result Error when token is blank`() = runTest {
-        val loginDataMockk = LoginEntity(id = "mockk")
         val token = "token"
 
         arrangeGetToken(token)
@@ -165,7 +157,6 @@ class SplashScreenViewModelTest {
     @Test
     fun `resetState() should set loginState to null`() {
         //Arrange
-        val loginDataMockk = LoginEntity(id = "mockk")
         val token = "token"
 
         arrangeGetToken(token)
@@ -198,7 +189,7 @@ class SplashScreenViewModelTest {
             loginJWTUseCase(token)
         } coAnswers {
             delay(2000)
-            flowOf(Result   Success(LoginEntity(isVerified = true)))
+            flowOf(Result Success (LoginEntity(isVerified = true)))
         }
 
         //Act

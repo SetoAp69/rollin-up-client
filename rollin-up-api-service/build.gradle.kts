@@ -2,13 +2,13 @@
 
 import org.gradle.util.internal.GUtil.loadProperties
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
-import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.androidLint)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlinx.kover)
 }
 
 val envProperties = loadProperties(rootProject.file("env.properties"))
@@ -34,7 +34,6 @@ val buildGenerator by tasks.registering(Sync::class) {
 
 
 kotlin {
-
     jvm()
 
     group = "com.rollinup"
@@ -43,8 +42,7 @@ kotlin {
         compileSdk = 36
         minSdk = 24
 
-        withHostTestBuilder {
-        }
+        withHostTestBuilder {}
 
         withDeviceTestBuilder {
             sourceSetTreeName = "test"
@@ -53,13 +51,6 @@ kotlin {
         }
     }
 
-    // For iOS targets, this is also where you should
-    // configure native binary output. For more information, see:
-    // https://kotlinlang.org/docs/multiplatform-build-native-binaries.html#build-xcframeworks
-
-    // A step-by-step guide on how to include this library in an XCode
-    // project can be found here:
-    // https://developer.android.com/kotlin/multiplatform/migrate
     val xcfName = "rollin-up-api-serviceKit"
 
     iosX64 {
@@ -80,11 +71,6 @@ kotlin {
         }
     }
 
-    // Source set declarations.
-    // Declaring a target automatically creates a source set with the same name. By default, the
-    // Kotlin Gradle Plugin creates additional source sets that depend on each other, since it is
-    // common to share sources between related targets.
-    // See: https://kotlinlang.org/docs/multiplatform-hierarchy.html
     sourceSets {
         commonMain.configure {
             kotlin.srcDir(buildGenerator.map { it.destinationDir })
@@ -159,24 +145,46 @@ kotlin {
             }
         }
 
+        getByName("jvmTest") {
+            dependencies{
+                implementation(libs.mockk)
+                implementation(libs.kotlin.test)
+                implementation(libs.coroutine.test)
+                implementation(libs.ktor.mock)
+            }
+        }
+
         iosMain {
-            dependencies {
-                // Add iOS-specific dependencies here. This a source set created by Kotlin Gradle
-                // Plugin (KGP) that each specific iOS target (e.g., iosX64) depends on as
-                // part of KMP’s default source set hierarchy. Note that this source set depends
-                // on common by default and will correctly pull the iOS artifacts of any
-                // KMP dependencies declared in commonMain.
+            dependencies {}
+        }
+    }
+}
+
+kover {
+    val includedPackages = listOf(
+        "*.model.*",
+        "*.domain",
+        "*.data.*",
+        "*.source.*",
+        "com.rollinup.apiservice.data.source.network.datasource.*",
+    )
+
+    val excludedPackages = listOf(
+        "*.di",
+        "*.utils",
+        "*.model.common",
+        "com.rollinup.apiservice.data.source.network.model.*",
+        "com.rollinup.apiservice.data.source.datastore"
+    )
+
+    reports{
+        filters{
+            includes {
+                packages(includedPackages)
+            }
+            excludes{
+                packages(excludedPackages)
             }
         }
     }
-
-}
-
-fun getProperties(path: String): Properties {
-    val envFile = rootProject.file(path)
-
-    val properties = Properties()
-    properties.load(envFile.inputStream())
-
-    return properties
 }

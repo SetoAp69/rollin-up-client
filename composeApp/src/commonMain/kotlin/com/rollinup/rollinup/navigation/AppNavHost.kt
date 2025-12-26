@@ -9,6 +9,6 @@ expect fun AppNavHost(
     navController: NavHostController,
     initialRoute:String,
     loginData: LoginEntity?,
-    onLogout: () -> Unit,
     onRefreshSetting:()->Unit,
+    onLogout:()->Unit,
 )

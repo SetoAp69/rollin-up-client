@@ -12,8 +12,6 @@ import com.rollinup.apiservice.model.attendance.AttendanceByStudentEntity
 import com.rollinup.apiservice.model.common.Result
 import com.rollinup.rollinup.component.date.DateFormatter
 import com.rollinup.rollinup.component.export.FileWriter
-import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
-import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.screen.main.screen.attendance.model.attendancebystudent.AttendanceByStudentCallback
 import com.rollinup.rollinup.screen.main.screen.attendance.model.attendancebystudent.AttendanceByStudentFilterData
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancebystudent.uistate.AttendanceByStudentUiState
@@ -39,11 +37,11 @@ class AttendanceByStudentViewModel(
         MutableStateFlow<PagingData<AttendanceByStudentEntity>>(PagingData.empty())
     val pagingData = _pagingData.asStateFlow()
 
-    fun init(studentUserId: String, isMobile:Boolean) {
+    fun init(studentUserId: String, isMobile: Boolean) {
         if (studentUserId.isBlank()) return
 
         _uiState.update {
-            it.copy(studentUserId = studentUserId, isMobile =isMobile)
+            it.copy(studentUserId = studentUserId, isMobile = isMobile)
         }
 
         if (isMobile) {
@@ -252,7 +250,7 @@ class AttendanceByStudentViewModel(
         )
     }
 
-    private fun resetMessageState(){
+    private fun resetMessageState() {
         _uiState.update {
             it.copy(
                 exportState = null

@@ -1,7 +1,6 @@
 package com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard
 
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
-import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardAction
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

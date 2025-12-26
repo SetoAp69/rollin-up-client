@@ -16,8 +16,6 @@ import com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.uistate.Update
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -176,25 +174,25 @@ class UpdatePasswordViewModel(
             )
             _uiState.update { it.copy(isLoadingOverlay = true) }
             updatePasswordAndVerificationUseCase(body).collectLatest { result ->
-               when (result){
-                   is Result.Success->{
-                       _uiState.update {
-                           it.copy(
-                               isLoadingOverlay = false,
-                               updatePasswordState = true
-                           )
-                       }
-                   }
+                when (result) {
+                    is Result.Success -> {
+                        _uiState.update {
+                            it.copy(
+                                isLoadingOverlay = false,
+                                updatePasswordState = true
+                            )
+                        }
+                    }
 
-                   is Result.Error->{
-                       _uiState.update {
-                           it.copy(
-                               isLoadingOverlay = false,
-                               updatePasswordState = false
-                           )
-                       }
-                   }
-               }
+                    is Result.Error -> {
+                        _uiState.update {
+                            it.copy(
+                                isLoadingOverlay = false,
+                                updatePasswordState = false
+                            )
+                        }
+                    }
+                }
 
             }
         }

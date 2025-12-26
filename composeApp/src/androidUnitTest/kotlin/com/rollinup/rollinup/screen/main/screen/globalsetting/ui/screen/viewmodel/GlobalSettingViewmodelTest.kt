@@ -11,7 +11,6 @@ import com.rollinup.apiservice.model.common.NetworkError
 import com.rollinup.apiservice.model.common.Result
 import com.rollinup.rollinup.CoroutineTestRule
 import com.rollinup.rollinup.screen.main.screen.globalsetting.model.GlobalSettingFormData
-import com.rollinup.rollinup.screen.main.screen.globalsetting.ui.screen.uistate.GlobalSettingUiState
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -22,7 +21,11 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -44,7 +47,7 @@ class GlobalSettingViewmodelTest {
     // ---------- Arrange Helpers ----------
 
     private fun arrangeGetGlobalSetting(
-        result: Result<GlobalSetting, NetworkError>
+        result: Result<GlobalSetting, NetworkError>,
     ) {
         coEvery {
             getGlobalSettingUseCase()
@@ -53,7 +56,7 @@ class GlobalSettingViewmodelTest {
 
     private fun arrangeEditGlobalSetting(
         body: EditGlobalSettingBody,
-        result: Result<Unit, NetworkError>
+        result: Result<Unit, NetworkError>,
     ) {
         coEvery {
             editGlobalSettingUseCase(body)

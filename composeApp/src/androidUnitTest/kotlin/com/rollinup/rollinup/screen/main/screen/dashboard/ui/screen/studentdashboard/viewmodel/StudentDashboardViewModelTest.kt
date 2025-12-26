@@ -343,7 +343,7 @@ class StudentDashboardViewModelTest {
         val state = viewModel.uiState.value
         assertFalse(state.isLoadingDetail)
         // Detail should remain default/null or previous state
-        assertEquals(AttendanceDetailEntity(), state.attendanceDetail ?: AttendanceDetailEntity())
+        assertEquals(AttendanceDetailEntity(), state.attendanceDetail)
     }
 
     @Test

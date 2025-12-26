@@ -10,8 +10,6 @@ import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.Result
 import com.rollinup.apiservice.model.user.UserEntity
 import com.rollinup.rollinup.component.export.FileWriter
-import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
-import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.screen.main.screen.studentcenter.model.StudentCenterCallback
 import com.rollinup.rollinup.screen.main.screen.studentcenter.model.StudentCenterFilterData
 import com.rollinup.rollinup.screen.main.screen.studentcenter.ui.screen.studentcenterhome.uistate.StudentCenterUiState

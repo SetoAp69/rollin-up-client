@@ -1,6 +1,6 @@
 package com.rollinup.apiservice.data.repository.auth
 
-import com.rollinup.apiservice.data.mapper.LoginMapper
+import com.rollinup.apiservice.data.mapper.AuthMapper
 import com.rollinup.apiservice.data.source.network.apiservice.AuthApiService
 import com.rollinup.apiservice.data.source.network.model.request.auth.LoginBody
 import com.rollinup.apiservice.data.source.network.model.request.user.UpdatePasswordAndVerificationBody
@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.flowOn
 class AuthRepositoryImpl(
     private val apiDataSource: AuthApiService,
     private val ioDispatcher: CoroutineDispatcher,
-    private val mapper: LoginMapper,
+    private val mapper: AuthMapper,
 ) : AuthRepository {
 
     override fun login(body: LoginBody): Flow<Result<LoginEntity, NetworkError>> =

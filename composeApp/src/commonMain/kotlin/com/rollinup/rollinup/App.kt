@@ -6,7 +6,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rollinup.common.model.SecurityAlert
 import com.rollinup.common.model.Severity
@@ -61,7 +60,8 @@ fun App(
     ) {
         RollinUpTheme {
             NavigationHost(
-                onRefreshSetting = { generalSettingViewModel.init() }
+                onRefreshSetting = { generalSettingViewModel.init() },
+                onLogout = { authViewModel.logout() }
             )
             SecurityAlertDialog(
                 showDialog = securityAlerts.isNotEmpty(),

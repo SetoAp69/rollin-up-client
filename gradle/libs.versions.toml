@@ -40,7 +40,7 @@ webview = "2.0.1"
 kcef = "2025.03.23"
 talsec = "17.0.0"
 axer = "1.2.5"
-compottie="2.0.2"
+compottie = "2.0.2"
 dataframe = "0.15.0"
 mockk = "1.14.7"
 junitJupiter = "5.8.1"
@@ -96,10 +96,11 @@ ktor-java = { group = "io.ktor", name = "ktor-client-java", version.ref = "ktor"
 ktor-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
 ktor-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor" }
+ktor-mock = { group = "io.ktor", name = "ktor-client-mock", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 #mockk
-mockk ={group = "io.mockk", name="mockk",version.ref="mockk"}
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
 #paging
 androidx-paging-runtime-ktx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "androidx-paging" }
@@ -139,11 +140,11 @@ androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
 rollin-up-api-service = { group = "com.rolinup", name = "rollin-up-api-service" }
 
 #compottie
-compottie = {group="io.github.alexzhirkevich", name = "compottie", version.ref = "compottie"}
-compottie-dot = {group="io.github.alexzhirkevich", name = "compottie-dot", version.ref = "compottie"}
+compottie = { group = "io.github.alexzhirkevich", name = "compottie", version.ref = "compottie" }
+compottie-dot = { group = "io.github.alexzhirkevich", name = "compottie-dot", version.ref = "compottie" }
 
 #kotlin dataframe
-kotlinx-dataframe={group = "org.jetbrains.kotlinx", name="dataframe", version.ref="dataframe"}
+kotlinx-dataframe = { group = "org.jetbrains.kotlinx", name = "dataframe", version.ref = "dataframe" }
 
 #multiplatform settings
 multiplatform-settings = { group = "com.russhwolf", name = "multiplatform-settings", version.ref = "multiplatformSettings" }
@@ -176,7 +177,7 @@ compose-webview-multiplatform = { group = "io.github.kevinnzou", name = "compose
 
 #test
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
-coroutine-test = {group = "org.jetbrains.kotlinx",name = "kotlinx-coroutines-test", version.ref="kotlinx-coroutines"}
+coroutine-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

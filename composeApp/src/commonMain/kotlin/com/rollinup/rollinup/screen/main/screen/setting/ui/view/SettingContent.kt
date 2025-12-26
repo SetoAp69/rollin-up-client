@@ -10,10 +10,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -25,12 +21,10 @@ import com.rollinup.rollinup.component.spacer.screenPadding
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.topbar.TopBar
-import io.github.orioneee.AxerUIEntryPoint
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_exit_line_24
-import rollin_up.composeapp.generated.resources.ic_gear_line_24
 import rollin_up.composeapp.generated.resources.label_auto
 import rollin_up.composeapp.generated.resources.label_dark_mode
 import rollin_up.composeapp.generated.resources.label_light_mode
@@ -41,8 +35,6 @@ fun SettingContent(
     onLogout: () -> Unit,
     onUiModeChange: (UiMode) -> Unit,
 ) {
-    var showHTTPInspector by remember{ mutableStateOf(false) }
-
     Scaffold(
         topBar = {
             TopBar(
@@ -65,14 +57,7 @@ fun SettingContent(
             LogOut {
                 onLogout()
             }
-            HTTPInspector{
-                showHTTPInspector = true
-            }
-
         }
-    }
-    if(showHTTPInspector){
-        AxerUIEntryPoint().Screen()
     }
 }
 
@@ -127,34 +112,6 @@ fun UiModeSetting(
             UiModeSwitch(
                 value = value,
                 onValueChanges = onValueChanges
-            )
-        }
-    }
-}
-
-@Composable
-fun HTTPInspector(
-    onClick:()->Unit
-) {
-    Card(
-        onClick = onClick
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "HTTP Inspector",
-                style = Style.popupBody,
-                color = theme.bodyText
-            )
-            Spacer(Modifier.weight(1f))
-            Icon(
-                modifier = Modifier
-                    .size(24.dp),
-                painter = painterResource(Res.drawable.ic_gear_line_24),
-                tint = theme.textPrimary,
-                contentDescription = null
             )
         }
     }

@@ -4,13 +4,11 @@ import com.rollinup.apiservice.Constant
 import com.rollinup.apiservice.data.source.network.apiservice.AttendanceApiService
 import com.rollinup.apiservice.data.source.network.apiservice.AuthApiService
 import com.rollinup.apiservice.data.source.network.apiservice.GlobalSettingApiService
-import com.rollinup.apiservice.data.source.network.apiservice.PagingDummyApi
 import com.rollinup.apiservice.data.source.network.apiservice.PermitApiService
 import com.rollinup.apiservice.data.source.network.apiservice.UserApiService
 import com.rollinup.apiservice.data.source.network.datasource.attendance.AttendanceApiDataSource
 import com.rollinup.apiservice.data.source.network.datasource.auth.AuthApiDataSource
 import com.rollinup.apiservice.data.source.network.datasource.globalsetting.GlobalSettingApiDataSource
-import com.rollinup.apiservice.data.source.network.datasource.paging.PagingDummyDataSource
 import com.rollinup.apiservice.data.source.network.datasource.permit.PermitApiDataSource
 import com.rollinup.apiservice.data.source.network.datasource.user.UserApiDataSource
 import org.koin.core.qualifier.named
@@ -24,11 +22,6 @@ object DatasourceModule {
             GlobalSettingApiDataSource(
                 httpClient = get(named(Constant.HTTP_CLIENT)),
                 sseClient = get(named(Constant.SSE_CLIENT))
-            )
-        }
-        single<PagingDummyApi> {
-            PagingDummyDataSource(
-                httpClient = get(named(Constant.HTTP_CLIENT))
             )
         }
         single<AttendanceApiService> {

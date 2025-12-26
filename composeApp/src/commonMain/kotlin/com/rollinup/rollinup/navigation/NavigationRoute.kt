@@ -6,10 +6,9 @@ import com.rollinup.rollinup.screen.auth.navigation.AuthNavigationRoute
 sealed class NavigationRoute(val route: String) {
     object SplashScreen : NavigationRoute("splash-screen")
     object Auth : NavigationRoute("auth")
-    object TestRoute : NavigationRoute("test")
     object MainRoute : NavigationRoute("main/{role}") {
         fun navigate(role: Role): String {
-            return MainRoute.route.replace("{role}", role.value)
+            return route.replace("{role}", role.value)
         }
     }
 

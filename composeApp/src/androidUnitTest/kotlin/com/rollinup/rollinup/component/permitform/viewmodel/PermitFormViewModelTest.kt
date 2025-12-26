@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.rollinup.rollinup.component.permitform.viewmodel
 
 import com.rollinup.apiservice.data.source.network.model.request.permit.CreateEditPermitBody

@@ -21,7 +21,6 @@ import com.rollinup.apiservice.domain.globalsetting.GetCachedGlobalSettingUseCas
 import com.rollinup.apiservice.domain.globalsetting.GetGlobalSettingUseCase
 import com.rollinup.apiservice.domain.globalsetting.ListenGlobalSettingSSE
 import com.rollinup.apiservice.domain.globalsetting.UpdateCachedGlobalSettingUseCase
-import com.rollinup.apiservice.domain.pagging.GetPagingDummyUseCase
 import com.rollinup.apiservice.domain.permit.CancelPermitUseCase
 import com.rollinup.apiservice.domain.permit.CreatePermitUseCase
 import com.rollinup.apiservice.domain.permit.DoApprovalUseCase
@@ -62,7 +61,6 @@ object DomainModule {
         authDomain()
         userDomain()
         globalSettingDomain()
-        pagingDummyDomain()
         permitDomain()
         attendanceDomain()
         tokenDomain()
@@ -99,10 +97,6 @@ object DomainModule {
         singleOf(::UpdatePasswordAndVerificationUseCase)
         singleOf(::ResendVerificationOtpUseCase)
         singleOf(::SubmitVerificationOtpUseCase)
-    }
-
-    private fun Module.pagingDummyDomain() {
-        singleOf(::GetPagingDummyUseCase)
     }
 
     private fun Module.permitDomain() {

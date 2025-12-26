@@ -21,20 +21,16 @@ import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.unmockkAll
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class UpdatePasswordViewModelTest {
@@ -293,7 +289,7 @@ class UpdatePasswordViewModelTest {
         }
 
         val state = viewModel.uiState.value
-        assertEquals(true,state.updatePasswordState)
+        assertEquals(true, state.updatePasswordState)
         assertFalse(state.isLoadingOverlay)
     }
 

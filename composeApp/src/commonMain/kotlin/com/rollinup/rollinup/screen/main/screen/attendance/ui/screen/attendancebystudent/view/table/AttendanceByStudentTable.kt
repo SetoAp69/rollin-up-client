@@ -75,6 +75,7 @@ private fun getColumn(): List<TableColumn<AttendanceByStudentEntity>> =
         },
         TableColumn("Duration", 0.5f) { data ->
             val text = data.permit?.durationString ?: "-"
+
             Text(
                 text = text,
                 color = theme.bodyText,

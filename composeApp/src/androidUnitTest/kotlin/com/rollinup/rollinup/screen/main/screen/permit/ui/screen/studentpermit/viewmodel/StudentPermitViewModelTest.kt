@@ -31,6 +31,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+@Suppress("UnusedFlow")
 class StudentPermitViewModelTest {
 
     private lateinit var viewModel: StudentPermitViewModel

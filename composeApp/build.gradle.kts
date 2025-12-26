@@ -1,4 +1,3 @@
-import org.gradle.kotlin.dsl.invoke
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
@@ -189,15 +188,12 @@ kotlin {
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
-//            implementation(libs.skiko.awt.runtime.windows.x64)
-//            implementation(compose.desktop.windows_arm64)
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.ktor.java)
             implementation(libs.kcef)
 
             //Dataframe
             implementation(libs.kotlinx.dataframe)
-//            implementation(libs.kotlinx.dataframe.excel)
 
         }
         iosMain.dependencies {
@@ -238,7 +234,7 @@ android {
     namespace = "com.rollinup.rollinup"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 //
-    androidResources{
+    androidResources {
         generateLocaleConfig = true
         localeFilters.add("en")
         localeFilters.add("id")
@@ -261,7 +257,7 @@ android {
 
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
         }
     }
     compileOptions {
@@ -304,19 +300,28 @@ compose.desktop {
     }
 }
 
-kover{
+kover {
     val includePackage = listOf(
         "*.model.*",
         "*.viewmodel",
     )
 
-    val exludePackage = listOf(
-        "*.test.*"
+    val excludedPackage = listOf(
+        "*.di.*",
+        "*.test.*",
+        "*.view",
+        "*.utils",
+        "*.view.*",
+        ""
     )
-    reports{
+
+    reports {
         filters {
-            includes{
+            includes {
                 packages(includePackage)
+            }
+            excludes {
+                packages(excludedPackage)
             }
         }
     }

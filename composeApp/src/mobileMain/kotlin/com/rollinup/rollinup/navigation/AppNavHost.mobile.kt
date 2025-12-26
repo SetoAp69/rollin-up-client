@@ -31,8 +31,8 @@ actual fun AppNavHost(
     navController: NavHostController,
     initialRoute: String,
     loginData: LoginEntity?,
-    onLogout: () -> Unit,
     onRefreshSetting: () -> Unit,
+    onLogout: () -> Unit,
 ) {
     var isSuccess: Boolean? by remember { mutableStateOf(null) }
     var bottomBarHeight by remember { mutableStateOf(0.dp) }
@@ -83,7 +83,6 @@ actual fun AppNavHost(
                 ) {
                     appGraph(
                         navController = navController,
-                        onLogout = onLogout,
                         onRefreshSetting = onRefreshSetting,
                         onShowSnackBar = { msg, success ->
                             isSuccess = success

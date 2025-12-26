@@ -13,7 +13,6 @@ import com.rollinup.rollinup.screen.main.screen.globalsetting.di.GlobalSettingMo
 import com.rollinup.rollinup.screen.main.screen.permit.di.PermitModule
 import com.rollinup.rollinup.screen.main.screen.studentcenter.di.StudentCenterModule
 import com.rollinup.rollinup.screen.main.screen.usercenter.di.UserCenterModule
-import com.rollinup.rollinup.screen.test.di.TestModule
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -22,7 +21,6 @@ object AppModule {
     operator fun invoke() = listOf(
         ExportFileModule(),
         AuthModule(),
-        TestModule(),
         DashboardModule(),
         ComponentModule(),
         UserCenterModule(),
