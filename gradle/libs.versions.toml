@@ -45,7 +45,9 @@ dataframe = "0.15.0"
 mockk = "1.14.7"
 junitJupiter = "5.8.1"
 kover = "0.9.2"
-
+googleServices = "4.4.4"
+firebase = "34.7.0"
+crashlytics = "3.0.6"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -175,6 +177,11 @@ compass-geocoder-web-googlemaps = { module = "dev.jordond.compass:geocoder-web-g
 #webview
 compose-webview-multiplatform = { group = "io.github.kevinnzou", name = "compose-webview-multiplatform", version.ref = "webview" }
 
+#google-services
+firebase-bom = {group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase"}
+firebase-analytics = {group = "com.google.firebase", name = "firebase-analytics"}
+firebase-crashlytics = {group = "com.google.firebase", name = "firebase-crashlytics"}
+
 #test
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 coroutine-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
@@ -189,6 +196,6 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 androidKotlinMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 androidLint = { id = "com.android.lint", version.ref = "agp" }
 kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
-
-#Serialization
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+crashlytics = {id = "com.google.firebase.crashlytics", version.ref = "crashlytics"}
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

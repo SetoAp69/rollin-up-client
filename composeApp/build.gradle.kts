@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
@@ -10,6 +12,8 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 //    alias(libs.plugins.composeHotReload)
     alias(libs.plugins.kotlinx.kover)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.crashlytics)
 }
 
 val envProperties = Properties()
@@ -104,6 +108,10 @@ kotlin {
             implementation(libs.kotlinx.dataframe)
 //            implementation(libs.kotlinx.dataframe.excel)
 
+            //Firebase
+            implementation(libs.firebase.analytics)
+            implementation(libs.firebase.crashlytics)
+
             //moko permission
             implementation(libs.permission.camera)
             implementation(libs.permission.gallery)
@@ -175,6 +183,9 @@ kotlin {
             //Compottie
             implementation(libs.compottie)
             implementation(libs.compottie.dot)
+
+            //firebase
+            implementation(project.dependencies.platform(libs.firebase.bom))
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -226,14 +237,13 @@ kotlin {
                 implementation(libs.compass.geocoder.web.googlemaps)
             }
         }
-
     }
 }
 
 android {
     namespace = "com.rollinup.rollinup"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
-//
+
     androidResources {
         generateLocaleConfig = true
         localeFilters.add("en")
@@ -245,8 +255,9 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
-        versionName = "0.1"
+        versionName = "0.1.1"
     }
+
     packaging {
         resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
         resources.pickFirsts.add("/META-INF/kotlin-jupyter-libraries/libraries.json")
@@ -258,8 +269,16 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
+            proguardFile(rootProject.file("androidProguard.pro"))
+            this.versionNameSuffix = "release"
+        }
+
+        getByName("debug"){
+            versionNameSuffix = "debug"
+            applicationIdSuffix = ".debug"
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11

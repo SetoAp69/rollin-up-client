@@ -58,15 +58,6 @@ class AndroidFileWriter(
             e.printStackTrace()
             L.e { e.stackTraceToString() }
         }
-
-//        try {
-//            resolver.openOutputStream(newUri)?.let {
-//                dataFrame.writeC
-//            }
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//            L.wtf { e.toString() }
-//        }
     }
 
 }

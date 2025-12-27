@@ -34,9 +34,3 @@ fun main() = application {
     }
     AxerTrayWindow()
 }
-
-
-fun mainx() {
-    val dt = "2025-12-11T15:04:22.440574Z".parseToLocalDateTime(TimeZone.currentSystemDefault())
-    println(dt)
-}

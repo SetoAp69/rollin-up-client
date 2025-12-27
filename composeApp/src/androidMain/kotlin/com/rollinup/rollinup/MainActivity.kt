@@ -13,6 +13,10 @@ import com.michaelflisar.lumberjack.implementation.plant
 import com.michaelflisar.lumberjack.loggers.console.ConsoleLogger
 import com.rollinup.apiservice.di.AndroidDataModule
 import com.rollinup.rollinup.di.AppModule
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -23,7 +27,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         L.init(LumberjackLogger)
         L.plant(ConsoleLogger())
-        L.wtf { "onCreate()" }
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         startKoin {
@@ -39,6 +42,15 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onPause() {
+        super.onPause()
+        CoroutineScope(Dispatchers.IO).launch {
+            delay(5 * 60 * 1000)
+            finish()
+        }
+    }
+
 }
 
 @Composable
