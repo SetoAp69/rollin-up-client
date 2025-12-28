@@ -34,7 +34,9 @@ fun TeacherDashboardContentMobile(
     var showActionSheet by remember { mutableStateOf(false) }
     val selectedList = uiState.itemSelected.ifEmpty { listOf(selectedAttendance) }
 
-    Scaffold() {
+    Scaffold(
+        showLoadingOverlay = uiState.isLoadingOverlay
+    ) {
         Box(
             modifier = Modifier
                 .padding(screenPaddingValues),

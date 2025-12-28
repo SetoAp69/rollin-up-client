@@ -3,6 +3,7 @@ package com.rollinup.rollinup.screen.auth.ui.screen.loginscreen.view
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,6 +22,7 @@ import com.rollinup.rollinup.component.textfield.PasswordTextField
 import com.rollinup.rollinup.component.textfield.TextField
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import com.rollinup.rollinup.component.utils.getVersion
 import com.rollinup.rollinup.screen.auth.model.login.LoginCallback
 import com.rollinup.rollinup.screen.auth.model.login.LoginFormData
 import com.rollinup.rollinup.screen.auth.navigation.AuthNavigationRoute
@@ -62,6 +64,13 @@ fun LoginContentCompact(
                 color = theme.textPrimary
             )
         }
+        Spacer(modifier = Modifier.weight(1f))
+        Text(
+            text = getVersion(),
+            style = Style.body,
+            color = theme.chipSecondaryBg
+        )
+        Spacer(12.dp)
     }
 }
 

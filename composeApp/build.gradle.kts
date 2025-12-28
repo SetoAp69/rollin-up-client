@@ -22,6 +22,8 @@ if (envPropertiesFile.exists()) {
     envPropertiesFile.inputStream().use { envProperties.load(it) }
 }
 
+val appVersion = "1.0.1"
+
 val buildConfigGenerator by tasks.registering(Sync::class) {
     from(
         resources.text.fromString(
@@ -30,7 +32,6 @@ val buildConfigGenerator by tasks.registering(Sync::class) {
                 object BuildConfig{
                    const val MAP_URL = "${envProperties["MAP_URL"]}"
                    const val IS_PROD = ${envProperties["IS_PROD"]}
-                   const val TEMP_PASSWORD = ${envProperties["TEMP_PASSWORD"]}
                }
             """.trimIndent()
         )
@@ -107,10 +108,6 @@ kotlin {
             //Dataframe
             implementation(libs.kotlinx.dataframe)
 //            implementation(libs.kotlinx.dataframe.excel)
-
-            //Firebase
-            implementation(libs.firebase.analytics)
-            implementation(libs.firebase.crashlytics)
 
             //moko permission
             implementation(libs.permission.camera)
@@ -255,7 +252,7 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
-        versionName = "0.1.1"
+        versionName = appVersion
     }
 
     packaging {
@@ -269,13 +266,19 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
+            versionNameSuffix = "release"
+            manifestPlaceholders["crashlyticsCollectionEnabled"] = "true"
+            manifestPlaceholders["version"] = defaultConfig.versionName + versionNameSuffix
+            manifestPlaceholders["appName"] = "@string/app_name"
             proguardFile(rootProject.file("androidProguard.pro"))
-            this.versionNameSuffix = "release"
         }
 
-        getByName("debug"){
-            versionNameSuffix = "debug"
+        getByName("debug") {
+            versionNameSuffix = "-debug"
             applicationIdSuffix = ".debug"
+            manifestPlaceholders["version"] = defaultConfig.versionName + versionNameSuffix
+            manifestPlaceholders["appName"] = "@string/app_name_debug"
+            manifestPlaceholders["crashlyticsCollectionEnabled"] = "false"
         }
     }
 
@@ -287,9 +290,17 @@ android {
 }
 
 dependencies {
+    //Test
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.coroutine.test)
+
+    //Tooling
     debugImplementation(compose.uiTooling)
+
+    //Firebase
+    releaseImplementation(libs.firebase.analytics)
+    releaseImplementation(libs.firebase.crashlytics)
+
     coreLibraryDesugaring(libs.desugar.jdk)
 }
 
@@ -304,11 +315,11 @@ repositories {
 compose.desktop {
     application {
         mainClass = "com.rollinup.rollinup.MainKt"
-
+        version = appVersion
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Exe)
             packageName = "com.rollinup.rollinup"
-            packageVersion = "1.0.0"
+            packageVersion = appVersion
             includeAllModules = true
             modules("jdk.jcef")
         }

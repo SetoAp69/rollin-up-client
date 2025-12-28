@@ -12,21 +12,29 @@ import com.michaelflisar.lumberjack.core.L
 import com.michaelflisar.lumberjack.implementation.LumberjackLogger
 import com.michaelflisar.lumberjack.implementation.plant
 import com.michaelflisar.lumberjack.loggers.console.ConsoleLogger
+import com.rollinup.CounterViewModel
 import com.rollinup.apiservice.di.AndroidDataModule
 import com.rollinup.rollinup.di.AppModule
 import com.rollinup.rollinup.security.SecurityEventBus
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.context.startKoin
 
 class TalsecApplication() : ComponentActivity(), ThreatListener.ThreatDetected {
+    private lateinit var counterViewModel: CounterViewModel
+    private lateinit var authViewModel: AuthViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         initLogger()
         initKoin()
         initTalSec()
+        initViewModels()
         setContent {
-            AndroidApp {
+            AndroidApp(
+                authViewModel = authViewModel
+            ) {
                 finish()
             }
         }
@@ -39,6 +47,13 @@ class TalsecApplication() : ComponentActivity(), ThreatListener.ThreatDetected {
             .build()
         Talsec.start(this, config)
     }
+
+    private fun initViewModels() {
+        val authViewmodel: AuthViewModel by viewModel()
+        this.authViewModel = authViewmodel
+        counterViewModel = CounterViewModel()
+    }
+
 
     private fun initKoin() {
         startKoin {

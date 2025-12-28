@@ -120,3 +120,6 @@ expect fun getDeviceId(): String
 
 @Composable
 expect fun getOrientation(): Orientation
+
+@Composable
+expect fun getVersion():String

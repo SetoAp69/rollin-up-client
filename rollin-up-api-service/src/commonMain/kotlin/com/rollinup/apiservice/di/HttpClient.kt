@@ -42,7 +42,7 @@ private fun getSSEClient(localDataStore: LocalDataStore) = HttpClient {
     expectSuccess = true
     defaultRequest {
         url {
-            protocol = URLProtocol.HTTP //TODO:Changes this to HTTPS on productions
+            protocol = URLProtocol.HTTPS
             host = BuildConfig.BASE_URL
         }
     }
@@ -110,7 +110,7 @@ private fun getClient(localDataStore: LocalDataStore) = HttpClient {
 
     defaultRequest {
         url {
-            protocol = URLProtocol.HTTP //TODO:Changes this to HTTPS on productions
+            protocol = URLProtocol.HTTPS
             host = BuildConfig.BASE_URL
         }
     }

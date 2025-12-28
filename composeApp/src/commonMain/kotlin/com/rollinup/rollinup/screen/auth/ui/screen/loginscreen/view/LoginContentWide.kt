@@ -1,11 +1,13 @@
 package com.rollinup.rollinup.screen.auth.ui.screen.loginscreen.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -21,10 +23,12 @@ import androidx.compose.ui.unit.dp
 import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.button.ButtonType
+import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.textfield.PasswordTextField
 import com.rollinup.rollinup.component.textfield.TextField
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import com.rollinup.rollinup.component.utils.getVersion
 import com.rollinup.rollinup.screen.auth.model.login.LoginCallback
 import com.rollinup.rollinup.screen.auth.model.login.LoginFormData
 import com.rollinup.rollinup.screen.auth.navigation.AuthNavigationRoute
@@ -64,6 +68,20 @@ fun LoginContentWide(
                     onSubmit = cb.onLogin,
                     onNavigateTo = onNavigateTo
                 )
+                Box(
+                    modifier = Modifier
+                        .background(theme.primary)
+                        .weight(1f)
+                        .fillMaxHeight(),
+                    contentAlignment = Alignment.BottomCenter
+                ) {
+                    Text(
+                        text = getVersion(),
+                        color = theme.chipSecondaryBg,
+                        style = Style.body,
+                        modifier = Modifier.padding(itemGap8)
+                    )
+                }
             }
         }
     }

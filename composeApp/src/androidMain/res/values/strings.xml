@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">rollin-up</string>
+    <string name="app_name">Rollin-up</string>
+    <string name="app_name_debug">Rollin-Up-debug</string>
 </resources>

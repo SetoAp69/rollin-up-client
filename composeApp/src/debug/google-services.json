@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "422759067422",
+    "project_id": "rollin-up",
+    "storage_bucket": "rollin-up.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:422759067422:android:3950a787348ba2b1d0a30f",
+        "android_client_info": {
+          "package_name": "com.rollinup.rollinup"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7UPX5dJMq7nwn5vcfr882_q4sctoAQ_M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:422759067422:android:759f380e26c8b24cd0a30f",
+        "android_client_info": {
+          "package_name": "com.rollinup.rollinup.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7UPX5dJMq7nwn5vcfr882_q4sctoAQ_M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

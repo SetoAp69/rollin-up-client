@@ -11,22 +11,25 @@ import com.michaelflisar.lumberjack.core.L
 import com.michaelflisar.lumberjack.implementation.LumberjackLogger
 import com.michaelflisar.lumberjack.implementation.plant
 import com.michaelflisar.lumberjack.loggers.console.ConsoleLogger
+import com.rollinup.CounterViewModel
 import com.rollinup.apiservice.di.AndroidDataModule
 import com.rollinup.rollinup.di.AppModule
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.context.startKoin
 
 class MainActivity : ComponentActivity() {
+    private lateinit var counterViewModel: CounterViewModel
+    private lateinit var authViewmodel: AuthViewModel
+
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        L.init(LumberjackLogger)
         L.plant(ConsoleLogger())
+        L.init(LumberjackLogger)
+
+        counterViewModel = CounterViewModel()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         startKoin {
@@ -36,8 +39,15 @@ class MainActivity : ComponentActivity() {
             )
         }
 
+        val authViewmodel: AuthViewModel by viewModel()
+        this.authViewmodel = authViewmodel
+
+        counterViewModel.stopTimer()
+
         setContent {
-            AndroidApp {
+            AndroidApp(
+                authViewModel = authViewmodel
+            ) {
                 finish()
             }
         }
@@ -45,15 +55,22 @@ class MainActivity : ComponentActivity() {
 
     override fun onPause() {
         super.onPause()
-        CoroutineScope(Dispatchers.IO).launch {
-            delay(5 * 60 * 1000)
-            finish()
+        counterViewModel.startTimer {
+            authViewmodel.resetLoginData()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        counterViewModel.stopTimer()
     }
 
 }
 
 @Composable
-fun AndroidApp(onFinish: () -> Unit) {
-    App(onFinish)
+fun AndroidApp(authViewModel: AuthViewModel, onFinish: () -> Unit) {
+    App(
+        authViewModel = authViewModel,
+        onFinish = onFinish
+    )
 }
