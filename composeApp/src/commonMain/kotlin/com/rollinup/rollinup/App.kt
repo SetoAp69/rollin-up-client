@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.text.AnnotatedString
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rollinup.common.model.SecurityAlert
 import com.rollinup.common.model.Severity
@@ -28,12 +27,12 @@ import rollin_up.composeapp.generated.resources.msg_multiple_security_alert
 
 @Composable
 fun App(
+    securityViewModel: SecurityViewModel = koinViewModel(),
     authViewModel: AuthViewModel = koinViewModel(),
     onFinish: () -> Unit,
 ) {
     val generalSettingViewModel: GlobalSettingViewModel = koinViewModel()
     val uiModeViewModel: UiModeViewModel = koinViewModel()
-    val securityViewModel: SecurityViewModel = koinViewModel()
     val uiMode = uiModeViewModel.uiMode.collectAsStateWithLifecycle().value
     val authState = authViewModel.uiState.collectAsStateWithLifecycle().value
     val securityAlerts = securityViewModel.securityAlert.collectAsStateWithLifecycle().value
@@ -91,7 +90,11 @@ fun SecurityAlertDialog(
     onDismissRequest: (Boolean) -> Unit,
 ) {
     val title = getAlertTitle(securityAlert)
-    val message = getAlertMessage(securityAlert)
+    val message = if (securityAlert.size == 1) {
+        (securityAlert.first().message).toAnnotatedString()
+    } else {
+        stringResource(Res.string.msg_multiple_security_alert).toAnnotatedString()
+    }
 
     AlertDialog(
         title = title,
@@ -110,13 +113,4 @@ fun SecurityAlertDialog(
 
 fun getAlertTitle(securityAlert: List<SecurityAlert>) =
     if (securityAlert.size == 1) "Security Alert : ${securityAlert.firstOrNull()?.title ?: ""}"
-    else ""
-
-@Composable
-fun getAlertMessage(securityAlert: List<SecurityAlert>): AnnotatedString {
-    return if (securityAlert.size == 1) {
-        (securityAlert.firstOrNull()?.message ?: "").toAnnotatedString()
-    } else {
-        stringResource(Res.string.msg_multiple_security_alert).toAnnotatedString()
-    }
-}
+    else "Multiple Security Alerts"

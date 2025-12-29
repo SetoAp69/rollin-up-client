@@ -21,31 +21,23 @@ import org.koin.core.context.startKoin
 class MainActivity : ComponentActivity() {
     private lateinit var counterViewModel: CounterViewModel
     private lateinit var authViewmodel: AuthViewModel
+    private lateinit var securityViewModel: SecurityViewModel
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        L.plant(ConsoleLogger())
-        L.init(LumberjackLogger)
-
-        counterViewModel = CounterViewModel()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-        startKoin {
-            androidContext(this@MainActivity)
-            modules(
-                AndroidDataModule() + AppModule()
-            )
-        }
-
-        val authViewmodel: AuthViewModel by viewModel()
-        this.authViewmodel = authViewmodel
+        initLogger()
+        initKoin()
+        initViewModels()
 
         counterViewModel.stopTimer()
 
         setContent {
             AndroidApp(
+                securityViewModel = securityViewModel,
                 authViewModel = authViewmodel
             ) {
                 finish()
@@ -53,6 +45,28 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private fun initLogger() {
+        L.init(LumberjackLogger)
+        L.plant(ConsoleLogger())
+    }
+
+    private fun initViewModels() {
+        val authViewmodel: AuthViewModel by viewModel()
+        this.authViewmodel = authViewmodel
+        counterViewModel = CounterViewModel()
+        val securityViewmodel: SecurityViewModel by viewModel()
+        this.securityViewModel= securityViewmodel
+    }
+
+
+    private fun initKoin() {
+        startKoin {
+            androidContext(this@MainActivity)
+            modules(
+                AndroidDataModule() + AppModule()
+            )
+        }
+    }
     override fun onPause() {
         super.onPause()
         counterViewModel.startTimer {
@@ -68,8 +82,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun AndroidApp(authViewModel: AuthViewModel, onFinish: () -> Unit) {
+fun AndroidApp(
+    securityViewModel: SecurityViewModel,
+    authViewModel: AuthViewModel,
+    onFinish: () -> Unit,
+) {
     App(
+        securityViewModel = securityViewModel,
         authViewModel = authViewModel,
         onFinish = onFinish
     )

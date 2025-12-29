@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import com.aheaditec.talsec_security.security.api.SuspiciousAppInfo
 import com.aheaditec.talsec_security.security.api.Talsec
 import com.aheaditec.talsec_security.security.api.TalsecConfig
+import com.aheaditec.talsec_security.security.api.TalsecMode
 import com.aheaditec.talsec_security.security.api.ThreatListener
 import com.michaelflisar.lumberjack.core.L
 import com.michaelflisar.lumberjack.implementation.LumberjackLogger
@@ -14,8 +15,8 @@ import com.michaelflisar.lumberjack.implementation.plant
 import com.michaelflisar.lumberjack.loggers.console.ConsoleLogger
 import com.rollinup.CounterViewModel
 import com.rollinup.apiservice.di.AndroidDataModule
+import com.rollinup.common.model.SecurityAlert
 import com.rollinup.rollinup.di.AppModule
-import com.rollinup.rollinup.security.SecurityEventBus
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.context.startKoin
@@ -23,17 +24,19 @@ import org.koin.core.context.startKoin
 class TalsecApplication() : ComponentActivity(), ThreatListener.ThreatDetected {
     private lateinit var counterViewModel: CounterViewModel
     private lateinit var authViewModel: AuthViewModel
+    private lateinit var securityViewModel: SecurityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         initLogger()
         initKoin()
-        initTalSec()
         initViewModels()
+        initTalSec()
         setContent {
             AndroidApp(
-                authViewModel = authViewModel
+                authViewModel = authViewModel,
+                securityViewModel = securityViewModel
             ) {
                 finish()
             }
@@ -53,16 +56,20 @@ class TalsecApplication() : ComponentActivity(), ThreatListener.ThreatDetected {
     }
 
     private fun initTalSec() {
-        val config = TalsecConfig.Builder("com.rollinup.rollinup", arrayOf(BuildConfig.SIGNING_CERTIFICATE))
-            .prod(BuildConfig.IS_PROD)
-            .build()
-        Talsec.start(this, config)
+        val config =
+            TalsecConfig.Builder("com.rollinup.rollinup", arrayOf(BuildConfig.SIGNING_CERTIFICATE))
+                .prod(BuildConfig.IS_PROD)
+                .build()
+        ThreatListener(this, deviceStateListener).registerListener(this)
+        Talsec.start(this, config, TalsecMode.BACKGROUND)
     }
 
     private fun initViewModels() {
         val authViewmodel: AuthViewModel by viewModel()
         this.authViewModel = authViewmodel
         counterViewModel = CounterViewModel()
+        val securityViewmodel: SecurityViewModel by viewModel()
+        this.securityViewModel= securityViewmodel
     }
 
 
@@ -82,18 +89,20 @@ class TalsecApplication() : ComponentActivity(), ThreatListener.ThreatDetected {
 
 
     override fun onRootDetected() {
-        SecurityEventBus.rootDetected.tryEmit(Unit)
+        securityViewModel.securityAlert(SecurityAlert.ROOT)
     }
 
     override fun onTimeSpoofingDetected() {
-        SecurityEventBus.timeSpoofDetected.tryEmit(Unit)
+        securityViewModel.securityAlert(SecurityAlert.TIME_SPOOF)
     }
 
     override fun onLocationSpoofingDetected() {
-        SecurityEventBus.locationSpoofDetected.tryEmit(Unit)
+        securityViewModel.securityAlert(SecurityAlert.LOCATION_SPOOF)
     }
 
-    override fun onDebuggerDetected() {}
+    override fun onDebuggerDetected() {
+
+    }
 
     override fun onEmulatorDetected() {}
 
@@ -117,4 +126,15 @@ class TalsecApplication() : ComponentActivity(), ThreatListener.ThreatDetected {
 
     override fun onUnsecureWifiDetected() {}
 
+    private val deviceStateListener = object : ThreatListener.DeviceState {
+        override fun onUnlockedDeviceDetected() {}
+
+        override fun onHardwareBackedKeystoreNotAvailableDetected() {}
+
+        override fun onDeveloperModeDetected() {}
+
+        override fun onADBEnabledDetected() {}
+
+        override fun onSystemVPNDetected() {}
+    }
 }

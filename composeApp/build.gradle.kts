@@ -22,7 +22,7 @@ if (envPropertiesFile.exists()) {
     envPropertiesFile.inputStream().use { envProperties.load(it) }
 }
 
-val appVersion = "1.0.2"
+val appVersion = "1.0.3"
 
 val buildConfigGenerator by tasks.registering(Sync::class) {
     from(
@@ -248,7 +248,7 @@ android {
         localeFilters.add("id")
     }
 
-    signingConfigs{
+    signingConfigs {
         create("release") {
             storeFile = rootProject.file("/keystore/release-keystore.jks")
             storePassword = envProperties["KEYSTORE_PASSWORD"]?.toString()
@@ -279,7 +279,7 @@ android {
             isMinifyEnabled = true
             versionNameSuffix = "release"
             manifestPlaceholders["crashlyticsCollectionEnabled"] = "true"
-            manifestPlaceholders["version"] = defaultConfig.versionName +"-"+ versionNameSuffix
+            manifestPlaceholders["version"] = defaultConfig.versionName + "-" + versionNameSuffix
             manifestPlaceholders["appName"] = "@string/app_name"
             manifestPlaceholders["mainActivity"] = ".TalsecApplication"
             proguardFile(rootProject.file("androidProguard.pro"))
@@ -289,8 +289,8 @@ android {
         getByName("debug") {
             versionNameSuffix = "-debug"
             applicationIdSuffix = ".debug"
-            manifestPlaceholders["version"] = defaultConfig.versionName +"-"+ versionNameSuffix
-            manifestPlaceholders["appName"] = "@string/app_name_debug"
+            manifestPlaceholders["version"] = defaultConfig.versionName + "-" + versionNameSuffix
+            manifestPlaceholders["appName"] = "@string/app_name"
             manifestPlaceholders["mainActivity"] = ".MainActivity"
             manifestPlaceholders["crashlyticsCollectionEnabled"] = "false"
         }
