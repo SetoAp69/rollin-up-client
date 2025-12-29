@@ -20,5 +20,5 @@ actual fun getPlatform(): Platform {
 
 @Composable
 actual fun getVersion(): String {
-   return  "-"
+    return "-"
 }

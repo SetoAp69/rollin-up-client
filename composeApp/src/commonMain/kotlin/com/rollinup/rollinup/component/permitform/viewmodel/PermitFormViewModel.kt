@@ -134,6 +134,7 @@ class PermitFormViewModel(
                 _uiState.update {
                     it.copy(
                         isLoadingOverlay = false,
+                        submitState = isSuccess
                     )
                 }
                 if (isSuccess) {

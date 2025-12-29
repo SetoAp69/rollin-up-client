@@ -22,7 +22,7 @@ if (envPropertiesFile.exists()) {
     envPropertiesFile.inputStream().use { envProperties.load(it) }
 }
 
-val appVersion = "1.0.1"
+val appVersion = "1.0.2"
 
 val buildConfigGenerator by tasks.registering(Sync::class) {
     from(
@@ -32,6 +32,7 @@ val buildConfigGenerator by tasks.registering(Sync::class) {
                 object BuildConfig{
                    const val MAP_URL = "${envProperties["MAP_URL"]}"
                    const val IS_PROD = ${envProperties["IS_PROD"]}
+                   const val SIGNING_CERTIFICATE = "${envProperties["SIGNING_CERTIFICATE"]}"
                }
             """.trimIndent()
         )
@@ -247,6 +248,15 @@ android {
         localeFilters.add("id")
     }
 
+    signingConfigs{
+        create("release") {
+            storeFile = rootProject.file("/keystore/release-keystore.jks")
+            storePassword = envProperties["KEYSTORE_PASSWORD"]?.toString()
+            keyAlias = envProperties["KEYSTORE_ALIAS"]?.toString()
+            keyPassword = envProperties["KEY_PASSWORD"]?.toString()
+        }
+    }
+
     defaultConfig {
         applicationId = "com.rollinup.rollinup"
         minSdk = libs.versions.android.minSdk.get().toInt()
@@ -265,19 +275,23 @@ android {
 
     buildTypes {
         getByName("release") {
+            manifestPlaceholders += mapOf()
             isMinifyEnabled = true
             versionNameSuffix = "release"
             manifestPlaceholders["crashlyticsCollectionEnabled"] = "true"
-            manifestPlaceholders["version"] = defaultConfig.versionName + versionNameSuffix
+            manifestPlaceholders["version"] = defaultConfig.versionName +"-"+ versionNameSuffix
             manifestPlaceholders["appName"] = "@string/app_name"
+            manifestPlaceholders["mainActivity"] = ".TalsecApplication"
             proguardFile(rootProject.file("androidProguard.pro"))
+            signingConfig = signingConfigs.getByName("release")
         }
 
         getByName("debug") {
             versionNameSuffix = "-debug"
             applicationIdSuffix = ".debug"
-            manifestPlaceholders["version"] = defaultConfig.versionName + versionNameSuffix
+            manifestPlaceholders["version"] = defaultConfig.versionName +"-"+ versionNameSuffix
             manifestPlaceholders["appName"] = "@string/app_name_debug"
+            manifestPlaceholders["mainActivity"] = ".MainActivity"
             manifestPlaceholders["crashlyticsCollectionEnabled"] = "false"
         }
     }

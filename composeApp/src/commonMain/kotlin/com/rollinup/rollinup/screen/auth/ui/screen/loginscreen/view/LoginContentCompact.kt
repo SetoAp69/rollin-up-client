@@ -41,7 +41,7 @@ fun LoginContentCompact(
     uiState: LoginUiState,
     cb: LoginCallback,
 ) {
-    Column {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         LoginHeader()
         Spacer(24.dp)
         LoginForm(

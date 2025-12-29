@@ -163,30 +163,30 @@ fun FilePicker(
                 contentColor = contentColor
             )
         }
-    }
 
-    if (showCameraOption && getPlatform().isMobile()) {
-        FilePickerBottomSheet(
-            isShowSheet = showHandler,
-            onDismissRequest = {
-                showHandler = it
-            },
-            onSelectFile = {
-                tempValue = it
-                onValueChange(tempValue)
-            }
-        )
-    } else {
-        FileHandler(
-            onFileSelected = {
-                tempValue = it
-                showHandler = false
-                onValueChange(tempValue)
-            },
-            value = tempValue,
-            allowedType = listOf(MimeType.DOCUMENT_TYPE),
-            isLaunchHandler = showHandler
-        )
+        if (showCameraOption && getPlatform().isMobile()) {
+            FilePickerBottomSheet(
+                isShowSheet = showHandler,
+                onDismissRequest = {
+                    showHandler = it
+                },
+                onSelectFile = {
+                    tempValue = it
+                    onValueChange(tempValue)
+                }
+            )
+        } else {
+            FileHandler(
+                onFileSelected = {
+                    tempValue = it
+                    showHandler = false
+                    onValueChange(tempValue)
+                },
+                value = tempValue,
+                allowedType = listOf(MimeType.DOCUMENT_TYPE),
+                isLaunchHandler = showHandler
+            )
+        }
     }
 }
 

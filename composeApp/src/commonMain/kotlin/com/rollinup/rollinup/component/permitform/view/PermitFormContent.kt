@@ -165,7 +165,7 @@ fun PermitFormContent(
         successMsg = stringResource(Res.string.msg_permit_submit_success),
         errorMsg = stringResource(Res.string.msg_permit_submit_error),
         onDispose = cb.onResetMessageState,
-        onError = onSuccess,
+        onError = onError,
         onSuccess = onSuccess,
         onShowSnackBar = onShowSnackbar,
     )
@@ -277,9 +277,12 @@ fun PermitFormDurationSection(
             val invalidDurationError = stringResource(Res.string.msg_duration_error_invalid)
 
             TimeDurationTextField(
-                value = formData.duration.map { second ->
-                    if (second == null) null
-                    else LocalTime.fromSecondOfDay(second.toInt())
+                value = with(formData.duration) {
+                    if (isEmpty()) listOf(null, null)
+                    else map { second ->
+                        if (second == null) null
+                        else LocalTime.fromSecondOfDay(second.toInt())
+                    }
                 },
                 onValueChange = { value ->
                     val from = value.first()
@@ -379,7 +382,8 @@ fun PermitFormHeader(
         onValueChange = {
             onUpdateFormData(
                 formData.copy(
-                    type = it
+                    type = it,
+                    duration = emptyList()
                 )
             )
         }

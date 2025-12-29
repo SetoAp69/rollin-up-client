@@ -38,11 +38,22 @@ class TalsecApplication() : ComponentActivity(), ThreatListener.ThreatDetected {
                 finish()
             }
         }
+    }
 
+    override fun onPause() {
+        super.onPause()
+        counterViewModel.startTimer {
+            authViewModel.resetLoginData()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        counterViewModel.stopTimer()
     }
 
     private fun initTalSec() {
-        val config = TalsecConfig.Builder("com.rollinup.rollinup", arrayOf())
+        val config = TalsecConfig.Builder("com.rollinup.rollinup", arrayOf(BuildConfig.SIGNING_CERTIFICATE))
             .prod(BuildConfig.IS_PROD)
             .build()
         Talsec.start(this, config)
@@ -80,7 +91,6 @@ class TalsecApplication() : ComponentActivity(), ThreatListener.ThreatDetected {
 
     override fun onLocationSpoofingDetected() {
         SecurityEventBus.locationSpoofDetected.tryEmit(Unit)
-
     }
 
     override fun onDebuggerDetected() {}

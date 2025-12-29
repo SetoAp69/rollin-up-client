@@ -417,50 +417,52 @@ fun DateRangePickerField(
     val lineColor = if (isError) theme.danger else theme.textPrimary
     val interactionSource = remember { MutableInteractionSource() }
 
-    TextFieldTitle(
-        title = title,
-        isRequired = isRequired
-    ) {
-        Column {
-            Column(
-                modifier = Modifier
-                    .clickable(
-                        interactionSource = interactionSource,
-                        indication = null,
-                        enabled = enabled
-                    ) {
-                        showBottomSheet = true
-                    }
-            ) {
-                Text(
+    Box{
+        TextFieldTitle(
+            title = title,
+            isRequired = isRequired
+        ) {
+            Column {
+                Column(
                     modifier = Modifier
-                        .padding(vertical = itemGap8)
-                        .fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    text = stringValue,
-                    style = textStyle,
-                    color = textColor
+                        .clickable(
+                            interactionSource = interactionSource,
+                            indication = null,
+                            enabled = enabled
+                        ) {
+                            showBottomSheet = true
+                        }
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .padding(vertical = itemGap8)
+                            .fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        text = stringValue,
+                        style = textStyle,
+                        color = textColor
+                    )
+                    HorizontalDivider(color = lineColor, thickness = 1.dp)
+                }
+                Spacer(itemGap4)
+                TextError(
+                    text = errorText ?: "",
+                    isError = isError
                 )
-                HorizontalDivider(color = lineColor, thickness = 1.dp)
             }
-            Spacer(itemGap4)
-            TextError(
-                text = errorText ?: "",
-                isError = isError
-            )
         }
-    }
 
-    DateRangePicker(
-        isShowDatePicker = showBottomSheet,
-        onDismissRequest = { showBottomSheet = it },
-        value = value.map { it.toLocalDate() },
-        onSelectDate = { value -> onValueChange(value.map { it.toEpochMilli() }) },
-        maxRange = maxRange,
-        isDisablePastSelection = isDisablePastSelection,
-        isAllSelectable = isAllSelectable,
-        color = color
-    )
+        DateRangePicker(
+            isShowDatePicker = showBottomSheet,
+            onDismissRequest = { showBottomSheet = it },
+            value = value.map { it.toLocalDate() },
+            onSelectDate = { value -> onValueChange(value.map { it.toEpochMilli() }) },
+            maxRange = maxRange,
+            isDisablePastSelection = isDisablePastSelection,
+            isAllSelectable = isAllSelectable,
+            color = color
+        )
+    }
 
 }
 
