@@ -23,6 +23,12 @@ import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.msg_record_empty
 
+/**
+ * A placeholder component used when there is no data to display.
+ *
+ * It renders a Lottie animation (`animation_empty_data.lottie`) and a text message
+ * indicating that the record list is empty.
+ */
 @Composable
 fun EmptyRecord() {
     val lottieComposition by rememberLottieComposition {

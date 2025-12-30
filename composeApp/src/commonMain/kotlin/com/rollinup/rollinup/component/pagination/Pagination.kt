@@ -21,6 +21,17 @@ import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_drop_down_arrow_line_left_24
 import rollin_up.composeapp.generated.resources.ic_drop_down_arrow_line_right_24
 
+/**
+ * A pagination control component that allows navigating through pages of data.
+ *
+ * It displays a set of page numbers and navigation arrows (previous/next). Smartly handles
+ * truncation (ellipses) when the total number of pages exceeds the [showedPageCount].
+ *
+ * @param totalPage The total number of available pages.
+ * @param currentPage The currently active page index (1-based).
+ * @param showedPageCount The maximum number of page buttons to display at once. Defaults to 5.
+ * @param onPageChange Callback triggered when a new page is selected.
+ */
 @Composable
 fun Pagination(
     totalPage: Int,
@@ -120,6 +131,15 @@ fun Pagination(
     }
 }
 
+/**
+ * Calculates the range of page numbers to display based on the current position.
+ *
+ * Logic:
+ * 1. If total pages fit within the limit, show all.
+ * 2. If near the start, show the first [showedPageCount] pages.
+ * 3. If near the end, show the last [showedPageCount] pages.
+ * 4. Otherwise, center the current page within the range.
+ */
 private fun getShowedPage(
     totalPage: Int,
     currentPage: Int,
@@ -144,4 +164,3 @@ private fun getShowedPage(
         }
     }
 }
-

@@ -19,6 +19,13 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel responsible for managing location tracking using the [Geolocator].
+ *
+ * Handles initialization, starting/stopping tracking, and monitoring tracking status.
+ *
+ * @property locator The Compass [Geolocator] instance injected for location operations.
+ */
 class LocationViewModel(
     private val locator: Geolocator,
 ) : ViewModel() {
@@ -27,6 +34,9 @@ class LocationViewModel(
 
     private val _restartTrackingEvent = MutableSharedFlow<Unit>(replay = 0, extraBufferCapacity = 1)
 
+    /**
+     * Initializes the view model by starting tracking and listening for restart events.
+     */
     fun init() {
         viewModelScope.launch {
             startTracking()
@@ -36,6 +46,11 @@ class LocationViewModel(
         }
     }
 
+    /**
+     * configured and starts the location tracking request.
+     *
+     * Uses HighAccuracy priority and a 500ms interval.
+     */
     private suspend fun startTracking() {
         if (locator.trackingStatus.first().isActive) stopTracking()
 
@@ -55,14 +70,25 @@ class LocationViewModel(
         listenLocation()
     }
 
+    /**
+     * Stops active location tracking.
+     */
     fun stopTracking() {
         locator.stopTracking()
     }
 
+    /**
+     * Triggers a restart of the location tracking flow.
+     */
     fun restartTracking() {
         _restartTrackingEvent.tryEmit(Unit)
     }
 
+    /**
+     * Monitors active status and collects location updates.
+     *
+     * If tracking becomes inactive, the flow is paused.
+     */
     @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun listenLocation() {
         collectActiveStatus().flatMapLatest { isActive ->
@@ -87,6 +113,9 @@ class LocationViewModel(
         }
     }
 
+    /**
+     * Polls the locator availability status every 500ms.
+     */
     private fun collectActiveStatus(): Flow<Boolean> = flow {
         while (true) {
             val available = locator.isAvailable()

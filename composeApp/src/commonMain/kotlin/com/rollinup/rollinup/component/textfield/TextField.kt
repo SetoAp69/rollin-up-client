@@ -54,6 +54,26 @@ import rollin_up.composeapp.generated.resources.label_toggle_show_password
 import rollin_up.composeapp.generated.resources.ph_search
 
 
+/**
+ * A specialized text field for entering phone numbers.
+ *
+ * Automatically filters input to allow only digits and limits the length.
+ * Includes a phone icon and keyboard configuration.
+ *
+ * @param value The current text value.
+ * @param onValueChange Callback for when the value changes. Input is sanitized.
+ * @param placeholder Text to display when empty.
+ * @param modifier Modifier for the layout.
+ * @param title Label displayed above the field.
+ * @param titleStyle Typography for the title.
+ * @param isError If true, displays error styling.
+ * @param errorMsg Error message text to show below the field.
+ * @param isRequired If true, adds a visual indicator to the title.
+ * @param isEnabled Controls enabled state.
+ * @param isReadOnly Controls read-only state.
+ * @param maxChar Maximum number of characters allowed.
+ * @param keyboardActions Actions for keyboard events (e.g., Done).
+ */
 @Composable
 fun PhoneNumberTextField(
     value: String,
@@ -123,6 +143,16 @@ fun PhoneNumberTextField(
     }
 }
 
+/**
+ * A wrapper component that displays a label title above content.
+ *
+ * @param title The text label.
+ * @param textStyle Typography style for the label.
+ * @param isRequired If true, appends a red asterisk to the label.
+ * @param color Text color for the label.
+ * @param modifier Modifier for the container.
+ * @param content The composable content to be labeled (usually an input field).
+ */
 @Composable
 fun TextFieldTitle(
     title: String,
@@ -159,6 +189,13 @@ fun TextFieldTitle(
     }
 }
 
+/**
+ * Displays an error message string with error styling.
+ *
+ * @param text The error message.
+ * @param isError Controls visibility.
+ * @param style Typography style for the message.
+ */
 @Composable
 fun TextError(
     text: String,
@@ -174,6 +211,29 @@ fun TextError(
     }
 }
 
+/**
+ * A text field for entering decimal numbers.
+ *
+ * Enforces numeric input and clamps the value between [minValue] and [maxValue].
+ *
+ * @param value The current double value.
+ * @param onValueChange Callback with the new value.
+ * @param maxValue Maximum allowed value.
+ * @param minValue Minimum allowed value.
+ * @param placeHolder Text to show when empty.
+ * @param height Specific height for the field.
+ * @param isEnabled Controls enabled state.
+ * @param title Label above the field.
+ * @param titleStyle Typography for the title.
+ * @param isError Shows error styling if true.
+ * @param errorMsg Error message text.
+ * @param isReadOnly Controls read-only state.
+ * @param modifier Modifier for the layout.
+ * @param isRequired Show required indicator.
+ * @param leadingContent Optional content at start of field.
+ * @param trailingContent Optional content at end of field.
+ * @param keyboardActions Actions for keyboard events.
+ */
 @Composable
 fun DecimalNumberTextField(
     value: Double,
@@ -235,6 +295,29 @@ fun DecimalNumberTextField(
     }
 }
 
+/**
+ * A text field for entering integer numbers.
+ *
+ * Enforces numeric input and clamps the value between [minValue] and [maxValue].
+ *
+ * @param value The current integer value.
+ * @param onValueChange Callback with the new value.
+ * @param maxValue Maximum allowed value.
+ * @param minValue Minimum allowed value.
+ * @param placeHolder Text to show when empty.
+ * @param height Specific height for the field.
+ * @param isEnabled Controls enabled state.
+ * @param title Label above the field.
+ * @param titleStyle Typography for the title.
+ * @param isError Shows error styling if true.
+ * @param errorMsg Error message text.
+ * @param isReadOnly Controls read-only state.
+ * @param modifier Modifier for the layout.
+ * @param isRequired Show required indicator.
+ * @param leadingContent Optional content at start of field.
+ * @param trailingContent Optional content at end of field.
+ * @param keyboardActions Actions for keyboard events.
+ */
 @Composable
 fun NumberTextField(
     value: Int,
@@ -296,6 +379,17 @@ fun NumberTextField(
     }
 }
 
+/**
+ * A dedicated text field for search functionality.
+ *
+ * Includes a search icon, handles IME Search actions, and syncs internal state.
+ *
+ * @param title Optional label above the field.
+ * @param onValueChange Callback for every text change.
+ * @param value The current search query.
+ * @param placeholder Placeholder text.
+ * @param onSearch Callback triggered when the search action is performed.
+ */
 @Composable
 fun SearchTextField(
     title: String = "",
@@ -339,6 +433,24 @@ fun SearchTextField(
 
 }
 
+/**
+ * A text field for password entry.
+ *
+ * Features:
+ * - Obscured text by default.
+ * - Toggle button to show/hide password.
+ * - Auto-hides password after a delay.
+ * - Restricted max character length.
+ *
+ * @param value Current password text.
+ * @param onValueChange Callback for text changes.
+ * @param placeholder Text to show when empty.
+ * @param modifier Modifier for the layout.
+ * @param title Label above the field.
+ * @param titleStyle Typography for the title.
+ * @param isError Shows error styling if true.
+ * @param errorMsg Error message text.
+ */
 @Composable
 fun PasswordTextField(
     value: String,
@@ -421,6 +533,30 @@ fun PasswordTextField(
 
 }
 
+/**
+ * A general-purpose text field wrapper with support for titles, errors, and icons.
+ *
+ * @param value Current text value.
+ * @param onValueChange Callback for text changes.
+ * @param placeholder Text to show when empty.
+ * @param isRequired If true, marks title with asterisk.
+ * @param maxChar Maximum characters allowed.
+ * @param title Label above the field.
+ * @param maxLines Maximum visual lines.
+ * @param height Specific height.
+ * @param isEnabled Controls interaction.
+ * @param titleStyle Typography for the title.
+ * @param modifier Layout modifier.
+ * @param isError Shows error styling.
+ * @param errorMsg Error message text.
+ * @param isSingleLine Restricts input to one line.
+ * @param isReadOnly Prevents editing.
+ * @param leadingIcon Icon resource at start.
+ * @param trailingIcon Icon resource at end.
+ * @param keyboardActions Actions for keyboard events.
+ * @param keyboardOptions Options for keyboard type/behavior.
+ * @param visualTransformation Visual transformation for input (e.g. password).
+ */
 @Composable
 fun TextField(
     value: String,
@@ -511,6 +647,29 @@ fun TextField(
     }
 }
 
+/**
+ * The core implementation of the text field using [BasicTextField].
+ *
+ * Handles styling, coloring based on state (error/disabled), and structure (decoration box).
+ *
+ * @param value Current text.
+ * @param onValueChange Callback for changes.
+ * @param placeholder Placeholder text.
+ * @param modifier Layout modifier.
+ * @param height Specific height.
+ * @param isError Error state.
+ * @param isEnabled Enabled state.
+ * @param isReadOnly Read-only state.
+ * @param maxLines Max visible lines.
+ * @param minLines Min visible lines.
+ * @param maxChar Max characters allowed (truncates input).
+ * @param leadingContent Composable at start.
+ * @param trailingContent Composable at end.
+ * @param isSingleLine Single line restriction.
+ * @param keyboardActions Keyboard actions.
+ * @param keyboardOptions Keyboard options.
+ * @param visualTransformation Visual transformation.
+ */
 @Composable
 fun BaseTextField(
     value: String,
@@ -620,6 +779,9 @@ fun BaseTextField(
 }
 
 
+/**
+ * Default configuration values for text fields.
+ */
 object TextFieldDefaults {
     val shape
         @Composable get() =

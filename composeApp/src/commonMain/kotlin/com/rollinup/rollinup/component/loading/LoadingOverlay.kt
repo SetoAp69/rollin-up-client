@@ -21,6 +21,13 @@ import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import rollin_up.composeapp.generated.resources.Res
 
+/**
+ * A full-screen overlay dialog that displays a loading animation.
+ *
+ * This component blocks interaction with the underlying UI while [show] is true.
+ *
+ * @param show Controls the visibility of the overlay.
+ */
 @Composable
 fun LoadingOverlay(
     show: Boolean = false,
@@ -44,6 +51,9 @@ fun LoadingOverlay(
     }
 }
 
+/**
+ * Displays the specific Lottie animation for the loading state (paper plane).
+ */
 @Composable
 fun LottieAnimation() {
     val animatable = rememberLottieAnimatable()

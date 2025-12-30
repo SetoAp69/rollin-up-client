@@ -14,12 +14,32 @@ import rollin_up.composeapp.generated.resources.label_confirm
 import rollin_up.composeapp.generated.resources.msg_export_alert_dialog
 import rollin_up.composeapp.generated.resources.welcome_message
 
+/**
+ * Koin module provider for the file export functionality.
+ *
+ * This object wraps the platform-specific [fileExporterModule].
+ */
 object ExportFileModule {
     operator fun invoke() = fileExporterModule()
 }
 
+/**
+ * Expect function to provide the platform-specific Koin module for file exporting.
+ *
+ * Implementations should provide the concrete [FileWriter] instance.
+ */
 expect fun fileExporterModule(): Module
 
+/**
+ * A dialog that asks the user to confirm a file export operation.
+ *
+ * It automatically appends the current date to the proposed filename.
+ *
+ * @param isShowDialog Controls the visibility of the dialog.
+ * @param fileName The base name of the file to be exported (without date suffix).
+ * @param onDismissRequest Callback triggered when the dialog is dismissed or cancelled.
+ * @param onConfirm Callback triggered when the export is confirmed. Receives the final formatted filename.
+ */
 @Composable
 fun ExportAlertDialog(
     isShowDialog: Boolean,

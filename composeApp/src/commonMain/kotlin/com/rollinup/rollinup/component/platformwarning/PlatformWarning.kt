@@ -12,6 +12,16 @@ import com.rollinup.rollinup.component.utils.toAnnotatedString
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_info_line_24
 
+/**
+ * A blocking warning screen displayed when a user attempts to log in with a role that is restricted
+ * on the current platform (e.g., trying to access a mobile-only view from a web desktop environment).
+ *
+ * This component locks the UI with a full-screen [Scaffold] containing a non-dismissible [AlertDialog]
+ * that prompts the user to logout.
+ *
+ * @param role The user's role (e.g., Admin, Driver).
+ * @param platform The current platform (e.g., Android, Desktop).
+ */
 @Composable
 fun PlatformWarning(
     role: Role,

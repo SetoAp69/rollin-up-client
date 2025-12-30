@@ -33,6 +33,25 @@ import com.rollinup.rollinup.component.utils.isCompact
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * A highly customizable general-purpose button component.
+ *
+ * This button supports various visual styles through [ButtonType] (Filled, Outlined) and
+ * semantic coloring through [Severity]. It can accommodate text, leading icons, and trailing icons.
+ *
+ * @param text The text label to display on the button. If [type] is [ButtonType.ICON], this is ignored.
+ * @param severity Determines the color palette of the button (e.g., Primary, Danger, Success).
+ * @param modifier Modifier to be applied to the button container.
+ * @param type The visual style of the button (e.g., [ButtonType.FILLED], [ButtonType.OUTLINED]).
+ * @param height The height of the button. Defaults to [ButtonDefault.height].
+ * @param enabled Controls the enabled state of the button. When false, interactions are disabled.
+ * @param cornerRad The corner radius for the button's shape. If null, defaults based on screen compactness.
+ * @param contentPadding Custom padding for the button content.
+ * @param buttonColors Custom [ButtonColors] to override the default severity-based colors.
+ * @param leadingIcon Optional icon displayed before the text.
+ * @param trailingIcon Optional icon displayed after the text.
+ * @param onClick Callback invoked when the button is clicked.
+ */
 @Composable
 fun Button(
     text: String? = null,
@@ -104,6 +123,9 @@ fun Button(
     )
 }
 
+/**
+ * Internal helper to render an icon within a button with standard sizing.
+ */
 @Composable
 internal fun ButtonIcon(
     icon: DrawableResource,
@@ -119,6 +141,9 @@ internal fun ButtonIcon(
     }
 }
 
+/**
+ * A wrapper around the Material3 Button that handles focus management and basic styling.
+ */
 @Composable
 internal fun ButtonBasic(
     modifier: Modifier,
@@ -153,6 +178,9 @@ internal fun ButtonBasic(
     )
 }
 
+/**
+ * Determines the [ButtonColors] based on the semantic [Severity] and [ButtonType].
+ */
 @Composable
 internal fun getButtonColor(
     severity: Severity,
@@ -217,10 +245,21 @@ internal fun getButtonColor(
     return buttonColors
 }
 
+/**
+ * Defines the visual style of the button.
+ */
 enum class ButtonType {
-    FILLED, OUTLINED, ICON
+    /** A solid background button. */
+    FILLED,
+    /** A transparent background button with a colored border. */
+    OUTLINED,
+    /** Reserved for icon-only variations (though usually handled by [IconButton]). */
+    ICON
 }
 
+/**
+ * Default constants used by the Button component.
+ */
 object ButtonDefault {
     val contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp)
     val shape = RoundedCornerShape(12.dp)

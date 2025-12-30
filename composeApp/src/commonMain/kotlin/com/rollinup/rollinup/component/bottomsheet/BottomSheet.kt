@@ -36,6 +36,20 @@ import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.label_apply
 
+/**
+ * A wrapper around Material 3 [ModalBottomSheet] that provides built-in SnackBar support.
+ *
+ * This component manages the sheet state and overlays a [SnackBarHost] on top of the sheet content,
+ * allowing the content to trigger snackbars that appear specifically within the sheet's context.
+ *
+ * @param onDismissRequest Callback invoked when the user requests to dismiss the bottom sheet.
+ * @param modifier The modifier to be applied to the content layout.
+ * @param isShowSheet Controls the visibility of the bottom sheet.
+ * @param skipPartialExpanded Whether the sheet should skip the partially expanded state and go directly to full expansion.
+ * @param containerColor The background color of the bottom sheet.
+ * @param dragHandleColor The color of the custom drag handle indicator.
+ * @param content The content of the bottom sheet. Provides a callback [OnShowSnackBar] to trigger snackbar messages.
+ */
 @Composable
 fun BottomSheet(
     onDismissRequest: (Boolean) -> Unit,
@@ -109,7 +123,22 @@ fun BottomSheet(
     }
 }
 
-
+/**
+ * A variant of [BottomSheet] that includes a primary action button at the bottom.
+ *
+ * This composable wraps the standard [BottomSheet] and appends a button below the content,
+ * typically used for "Apply" or "Confirm" actions.
+ *
+ * @param onDismissRequest Callback invoked when the user requests to dismiss the bottom sheet.
+ * @param modifier The modifier to be applied to the content layout.
+ * @param isShowSheet Controls the visibility of the bottom sheet.
+ * @param onClickConfirm Callback invoked when the confirm button is clicked.
+ * @param btnConfirmText The text displayed on the confirm button.
+ * @param skipPartialExpanded Whether the sheet should skip the partially expanded state.
+ * @param dragHandleColor The color of the custom drag handle indicator.
+ * @param containerColor The background color of the bottom sheet.
+ * @param content The content of the bottom sheet.
+ */
 @Composable
 fun BottomSheet(
     onDismissRequest: (Boolean) -> Unit,
@@ -152,7 +181,11 @@ fun BottomSheet(
 
 }
 
-
+/**
+ * A custom visual indicator for the drag handle of the Bottom Sheet.
+ *
+ * @param color The background color of the drag handle.
+ */
 @Composable
 private fun BottomSheetDragHandle(
     color: Color,

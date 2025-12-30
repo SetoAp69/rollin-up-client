@@ -57,6 +57,20 @@ import rollin_up.composeapp.generated.resources.label_apply
 import rollin_up.composeapp.generated.resources.label_select
 import rollin_up.composeapp.generated.resources.label_select_all
 
+/**
+ * A form field that opens a selector dialog/bottom sheet for picking a single value.
+ *
+ * It looks like a standard text field with a dropdown arrow.
+ *
+ * @param title Label for the field.
+ * @param value The currently selected value.
+ * @param options List of available [OptionData].
+ * @param isError Shows error styling if true.
+ * @param isEnabled Controls interaction.
+ * @param textError Error message displayed below the field.
+ * @param onValueChange Callback with the new selected value.
+ * @param placeHolder Text displayed when no value is selected.
+ */
 @Composable
 fun <T> SingleSelectorField(
     title: String,
@@ -131,6 +145,19 @@ fun <T> SingleSelectorField(
 
 }
 
+/**
+ * A compact dropdown selector for multiple values, commonly used in filters.
+ *
+ * Displays a summary string (e.g., "3 selected") when multiple items are chosen.
+ *
+ * @param title Label for the selector.
+ * @param isLoading Shows loading state in the dropdown content.
+ * @param value List of currently selected values.
+ * @param enable Controls interaction.
+ * @param options List of available options.
+ * @param width Fixed width for the selector field.
+ * @param onValueChange Callback with the updated list of selected values.
+ */
 @Composable
 fun <T> MultiDropDownSelector(
     title: String,
@@ -200,6 +227,15 @@ fun <T> MultiDropDownSelector(
     }
 }
 
+/**
+ * A compact dropdown selector for a single value, commonly used in filters or small forms.
+ *
+ * @param title Label for the selector.
+ * @param value Currently selected value.
+ * @param enable Controls interaction.
+ * @param options List of available options.
+ * @param onValueChange Callback with the new value.
+ */
 @Composable
 fun <T> SingleDropDownSelector(
     title: String,
@@ -270,6 +306,9 @@ fun <T> SingleDropDownSelector(
     }
 }
 
+/**
+ * Platform-specific implementation for showing the single selection dialog/sheet.
+ */
 @Composable
 expect fun <T> SingleSelector(
     isShowSelector: Boolean,
@@ -281,6 +320,11 @@ expect fun <T> SingleSelector(
     onValueChange: (T) -> Unit,
 )
 
+/**
+ * The content composable for a single selector list.
+ *
+ * Renders a list of radio-button style items.
+ */
 @Composable
 fun <T> SingleSelectorContent(
     title: String,
@@ -325,6 +369,9 @@ fun <T> SingleSelectorContent(
     }
 }
 
+/**
+ * Platform-specific implementation for showing the multi-selection dialog/sheet.
+ */
 @Composable
 expect fun <T> MultiSelector(
     isShowSelector: Boolean,
@@ -336,6 +383,11 @@ expect fun <T> MultiSelector(
     onValueChange: (List<T>) -> Unit,
 )
 
+/**
+ * The content composable for a multi-selector list.
+ *
+ * Renders a list of checkbox style items with a "Select All" option and an Apply button.
+ */
 @Composable
 fun <T> MultiSelectorContent(
     title: String,
@@ -419,6 +471,9 @@ fun <T> MultiSelectorContent(
     }
 }
 
+/**
+ * Placeholder showing shimmer effect while options are loading.
+ */
 @Composable
 fun SelectorLoading(
     title: String,

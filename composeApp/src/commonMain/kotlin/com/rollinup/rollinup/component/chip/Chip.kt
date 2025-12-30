@@ -31,6 +31,20 @@ import com.rollinup.rollinup.component.tooltip.ToolTip
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * A compact element that represents an input, attribute, or action.
+ *
+ * This convenience overload allows passing [DrawableResource] IDs directly for icons.
+ *
+ * @param text The label text displayed on the chip.
+ * @param severity Determines the semantic color of the chip (e.g., Primary, Warning).
+ * @param textStyle The typography style for the label.
+ * @param leadingIcon Optional resource for an icon displayed before the text.
+ * @param trailingIcon Optional resource for an icon displayed after the text.
+ * @param onClickLeadIcon Callback for clicks on the leading icon.
+ * @param onClickTrailIcon Callback for clicks on the trailing icon.
+ * @param toolTipContent Optional text to display in a tooltip when hovering/long-pressing.
+ */
 @Composable
 fun Chip(
     text: String,
@@ -94,6 +108,18 @@ fun Chip(
     )
 }
 
+/**
+ * The base composable for rendering a Chip.
+ *
+ * Supports arbitrary composable content for leading and trailing slots.
+ *
+ * @param text The label text displayed on the chip.
+ * @param severity Determines the semantic color of the chip.
+ * @param textStyle The typography style for the label.
+ * @param leadingContent Composable slot for content before the text.
+ * @param trailingContent Composable slot for content after the text.
+ * @param toolTipContent Optional text to display in a tooltip.
+ */
 @Composable
 fun Chip(
     text: String,
@@ -145,6 +171,9 @@ fun Chip(
 
 }
 
+/**
+ * Maps a [Severity] level to a specific color palette for chips.
+ */
 @Composable
 private fun generateChipColor(
     severity: Severity,

@@ -28,7 +28,19 @@ import org.jetbrains.compose.resources.painterResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_more_fill_24
 
-
+/**
+ * A basic, customizable Card container with shadow, border, and click handling.
+ *
+ * This component provides the visual foundation for cards in the application,
+ * including elevation, rounded corners, and ripple effects.
+ *
+ * @param shadowColor The color of the card's shadow.
+ * @param lineStroke The color of the card's border stroke. Passing null removes the border.
+ * @param backgroundColor The background color of the card.
+ * @param onClick Callback triggered when the card is clicked.
+ * @param onLongClick Callback triggered when the card is long-pressed.
+ * @param content The content to display inside the card.
+ */
 @Composable
 fun Card(
     shadowColor: Color = theme.shadow,
@@ -66,8 +78,6 @@ fun Card(
                     onClick = onClick,
                     onLongClick = onLongClick
                 )
-
-
                 .fillMaxWidth(),
         ) {
             Box(
@@ -81,6 +91,21 @@ fun Card(
     }
 }
 
+/**
+ * A specialized Card variant that includes a dedicated "More Actions" button.
+ *
+ * This version places the provided [content] on the left and a 3-dot menu icon
+ * on the right. Useful for list items that require secondary actions.
+ *
+ * @param shadowColor The color of the card's shadow.
+ * @param lineStroke The color of the card's border stroke.
+ * @param onClick Callback triggered when the main body of the card is clicked.
+ * @param onLongClick Callback triggered when the card is long-pressed.
+ * @param showAction Controls the visibility of the action button.
+ * @param onClickAction Callback triggered when the "More Actions" icon is clicked.
+ * @param backgroundColor The background color of the card.
+ * @param content The main content to display on the left side of the card.
+ */
 @Composable
 fun Card(
     shadowColor: Color = theme.primary,

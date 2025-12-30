@@ -31,133 +31,142 @@ import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.label_end
 import rollin_up.composeapp.generated.resources.label_start
-import kotlin.time.ExperimentalTime
 
+/**
+ * A compound form field for selecting a time duration (Start Time and End Time).
+ *
+ * This component renders two interactive time selection fields side-by-side.
+ * It automatically adapts its interaction model based on the platform:
+ * - **Mobile (Android/iOS):** Opens a [TimePickerBottomSheet].
+ * - **Desktop/Web:** Opens a [TimePickerDropDown].
+ *
+ * @param value A list containing exactly two [LocalTime] elements (Start, End). Elements can be null.
+ * @param onValueChange Callback invoked when either time value changes. Returns the updated list.
+ * @param title The main label displayed above the field group.
+ * @param textError Error message to display below the fields if [isError] is true.
+ * @param isRequired If true, displays a visual indicator (asterisk) next to the title.
+ * @param isError If true, applies error styling to the text and borders.
+ * @param modifier Modifier applied to the container row.
+ * @param placeHolder Text to display when a time value is null (e.g., "-").
+ */
 @Composable
 fun TimeDurationTextField(
-    title: String,
     value: List<LocalTime?>,
     onValueChange: (List<LocalTime?>) -> Unit,
-    modifier: Modifier = Modifier,
+    title: String,
+    textError: String? = null,
     isRequired: Boolean = false,
     isError: Boolean = false,
-    textError: String? = null,
-    enable: Boolean = true,
-    titleStyle: TextStyle = Style.body,
+    modifier: Modifier = Modifier,
+    placeHolder: String = "-",
 ) {
     TextFieldTitle(
         title = title,
-        textStyle = titleStyle,
-        isRequired = isRequired,
-        color = theme.bodyText,
+        isRequired = isRequired
     ) {
         Column {
-            TimeDurationTextField(
-                value = value,
-                onValueChange = onValueChange,
-                modifier = modifier,
-                isError = isError,
-                enable = enable
+            Row(
+                modifier = modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(itemGap8)
+            ) {
+                Box(modifier = Modifier.weight(1f)) {
+                    TimeDurationItem(
+                        value = value,
+                        onValueChange = onValueChange,
+                        isFrom = true,
+                        isError = isError,
+                        placeHolder = placeHolder
+                    )
+                }
+                HorizontalDivider(
+                    modifier = Modifier.weight(0.2f),
+                    color = theme.textPrimary,
+                    thickness = itemGap8
+                )
+                Box(modifier = Modifier.weight(1f)) {
+                    TimeDurationItem(
+                        value = value,
+                        onValueChange = onValueChange,
+                        isFrom = false,
+                        isError = isError,
+                        placeHolder = placeHolder
+                    )
+                }
+            }
+            TextError(
+                text = textError ?: "",
+                isError = isError
             )
         }
-        TextError(
-            text = textError ?: "",
-            isError = isError
-        )
     }
 }
 
-@ExperimentalTime
+/**
+ * An individual interactive item representing either the Start or End time.
+ *
+ * Handles the click interaction to trigger the appropriate platform-specific picker
+ * and updates the specific index in the value list.
+ *
+ * @param value The current list of [LocalTime] values.
+ * @param onValueChange Callback to update the list.
+ * @param isFrom True if this item represents the Start time (index 0), False for End time (index 1).
+ * @param isError Controls the text color for error states.
+ * @param placeHolder Text displayed when the specific time value is null.
+ */
 @Composable
-fun TimeDurationTextField(
+private fun TimeDurationItem(
     value: List<LocalTime?>,
     onValueChange: (List<LocalTime?>) -> Unit,
-    modifier: Modifier = Modifier,
-    isError: Boolean = false,
-    enable: Boolean = true,
+    isFrom: Boolean,
+    isError: Boolean,
+    placeHolder: String,
 ) {
-    val value = listOf(value.firstOrNull(), value.getOrNull(1))
-    val from = value.firstOrNull()
-    val to = value[1]
-
-    val isEmpty = value.isEmpty() || value.all { it == null }
-
-    var isFrom by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
 
-    val lineColor: Color
+    val selectedValue = if (isFrom) value.getOrNull(0) else value.getOrNull(1)
+    val textStyle: TextStyle
     val textColor: Color
 
-    when {
-        isError -> {
-            lineColor = theme.danger
-            textColor = theme.danger
-        }
+    val label =
+        if (isFrom) stringResource(Res.string.label_end) else stringResource(Res.string.label_start)
 
-        isEmpty -> {
-            lineColor = theme.textPrimary
-            textColor = theme.textPrimary.copy(alpha = 0.6f)
-        }
-
-        else -> {
-            lineColor = theme.textPrimary
-            textColor = theme.textPrimary
-        }
+    if (selectedValue != null) {
+        textStyle = Style.title
+        textColor = if (isError) theme.danger else theme.textPrimary
+    } else {
+        textStyle = Style.body
+        textColor = if (isError) theme.danger else theme.textPrimary.copy(alpha = 0.5f)
     }
 
-    val platform = getPlatform()
-
-    Box(contentAlignment = Alignment.Center) {
-        Row(
-            modifier = modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(itemGap8),
-            verticalAlignment = Alignment.CenterVertically
+    Box {
+        Column(
+            modifier = Modifier.clickable {
+                showBottomSheet = true
+            }
         ) {
-            Column(
-                modifier = Modifier
-                    .clickable(enable) {
-                        isFrom = true
-                        showBottomSheet = true
-                    }
-                    .weight(1f),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = from?.toString() ?: stringResource(Res.string.label_start),
-                    style = Style.title,
-                    color = textColor,
-                    modifier = Modifier.padding(vertical = itemGap8)
-                )
-                HorizontalDivider(color = lineColor)
-            }
-
             Text(
-                text = " - ",
-                style = Style.title,
-                color = textColor
+                text = label,
+                color = theme.textPrimary,
+                style = Style.label,
+                modifier = Modifier.padding(bottom = itemGap8)
             )
-
-            Column(
+            Text(
+                text = selectedValue?.toString() ?: placeHolder,
+                color = textColor,
+                style = textStyle,
                 modifier = Modifier
-                    .clickable(enable) {
-                        isFrom = false
-                        showBottomSheet = true
-                    }
-                    .weight(1f),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = to?.toString() ?: stringResource(Res.string.label_end),
-                    style = Style.title,
-                    color = textColor,
-                    modifier = Modifier.padding(vertical = itemGap8)
-                )
-                HorizontalDivider(color = lineColor)
-            }
+                    .padding(bottom = itemGap8)
+                    .fillMaxWidth()
+            )
+            HorizontalDivider(
+                color = textColor,
+                thickness = itemGap8
+            )
         }
 
-        when (platform) {
+        when (getPlatform()) {
             Platform.ANDROID, Platform.IOS -> {
                 TimePickerBottomSheet(
                     showSheet = showBottomSheet,

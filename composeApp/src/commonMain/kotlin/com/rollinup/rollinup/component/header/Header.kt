@@ -14,6 +14,14 @@ import androidx.compose.ui.unit.dp
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 
+/**
+ * A standardized header component used at the top of screens.
+ *
+ * Displays a title within a primary-colored container with rounded bottom corners.
+ *
+ * @param title The text to display in the header.
+ * @param rad The radius for the bottom corners.
+ */
 @Composable
 fun Header(
     title: String,

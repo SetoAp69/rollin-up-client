@@ -23,6 +23,24 @@ import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_radio_selected_line_24
 import rollin_up.composeapp.generated.resources.ic_radio_unselect_line_24
 
+/**
+ * A group of radio buttons arranged in a flowing row layout.
+ *
+ * Useful for selecting a single option from a list where the items might wrap
+ * to the next line if horizontal space is constrained. Wrapped in a [TextFieldTitle].
+ *
+ * @param T The type of value associated with the options.
+ * @param modifier Modifier applied to the flow row container.
+ * @param value The currently selected value.
+ * @param onValueChange Callback invoked when a new option is selected.
+ * @param options List of available options [OptionData].
+ * @param title Optional title displayed above the radio group.
+ * @param horizontalArrangement Arrangement of items horizontally.
+ * @param verticalArrangement Arrangement of items vertically (when wrapped).
+ * @param itemVerticalAlignment Vertical alignment of items within their row.
+ * @param maxItemsInEachRow Maximum number of items before forcing a wrap.
+ * @param maxLines Maximum number of lines to display.
+ */
 @Composable
 fun <T> RadioSelectorRow(
     modifier: Modifier = Modifier,
@@ -59,6 +77,14 @@ fun <T> RadioSelectorRow(
 }
 
 
+/**
+ * A single radio button item with a label.
+ *
+ * @param T The type of value associated with the option.
+ * @param option The data for this option (label and value).
+ * @param isSelected Whether this option is currently selected.
+ * @param onSelect Callback invoked when this option is clicked.
+ */
 @Composable
 fun <T> RadioButton(
     option: OptionData<T>,

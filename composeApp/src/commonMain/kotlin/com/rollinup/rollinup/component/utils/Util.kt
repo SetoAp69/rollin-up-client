@@ -56,11 +56,7 @@ fun String.toAnnotatedString(): AnnotatedString {
     val matches = regex.findAll(this)
 
     val annotatedString = buildAnnotatedString {
-
-//        append(this@toAnnotatedString)
-
         var startIndex = 0
-
         matches.forEach {
             append(
                 this@toAnnotatedString.substring(startIndex, it.range.start).replace("**", "")
@@ -82,6 +78,8 @@ fun String.toAnnotatedString(): AnnotatedString {
                 this@toAnnotatedString.substring(startIndex)
             )
         }
+    }.ifEmpty {
+        AnnotatedString(this)
     }
 
     return annotatedString

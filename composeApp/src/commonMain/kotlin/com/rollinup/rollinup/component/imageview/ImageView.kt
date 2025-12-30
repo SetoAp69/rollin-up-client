@@ -48,6 +48,13 @@ import org.koin.compose.koinInject
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_image_broken_fill_24
 
+/**
+ * A basic wrapper for displaying a [Painter] with standard sizing and corner clipping.
+ *
+ * @param painter The image painter to draw.
+ * @param width The width of the image.
+ * @param height The height of the image.
+ */
 @Composable
 fun Image(
     painter: Painter,
@@ -64,6 +71,19 @@ fun Image(
     )
 }
 
+/**
+ * Displays an image loaded asynchronously from a URL.
+ *
+ * Features:
+ * - Loading indicator.
+ * - Error placeholder.
+ * - Click-to-expand (full-screen view) capability.
+ *
+ * @param url The URL of the image source.
+ * @param height The display height.
+ * @param width The display width.
+ * @param onClick Optional callback for click events. If null, clicking opens the full-screen viewer.
+ */
 @Composable
 fun Image(
     url: String,
@@ -98,6 +118,16 @@ fun Image(
 }
 
 
+/**
+ * A full-screen dialog for viewing an image fetched from a URL with authentication headers.
+ *
+ * This component fetches the authentication token from [LocalDataStore] to construct the request.
+ * Supports pan and zoom gestures.
+ *
+ * @param showView Controls the visibility of the dialog.
+ * @param onDismissRequests Callback to close the dialog.
+ * @param url The image URL.
+ */
 @Composable
 fun ImageView(
     showView: Boolean,
@@ -170,6 +200,16 @@ fun ImageView(
     }
 }
 
+/**
+ * A full-screen dialog for viewing an image using an existing [AsyncImagePainter].
+ *
+ * Supports pan and zoom gestures.
+ *
+ * @param showView Controls visibility.
+ * @param onDismissRequests Callback to close the dialog.
+ * @param painter The image painter.
+ * @param state The current state of the image painter.
+ */
 @Composable
 fun ImageView(
     showView: Boolean,
@@ -227,6 +267,9 @@ fun ImageView(
     }
 }
 
+/**
+ * Internal helper to display an image with state handling (Loading, Error, Success).
+ */
 @Composable
 private fun AsyncImage(
     modifier: Modifier = Modifier,

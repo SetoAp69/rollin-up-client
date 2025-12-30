@@ -11,6 +11,16 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 
+/**
+ * A composable that manages geofencing logic by tracking user location and validating it against a defined zone.
+ *
+ * It retrieves global settings (radius, latitude, longitude) to define the geofence and uses [LocationHandler]
+ * to receive location updates. It calculates whether the user is inside the geofence and invokes [onUpdateLocation].
+ *
+ * @param startTracking Controls whether location tracking is active.
+ * @param onUpdateLocation Callback invoked when a location update is received.
+ * Returns the [Location] object and a Boolean indicating if the user is inside the geofence.
+ */
 @Composable
 fun GeofenceHandler(
     startTracking: Boolean,
@@ -33,6 +43,13 @@ fun GeofenceHandler(
     )
 }
 
+/**
+ * Checks if the provided location is within the radius of the geofence.
+ *
+ * @param geofence The geofence definition.
+ * @param location The current user location.
+ * @return True if the user is within the geofence radius, false otherwise.
+ */
 private fun validateLocation(geofence: Geofence, location: Location?): Boolean {
     val currentLocation = location?.coordinates ?: return false
     val geofenceCenter = Coordinates(geofence.latitude, geofence.longitude)
@@ -40,6 +57,13 @@ private fun validateLocation(geofence: Geofence, location: Location?): Boolean {
     return calculateDistance(currentLocation, geofenceCenter) <= geofence.rad
 }
 
+/**
+ * Calculates the distance between two coordinates using the Haversine formula.
+ *
+ * @param current The current coordinates.
+ * @param target The target (geofence center) coordinates.
+ * @return The distance in meters.
+ */
 private fun calculateDistance(
     current: Coordinates,
     target: Coordinates,
@@ -57,6 +81,9 @@ private fun calculateDistance(
     return finalDistance
 }
 
+/**
+ * Extension function to convert degrees to radians.
+ */
 private fun Double.toRadians(): Double {
     return this * PI / 180.0
 }

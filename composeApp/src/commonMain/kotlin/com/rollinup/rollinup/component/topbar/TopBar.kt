@@ -35,10 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.backhandler.BackHandler
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
@@ -47,7 +44,6 @@ import androidx.compose.ui.text.intl.LocaleList
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.rollinup.rollinup.component.model.Menu
-import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.textfield.TextFieldDefaults
@@ -56,255 +52,133 @@ import com.rollinup.rollinup.component.theme.theme
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.ic_arrow_left_line_24
 import rollin_up.composeapp.generated.resources.ic_close_line_24
 import rollin_up.composeapp.generated.resources.ic_search_line_24
-import rollin_up.composeapp.generated.resources.ph_search
+import rollin_up.composeapp.generated.resources.label_search
 
-@OptIn(ExperimentalComposeUiApi::class)
+/**
+ * A standard top app bar component.
+ *
+ * Displays a navigation icon (back button), a title, and a list of optional action menus.
+ *
+ * @param onNavigateUp Callback triggered when the navigation icon (back arrow) is clicked.
+ * @param title The title text to display in the center of the app bar.
+ * @param menu A list of [Menu] items to display as action icons on the right side.
+ * @param onClickMenu Callback triggered when a menu item is clicked.
+ * @param scrollBehavior Scroll behavior to be attached to the TopAppBar (e.g., for collapsing).
+ */
 @Composable
 fun TopBar(
-    onClickMenu: (Menu) -> Unit,
-    menu: List<Menu>,
-    onSearch: (String) -> Unit,
     onNavigateUp: () -> Unit,
-    title: String = "",
-    modifier: Modifier = Modifier,
-    color: TopAppBarColors? = null,
-    showNavigateUp: Boolean = true,
-    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
+    title: String,
+    menu: List<Menu> = emptyList(),
+    onClickMenu: (Menu) -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
-    var showSearch by remember { mutableStateOf(false) }
-    var searchQuery by remember { mutableStateOf("") }
-    val title = if (showSearch) "" else title
-    val menu = menu.distinct().filterNot { it == Menu.SEARCH }
-    val navigateUp: () -> Unit = {
-        if (showSearch) {
-            searchQuery = ""
-            onSearch("")
-            showSearch = false
-        } else {
-            onNavigateUp()
+    val colors = TopAppBarColors(
+        containerColor = theme.popUpBg,
+        scrolledContainerColor = theme.popUpBg,
+        navigationIconContentColor = theme.textPrimary,
+        titleContentColor = theme.textPrimary,
+        actionIconContentColor = theme.textPrimary
+    )
+
+    val actions: @Composable RowScope.() -> Unit = {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(itemGap4)
+        ) {
+            menu.forEach {
+                TopBarMenu(
+                    menu = it,
+                    onClickMenu = onClickMenu
+                )
+            }
         }
     }
-
-    BackHandler {
-        navigateUp()
-    }
-
-    BaseTopBar(
-        title = title,
-        actionContent = {
-            if (showSearch) {
-                Box(modifier = Modifier.weight(1f)) {
-                    TopBarSearchField(
-                        onNavigateUp = {
-                            showSearch = false
-                            searchQuery = ""
-                            onSearch("")
-                        },
-                        searchQuery = searchQuery,
-                        onUpdateValue = { searchQuery = it },
-                        onSearch = onSearch
-                    )
-                }
-            } else {
-                TopBarMenu(
-                    menu = Menu.SEARCH,
-                    onClickMenu = {
-                        showSearch = true
-                        onSearch("$showSearch")
-                    }
-                )
-            }
-            menu.forEach {
-                TopBarMenu(
-                    menu = it,
-                    onClickMenu = onClickMenu
-                )
-            }
-        },
-        modifier = modifier,
-        showNavigateUp = showNavigateUp,
-        windowInsets = windowInsets,
-        onNavigateUp = navigateUp,
-        color = color,
-        scrollBehavior = scrollBehavior
-    )
-}
-
-@Composable
-fun TopBar(
-    onClickMenu: (Menu) -> Unit,
-    menu: List<Menu>,
-    showNavigateUp: Boolean = true,
-    onNavigateUp: () -> Unit,
-    title: String = "",
-    modifier: Modifier = Modifier,
-    color: TopAppBarColors? = null,
-    scrollBehavior: TopAppBarScrollBehavior? = null,
-) {
-    val menu = menu.distinct().filterNot { it == Menu.SEARCH }
-    BaseTopBar(
-        title = title,
-        actionContent = {
-            menu.forEach {
-                TopBarMenu(
-                    menu = it,
-                    onClickMenu = onClickMenu
-                )
-            }
-        },
-        modifier = modifier,
-        showNavigateUp = showNavigateUp,
-        onNavigateUp = onNavigateUp,
-        color = color,
-        scrollBehavior = scrollBehavior
-    )
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BaseTopBar(
-    title: String = "",
-    actionContent: @Composable RowScope.() -> Unit,
-    modifier: Modifier = Modifier,
-    showNavigateUp: Boolean = true,
-    onNavigateUp: () -> Unit = {},
-    color: TopAppBarColors? = null,
-    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
-    scrollBehavior: TopAppBarScrollBehavior? = null,
-) {
-    val color = color ?: TopAppBarDefaults.topAppBarColors
-    val title = if (title.length > 25) title.take(8) + "..." + title.takeLast(8) else title
 
     TopAppBar(
-        title = {},
-        modifier = modifier,
-        navigationIcon = {},
-        actions = {
-            TopBarContent(
-                title = title,
-                content = actionContent,
-                showNavigateUp = showNavigateUp,
-                navigateUp = onNavigateUp,
+        title = {
+            Text(
+                text = title,
+                style = Style.popupTitle,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
             )
         },
-        colors = color,
-        windowInsets = windowInsets,
-        scrollBehavior = scrollBehavior
+        navigationIcon = {
+            Icon(
+                painter = painterResource(Res.drawable.ic_arrow_left_line_24),
+                contentDescription = null,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(50))
+                    .clickable {
+                        onNavigateUp()
+                    }
+                    .padding(4.dp)
+                    .size(24.dp)
+            )
+        },
+        windowInsets = WindowInsets(top = 0.dp),
+        colors = colors,
+        scrollBehavior = scrollBehavior,
+        actions = actions
     )
 }
 
-object TopAppBarDefaults {
-    val topAppBarColors: TopAppBarColors
-        @Composable get() = TopAppBarColors(
-            containerColor = Color.Transparent,
-            scrolledContainerColor = Color.Transparent,
-            navigationIconContentColor = theme.textPrimary,
-            titleContentColor = theme.textPrimary,
-            actionIconContentColor = theme.textPrimary
-        )
-
-    val windowInsets
-        @Composable
-        get() = androidx.compose.material3.TopAppBarDefaults.windowInsets
-}
-
-@Composable
-internal fun TopBarContent(
-    title: String,
-    content: @Composable RowScope.() -> Unit,
-    showNavigateUp: Boolean,
-    navigateUp: () -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .padding(horizontal = itemGap8 + itemGap4),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        if (showNavigateUp) {
-            TopBarMenu(menu = Menu.BACK, onClickMenu = { navigateUp() })
-            Spacer(itemGap8)
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            if (title.isNotBlank()) {
-                Text(
-                    text = title,
-                    modifier = Modifier
-                        .weight(1f),
-                    textAlign = TextAlign.Start,
-                    style = Style.header,
-                    color = theme.textPrimary
-                )
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(itemGap8, Alignment.End),
-                modifier = Modifier
-                    .weight(1f)
-
-            ) {
-                content()
-            }
-        }
-    }
-}
-
+/**
+ * A specialized top app bar that includes an integrated search field.
+ *
+ * Features:
+ * - Back navigation button.
+ * - Search text input with "Search" IME action.
+ * - Clear button (X) inside the search field.
+ *
+ * @param onNavigateUp Callback triggered when the back button is clicked.
+ * @param searchQuery The current text in the search field.
+ * @param onSearch Callback triggered when the search action is performed or text is cleared.
+ */
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun TopBarSearchField(
+fun SearchTopBar(
     onNavigateUp: () -> Unit,
     searchQuery: String,
-    onUpdateValue: (String) -> Unit,
     onSearch: (String) -> Unit,
 ) {
-    BackHandler {
-        onNavigateUp()
+    var tempSearchQuery by remember { mutableStateOf(searchQuery) }
+    LaunchedEffect(searchQuery) {
+        if (searchQuery != tempSearchQuery) tempSearchQuery = searchQuery
     }
 
-    val focusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
-    val interactionSource = remember { MutableInteractionSource() }
-
     val trailingIcon =
-        if (searchQuery.isEmpty()) {
+        if (tempSearchQuery.isEmpty()) {
             Res.drawable.ic_search_line_24
         } else {
             Res.drawable.ic_close_line_24
         }
 
-    val shape = RoundedCornerShape(8.dp)
+    val shape = RoundedCornerShape(50)
     val keyboardActions = KeyboardActions(
         onDone = {
-            onSearch(searchQuery)
-            focusManager.clearFocus()
+            onSearch(tempSearchQuery)
         },
         onSearch = {
-            onSearch(searchQuery)
-            focusManager.clearFocus()
+            onSearch(tempSearchQuery)
         },
     )
     val keyboardOptions = KeyboardOptions(
         imeAction = ImeAction.Search,
         hintLocales = LocaleList.current
     )
-
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
-        focusRequester.captureFocus()
-    }
+    val interactionSource = remember { MutableInteractionSource() }
+    val focusManager = LocalFocusManager.current
 
     BasicTextField(
-        value = searchQuery,
-        onValueChange = onUpdateValue,
+        value = tempSearchQuery,
+        onValueChange = { tempSearchQuery = it },
         modifier = Modifier
-            .focusRequester(focusRequester)
-            .height(32.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
+            .height(42.dp)
             .fillMaxWidth(),
         enabled = true,
         textStyle = Style.body.copy(color = theme.textFieldText),
@@ -314,22 +188,36 @@ private fun TopBarSearchField(
         cursorBrush = SolidColor(value = theme.textFieldText),
         decorationBox = { innerTextField ->
             DecorationBox(
-                value = searchQuery,
+                value = tempSearchQuery,
                 innerTextField = innerTextField,
                 enabled = true,
                 singleLine = true,
                 visualTransformation = VisualTransformation.None,
                 interactionSource = interactionSource,
                 placeholder = {
-                    if (searchQuery.isBlank()) {
+                    if (tempSearchQuery.isBlank()) {
                         Text(
-                            text = stringResource(Res.string.ph_search),
+                            text = stringResource(Res.string.label_search),
                             color = theme.textFieldPlaceHolder,
                             style = Style.body
                         )
                     }
                 },
                 contentPadding = PaddingValues(vertical = itemGap4, horizontal = itemGap8),
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_arrow_left_line_24),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(50))
+                            .clickable {
+                                onNavigateUp()
+                            }
+                            .padding(4.dp)
+                            .size(24.dp),
+                        tint = theme.textPrimary
+                    )
+                },
                 container = {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -368,6 +256,12 @@ private fun TopBarSearchField(
 }
 
 
+/**
+ * Internal helper to render a single menu action icon in the [TopBar].
+ *
+ * @param menu The menu item data.
+ * @param onClickMenu Callback triggered when the icon is clicked.
+ */
 @Composable
 internal fun TopBarMenu(
     menu: Menu,

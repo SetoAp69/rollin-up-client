@@ -56,6 +56,16 @@ import rollin_up.composeapp.generated.resources.ic_close_line_24
 import rollin_up.composeapp.generated.resources.label_close
 import rollin_up.composeapp.generated.resources.label_confirm
 
+/**
+ * A full-screen dialog wrapper that provides built-in SnackBar support.
+ *
+ * This is useful for dialogs that need to display feedback messages (success/error)
+ * overlaid on top of their content.
+ *
+ * @param showDialog Controls the visibility of the dialog.
+ * @param onDismissRequest Callback triggered to close the dialog.
+ * @param content The content of the dialog. Receives [OnShowSnackBar] to trigger snackbars.
+ */
 @Composable
 fun DialogScreen(
     showDialog: Boolean,
@@ -103,6 +113,15 @@ fun DialogScreen(
     }
 }
 
+/**
+ * A standard modal dialog container with a close button and SnackBar support.
+ *
+ * @param showDialog Controls the visibility of the dialog.
+ * @param onDismissRequest Callback triggered to close the dialog.
+ * @param modifier Modifier applied to the dialog content container.
+ * @param contentPadding Padding applied to the internal content.
+ * @param content The content of the dialog. Receives [OnShowSnackBar] to trigger snackbars.
+ */
 @Composable
 fun Dialog(
     showDialog: Boolean,
@@ -171,6 +190,23 @@ fun Dialog(
     }
 }
 
+/**
+ * A standard Alert Dialog showing [AnnotatedString] content.
+ *
+ * @param isShowDialog Controls visibility.
+ * @param onDismissRequest Callback to close the dialog.
+ * @param onClickConfirm Action for the confirm button.
+ * @param onClickCancel Action for the cancel button.
+ * @param content The message body as an AnnotatedString.
+ * @param title The dialog title.
+ * @param showCancelButton Whether to show the secondary cancel button.
+ * @param isSingleButton If true, modifies button layout logic.
+ * @param btnConfirmText Label for the confirm button.
+ * @param btnCancelText Label for the cancel button.
+ * @param icon Optional icon displayed above the title.
+ * @param iconTint Color tint for the icon.
+ * @param severity Affects the color styling of the buttons (e.g., DANGER vs PRIMARY).
+ */
 @Composable
 fun AlertDialog(
     isShowDialog: Boolean,
@@ -211,6 +247,23 @@ fun AlertDialog(
     }
 }
 
+/**
+ * A standard Alert Dialog showing simple [String] content.
+ *
+ * @param isShowDialog Controls visibility.
+ * @param onDismissRequest Callback to close the dialog.
+ * @param onClickConfirm Action for the confirm button.
+ * @param onClickCancel Action for the cancel button.
+ * @param content The message body text.
+ * @param title The dialog title.
+ * @param showCancelButton Whether to show the secondary cancel button.
+ * @param isSingleButton If true, modifies button layout logic.
+ * @param btnConfirmText Label for the confirm button.
+ * @param btnCancelText Label for the cancel button.
+ * @param icon Optional icon displayed above the title.
+ * @param iconTint Color tint for the icon.
+ * @param severity Affects the color styling of the buttons.
+ */
 @Composable
 fun AlertDialog(
     isShowDialog: Boolean,
@@ -251,6 +304,23 @@ fun AlertDialog(
     }
 }
 
+/**
+ * The base Alert Dialog composable accepting arbitrary content.
+ *
+ * @param isShowDialog Controls visibility.
+ * @param onDismissRequest Callback to close the dialog.
+ * @param title The dialog title.
+ * @param showCancelButton Whether to show the secondary cancel button.
+ * @param isSingleButton If true, modifies button layout logic.
+ * @param btnConfirmText Label for the confirm button.
+ * @param btnCancelText Label for the cancel button.
+ * @param onClickConfirm Action for the confirm button.
+ * @param onClickCancel Action for the cancel button.
+ * @param icon Optional icon displayed above the title.
+ * @param iconTint Color tint for the icon.
+ * @param severity Affects the color styling of the buttons.
+ * @param content The custom Composable content to display within the dialog.
+ */
 @Composable
 fun AlertDialog(
     isShowDialog: Boolean,

@@ -20,6 +20,19 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel responsible for managing the state and business logic of the Permit Form.
+ *
+ * This class handles:
+ * - Initializing form data (fetching existing permit details for editing).
+ * - Validating user input.
+ * - Submitting the form data to create or edit a permit.
+ * - Managing UI state (loading, errors, success).
+ *
+ * @property getPermitByIdUseCase Use case to retrieve permit details by ID.
+ * @property editPermitUseCase Use case to update an existing permit.
+ * @property createPermitUseCase Use case to create a new permit.
+ */
 class PermitFormViewModel(
     private val getPermitByIdUseCase: GetPermitByIdUseCase,
     private val editPermitUseCase: EditPermitUseCase,
@@ -28,6 +41,15 @@ class PermitFormViewModel(
     private val _uiState = MutableStateFlow(PermitFormUiState())
     val uiState = _uiState.asStateFlow()
 
+    /**
+     * Initializes the ViewModel with the target permit ID and user info.
+     *
+     * If an [id] is provided, it fetches the permit details and populates the form
+     * for editing.
+     *
+     * @param id The ID of the permit to edit, or null if creating a new one.
+     * @param user The currently logged-in user entity.
+     */
     fun init(
         id: String?,
         user: LoginEntity?,
@@ -66,10 +88,16 @@ class PermitFormViewModel(
         }
     }
 
+    /**
+     * Resets the UI state to its initial values.
+     */
     fun reset() {
         _uiState.update { PermitFormUiState() }
     }
 
+    /**
+     * Generates a callback object containing method references for UI interactions.
+     */
     fun getCallback() =
         PermitFormCallback(
             onSubmit = ::submit,
@@ -77,6 +105,14 @@ class PermitFormViewModel(
             onUpdateFormData = ::updateFormData
         )
 
+    /**
+     * Validates the current form data.
+     *
+     * Updates the UI state with specific error messages if validation fails.
+     *
+     * @param formData The current data from the form.
+     * @return True if the data is valid, false otherwise.
+     */
     private fun validateFormData(
         formData: PermitFormData,
     ): Boolean {
@@ -96,12 +132,25 @@ class PermitFormViewModel(
         return formData.isValid
     }
 
+    /**
+     * Updates the form data in the UI state.
+     */
     private fun updateFormData(
         formData: PermitFormData,
     ) {
         _uiState.update { it.copy(formData = formData) }
     }
 
+    /**
+     * Submits the permit form.
+     *
+     * Triggers validation, constructs the request body, and calls the appropriate
+     * domain use case (Create or Edit).
+     *
+     * @param formData The form data to submit.
+     * @param onSuccess Callback invoked when the operation succeeds.
+     * @param onError Callback invoked when the operation fails.
+     */
     @Suppress("UNCHECKED_CAST")
     private fun submit(
         formData: PermitFormData,

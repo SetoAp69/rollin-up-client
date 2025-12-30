@@ -21,6 +21,18 @@ import com.rollinup.rollinup.component.theme.theme
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * A square button containing only an icon, with a solid background color based on severity.
+ *
+ * Unlike standard IconButtons which are often transparent, this component has a visible
+ * container shape and background.
+ *
+ * @param icon The icon resource to display.
+ * @param size The size of the button container. Defaults to 28.dp.
+ * @param severity Determines the background and icon color colors (e.g., Primary, Danger).
+ * @param enabled Controls the enabled state of the button.
+ * @param onClick Callback triggered when the button is clicked.
+ */
 @Composable
 fun IconButton(
     icon: DrawableResource,
@@ -54,6 +66,9 @@ fun IconButton(
     }
 }
 
+/**
+ * Maps [Severity] values to [IconButtonColors].
+ */
 @Composable
 private fun getColor(
     severity: Severity,

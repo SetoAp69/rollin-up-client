@@ -46,6 +46,17 @@ import rollin_up.composeapp.generated.resources.ic_close_line_24
 import rollin_up.composeapp.generated.resources.ic_search_line_24
 import rollin_up.composeapp.generated.resources.label_search
 
+/**
+ * A composite component featuring a search text field and a list of action menus.
+ *
+ * This is typically used at the top of a list screen to provide search capability alongside
+ * filters or other actions (represented by icons).
+ *
+ * @param searchQuery The current text in the search field.
+ * @param onSearch Callback triggered when the search action is performed (IME action or icon click).
+ * @param menu A list of [Menu] items to display as icons next to the search bar. Limited to 3 items.
+ * @param onClickMenu Callback triggered when one of the menu icons is clicked.
+ */
 @Composable
 fun SearchBarWithMenu(
     searchQuery: String,
@@ -81,6 +92,14 @@ fun SearchBarWithMenu(
     }
 }
 
+/**
+ * The internal text field implementation for the search bar.
+ *
+ * Customizes the [BasicTextField] to look like a search bar, including:
+ * - Placeholder text.
+ * - Search/Clear trailing icon logic.
+ * - IME Search action handling.
+ */
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun SearchField(
@@ -176,6 +195,9 @@ private fun SearchField(
 }
 
 
+/**
+ * Renders a single menu icon button next to the search bar.
+ */
 @Composable
 private fun SearchBarMenu(
     menu: Menu,

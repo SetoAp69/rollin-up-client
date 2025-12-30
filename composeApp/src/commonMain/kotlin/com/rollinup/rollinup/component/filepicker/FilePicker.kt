@@ -47,6 +47,26 @@ import rollin_up.composeapp.generated.resources.ic_edit_line_24
 import rollin_up.composeapp.generated.resources.ic_upload_fill_24
 import rollin_up.composeapp.generated.resources.label_upload
 
+/**
+ * Platform-specific file handler component.
+ *
+ * Expected to launch a file picker dialog or interface when `isLaunchHandler` is true,
+ * and invoke `onFileSelected` with the selected file.
+ *
+ * @param onFileSelected Callback invoked with the selected file.
+ * @param value The currently selected file (if any).
+ * @param allowedType List of allowed MIME types for selection.
+ * @param isLaunchHandler If true, triggers the file selection process.
+ */
+
+/**
+ * Platform-specific handler for launching the system file picker.
+ *
+ * @param onFileSelected Callback invoked when a file is successfully picked.
+ * @param value The currently selected file (if any).
+ * @param allowedType List of allowed MIME types for file selection (e.g., "image/ *", "application/pdf").
+ * @param isLaunchHandler When true, triggers the file picker launch.
+ */
 @Composable
 expect fun FileHandler(
     onFileSelected: (MultiPlatformFile) -> Unit,
@@ -55,6 +75,20 @@ expect fun FileHandler(
     isLaunchHandler: Boolean,
 )
 
+/**
+ * A form field component for file uploading with validation support.
+ *
+ * Wraps [FilePicker] with a title and error message display.
+ *
+ * @param title The label displayed above the picker.
+ * @param isRequired Indicates if this field is mandatory (visual indicator).
+ * @param value The currently selected file.
+ * @param fileName Optional filename to display if `value` doesn't have a name or for initial state.
+ * @param showCameraOption If true (and on mobile), allows taking a photo via [FilePickerBottomSheet].
+ * @param onValueChange Callback invoked when the selected file changes (picked or deleted).
+ * @param isError If true, displays the component in an error state.
+ * @param errorMsg Error text displayed below the component if `isError` is true.
+ */
 @Composable
 fun FilePicker(
     title: String,
@@ -87,6 +121,18 @@ fun FilePicker(
     }
 }
 
+/**
+ * The core file picker component.
+ *
+ * Renders a dashed border box when empty (upload prompt) or a solid border box with
+ * filename and actions (edit/delete) when a file is selected.
+ *
+ * @param value The currently selected file.
+ * @param fileName Optional filename string override.
+ * @param showCameraOption If true, provides camera access on mobile devices.
+ * @param onValueChange Callback invoked with the new file or null (deleted).
+ * @param isError Affects the border and text color to indicate error state.
+ */
 @Composable
 fun FilePicker(
     value: MultiPlatformFile?,
@@ -190,6 +236,11 @@ fun FilePicker(
     }
 }
 
+/**
+ * Renders the content when a file has been picked.
+ *
+ * Shows the filename, an edit button (to re-pick), and a delete button (to clear).
+ */
 @Composable
 private fun FilePickerPickedContent(
     fileName: String,
@@ -239,6 +290,11 @@ private fun FilePickerPickedContent(
 
 }
 
+/**
+ * Renders the placeholder content when no file is selected.
+ *
+ * Shows an upload icon and label.
+ */
 @Composable
 private fun FilePickerNullContent(
     onClick: () -> Unit,
@@ -269,4 +325,3 @@ private fun FilePickerNullContent(
         )
     }
 }
-
