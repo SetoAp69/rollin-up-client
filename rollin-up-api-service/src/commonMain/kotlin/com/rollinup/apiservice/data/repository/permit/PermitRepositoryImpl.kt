@@ -23,11 +23,29 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
+/**
+ * Implementation of the [PermitRepository] interface.
+ *
+ * This repository handles data operations related to permits, including fetching
+ * paginated lists, retrieving specific permit details, and performing actions
+ * like creating, editing, approving, and canceling permits.
+ *
+ * @property dataSource The network API service for permit operations.
+ * @property mapper The mapper to transform network DTOs into domain entities.
+ * @property ioDispatcher The CoroutineDispatcher for performing IO operations.
+ */
 class PermitRepositoryImpl(
     private val dataSource: PermitApiService,
     private val mapper: PermitMapper,
     private val ioDispatcher: CoroutineDispatcher,
 ) : PermitRepository {
+    /**
+     * Retrieves a paginated list of permits for a specific student.
+     *
+     * @param id The ID of the student.
+     * @param queryParams Parameters for filtering and sorting the list.
+     * @return A Flow emitting [PagingData] of [PermitByStudentEntity].
+     */
     override fun getPermitByStudentPaging(
         id: String,
         queryParams: GetPermitListQueryParams,
@@ -47,6 +65,13 @@ class PermitRepositoryImpl(
         }.flow
 
 
+    /**
+     * Retrieves a paginated list of permits for a specific class.
+     *
+     * @param classKey The ID (key) of the class.
+     * @param queryParams Parameters for filtering and sorting the list.
+     * @return A Flow emitting [PagingData] of [PermitByClassEntity].
+     */
     override fun getPermitByClassPaging(
         classKey: Int,
         queryParams: GetPermitListQueryParams,
@@ -65,6 +90,13 @@ class PermitRepositoryImpl(
             )
         }.flow
 
+    /**
+     * Retrieves a complete list of permits for a class based on query parameters.
+     *
+     * @param classKey The ID (key) of the class.
+     * @param query Parameters for filtering the list.
+     * @return A Flow emitting a [Result] containing a list of [PermitByClassEntity] or a [NetworkError].
+     */
     override fun getPermitListByClass(
         classKey: Int,
         query: GetPermitListQueryParams,
@@ -84,6 +116,13 @@ class PermitRepositoryImpl(
         emit(Utils.handleApiError(it as Exception))
     }.flowOn(ioDispatcher)
 
+    /**
+     * Retrieves a complete list of permits for a student based on query parameters.
+     *
+     * @param id The ID of the student.
+     * @param query Parameters for filtering the list.
+     * @return A Flow emitting a [Result] containing a list of [PermitByStudentEntity] or a [NetworkError].
+     */
     override fun getPermitListByStudent(
         id: String,
         query: GetPermitListQueryParams,
@@ -104,6 +143,12 @@ class PermitRepositoryImpl(
             emit(Utils.handleApiError(it as Exception))
         }.flowOn(ioDispatcher)
 
+    /**
+     * Fetches detailed information about a specific permit.
+     *
+     * @param id The ID of the permit.
+     * @return A Flow emitting a [Result] containing [PermitDetailEntity] or a [NetworkError].
+     */
     override fun getPermitById(id: String): Flow<Result<PermitDetailEntity, NetworkError>> =
         flow {
             val response = dataSource.getPermitById(id)
@@ -121,6 +166,12 @@ class PermitRepositoryImpl(
             emit(Utils.handleApiError(it as Exception))
         }.flowOn(ioDispatcher)
 
+    /**
+     * Approves or rejects a permit request.
+     *
+     * @param body The approval body containing status and notes.
+     * @return A Flow emitting a [Result] indicating success or failure.
+     */
     override fun doApproval(body: PermitApprovalBody): Flow<Result<Unit, NetworkError>> =
         flow {
             val response = dataSource.doApproval(body)
@@ -137,6 +188,12 @@ class PermitRepositoryImpl(
             emit(Utils.handleApiError(it as Exception))
         }.flowOn(ioDispatcher)
 
+    /**
+     * Creates a new permit request.
+     *
+     * @param body The body containing permit details.
+     * @return A Flow emitting a [Result] indicating success or failure.
+     */
     override fun createPermit(body: CreateEditPermitBody): Flow<Result<Unit, NetworkError>> =
         flow {
             val response = dataSource.createPermit(body)
@@ -153,6 +210,13 @@ class PermitRepositoryImpl(
             emit(Utils.handleApiError(it as Exception))
         }.flowOn(ioDispatcher)
 
+    /**
+     * Edits an existing permit request.
+     *
+     * @param id The ID of the permit to edit.
+     * @param body The updated permit details.
+     * @return A Flow emitting a [Result] indicating success or failure.
+     */
     override fun editPermit(
         id: String,
         body: CreateEditPermitBody,
@@ -172,6 +236,12 @@ class PermitRepositoryImpl(
             emit(Utils.handleApiError(it as Exception))
         }.flowOn(ioDispatcher)
 
+    /**
+     * Cancels a pending permit request.
+     *
+     * @param id The ID of the permit to cancel.
+     * @return A Flow emitting a [Result] indicating success or failure.
+     */
     override fun cancelPermit(id: String): Flow<Result<Unit, NetworkError>> =
         flow {
             val response = dataSource.cancelPermitRequest(id)
@@ -188,4 +258,3 @@ class PermitRepositoryImpl(
             emit(Utils.handleApiError(it as Exception))
         }.flowOn(ioDispatcher)
 }
-

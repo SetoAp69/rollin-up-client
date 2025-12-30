@@ -17,10 +17,25 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
+/**
+ * Implementation of [PermitApiService] using Ktor [HttpClient].
+ * Manages operations related to student permits, including creation,
+ * retrieval, cancellation, and approval workflows.
+ *
+ * @property httpClient The Ktor client instance used to make network requests.
+ */
 class PermitApiDataSource(
     val httpClient: HttpClient,
 ) : PermitApiService {
     val baseUrl = "/permit"
+
+    /**
+     * Retrieves a list of permits for a specific student.
+     *
+     * @param id The unique identifier of the student.
+     * @param queryParams Optional filters or pagination parameters.
+     * @return [ApiResponse] containing [GetPermitListByStudentResponse].
+     */
     override suspend fun getPermitListByStudent(
         id: String,
         queryParams: Map<String, String?>,
@@ -40,6 +55,12 @@ class PermitApiDataSource(
         }
     }
 
+    /**
+     * Cancels an existing permit request.
+     *
+     * @param id The unique identifier of the permit to cancel.
+     * @return [ApiResponse] containing [Unit] on success.
+     */
     override suspend fun cancelPermitRequest(id: String): ApiResponse<Unit> {
         return try {
             val response = httpClient.put("$baseUrl/$id/cancel")
@@ -50,6 +71,13 @@ class PermitApiDataSource(
         }
     }
 
+    /**
+     * Retrieves a list of permits associated with a specific class.
+     *
+     * @param classKey The unique integer key of the class.
+     * @param queryParams Optional filters or pagination parameters.
+     * @return [ApiResponse] containing [GetPermitListByClassResponse].
+     */
     override suspend fun getPermitListByClass(
         classKey: Int,
         queryParams: Map<String, String?>,
@@ -68,6 +96,12 @@ class PermitApiDataSource(
         }
     }
 
+    /**
+     * Retrieves detailed information about a specific permit.
+     *
+     * @param id The unique identifier of the permit.
+     * @return [ApiResponse] containing [GetPermitByIdResponse].
+     */
     override suspend fun getPermitById(id: String): ApiResponse<GetPermitByIdResponse> {
         return try {
             val response = httpClient.get("$baseUrl/$id")
@@ -79,6 +113,12 @@ class PermitApiDataSource(
         }
     }
 
+    /**
+     * Processes an approval or rejection for a permit.
+     *
+     * @param body The [PermitApprovalBody] containing the approval status and notes.
+     * @return [ApiResponse] containing [Unit] on success.
+     */
     override suspend fun doApproval(body: PermitApprovalBody): ApiResponse<Unit> {
         return try {
             val response = httpClient.post("$baseUrl/approval") {
@@ -92,6 +132,13 @@ class PermitApiDataSource(
         }
     }
 
+    /**
+     * Submits a new permit request.
+     * Uses Multipart/FormData to support potential file attachments (e.g., medical notes).
+     *
+     * @param body The [CreateEditPermitBody] containing permit details and files.
+     * @return [ApiResponse] containing [Unit] on success.
+     */
     override suspend fun createPermit(body: CreateEditPermitBody): ApiResponse<Unit> {
         return try {
             val response = httpClient.post(baseUrl) {
@@ -105,6 +152,14 @@ class PermitApiDataSource(
         }
     }
 
+    /**
+     * Edits an existing permit request.
+     * Uses Multipart/FormData for updates, similar to creation.
+     *
+     * @param id The unique identifier of the permit to edit.
+     * @param body The [CreateEditPermitBody] containing updated details.
+     * @return [ApiResponse] containing [Unit] on success.
+     */
     override suspend fun editPermit(
         id: String,
         body: CreateEditPermitBody,

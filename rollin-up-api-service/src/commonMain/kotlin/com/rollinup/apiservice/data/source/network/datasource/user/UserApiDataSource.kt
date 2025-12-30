@@ -29,10 +29,25 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
+/**
+ * Implementation of [UserApiService] using Ktor [HttpClient].
+ * Handles all network operations related to user management, including registration,
+ * profile updates, password resets, and user retrieval.
+ *
+ * @property httpClient The Ktor client instance used to make network requests.
+ */
 class UserApiDataSource(
     private val httpClient: HttpClient,
 ) : UserApiService {
     val baseUrl = "/user"
+
+    /**
+     * Retrieves a list of users based on the provided query parameters.
+     * Useful for admin dashboards, search, or pagination.
+     *
+     * @param queryParams The [GetUserQueryParams] object containing filters and pagination settings.
+     * @return [ApiResponse] containing [GetUserListResponse].
+     */
     override suspend fun getUsersList(
         queryParams: GetUserQueryParams,
     ): ApiResponse<GetUserListResponse> {
@@ -50,6 +65,12 @@ class UserApiDataSource(
         }
     }
 
+    /**
+     * Retrieves detailed information for a specific user.
+     *
+     * @param userId The unique identifier of the user.
+     * @return [ApiResponse] containing [GetUserByIdResponse].
+     */
     override suspend fun getUserById(
         userId: String,
     ): ApiResponse<GetUserByIdResponse> {
@@ -63,6 +84,12 @@ class UserApiDataSource(
         }
     }
 
+    /**
+     * Registers a new user in the system.
+     *
+     * @param body The [CreateEditUserBody] containing the new user's details.
+     * @return [ApiResponse] containing [Unit] on success.
+     */
     override suspend fun registerUser(
         body: CreateEditUserBody,
     ): ApiResponse<Unit> {
@@ -78,6 +105,13 @@ class UserApiDataSource(
         }
     }
 
+    /**
+     * Updates an existing user's profile information.
+     *
+     * @param id The unique identifier of the user to edit.
+     * @param body The [CreateEditUserBody] containing updated details.
+     * @return [ApiResponse] containing [Unit] on success.
+     */
     override suspend fun editUser(
         id: String,
         body: CreateEditUserBody,
@@ -94,6 +128,12 @@ class UserApiDataSource(
         }
     }
 
+    /**
+     * Initiates a password reset process (e.g., sending an OTP to email).
+     *
+     * @param body The [CreateResetPasswordRequestBody] containing the user's identifier (email/username).
+     * @return [ApiResponse] containing [ResetPasswordRequestResponse].
+     */
     override suspend fun createResetPasswordRequest(
         body: CreateResetPasswordRequestBody,
     ): ApiResponse<ResetPasswordRequestResponse> {
@@ -109,6 +149,12 @@ class UserApiDataSource(
         }
     }
 
+    /**
+     * Validates the OTP sent during the password reset process.
+     *
+     * @param body The [SubmitResetPasswordOTPBody] containing the OTP.
+     * @return [ApiResponse] containing [SubmitResetOtpResponse].
+     */
     override suspend fun submitResetOtp(
         body: SubmitResetPasswordOTPBody,
     ): ApiResponse<SubmitResetOtpResponse> {
@@ -124,6 +170,12 @@ class UserApiDataSource(
         }
     }
 
+    /**
+     * Finalizes the password reset by setting the new password.
+     *
+     * @param body The [SubmitResetPasswordBody] containing the new password and verification token.
+     * @return [ApiResponse] containing [Unit] on success.
+     */
     override suspend fun submitResetPassword(
         body: SubmitResetPasswordBody,
     ): ApiResponse<Unit> {
@@ -139,6 +191,12 @@ class UserApiDataSource(
         }
     }
 
+    /**
+     * Retrieves available options for user properties (e.g., roles, classes).
+     * Used for populating dropdowns or selectors in the UI.
+     *
+     * @return [ApiResponse] containing [GetUserOptionsResponse].
+     */
     override suspend fun getUserOptions(): ApiResponse<GetUserOptionsResponse> {
         return try {
             val response = httpClient.get("$baseUrl/options") {
@@ -151,6 +209,12 @@ class UserApiDataSource(
         }
     }
 
+    /**
+     * Deletes one or more users from the system.
+     *
+     * @param body The [DeleteUserBody] containing the list of IDs to delete.
+     * @return [ApiResponse] containing [Unit] on success.
+     */
     override suspend fun deleteUser(body: DeleteUserBody): ApiResponse<Unit> =
         try {
             val response = httpClient.delete(baseUrl) {
@@ -162,6 +226,12 @@ class UserApiDataSource(
             ApiResponse.Error(e)
         }
 
+    /**
+     * Checks if a specific email or username is already taken.
+     *
+     * @param queryParams Map containing 'email' or 'username' to check.
+     * @return [ApiResponse] containing [Unit] (Success usually implies available/valid).
+     */
     override suspend fun checkEmailOrUsername(queryParams: Map<String, String?>): ApiResponse<Unit> =
         try {
             val response = httpClient.get("$baseUrl/check-email-username") {
@@ -174,6 +244,12 @@ class UserApiDataSource(
             ApiResponse.Error(e)
         }
 
+    /**
+     * Validates the OTP for account verification or sensitive actions.
+     *
+     * @param body The [SubmitVerificationOTPBody] containing the OTP code.
+     * @return [ApiResponse] containing [ValidateVerificationOtpResponse].
+     */
     override suspend fun submitVerificationOtp(body: SubmitVerificationOTPBody): ApiResponse<ValidateVerificationOtpResponse> =
         try {
             val response = httpClient.post("$baseUrl/update-password-and-verification/validate") {
@@ -186,6 +262,12 @@ class UserApiDataSource(
             ApiResponse.Error(e)
         }
 
+    /**
+     * Updates the user's password and verification status in one go.
+     *
+     * @param body The [UpdatePasswordAndVerificationBody] containing new credentials.
+     * @return [ApiResponse] containing [Unit] on success.
+     */
     override suspend fun updatePasswordAndVerification(body: UpdatePasswordAndVerificationBody): ApiResponse<Unit> =
         try {
             val response = httpClient.patch("$baseUrl/update-password-and-verification") {
@@ -197,6 +279,11 @@ class UserApiDataSource(
             ApiResponse.Error(e)
         }
 
+    /**
+     * Resends the verification OTP to the user's registered contact method.
+     *
+     * @return [ApiResponse] containing [Unit] on success.
+     */
     override suspend fun resetVerificationOtp(): ApiResponse<Unit> =
         try {
             val response = httpClient.get("$baseUrl/resend-verification-otp") { }

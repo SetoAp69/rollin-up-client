@@ -15,6 +15,18 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
+/**
+ * Implementation of the [GlobalSettingRepository] interface.
+ *
+ * This repository manages global application settings, synchronizing them between
+ * the remote server and local storage ([LocalDataStore]). It supports fetching,
+ * editing, and listening for real-time updates.
+ *
+ * @property apiDataSource The API service for fetching/updating settings remotely.
+ * @property localDataSource The local data store for caching settings.
+ * @property ioDispatcher The CoroutineDispatcher for performing IO operations.
+ * @property mapper The mapper to transform network DTOs into domain entities.
+ */
 class GlobalSettingRepositoryImpl(
     private val apiDataSource: GlobalSettingApiService,
     private val localDataSource: LocalDataStore,
@@ -22,6 +34,11 @@ class GlobalSettingRepositoryImpl(
     private val mapper: GlobalSettingMapper,
 ) : GlobalSettingRepository {
 
+    /**
+     * Establishes a listener for real-time updates to global settings from the server.
+     *
+     * @return A Flow that emits [Unit] whenever a successful update notification is received.
+     */
     override fun listen(): Flow<Unit> =
         flow {
             apiDataSource.listen().collect { response ->
@@ -37,6 +54,11 @@ class GlobalSettingRepositoryImpl(
             .catch { e -> e.printStackTrace() }
             .flowOn(ioDispatcher)
 
+    /**
+     * Fetches the current global settings from the remote server.
+     *
+     * @return A Flow emitting a [Result] containing [GlobalSetting] on success or [NetworkError] on failure.
+     */
     override fun getGlobalSetting(): Flow<Result<GlobalSetting, NetworkError>> =
         flow {
             val response = apiDataSource.getGlobalSetting()
@@ -54,6 +76,12 @@ class GlobalSettingRepositoryImpl(
             .catch { e -> emit(Utils.handleApiError(e as Exception)) }
             .flowOn(ioDispatcher)
 
+    /**
+     * Updates the global settings on the server.
+     *
+     * @param body The request body containing the updated settings values.
+     * @return A Flow emitting [Result.Success] on completion or [NetworkError] on failure.
+     */
     override fun editGlobalSetting(body: EditGlobalSettingBody): Flow<Result<Unit, NetworkError>> =
         flow {
             val response = apiDataSource.editGlobalSetting(body)
@@ -70,10 +98,20 @@ class GlobalSettingRepositoryImpl(
             .catch { e -> emit(Utils.handleApiError(e as Exception)) }
             .flowOn(ioDispatcher)
 
+    /**
+     * Retrieves the global settings currently cached in local storage.
+     *
+     * @return The cached [GlobalSetting] object, or null if none exists.
+     */
     override suspend fun getCachedGlobalSetting(): GlobalSetting? {
         return localDataSource.getLocalGlobalSetting()
     }
 
+    /**
+     * Updates the local cache with new global settings.
+     *
+     * @param globalSetting The new settings object to cache.
+     */
     override suspend fun updateCachedGlobalSetting(globalSetting: GlobalSetting) {
         localDataSource.updateGlobalSetting(globalSetting)
     }

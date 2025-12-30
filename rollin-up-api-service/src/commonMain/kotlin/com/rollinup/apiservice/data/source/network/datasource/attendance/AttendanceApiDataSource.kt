@@ -22,11 +22,24 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
+/**
+ * Implementation of [AttendanceApiService] using Ktor [HttpClient].
+ * Manages all network requests related to attendance tracking, reporting, and dashboard data.
+ *
+ * @property httpClient The Ktor client instance used to make network requests.
+ */
 class AttendanceApiDataSource(
     private val httpClient: HttpClient,
 ) : AttendanceApiService {
     val baseUrl = "/attendance"
 
+    /**
+     * Retrieves a list of attendance records for a specific student.
+     *
+     * @param id The unique identifier of the student.
+     * @param query A map of query parameters (e.g., date range, filters).
+     * @return [ApiResponse] containing [GetAttendanceListByStudentResponse].
+     */
     override suspend fun getAttendanceListByStudent(
         id: String,
         query: Map<String, String?>,
@@ -45,6 +58,13 @@ class AttendanceApiDataSource(
         }
     }
 
+    /**
+     * Retrieves an attendance summary (stats) for a specific student.
+     *
+     * @param studentId The unique identifier of the student.
+     * @param query A map of query parameters for filtering the summary.
+     * @return [ApiResponse] containing [GetAttendanceSummaryResponse].
+     */
     override suspend fun getAttendanceByStudentSummary(
         studentId: String,
         query: Map<String, String?>,
@@ -62,6 +82,13 @@ class AttendanceApiDataSource(
         }
     }
 
+    /**
+     * Retrieves a list of attendance records for a specific class.
+     *
+     * @param classKey The unique integer key identifying the class.
+     * @param query A map of query parameters for filtering the list.
+     * @return [ApiResponse] containing [GetAttendanceListByClassResponse].
+     */
     override suspend fun getAttendanceListByClass(
         classKey: Int,
         query: Map<String, String?>,
@@ -79,6 +106,13 @@ class AttendanceApiDataSource(
         }
     }
 
+    /**
+     * Retrieves an attendance summary (stats) for a specific class.
+     *
+     * @param classKey The unique integer key identifying the class.
+     * @param query A map of query parameters for filtering the summary.
+     * @return [ApiResponse] containing [GetAttendanceSummaryResponse].
+     */
     override suspend fun getAttendanceByClassSummary(
         classKey: Int,
         query: Map<String, String?>,
@@ -96,6 +130,12 @@ class AttendanceApiDataSource(
         }
     }
 
+    /**
+     * Retrieves the details of a specific attendance record by its ID.
+     *
+     * @param id The unique identifier of the attendance record.
+     * @return [ApiResponse] containing [GetAttendanceByIdResponse].
+     */
     override suspend fun getAttendanceById(id: String): ApiResponse<GetAttendanceByIdResponse> {
         return try {
             val response = httpClient.get("$baseUrl/$id")
@@ -106,6 +146,13 @@ class AttendanceApiDataSource(
         }
     }
 
+    /**
+     * Creates a new attendance record manually.
+     * Typically used by admins or teachers to record attendance without a check-in.
+     *
+     * @param body The [CreateAttendanceBody] containing attendance details.
+     * @return [ApiResponse] containing [Unit] on success.
+     */
     override suspend fun createAttendanceData(body: CreateAttendanceBody): ApiResponse<Unit> {
         return try {
             val response = httpClient.post(baseUrl) {
@@ -118,6 +165,13 @@ class AttendanceApiDataSource(
         }
     }
 
+    /**
+     * Performs a check-in action.
+     * Sends the data as Multipart/FormData, implying support for file uploads (e.g., photos).
+     *
+     * @param body The [CheckInBody] containing check-in data and potential files.
+     * @return [ApiResponse] containing [Unit] on success.
+     */
     override suspend fun checkIn(body: CheckInBody): ApiResponse<Unit> {
         return try {
             val response = httpClient.post("$baseUrl/check-in") {
@@ -130,6 +184,13 @@ class AttendanceApiDataSource(
         }
     }
 
+    /**
+     * Retrieves aggregated data for the dashboard view.
+     *
+     * @param id The identifier for the user or entity requesting the dashboard.
+     * @param query A map of query parameters to filter dashboard metrics.
+     * @return [ApiResponse] containing [GetDashboardDataResponse].
+     */
     override suspend fun getDashboardData(
         id: String,
         query: Map<String, String?>,
@@ -148,6 +209,14 @@ class AttendanceApiDataSource(
         }
     }
 
+    /**
+     * Edits an existing attendance record.
+     * Uses Multipart/FormData, allowing updates to associated files (e.g., evidence photos).
+     *
+     * @param id The unique identifier of the attendance record to edit.
+     * @param body The [EditAttendanceBody] containing updated data.
+     * @return [ApiResponse] containing [Unit] on success.
+     */
     override suspend fun editAttendance(
         id: String,
         body: EditAttendanceBody,
@@ -164,6 +233,12 @@ class AttendanceApiDataSource(
         }
     }
 
+    /**
+     * Retrieves attendance data formatted for export (e.g., Excel, CSV).
+     *
+     * @param query A map of query parameters defining the scope of the export.
+     * @return [ApiResponse] containing [GetExportAttendanceDataResponse].
+     */
     override suspend fun getExportData(query: Map<String, String?>): ApiResponse<GetExportAttendanceDataResponse> =
         try {
             val response = httpClient.get("$baseUrl/export") {

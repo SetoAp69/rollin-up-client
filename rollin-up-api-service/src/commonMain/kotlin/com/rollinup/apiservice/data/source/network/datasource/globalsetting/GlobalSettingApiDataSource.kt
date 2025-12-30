@@ -18,12 +18,25 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 
-
+/**
+ * Implementation of [GlobalSettingApiService].
+ * Handles reading, updating, and listening to real-time changes in global application settings.
+ *
+ * @property httpClient The Ktor client for standard HTTP requests (GET/PATCH).
+ * @property sseClient The Ktor client specifically configured for Server-Sent Events (SSE).
+ */
 class GlobalSettingApiDataSource(
     private val httpClient: HttpClient,
     private val sseClient: HttpClient,
 ) : GlobalSettingApiService {
     private val url = "/global-setting"
+
+    /**
+     * Establishes a Server-Sent Events (SSE) connection to listen for setting updates.
+     * Emits an [ApiResponse] whenever a "global-setting-update" event is received.
+     *
+     * @return A [Flow] that emits [ApiResponse.Success] on update events.
+     */
     override fun listen(): Flow<ApiResponse<Unit>> = flow {
         sseClient.sse(
             urlString = "$url/sse",
@@ -50,6 +63,11 @@ class GlobalSettingApiDataSource(
         }
     }
 
+    /**
+     * Retrieves the current global settings configuration.
+     *
+     * @return [ApiResponse] containing [GetGlobalSettingResponse].
+     */
     override suspend fun getGlobalSetting(): ApiResponse<GetGlobalSettingResponse> {
         return try {
             val response = httpClient.get(url).body<GetGlobalSettingResponse>()
@@ -59,6 +77,12 @@ class GlobalSettingApiDataSource(
         }
     }
 
+    /**
+     * Updates the global settings configuration.
+     *
+     * @param body The [EditGlobalSettingBody] containing the new settings values.
+     * @return [ApiResponse] containing [Unit] on success.
+     */
     override suspend fun editGlobalSetting(body: EditGlobalSettingBody): ApiResponse<Unit> {
         return try {
             val response = httpClient.patch("$url/edit") {
