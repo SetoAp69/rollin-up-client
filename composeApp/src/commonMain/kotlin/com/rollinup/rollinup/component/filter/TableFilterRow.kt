@@ -16,6 +16,16 @@ import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.label_reset
 
+/**
+ * A layout container for filter controls typically placed above a data table.
+ *
+ * It arranges filter inputs horizontally and optionally includes a "Reset" button
+ * aligned to the bottom (to match baseline with inputs).
+ *
+ * @param onReset Callback triggered when the reset text is clicked.
+ * @param showReset Controls visibility of the reset option.
+ * @param content The filter components to display in the row.
+ */
 @Composable
 fun TableFilterRow(
     onReset: () -> Unit,

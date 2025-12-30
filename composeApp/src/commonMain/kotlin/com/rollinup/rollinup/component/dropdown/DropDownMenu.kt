@@ -28,6 +28,14 @@ import com.rollinup.rollinup.component.utils.isCompact
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * A styled wrapper around the Material 3 [DropdownMenu].
+ *
+ * @param isShowDropDown Controls whether the menu is currently expanded.
+ * @param onDismissRequest Callback invoked when the user requests to dismiss the menu.
+ * @param modifier Modifier applied to the menu layout.
+ * @param content The content of the menu, typically [DropDownMenuItem]s.
+ */
 @Composable
 fun DropDownMenu(
     isShowDropDown: Boolean,
@@ -47,12 +55,30 @@ fun DropDownMenu(
     }
 }
 
+/**
+ * State holder for managing dropdown selections.
+ *
+ * @param T The type of items in the dropdown.
+ * @property selectedItem The currently selected items.
+ * @property expanded Whether the dropdown is expanded.
+ * @property onDismissRequest Callback to close the dropdown.
+ */
 data class DropDownState<T>(
     val selectedItem: List<T>,
     val expanded: Boolean,
     val onDismissRequest: (Boolean) -> Unit,
 )
 
+/**
+ * A dropdown menu item specifically designed for multi-select scenarios.
+ *
+ * Includes a checkbox to indicate selection state.
+ *
+ * @param label The text to display.
+ * @param textColor The color of the label text.
+ * @param isSelected Whether the item is currently selected (checked).
+ * @param onClick Callback triggered when the item is clicked.
+ */
 @Composable
 fun DropDownMenuMultiSelectItem(
     label: String,
@@ -87,6 +113,18 @@ fun DropDownMenuMultiSelectItem(
     }
 }
 
+/**
+ * A standard item for a [DropDownMenu].
+ *
+ * Supports an optional trailing icon.
+ *
+ * @param label The text to display.
+ * @param icon Optional trailing icon resource.
+ * @param textColor The color of the label text.
+ * @param iconTint The tint color for the icon.
+ * @param backgroundColor Background color for the item row.
+ * @param onClick Callback triggered when the item is clicked.
+ */
 @Composable
 fun DropDownMenuItem(
     label: String,
@@ -130,6 +168,3 @@ fun DropDownMenuItem(
         }
     }
 }
-
-
-

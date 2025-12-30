@@ -21,6 +21,17 @@ import com.rollinup.rollinup.component.utils.isCompact
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * A full-width, clickable list item typically used for actions in menus or bottom sheets.
+ *
+ * It consists of an optional leading icon and a text label.
+ *
+ * @param label The text to display.
+ * @param icon The optional leading icon resource.
+ * @param textColor The color of the text label.
+ * @param iconTint The color tint applied to the icon.
+ * @param onClick Callback triggered when the item is clicked.
+ */
 @Composable
 fun ActionButton(
     label: String,

@@ -21,6 +21,22 @@ import com.rollinup.rollinup.component.pullrefresh.PullRefresh
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.theme.theme
 
+/**
+ * A robust list component that integrates Paging 3 with Pull-to-Refresh functionality.
+ *
+ * This wrapper automatically handles the common states of a paginated list:
+ * - **Refreshing**: Shows a loading skeleton (simulated by repeating [loadingContent]).
+ * - **Empty**: Displays [EmptyRecord] if the data set is empty after loading.
+ * - **Appending**: Shows a progress indicator at the bottom when fetching the next page.
+ *
+ * @param T The type of data items.
+ * @param pagingData The [LazyPagingItems] collected from the ViewModel.
+ * @param itemContent Composable to render a single item.
+ * @param loadingContent Composable to render the loading placeholder/skeleton.
+ * @param onRefresh Callback triggered when the pull-to-refresh action is performed.
+ * @param contentPadding Padding around the list content.
+ * @param contentArrangement Vertical arrangement logic for list items.
+ */
 @Composable
 fun <T : Any> PagingColumn(
     pagingData: LazyPagingItems<T>,

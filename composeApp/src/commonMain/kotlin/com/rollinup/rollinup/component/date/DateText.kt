@@ -9,6 +9,15 @@ import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import kotlinx.datetime.LocalDateTime
 
+/**
+ * Displays a formatted date string using the application's standard date formatter.
+ *
+ * @param dateString The raw date string to be formatted.
+ * @param format The target format for the display (default is Date & Time).
+ * @param color The text color.
+ * @param style The typography style.
+ * @param showYear Whether to include the year in the formatted output.
+ */
 @Composable
 fun DateText(
     dateString: String,
@@ -24,6 +33,15 @@ fun DateText(
     )
 }
 
+/**
+ * Displays a formatted date from a [LocalDateTime] object.
+ *
+ * @param dateTime The LocalDateTime object to format.
+ * @param format The target format for the display.
+ * @param color The text color.
+ * @param style The typography style.
+ * @param showYear Whether to include the year in the formatted output.
+ */
 @Composable
 fun DateText(
     dateTime: LocalDateTime,
@@ -39,6 +57,17 @@ fun DateText(
     )
 }
 
+/**
+ * A specialized text component for displaying a permit's validity period.
+ *
+ * Formats the start and end dates according to the specific rules of the [PermitType].
+ *
+ * @param start The start date string.
+ * @param end The end date string.
+ * @param type The type of permit, which dictates the formatting logic.
+ * @param style The typography style.
+ * @param color The text color.
+ */
 @Composable
 fun PermitDateText(
     start: String,

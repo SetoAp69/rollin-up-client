@@ -44,6 +44,22 @@ import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.main.navigation.MainRoute
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * A custom Bottom Navigation Bar component that features a distinctive, floating center button.
+ *
+ * This component handles:
+ * - Animated visibility (slide in/out).
+ * - Automatic layout distribution with a "hole" reserved for the center button.
+ * - Selection state management.
+ * - Double-tap to refresh logic.
+ *
+ * @param showBottomBar Controls the visibility of the bottom bar with a slide animation.
+ * @param listMenu The list of navigation items to display. Note: This list is truncated to 5 items.
+ * @param onNavigate Callback triggered when a menu item is clicked and it is *not* the currently selected item.
+ * @param state The state holder for the bottom bar, managing the currently selected menu.
+ * @param onGetHeight Callback that reports the calculated height of the bottom bar (useful for padding scaffold content).
+ * @param onRefresh Callback triggered when the *currently selected* menu item is clicked again.
+ */
 @Composable
 fun BottomBar(
     showBottomBar: Boolean,
@@ -56,6 +72,7 @@ fun BottomBar(
     onRefresh: () -> Unit,
 ) {
     val listMenu = listMenu.take(5)
+
     val middleIndex = (listMenu.size / 2)
     val density = LocalDensity.current
     val shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
@@ -110,6 +127,7 @@ fun BottomBar(
                     }
                 }
             }
+
             BottomBarMainMenu(
                 menu = listMenu[middleIndex],
                 isSelected = state.currentMenu == listMenu[middleIndex],
@@ -125,6 +143,15 @@ fun BottomBar(
 }
 
 
+/**
+ * Renders the prominent, circular center menu item.
+ *
+ * This component visually "breaks" the top edge of the bottom bar.
+ *
+ * @param menu The navigation data for this item.
+ * @param isSelected Whether this item is currently active.
+ * @param onMenuClick Callback for click events.
+ */
 @Composable
 private fun BottomBarMainMenu(
     menu: NavigationMenu,
@@ -170,6 +197,15 @@ private fun BottomBarMainMenu(
     }
 }
 
+/**
+ * Renders a standard menu item located on the left or right of the center button.
+ *
+ * Features a small indicator line at the top when selected.
+ *
+ * @param menu The navigation data for this item.
+ * @param isSelected Whether this item is currently active.
+ * @param onMenuClick Callback for click events.
+ */
 @Composable
 fun BottomBarMenu(
     menu: NavigationMenu,
@@ -179,6 +215,7 @@ fun BottomBarMenu(
     val icon = if (isSelected) menu.filledIcon else menu.icon
     val contentColor = if (isSelected) theme.primary else theme.textFieldText
     val interactionSource = remember { MutableInteractionSource() }
+
     CustomRipple(Color.Transparent) {
         Column(
             modifier = Modifier
@@ -217,35 +254,34 @@ fun BottomBarMenu(
     }
 }
 
+/**
+ * State holder for the [BottomBar].
+ *
+ * Manages the currently selected menu item.
+ *
+ * @param initialMenu The menu item selected by default.
+ */
 class BottomBarState(private val initialMenu: NavigationMenu) {
     var currentMenu: NavigationMenu by mutableStateOf(initialMenu)
         private set
 
+    /** Updates the selected menu item. */
     fun onNavigate(menu: NavigationMenu) {
         currentMenu = menu
     }
 
+    /** Resets the selection to the initial menu item. */
     fun reset() {
         currentMenu = initialMenu
     }
 }
 
+/**
+ * Creates and remembers a [BottomBarState].
+ *
+ * @param initialMenu The menu item to be selected initially.
+ */
 @Composable
 fun rememberBottomBarState(initialMenu: NavigationMenu) = remember {
     BottomBarState(initialMenu)
 }
-
-//class BottomBarShape(
-//    menuHeight: Dp,
-//
-//): Shape{
-//    override fun createOutline(
-//        size: Size,
-//        layoutDirection: LayoutDirection,
-//        density: Density,
-//    ): Outline {
-//
-//    }
-//
-//}
-

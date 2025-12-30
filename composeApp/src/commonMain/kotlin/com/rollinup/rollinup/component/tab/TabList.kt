@@ -8,9 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,39 +26,18 @@ import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.utils.getPlatform
 
-@Composable
-fun TabRow(
-    tabList: List<String>,
-    currentIndex: Int,
-    onTabChange: (Int) -> Unit,
-) {
-    val modifier =
-        if (getPlatform().isMobile()) {
-            Modifier.fillMaxWidth()
-        } else {
-            Modifier.width(200.dp)
-        }
-    TabRow(
-        selectedTabIndex = currentIndex,
-        modifier = modifier,
-        containerColor = Color.Transparent,
-        contentColor = Color.Transparent,
-//        indicator =,
-//        divider =,
-        tabs = {
-            tabList.forEachIndexed { index, title ->
-                Tab(
-                    isSelected = index == currentIndex,
-                    label = title,
-                    onClick = {
-                        onTabChange(index)
-                    }
-                )
-            }
-        }
-    )
-}
-
+/**
+ * Displays a segmented control style tab row.
+ *
+ * Features a single container with a background color, where the selected tab
+ * is highlighted (e.g., White on Primary background). Useful for switching views
+ * or filtering lists.
+ *
+ * @param tabList List of titles for the tabs.
+ * @param currentTab The index of the currently selected tab.
+ * @param onTabChange Callback triggered when a tab is selected.
+ * @param modifier Modifier applied to the row container.
+ */
 @Composable
 fun TabRow(
     tabList: List<String>,
@@ -106,6 +83,17 @@ fun TabRow(
 }
 
 
+/**
+ * Displays a list of individual, pill-shaped tabs.
+ *
+ * Unlike the segmented style, these tabs are separate elements separated by a gap.
+ * On mobile, they stretch to fill width; otherwise, they wrap content.
+ *
+ * @param currentIndex The index of the currently selected tab.
+ * @param tabList List of titles for the tabs.
+ * @param padding Padding around the tab row.
+ * @param onTabChange Callback triggered when a tab is selected.
+ */
 @Composable
 fun TabRow(
     currentIndex: Int,
@@ -139,6 +127,9 @@ fun TabRow(
     }
 }
 
+/**
+ * Individual pill-shaped tab composable.
+ */
 @Composable
 private fun Tab(
     isSelected: Boolean,
@@ -166,6 +157,9 @@ private fun Tab(
 }
 
 
+/**
+ * Helper class to determine tab colors based on selection state.
+ */
 data class TabListColor(
     val contentColor: Color,
     val containerColor: Color,

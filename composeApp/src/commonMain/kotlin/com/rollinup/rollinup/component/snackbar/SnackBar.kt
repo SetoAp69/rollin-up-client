@@ -13,6 +13,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.rollinup.rollinup.component.theme.theme
 
+/**
+ * A container for displaying Snackbars within a specific layout area (usually bottom center).
+ *
+ * @param snackBarHostState The state object controlling the snackbar queue.
+ * @param isSuccess Determines the visual styling (success vs error) of the displayed snackbar.
+ */
 @Composable
 fun SnackBarHost(
     snackBarHostState: SnackbarHostState,
@@ -35,6 +41,16 @@ fun SnackBarHost(
     }
 }
 
+/**
+ * A customized Snackbar composable.
+ *
+ * Applies specific color schemes based on the [isSuccess] flag (green/success vs red/danger).
+ *
+ * @param snackBarData Data provided by the host (message, action label, etc.).
+ * @param isSuccess Controls the color theme.
+ * @param cornerRad The corner radius of the snackbar.
+ * @param modifier Modifier applied to the snackbar.
+ */
 @Composable
 fun SnackBar(
     snackBarData: SnackbarData,

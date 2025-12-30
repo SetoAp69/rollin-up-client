@@ -49,6 +49,18 @@ import rollin_up.composeapp.generated.resources.label_filter
 import rollin_up.composeapp.generated.resources.label_reset
 import rollin_up.composeapp.generated.resources.label_select_all
 
+/**
+ * A bottom sheet designed for complex filtering operations.
+ *
+ * Contains a header with Reset capability and a scrollable content area.
+ *
+ * @param isShowSheet Controls the visibility of the bottom sheet.
+ * @param onDismissRequest Callback to close the sheet.
+ * @param onApply Callback when the "Apply" button is clicked.
+ * @param onReset Callback when the "Reset" text is clicked.
+ * @param showReset Controls visibility of the Reset option.
+ * @param content The filter content, typically containing multiple [FilterSelector]s.
+ */
 @Composable
 fun FilterSelectorBottomSheet(
     isShowSheet: Boolean,
@@ -80,6 +92,9 @@ fun FilterSelectorBottomSheet(
     }
 }
 
+/**
+ * Header component for the filter bottom sheet.
+ */
 @Composable
 private fun FilterBottomSheetHeader(
     showReset: Boolean,
@@ -116,6 +131,22 @@ private fun FilterBottomSheetHeader(
 }
 
 
+/**
+ * An expandable filter section allowing multi-selection from a list of options.
+ *
+ * Features:
+ * - Expand/Collapse toggle.
+ * - Selection counter chip.
+ * - "Select All" functionality.
+ * - Loading state shimmer.
+ *
+ * @param T The type of value being filtered.
+ * @param title The display title for this filter category.
+ * @param options List of available options [OptionData].
+ * @param value List of currently selected values.
+ * @param isLoading Displays a loading shimmer if true.
+ * @param onValueChange Callback returning the updated list of selected values.
+ */
 @Composable
 fun <T> FilterSelector(
     title: String,
@@ -151,6 +182,9 @@ fun <T> FilterSelector(
     }
 }
 
+/**
+ * The internal content of the filter selector, rendering checkboxes for options.
+ */
 @Composable
 private fun <T> FilterSelectorContent(
     options: List<OptionData<T>>,
@@ -187,6 +221,9 @@ private fun <T> FilterSelectorContent(
     }
 }
 
+/**
+ * A single checkbox item row within the filter selector.
+ */
 @Composable
 fun FilterSelectorItem(
     label: String,
@@ -215,6 +252,11 @@ fun FilterSelectorItem(
     }
 }
 
+/**
+ * The header row for a [FilterSelector].
+ *
+ * Displays the title, selection count chip, and expand/collapse icon.
+ */
 @Composable
 fun FilterSelectorHeader(
     title: String,
@@ -249,6 +291,9 @@ fun FilterSelectorHeader(
     }
 }
 
+/**
+ * Shimmer placeholder for the filter header while data is loading.
+ */
 @Composable
 fun FilterHeaderLoading() {
     Row(verticalAlignment = Alignment.CenterVertically) {

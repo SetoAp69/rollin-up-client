@@ -59,12 +59,25 @@ import rollin_up.composeapp.generated.resources.ic_user_cross_fill_24
 import rollin_up.composeapp.generated.resources.label_permission_denied
 import rollin_up.composeapp.generated.resources.msg_camera_permission_denied
 
+/**
+ * Platform-specific composable that renders the actual camera preview and handles capture logic.
+ *
+ * @param onCapture Callback triggered when an image is successfully captured.
+ * @param onError Callback triggered when a camera error occurs.
+ */
 @Composable
 expect fun CameraHandler(
     onCapture: (MultiPlatformFile) -> Unit,
     onError: () -> Unit,
 )
 
+/**
+ * Platform-specific composable to request and handle camera permissions.
+ *
+ * @param onGranted Callback invoked when permissions are granted.
+ * @param onDenied Callback invoked when permissions are denied.
+ * @param onDismissRequest Callback invoked to dismiss the permission request flow.
+ */
 @Composable
 expect fun CameraPermissionHandler(
     onGranted: () -> Unit,
@@ -72,6 +85,23 @@ expect fun CameraPermissionHandler(
     onDismissRequest: (Boolean) -> Unit,
 )
 
+/**
+ * A high-level Camera component that orchestrates permissions, capturing, and image review.
+ *
+ * This component handles the full flow:
+ * 1. Checks/Requests Camera Permissions.
+ * 2. Opens the Camera Preview in a Dialog.
+ * 3. Shows an Image Preview/Confirmation screen after capture.
+ *
+ * @param onDismissRequest Callback to close the camera view.
+ * @param onCapture Callback providing the final accepted [MultiPlatformFile].
+ * @param notification Optional composable to overlay a notification/hint on the camera screen.
+ * @param isShowCamera Controls the visibility of the camera flow.
+ * @param onError Callback for capture errors.
+ * @param successMsg Optional message to display in a Snackbar upon successful capture.
+ * @param errorMsg Optional message to display in a Snackbar upon failure.
+ * @param snackBarHostState State for the Snackbar host to display messages.
+ */
 @Composable
 fun CameraView(
     onDismissRequest: (Boolean) -> Unit,
@@ -127,6 +157,17 @@ fun CameraView(
     }
 }
 
+/**
+ * A composable that displays the captured image for review.
+ *
+ * Supports pinch-to-zoom and panning gestures.
+ *
+ * @param showImagePreview Controls the visibility of this preview dialog.
+ * @param image The [MultiPlatformFile] image to display.
+ * @param onDismissRequest Callback to close the preview.
+ * @param onDiscard Callback to discard the image and return to camera.
+ * @param onAccept Callback to confirm the image selection.
+ */
 @Composable
 fun ImagePreview(
     showImagePreview: Boolean,
@@ -219,6 +260,14 @@ fun ImagePreview(
 }
 
 
+/**
+ * Dialog displayed when camera permissions are denied by the user.
+ *
+ * @param onDismissRequest Callback to close the dialog.
+ * @param isShowDialog Controls visibility.
+ * @param onClickConfirm Action for the confirm button.
+ * @param onCancel Action for the cancel button.
+ */
 @Composable
 fun CameraPermissionDeniedDialog(
     onDismissRequest: (Boolean) -> Unit,
@@ -245,6 +294,15 @@ fun CameraPermissionDeniedDialog(
     )
 }
 
+/**
+ * The layout structure for the active camera view.
+ *
+ * Includes the main camera content, a close button, and an optional notification overlay.
+ *
+ * @param onDismissRequest Callback to close the camera.
+ * @param notification Optional notification composable to display.
+ * @param cameraView The composable rendering the camera stream.
+ */
 @Composable
 fun CameraViewContent(
     onDismissRequest: (Boolean) -> Unit,
@@ -299,6 +357,20 @@ fun CameraViewContent(
     }
 }
 
+/**
+ * Wraps the camera functionality in a full-screen, immersive dialog.
+ *
+ * Handles the display of snackbars for success/error messages within the dialog context.
+ *
+ * @param isShowDialog Controls visibility.
+ * @param onDismissRequest Callback to close the dialog.
+ * @param onCapture Callback for successful image capture.
+ * @param onError Callback for errors.
+ * @param successMsg Message to show on success.
+ * @param errorMsg Message to show on error.
+ * @param snackBarHostState State for showing snackbars.
+ * @param notification Optional notification overlay.
+ */
 @Composable
 fun CameraViewDialog(
     isShowDialog: Boolean,
@@ -359,6 +431,12 @@ fun CameraViewDialog(
     }
 }
 
+/**
+ * The bottom control panel containing the shutter and camera swap buttons.
+ *
+ * @param onClickShutter Callback for the shutter button.
+ * @param onClickSwap Callback for the camera swap button.
+ */
 @Composable
 fun CameraControlPanel(
     onClickShutter: () -> Unit,
@@ -382,6 +460,9 @@ fun CameraControlPanel(
 
 }
 
+/**
+ * Icon button to toggle between front and back cameras.
+ */
 @Composable
 fun SwapButton(
     onClick: () -> Unit,
@@ -399,6 +480,13 @@ fun SwapButton(
 }
 
 
+/**
+ * Custom drawn circular shutter button.
+ *
+ * @param size The diameter of the button.
+ * @param color The color of the button.
+ * @param onClick Callback when clicked.
+ */
 @Composable
 fun ShutterButton(
     size: Dp = 70.dp,
@@ -429,5 +517,7 @@ fun ShutterButton(
     }
 }
 
+/**
+ * Platform-specific extension to convert a ByteArray into an ImageBitmap.
+ */
 expect fun ByteArray.toImageBitmap(): ImageBitmap
-

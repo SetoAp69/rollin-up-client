@@ -21,6 +21,19 @@ import com.rollinup.rollinup.component.utils.getScreenHeight
 import com.rollinup.rollinup.component.utils.getScreenWidth
 import org.koin.compose.viewmodel.koinViewModel
 
+/**
+ * The main entry point for the Permit Request/Edit form.
+ *
+ * This composable handles the initialization of the [PermitFormViewModel], manages the lifecycle
+ * of the form data (resetting on dispose), and determines the appropriate presentation mode
+ * (Bottom Sheet for mobile, Dialog for desktop/web) based on the platform.
+ *
+ * @param id The ID of an existing permit to edit. If null, the form opens in "Create" mode.
+ * @param showPermitForm Controls the visibility of the form.
+ * @param onDismissRequest Callback invoked to dismiss the form.
+ * @param onSuccess Callback invoked when the permit is successfully submitted.
+ * @param onError Callback invoked when submission fails.
+ */
 @Composable
 fun PermitForm(
     id: String? = null,
@@ -66,6 +79,9 @@ fun PermitForm(
     }
 }
 
+/**
+ * Displays the permit form within a modal dialog (optimized for Desktop/Web).
+ */
 @Composable
 private fun PermitFormDialog(
     showDialog: Boolean,
@@ -99,6 +115,9 @@ private fun PermitFormDialog(
     }
 }
 
+/**
+ * Displays the permit form within a bottom sheet (optimized for Android/iOS).
+ */
 @Composable
 private fun PermitFormBottomSheet(
     showSheet: Boolean,

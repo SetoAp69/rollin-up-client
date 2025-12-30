@@ -21,6 +21,16 @@ import rollin_up.composeapp.generated.resources.label_open_file
 import rollin_up.composeapp.generated.resources.msg_camera_error_capture
 import rollin_up.composeapp.generated.resources.msg_camera_face_position
 
+/**
+ * A bottom sheet dialog that presents options to either take a photo or pick a file.
+ *
+ * This component integrates [CameraView] for taking photos directly and uses [FileHandler]
+ * for selecting existing files from the device storage.
+ *
+ * @param isShowSheet Controls the visibility of the bottom sheet.
+ * @param onDismissRequest Callback invoked when the sheet or any sub-dialog is dismissed.
+ * @param onSelectFile Callback invoked when a file (photo or document) is successfully selected or captured.
+ */
 @Composable
 fun FilePickerBottomSheet(
     isShowSheet: Boolean,

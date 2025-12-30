@@ -81,21 +81,24 @@ import rollin_up.composeapp.generated.resources.label_date
 import kotlin.time.ExperimentalTime
 
 /**
- * A composable that provides a text field for selecting a single date from a date picker dialog.
+ * A styled form field for selecting a single date via a popup dialog.
  *
- * @param title The title of the date picker field.
- * @param value The currently selected date in milliseconds since epoch.
- * @param enable Whether the date picker field is enabled.
- * @param contentColor The color of the content (text and icon).
- * @param backgroundColor The background color of the date picker field.
- * @param placeHolder The placeholder text to display when no date is selected.
- * @param width The width of the date picker field.
- * @param isError Whether the date picker field is in an error state.
- * @param textError The error text to display when in an error state.
- * @param onValueChange A callback that is invoked when a date is selected.
- * @param isDisablePastSelection Whether to disable the selection of past dates.
- * @param isAllSelectable Whether all dates are selectable.
- * @param color The color scheme for the date picker.
+ * Displays the selected date in a read-only text box with a dropdown icon.
+ * Clicking the box opens the [SingleDatePicker].
+ *
+ * @param title The label displayed above the field.
+ * @param value The selected date in milliseconds (Epoch).
+ * @param enable Controls the interactive state of the field.
+ * @param contentColor Color for text and icons.
+ * @param backgroundColor Background color of the field container.
+ * @param placeHolder Text displayed when [value] is null.
+ * @param width Optional fixed width for the field.
+ * @param isError If true, displays the field in an error state (red styling).
+ * @param textError Error message displayed below the field if [isError] is true.
+ * @param onValueChange Callback returning the selected date in milliseconds.
+ * @param isDisablePastSelection If true, prevents selection of dates before today.
+ * @param isAllSelectable If true, overrides holiday/weekend restrictions.
+ * @param color Custom color palette for the date picker dialog.
  */
 @Composable
 fun SingleDatePickerField(
@@ -171,13 +174,13 @@ fun SingleDatePickerField(
 }
 
 /**
- * A composable that provides a filterable date picker for selecting a single date.
+ * A compact date picker field typically used in filter bars.
  *
- * @param title The title of the date picker.
- * @param value The currently selected date in milliseconds since epoch.
- * @param enabled Whether the date picker is enabled.
- * @param placeHolder The placeholder text to display when no date is selected.
- * @param onValueChange A callback that is invoked when a date is selected.
+ * @param title The label for the filter.
+ * @param value The selected date in milliseconds.
+ * @param enabled Whether interaction is allowed.
+ * @param placeHolder Text to show when no date is selected.
+ * @param onValueChange Callback returning the selected date in milliseconds.
  */
 @Composable
 fun SingleFilterDatePicker(
@@ -242,13 +245,15 @@ fun SingleFilterDatePicker(
 }
 
 /**
- * A composable that provides a filterable date picker for selecting a range of dates.
+ * A compact date range picker field typically used in filter bars.
  *
- * @param title The title of the date picker.
- * @param value The currently selected date range in milliseconds since epoch.
- * @param enabled Whether the date picker is enabled.
- * @param placeHolder The placeholder text to display when no date is selected.
- * @param onValueChange A callback that is invoked when a date range is selected.
+ * Displays the range as "Jan 1 - Jan 5" when selected.
+ *
+ * @param title The label for the filter.
+ * @param value A list of timestamps representing the selected range.
+ * @param enabled Whether interaction is allowed.
+ * @param placeHolder Text to show when no range is selected.
+ * @param onValueChange Callback returning the list of selected timestamps.
  */
 @Composable
 fun FilterDatePicker(
@@ -319,20 +324,19 @@ fun FilterDatePicker(
 }
 
 /**
- * A composable that provides a text field for selecting a single date from a date picker dialog.
- * This is a convenience wrapper around [DateRangePickerField] with a `maxRange` of 1.
+ * A wrapper around [DateRangePickerField] configured to allow only a single date selection.
  *
- * @param title The title of the date picker field.
- * @param placeholder The placeholder text to display when no date is selected.
- * @param value The currently selected date in milliseconds since epoch.
- * @param color The color scheme for the date picker.
- * @param isError Whether the date picker field is in an error state.
- * @param isAllSelectable Whether all dates are selectable.
- * @param errorText The error text to display when in an error state.
- * @param enabled Whether the date picker field is enabled.
- * @param isDisablePastSelection Whether to disable the selection of past dates.
- * @param isRequired Whether the field is required.
- * @param onValueChange A callback that is invoked when a date is selected.
+ * @param title The label displayed above the field.
+ * @param placeholder The text displayed when empty.
+ * @param value The selected date in milliseconds.
+ * @param color Custom colors for the picker.
+ * @param isError Error state flag.
+ * @param isAllSelectable Allow selection of holidays/weekends.
+ * @param errorText Text displayed in error state.
+ * @param enabled Whether interaction is allowed.
+ * @param isDisablePastSelection Prevent past date selection.
+ * @param isRequired Visual indicator for required fields.
+ * @param onValueChange Callback with the selected date.
  */
 @Composable
 fun SingleDatePickerField(
@@ -366,20 +370,22 @@ fun SingleDatePickerField(
 }
 
 /**
- * A composable that provides a text field for selecting a date range from a date picker dialog.
+ * A comprehensive form field for selecting a range of dates.
  *
- * @param title The title of the date picker field.
- * @param placeholder The placeholder text to display when no date is selected.
- * @param value The currently selected date range in milliseconds since epoch.
- * @param maxRange The maximum number of days that can be selected in a range.
- * @param color The color scheme for the date picker.
- * @param isError Whether the date picker field is in an error state.
- * @param isAllSelectable Whether all dates are selectable.
- * @param errorText The error text to display when in an error state.
- * @param enabled Whether the date picker field is enabled.
- * @param isDisablePastSelection Whether to disable the selection of past dates.
- * @param isRequired Whether the field is required.
- * @param onValueChange A callback that is invoked when a date range is selected.
+ * Triggers a bottom sheet or dialog containing the [DateRangePicker].
+ *
+ * @param title The label displayed above the field.
+ * @param placeholder Text displayed when empty.
+ * @param value List of timestamps (start and end) for the range.
+ * @param maxRange Maximum number of days allowed in the range.
+ * @param color Custom colors for the picker.
+ * @param isError Error state flag.
+ * @param isAllSelectable Allow selection of holidays/weekends.
+ * @param errorText Text displayed in error state.
+ * @param enabled Whether interaction is allowed.
+ * @param isDisablePastSelection Prevent past date selection.
+ * @param isRequired Visual indicator for required fields.
+ * @param onValueChange Callback with the list of selected timestamps.
  */
 @Composable
 fun DateRangePickerField(
@@ -467,15 +473,15 @@ fun DateRangePickerField(
 }
 
 /**
- * An expect composable for displaying a single-date picker.
+ * Platform-specific implementation for showing the single date picker dialog/modal.
  *
- * @param isShowDatePicker Whether to show the date picker.
- * @param onDismissRequest A callback that is invoked when the date picker is dismissed.
+ * @param isShowDatePicker Controls visibility of the picker.
+ * @param onDismissRequest Callback to close the picker.
  * @param value The currently selected date.
- * @param onSelectDate A callback that is invoked when a date is selected.
- * @param isDisablePastSelection Whether to disable the selection of past dates.
- * @param isAllSelectable Whether all dates are selectable.
- * @param color The color scheme for the date picker.
+ * @param onSelectDate Callback when a date is chosen.
+ * @param isDisablePastSelection Whether past dates are disabled.
+ * @param isAllSelectable Whether special days (holidays/weekends) are selectable.
+ * @param color Color theme.
  */
 @Composable
 expect fun SingleDatePicker(
@@ -489,16 +495,17 @@ expect fun SingleDatePicker(
 )
 
 /**
- * An expect composable for displaying a date range picker.
+ * Platform-specific implementation for showing the date range picker dialog/modal.
  *
- * @param isShowDatePicker Whether to show the date picker.
- * @param onDismissRequest A callback that is invoked when the date picker is dismissed.
- * @param value The currently selected date range.
- * @param onSelectDate A callback that is invoked when a date range is selected.
- * @param maxRange The maximum number of days that can be selected in a range.
- * @param isDisablePastSelection Whether to disable the selection of past dates.
- * @param isAllSelectable Whether all dates are selectable.
- * @param color The color scheme for the date picker.
+ * @param isShowDatePicker Controls visibility of the picker.
+ * @param onDismissRequest Callback to close the picker.
+ * @param value List of currently selected dates in the range.
+ * @param onSelectDate Callback when the range changes.
+ * @param title Optional title for the picker.
+ * @param maxRange Maximum allowed days in selection.
+ * @param isDisablePastSelection Whether past dates are disabled.
+ * @param isAllSelectable Whether special days are selectable.
+ * @param color Color theme.
  */
 @Composable
 expect fun DateRangePicker(
@@ -514,13 +521,9 @@ expect fun DateRangePicker(
 )
 
 /**
- * A composable that displays a calendar for selecting a single date.
+ * The core calendar composable for selecting a single date.
  *
- * @param value The currently selected date.
- * @param onSelectDate A callback that is invoked when a date is selected.
- * @param isAllSelectable Whether all dates are selectable.
- * @param isDisablePastSelection Whether to disable the selection of past dates.
- * @param color The color scheme for the date picker.
+ * Checks [LocalHolidayProvider] to style holidays.
  */
 @Composable
 fun DatePickerCalendar(
@@ -543,14 +546,14 @@ fun DatePickerCalendar(
 }
 
 /**
- * A composable that displays a calendar for selecting a date range.
+ * The core calendar composable for selecting a date range.
  *
- * @param value The currently selected date range.
- * @param onSelectDate A callback that is invoked when a date range is selected.
- * @param isDisablePastSelection Whether to disable the selection of past dates.
- * @param isAllSelectable Whether all dates are selectable.
- * @param maxSelection The maximum number of days that can be selected in a range.
- * @param color The color scheme for the date picker.
+ * Logic:
+ * - If a date inside the existing range is clicked, it deselects it.
+ * - If 0 or 1 dates are selected, clicking a new date forms the range (calculating validity against holidays).
+ * - If a range is already complete (2 dates), clicking a new date resets selection to just that new date.
+ *
+ * @param maxSelection Limits the maximum number of days allowed in a continuous range.
  */
 @Composable
 fun DateRangePickerCalendar(
@@ -590,6 +593,11 @@ fun DateRangePickerCalendar(
     )
 }
 
+/**
+ * Shared implementation for the Horizontal Calendar view.
+ *
+ * Handles month navigation and grid rendering.
+ */
 @Composable
 private fun BaseDatePickerCalendar(
     holidayList: List<LocalDate>,
@@ -649,6 +657,15 @@ private fun BaseDatePickerCalendar(
     }
 }
 
+/**
+ * Renders an individual day cell within the calendar grid.
+ *
+ * Handles visual states for:
+ * - Start/End of range (Full color circle)
+ * - In-between range (Lighter background)
+ * - Past dates (Disabled/Greyed out)
+ * - Weekends/Holidays (Red text)
+ */
 @Composable
 fun DayContent(
     selectedDate: List<LocalDate>,
@@ -713,6 +730,9 @@ fun DayContent(
 
 }
 
+/**
+ * Renders the header for the calendar, including Month/Year pickers and Weekday labels.
+ */
 @Composable
 private fun CalendarMonthHeader(
     month: CalendarMonth,
@@ -949,6 +969,9 @@ object DatePickerDefault {
         )
 }
 
+/**
+ * Checks if a specific date is active (selectable) based on holidays and weekends.
+ */
 private fun isActiveDate(
     date: LocalDate,
     holidayList: List<LocalDate>,
@@ -959,6 +982,11 @@ private fun isActiveDate(
     return !isHoliday && !isWeekend
 }
 
+/**
+ * Applies custom background drawing for range highlighting.
+ *
+ * Draws circles for start/end dates and a rectangle for in-between dates.
+ */
 private fun Modifier.datePickerHighlight(
     isStart: Boolean,
     isEnd: Boolean,

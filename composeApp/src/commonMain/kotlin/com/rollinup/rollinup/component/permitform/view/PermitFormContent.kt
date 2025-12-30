@@ -70,6 +70,18 @@ import rollin_up.composeapp.generated.resources.msg_permit_submit_success
 import rollin_up.composeapp.generated.resources.ph_permit_note
 import rollin_up.composeapp.generated.resources.ph_permit_reason
 
+/**
+ * The internal content of the permit form, rendering the input fields.
+ *
+ * Handles:
+ * - Dynamic Duration Section based on permit type.
+ * - Reason selection (Sick/Other) for Absence permits.
+ * - File attachment with size validation.
+ * - Note input.
+ *
+ * @param formData The current data state of the form.
+ * @param onUpdateFormData Callback to update the form data.
+ */
 @Composable
 fun PermitFormContent(
     formData: PermitFormData,
@@ -131,6 +143,21 @@ fun PermitFormContent(
     )
 }
 
+/**
+ * High-level wrapper for the Permit Form Content.
+ *
+ * Responsibilities:
+ * - Displays loading overlays.
+ * - Handles side effects for submission state (Success/Error snackbars).
+ * - Renders the form header and submit button.
+ * - Resets specific fields when switching permit types (e.g., Absence -> Dispensation).
+ *
+ * @param uiState The current UI state from the ViewModel.
+ * @param cb The callback interface for ViewModel actions.
+ * @param onSuccess Callback for successful submission.
+ * @param onError Callback for failed submission.
+ * @param onShowSnackbar Callback to display snackbars.
+ */
 @Composable
 fun PermitFormContent(
     uiState: PermitFormUiState,
@@ -194,6 +221,11 @@ fun PermitFormContent(
     }
 }
 
+/**
+ * Renders the Reason selection section (Sick vs Other).
+ *
+ * If "Other" is selected, it displays a text field for entering a custom reason.
+ */
 @Composable
 fun PermitReasonSection(
     onUpdateFormData: (PermitFormData) -> Unit,
@@ -244,6 +276,12 @@ fun PermitReasonSection(
     }
 }
 
+/**
+ * Renders the appropriate duration input based on the [PermitType].
+ *
+ * - **Absence**: Uses a [DateRangePickerField].
+ * - **Dispensation**: Uses a [TimeDurationTextField] and validates against school hours.
+ */
 @Composable
 fun PermitFormDurationSection(
     formData: PermitFormData,
@@ -318,6 +356,11 @@ fun PermitFormDurationSection(
     }
 }
 
+/**
+ * Header for the Permit Form.
+ *
+ * Displays the title and allows switching the permit type via a selector.
+ */
 @Composable
 fun PermitFormHeader(
     title: String,
@@ -390,6 +433,9 @@ fun PermitFormHeader(
     )
 }
 
+/**
+ * Displays a shimmer loading effect mimicking the structure of the permit form.
+ */
 @Composable
 fun PermitLoadingContent(
     isEdit: Boolean,

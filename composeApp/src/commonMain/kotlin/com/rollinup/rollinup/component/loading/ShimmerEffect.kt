@@ -20,7 +20,17 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.rollinup.rollinup.component.theme.theme
 
-
+/**
+ * A convenience composable for creating a rectangular shimmer placeholder with specific dimensions.
+ *
+ * This component is typically used to represent loading states for UI elements like text lines or buttons.
+ *
+ * @param width The width of the shimmer box.
+ * @param height The height of the shimmer box.
+ * @param cornerRad The radius of the rounded corners.
+ * @param durationMillis The duration of one animation cycle (fade in/out).
+ * @param modifier Additional modifiers to apply to the component.
+ */
 @Composable
 fun ShimmerEffect(
     width: Dp = 60.dp,
@@ -39,6 +49,15 @@ fun ShimmerEffect(
     )
 }
 
+/**
+ * The base composable for rendering a shimmer effect.
+ *
+ * It creates an infinite pulsing animation by modulating the alpha of the background color.
+ * The animation oscillates (reverses) to create a smooth breathing effect.
+ *
+ * @param modifier The modifier to be applied to the layout. This determines the size and shape of the shimmer area.
+ * @param durationMillis The duration of the animation cycle in milliseconds.
+ */
 @Composable
 fun ShimmerEffect(
     modifier: Modifier,
