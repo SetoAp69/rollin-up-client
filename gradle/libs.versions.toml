@@ -1,4 +1,8 @@
 [versions]
+version="1.0.4"
+name="com.rollinup.rollinup"
+applicationId = "com.rollinup.rollinup"
+vendor = "com.rollinup"
 agp = "8.8.0"
 android-compileSdk = "36"
 android-minSdk = "29"

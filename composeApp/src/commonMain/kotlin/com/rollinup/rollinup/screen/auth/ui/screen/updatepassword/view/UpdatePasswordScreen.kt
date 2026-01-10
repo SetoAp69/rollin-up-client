@@ -7,7 +7,7 @@ import com.rollinup.apiservice.model.common.Role
 import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.theme.localUser
 import com.rollinup.rollinup.component.utils.getDeviceId
-import com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.viewmodel.UpdatePasswordViewModel
+import com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.viewmodel.VerifyAccountViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -15,7 +15,7 @@ fun UpdatePasswordScreen(
     onSuccess: () -> Unit,
     onShowSnackBar: OnShowSnackBar,
 ) {
-    val viewModel: UpdatePasswordViewModel = koinViewModel()
+    val viewModel: VerifyAccountViewModel = koinViewModel()
     val cb = viewModel.getCallback()
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val loginData = localUser

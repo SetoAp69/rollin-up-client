@@ -57,6 +57,7 @@ actual fun AppNavHost(
     loginData: LoginEntity?,
     onRefreshSetting: () -> Unit,
     onLogout: () -> Unit,
+    onFinish: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
@@ -110,6 +111,7 @@ actual fun AppNavHost(
                 },
                 navController = navController,
                 onRefreshSetting = {},
+                onFinish = onFinish
             )
         }
     }

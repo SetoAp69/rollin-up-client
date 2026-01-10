@@ -14,7 +14,7 @@ import com.rollinup.apiservice.model.common.Result
 import com.rollinup.rollinup.CoroutineTestRule
 import com.rollinup.rollinup.screen.auth.model.updatepassword.UpdatePasswordCallback
 import com.rollinup.rollinup.screen.auth.model.updatepassword.UpdatePasswordFormData
-import com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.uistate.UpdatePasswordUiState
+import com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.uistate.VerifyAccountUiState
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -35,7 +35,7 @@ import kotlin.test.assertTrue
 
 class UpdatePasswordViewModelTest {
 
-    private lateinit var viewModel: UpdatePasswordViewModel
+    private lateinit var viewModel: VerifyAccountViewModel
     private lateinit var cb: UpdatePasswordCallback
 
     @MockK
@@ -50,7 +50,7 @@ class UpdatePasswordViewModelTest {
     @Before
     fun init() {
         MockKAnnotations.init(this)
-        viewModel = UpdatePasswordViewModel(
+        viewModel = VerifyAccountViewModel(
             updatePasswordAndVerificationUseCase = updatePasswordAndVerificationUseCase,
             submitVerificationOtpUseCase = submitVerificationUseCase,
             resendVerificationOtpUseCase = resendVerificationUseCase
@@ -109,7 +109,7 @@ class UpdatePasswordViewModelTest {
     fun `reset()_should reset ui state with default value`() {
         //Arrange
         val user = LoginEntity(id = "myUser")
-        val expected = UpdatePasswordUiState()
+        val expected = VerifyAccountUiState()
 
         viewModel.init(user)
 

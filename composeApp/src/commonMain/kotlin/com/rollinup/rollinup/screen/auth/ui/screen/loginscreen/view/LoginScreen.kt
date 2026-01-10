@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.michaelflisar.lumberjack.core.L
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.Role
 import com.rollinup.rollinup.component.model.OnShowSnackBar
@@ -31,7 +32,6 @@ fun LoginScreen(
     val loginData = uiState.loginData
     val deviceId = getDeviceId()
 
-
     DisposableEffect(uiState.loginState) {
         uiState.loginState?.let {
             val isFirstTimeLogin = loginData?.isVerified == false
@@ -45,6 +45,7 @@ fun LoginScreen(
                     }
 
                     deviceIsNotValid -> {
+                        L.wtf{deviceId}
                         showUnauthorizedDeviceDialog = true
                     }
 

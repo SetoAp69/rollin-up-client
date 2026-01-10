@@ -4,6 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.michaelflisar.lumberjack.core.L
 import com.rollinup.rollinup.component.theme.LocalAuthViewmodel
 import com.rollinup.rollinup.screen.auth.navigation.AuthNavigationRoute
 import com.rollinup.rollinup.screen.auth.navigation.authGraph
@@ -16,13 +17,16 @@ fun NavGraphBuilder.appGraph(
     navController: NavHostController,
     onShowSnackBar: (String, Boolean) -> Unit,
     onRefreshSetting: () -> Unit,
+    onFinish: () -> Unit,
 ) {
     fun navigateTo(route: String) {
         navController.navigate(route)
     }
 
     fun navigateUp() {
-        navController.popBackStack()
+        if(navController.previousBackStackEntry!=null){
+            navController.navigateUp()
+        }
     }
 
     composable(NavigationRoute.SplashScreen.route) {
@@ -46,8 +50,9 @@ fun NavGraphBuilder.appGraph(
         route = NavigationRoute.Auth.route
     ) {
         authGraph(
-            navController = navController,
             onShowSnackBar = onShowSnackBar,
+            onNavigateTo = ::navigateTo,
+            onNavigateUp = ::navigateUp
         )
     }
 
@@ -64,8 +69,9 @@ fun NavGraphBuilder.appGraph(
     }
 
     authGraph(
-        navController = navController,
         onShowSnackBar = onShowSnackBar,
+        onNavigateTo = ::navigateTo,
+        onNavigateUp = ::navigateUp
     )
 
 }

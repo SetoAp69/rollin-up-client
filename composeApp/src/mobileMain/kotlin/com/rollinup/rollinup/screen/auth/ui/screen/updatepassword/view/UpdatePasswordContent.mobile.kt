@@ -11,12 +11,12 @@ import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.screen.auth.model.updatepassword.UpdatePasswordCallback
 import com.rollinup.rollinup.screen.auth.model.updatepassword.UpdatePasswordStep
-import com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.uistate.UpdatePasswordUiState
+import com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.uistate.VerifyAccountUiState
 
 @Composable
 actual fun UpdatePasswordContent(
     cb: UpdatePasswordCallback,
-    uiState: UpdatePasswordUiState,
+    uiState: VerifyAccountUiState,
     onShowSnackBar: OnShowSnackBar,
 ) {
     Scaffold(

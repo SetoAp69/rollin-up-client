@@ -60,7 +60,8 @@ fun App(
         RollinUpTheme {
             NavigationHost(
                 onRefreshSetting = { generalSettingViewModel.init() },
-                onLogout = { authViewModel.logout() }
+                onLogout = { authViewModel.logout() },
+                onFinish = onFinish
             )
             SecurityAlertDialog(
                 showDialog = securityAlerts.isNotEmpty(),

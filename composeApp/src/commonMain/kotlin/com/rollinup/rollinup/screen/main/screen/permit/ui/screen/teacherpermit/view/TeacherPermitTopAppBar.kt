@@ -59,6 +59,7 @@ fun TeacherPermitTopAppBar(
         items = uiState.itemSelected,
         cb = cb
     )
+
     ExportAlertDialog(
         isShowDialog = showExportDialog,
         fileName = stringResource(Res.string.label_permit),

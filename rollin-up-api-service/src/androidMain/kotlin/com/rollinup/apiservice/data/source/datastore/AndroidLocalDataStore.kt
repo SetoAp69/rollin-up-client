@@ -1,8 +1,6 @@
 package com.rollinup.apiservice.data.source.datastore
 
-import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -13,25 +11,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
-import okio.Path.Companion.toPath
-import java.io.File
 
-class AndroidLocalDataStore(context: Context) : LocalDataStore {
-    val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.createWithPath {
-
-        val file = File(
-            context
-                .filesDir
-                .resolve(Constant.LOCAL_DATA_STORE_PATH + Constant.LOCAL_DATA_STORE_NAME)
-                .absolutePath
-        ).apply { parentFile?.mkdirs() }
-
-        if (!file.exists()) {
-            file.createNewFile()
-        }
-
-        file.absolutePath.toPath()
-    }
+class AndroidLocalDataStore(private val dataStore: DataStore<Preferences>) : LocalDataStore {
 
     override suspend fun getToken(): String {
         return dataStore.data.map { datastore -> datastore[stringPreferencesKey(Constant.ACCESS_TOKEN_KEY)] }

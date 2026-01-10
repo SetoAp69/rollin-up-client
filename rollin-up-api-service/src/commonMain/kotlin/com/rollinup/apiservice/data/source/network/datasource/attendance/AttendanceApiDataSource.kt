@@ -28,35 +28,35 @@ import io.ktor.http.contentType
  *
  * @property httpClient The Ktor client instance used to make network requests.
  */
-class AttendanceApiDataSource(
-    private val httpClient: HttpClient,
-) : AttendanceApiService {
-    val baseUrl = "/attendance"
+    class AttendanceApiDataSource(
+        private val httpClient: HttpClient,
+    ) : AttendanceApiService {
+        val baseUrl = "/attendance"
 
-    /**
-     * Retrieves a list of attendance records for a specific student.
-     *
-     * @param id The unique identifier of the student.
-     * @param query A map of query parameters (e.g., date range, filters).
-     * @return [ApiResponse] containing [GetAttendanceListByStudentResponse].
-     */
-    override suspend fun getAttendanceListByStudent(
-        id: String,
-        query: Map<String, String?>,
-    ): ApiResponse<GetAttendanceListByStudentResponse> {
-        return try {
-            val response = httpClient.get("$baseUrl/by-student/$id") {
-                query.forEach { (key, value) ->
-                    parameter(key, value)
+        /**
+         * Retrieves a list of attendance records for a specific student.
+         *
+         * @param id The unique identifier of the student.
+         * @param query A map of query parameters (e.g., date range, filters).
+         * @return [ApiResponse] containing [GetAttendanceListByStudentResponse].
+         */
+        override suspend fun getAttendanceListByStudent(
+            id: String,
+            query: Map<String, String?>,
+        ): ApiResponse<GetAttendanceListByStudentResponse> {
+            return try {
+                val response = httpClient.get("$baseUrl/by-student/$id") {
+                    query.forEach { (key, value) ->
+                        parameter(key, value)
+                    }
                 }
+                val body = response.body<GetAttendanceListByStudentResponse>()
+                ApiResponse.Success(data = body, statusCode = response.status)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                ApiResponse.Error(e)
             }
-            val body = response.body<GetAttendanceListByStudentResponse>()
-            ApiResponse.Success(data = body, statusCode = response.status)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            ApiResponse.Error(e)
         }
-    }
 
     /**
      * Retrieves an attendance summary (stats) for a specific student.

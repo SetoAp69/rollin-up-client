@@ -99,7 +99,7 @@ private fun getSSEClient(localDataStore: LocalDataStore) = HttpClient {
     }
 
     install(SSE) {
-        maxReconnectionAttempts = 5
+        maxReconnectionAttempts = 100
         reconnectionTime = 2.seconds
         bufferPolicy = SSEBufferPolicy.LastEvents(10)
     }
@@ -116,7 +116,7 @@ private fun getClient(localDataStore: LocalDataStore) = HttpClient {
     }
 
     install(HttpTimeout) {
-        requestTimeoutMillis = 3000
+        requestTimeoutMillis = 10000
     }
 
     install(ContentNegotiation) {

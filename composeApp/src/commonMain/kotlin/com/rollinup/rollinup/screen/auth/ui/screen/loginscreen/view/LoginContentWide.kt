@@ -7,13 +7,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,15 +36,17 @@ import com.rollinup.rollinup.screen.auth.model.login.LoginCallback
 import com.rollinup.rollinup.screen.auth.model.login.LoginFormData
 import com.rollinup.rollinup.screen.auth.navigation.AuthNavigationRoute
 import com.rollinup.rollinup.screen.auth.ui.screen.loginscreen.uistate.LoginUiState
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.ic_launcher_logo_foreground_24
 import rollin_up.composeapp.generated.resources.label_login
 import rollin_up.composeapp.generated.resources.msg_forgot_password
 import rollin_up.composeapp.generated.resources.ph_password
 import rollin_up.composeapp.generated.resources.ph_username_email
 
 @Composable
-fun LoginContentWide(
+fun     LoginContentWide(
     uiState: LoginUiState,
     cb: LoginCallback,
     onNavigateTo: (String) -> Unit,
@@ -68,13 +73,22 @@ fun LoginContentWide(
                     onSubmit = cb.onLogin,
                     onNavigateTo = onNavigateTo
                 )
-                Box(
+                Column (
                     modifier = Modifier
                         .background(theme.primary)
                         .weight(1f)
                         .fillMaxHeight(),
-                    contentAlignment = Alignment.BottomCenter
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    Spacer(modifier= Modifier.weight(1f))
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_launcher_logo_foreground_24),
+                        contentDescription = null,
+                        tint = theme.textBtnPrimary,
+                        modifier = Modifier.size(128.dp)
+                    )
+                    Spacer(modifier= Modifier.weight(1f))
                     Text(
                         text = getVersion(),
                         color = theme.chipSecondaryBg,

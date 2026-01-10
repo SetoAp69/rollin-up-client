@@ -11,4 +11,5 @@ expect fun AppNavHost(
     loginData: LoginEntity?,
     onRefreshSetting: () -> Unit,
     onLogout: () -> Unit,
+    onFinish:()->Unit,
 )

@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
-class AttendanceViewModel(
+class AttendanceByClassViewModel(
     private val getAttendanceByClassListUseCase: GetAttendanceByClassListUseCase,
     private val getAttendanceByIdUseCase: GetAttendanceByIdUseCase,
     private val getAttendanceByClassSummaryUseCase: GetAttendanceByClassSummaryUseCase,

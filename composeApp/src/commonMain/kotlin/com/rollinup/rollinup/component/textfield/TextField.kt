@@ -28,6 +28,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -458,6 +460,7 @@ fun PasswordTextField(
     placeholder: String,
     modifier: Modifier = Modifier,
     title: String = "",
+    layoutId:String = "input",
     titleStyle: TextStyle = Style.body,
     isError: Boolean = false,
     errorMsg: String? = null,
@@ -495,6 +498,7 @@ fun PasswordTextField(
                 placeholder = placeholder,
                 modifier = modifier,
                 isError = isError,
+                layoutId = layoutId,
                 isReadOnly = false,
                 maxLines = 1,
                 minLines = 1,
@@ -578,6 +582,7 @@ fun TextField(
     trailingIcon: DrawableResource?? = null,
     keyboardActions: KeyboardActions? = null,
     keyboardOptions: KeyboardOptions? = null,
+    layoutId:String = "input",
     visualTransformation: VisualTransformation = VisualTransformation.None,
 ) {
     val iconColor = when {
@@ -626,6 +631,7 @@ fun TextField(
                 placeholder = placeholder,
                 modifier = modifier,
                 height = height,
+                layoutId = layoutId,
                 isError = isError,
                 isEnabled = isEnabled,
                 isReadOnly = isReadOnly,
@@ -687,6 +693,7 @@ fun BaseTextField(
     trailingContent: @Composable (() -> Unit)? = null,
     isSingleLine: Boolean = true,
     keyboardActions: KeyboardActions? = null,
+    layoutId:String = "input",
     keyboardOptions: KeyboardOptions? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
 ) {
@@ -727,6 +734,7 @@ fun BaseTextField(
             onValueChange(newValue)
         },
         modifier = modifier
+            .testTag(layoutId)
             .height(height)
             .fillMaxWidth(),
         enabled = isEnabled,

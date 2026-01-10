@@ -45,7 +45,6 @@ class StudentDashboardViewmodel(
 
     fun init(userData: LoginEntity?) {
         if (userData == null) return
-
         _uiState.update {
             it.copy(
                 user = userData
@@ -53,6 +52,32 @@ class StudentDashboardViewmodel(
         }
         getAttendanceList()
         getSummary()
+    }
+
+    private fun showAttendanceDetail(id: String) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoadingDetail = true) }
+            getAttendanceByIdUseCase(id).collectLatest { result ->
+                when (result) {
+                    is Result.Error -> {
+                        _uiState.update {
+                            it.copy(
+                                isLoadingDetail = false,
+                            )
+                        }
+                    }
+
+                    is Result.Success -> {
+                        _uiState.update {
+                            it.copy(
+                                isLoadingDetail = false,
+                                attendanceDetail = result.data
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun getAttendanceList() {
@@ -123,32 +148,6 @@ class StudentDashboardViewmodel(
         getSummary()
         getAttendanceList()
 //                    _globalSetting.value = result.data
-    }
-
-    private fun showAttendanceDetail(id: String) {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoadingDetail = true) }
-            getAttendanceByIdUseCase(id).collectLatest { result ->
-                when (result) {
-                    is Result.Error -> {
-                        _uiState.update {
-                            it.copy(
-                                isLoadingDetail = false,
-                            )
-                        }
-                    }
-
-                    is Result.Success -> {
-                        _uiState.update {
-                            it.copy(
-                                isLoadingDetail = false,
-                                attendanceDetail = result.data
-                            )
-                        }
-                    }
-                }
-            }
-        }
     }
 
     private fun checkIn(attachment: MultiPlatformFile, location: Location) {

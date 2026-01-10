@@ -47,7 +47,7 @@ import org.junit.Test
 
 class AttendanceViewModelTest {
 
-    private lateinit var viewModel: AttendanceViewModel
+    private lateinit var viewModel: AttendanceByClassViewModel
 
     @MockK
     private lateinit var getAttendanceByClassListUseCase: GetAttendanceByClassListUseCase
@@ -123,7 +123,7 @@ class AttendanceViewModelTest {
     @Before
     fun setup() {
         MockKAnnotations.init(this, relaxed = true)
-        viewModel = AttendanceViewModel(
+        viewModel = AttendanceByClassViewModel(
             getAttendanceByClassListUseCase,
             getAttendanceByIdUseCase,
             getAttendanceByClassSummaryUseCase,

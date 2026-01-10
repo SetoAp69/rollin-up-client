@@ -4,7 +4,7 @@ import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.rollinup.screen.auth.model.updatepassword.UpdatePasswordFormData
 import com.rollinup.rollinup.screen.auth.model.updatepassword.UpdatePasswordStep
 
-data class UpdatePasswordUiState(
+data class VerifyAccountUiState(
     val isLoadingOverlay: Boolean = false,
     val user: LoginEntity? = null,
     val formData: UpdatePasswordFormData = UpdatePasswordFormData(),

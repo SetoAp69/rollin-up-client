@@ -70,6 +70,4 @@ interface AttendanceRepository {
     fun getAttendanceExportData(
         queryParams: GetExportAttendanceDataQueryParams,
     ): Flow<Result<ExportAttendanceDataEntity, NetworkError>>
-
-
 }

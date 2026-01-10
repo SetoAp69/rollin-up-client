@@ -1,6 +1,5 @@
 package com.rollinup.rollinup.screen.auth.navigation
 
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.rollinup.apiservice.model.auth.LoginEntity
@@ -16,12 +15,10 @@ import com.rollinup.rollinup.screen.auth.ui.screen.resetpassword.view.ResetPassw
 import com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.view.UpdatePasswordScreen
 
 fun NavGraphBuilder.authGraph(
-    navController: NavController,
+    onNavigateUp: () -> Unit,
+    onNavigateTo: (String) -> Unit,
     onShowSnackBar: OnShowSnackBar,
 ) {
-    val onNavigateUp: () -> Unit = { navController.popBackStack() }
-    val onNavigateTo: (String) -> Unit = { navController.navigate(it) }
-
     composable(route = AuthNavigationRoute.Login.route) {
         val authViewModel = LocalAuthViewmodel.current
         LoginScreen(
@@ -29,15 +26,6 @@ fun NavGraphBuilder.authGraph(
             onShowSnackBar = onShowSnackBar,
             onLogout = { authViewModel.logout() }
         ) { loginData ->
-//            navController.navigate(
-//                NavigationRoute.MainRoute.navigate(
-//                    loginData.role
-//                )
-//            ) {
-//                popUpTo(AuthNavigationRoute.Login.route) {
-//                    inclusive = true
-//                }
-//            }
             authViewModel.login(loginData)
         }
     }

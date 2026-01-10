@@ -12,19 +12,19 @@ import com.rollinup.apiservice.model.common.Result
 import com.rollinup.rollinup.screen.auth.model.updatepassword.UpdatePasswordCallback
 import com.rollinup.rollinup.screen.auth.model.updatepassword.UpdatePasswordFormData
 import com.rollinup.rollinup.screen.auth.model.updatepassword.UpdatePasswordStep
-import com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.uistate.UpdatePasswordUiState
+import com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.uistate.VerifyAccountUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class UpdatePasswordViewModel(
+class VerifyAccountViewModel(
     private val updatePasswordAndVerificationUseCase: UpdatePasswordAndVerificationUseCase,
     private val submitVerificationOtpUseCase: SubmitVerificationOtpUseCase,
     private val resendVerificationOtpUseCase: ResendVerificationOtpUseCase,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(UpdatePasswordUiState())
+    private val _uiState = MutableStateFlow(VerifyAccountUiState())
     val uiState = _uiState.asStateFlow()
 
     fun init(user: LoginEntity?) {
@@ -48,7 +48,7 @@ class UpdatePasswordViewModel(
         )
 
     fun reset() {
-        _uiState.value = UpdatePasswordUiState()
+        _uiState.value = VerifyAccountUiState()
     }
 
     fun resetForm() {

@@ -9,7 +9,7 @@ import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.theme.localUser
 import com.rollinup.rollinup.component.utils.getPlatform
-import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancehome.viewmodel.AttendanceViewModel
+import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancehome.viewmodel.AttendanceByClassViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -18,7 +18,7 @@ fun AttendanceHomeScreen(
     onNavigateTo: (String) -> Unit,
     onShowSnackBar: OnShowSnackBar,
 ) {
-    val viewModel: AttendanceViewModel = koinViewModel()
+    val viewModel: AttendanceByClassViewModel = koinViewModel()
     val cb = viewModel.getCallback()
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     val pagingData = viewModel.pagingData.collectAsLazyPagingItems()

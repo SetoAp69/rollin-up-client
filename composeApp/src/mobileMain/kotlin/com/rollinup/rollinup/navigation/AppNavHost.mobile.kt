@@ -33,6 +33,7 @@ actual fun AppNavHost(
     loginData: LoginEntity?,
     onRefreshSetting: () -> Unit,
     onLogout: () -> Unit,
+    onFinish: () -> Unit,
 ) {
     var isSuccess: Boolean? by remember { mutableStateOf(null) }
     var bottomBarHeight by remember { mutableStateOf(0.dp) }
@@ -71,7 +72,10 @@ actual fun AppNavHost(
         }
     ) { paddingValues ->
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = paddingValues.calculateBottomPadding())
+            ,
             contentAlignment = Alignment.BottomCenter
         ) {
             Box(
@@ -87,7 +91,8 @@ actual fun AppNavHost(
                         onShowSnackBar = { msg, success ->
                             isSuccess = success
                             showSnackBar(msg)
-                        }
+                        },
+                        onFinish = onFinish
                     )
                 }
             }

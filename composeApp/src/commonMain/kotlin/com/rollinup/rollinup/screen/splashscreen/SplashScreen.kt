@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,7 +24,10 @@ import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.utils.Utils
 import com.rollinup.rollinup.component.utils.getVersion
 import com.rollinup.rollinup.screen.splashscreen.viewmodel.SplashScreenViewmodel
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.ic_launcher_logo_foreground_24
 
 @Composable
 fun SplashScreen(
@@ -74,8 +78,15 @@ fun SplashScreen(
                             color = Color.White,
                             shape = RoundedCornerShape(12.dp)
                         )
-                        .size(100.dp)
+                        .size(100.dp),
+                    contentAlignment = Alignment.Center
                 ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_launcher_logo_foreground_24),
+                        contentDescription = "App Logo",
+                        tint = theme.primary,
+                        modifier = Modifier.size(64.dp)
+                    )
                 }
             }
             Box(

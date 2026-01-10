@@ -31,7 +31,7 @@ import com.rollinup.rollinup.component.utils.Utils
 import com.rollinup.rollinup.screen.auth.model.updatepassword.UpdatePasswordCallback
 import com.rollinup.rollinup.screen.auth.model.updatepassword.UpdatePasswordFormData
 import com.rollinup.rollinup.screen.auth.ui.screen.resetpassword.view.OTPTextField
-import com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.uistate.UpdatePasswordUiState
+import com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.uistate.VerifyAccountUiState
 import kotlinx.coroutines.delay
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
@@ -47,14 +47,14 @@ import rollin_up.composeapp.generated.resources.ph_reenter_new_password
 @Composable
 expect fun UpdatePasswordContent(
     cb: UpdatePasswordCallback,
-    uiState: UpdatePasswordUiState,
+    uiState: VerifyAccountUiState,
     onShowSnackBar: OnShowSnackBar,
 )
 
 @Composable
 fun SubmitOtpForm(
     cb: UpdatePasswordCallback,
-    uiState: UpdatePasswordUiState,
+    uiState: VerifyAccountUiState,
     onRequestOtp: () -> Unit,
 ) {
     var timeInSecond by remember { mutableStateOf(LocalTime(0, 1, 20).toSecondOfDay()) }

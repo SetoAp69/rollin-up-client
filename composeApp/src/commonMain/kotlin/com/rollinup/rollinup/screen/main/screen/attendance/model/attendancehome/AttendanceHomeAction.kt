@@ -7,7 +7,7 @@ import rollin_up.composeapp.generated.resources.ic_info_line_24
 
 enum class AttendanceHomeAction(val label: String, val icon: DrawableResource) {
     HISTORY_BY_STUDENT(
-        label = "History by student",
+        label = "Attendance by student",
         icon = Res.drawable.ic_document_line_24
     ),
     DETAIL(

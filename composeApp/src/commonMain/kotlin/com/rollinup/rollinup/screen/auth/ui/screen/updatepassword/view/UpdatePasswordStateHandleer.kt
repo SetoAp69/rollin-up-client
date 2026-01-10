@@ -3,7 +3,7 @@ package com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.view
 import androidx.compose.runtime.Composable
 import com.rollinup.rollinup.component.handlestate.HandleState
 import com.rollinup.rollinup.component.model.OnShowSnackBar
-import com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.uistate.UpdatePasswordUiState
+import com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.uistate.VerifyAccountUiState
 import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.msg_otp_send_error
@@ -13,7 +13,7 @@ import rollin_up.composeapp.generated.resources.msg_password_update_success
 
 @Composable
 fun UpdatePasswordStateHandler(
-    uiState: UpdatePasswordUiState,
+    uiState: VerifyAccountUiState,
     onSuccess: () -> Unit,
     onDispose: () -> Unit,
     onShowSnackBar: OnShowSnackBar,

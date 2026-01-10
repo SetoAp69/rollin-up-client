@@ -22,7 +22,7 @@ if (envPropertiesFile.exists()) {
     envPropertiesFile.inputStream().use { envProperties.load(it) }
 }
 
-val appVersion = "1.0.3"
+val appVersion = "1.0.4"
 
 val buildConfigGenerator by tasks.registering(Sync::class) {
     from(
@@ -281,7 +281,6 @@ android {
             manifestPlaceholders["crashlyticsCollectionEnabled"] = "true"
             manifestPlaceholders["version"] = defaultConfig.versionName + "-" + versionNameSuffix
             manifestPlaceholders["appName"] = "@string/app_name"
-            manifestPlaceholders["mainActivity"] = ".TalsecApplication"
             proguardFile(rootProject.file("androidProguard.pro"))
             signingConfig = signingConfigs.getByName("release")
         }
@@ -291,7 +290,6 @@ android {
             applicationIdSuffix = ".debug"
             manifestPlaceholders["version"] = defaultConfig.versionName + "-" + versionNameSuffix
             manifestPlaceholders["appName"] = "@string/app_name"
-            manifestPlaceholders["mainActivity"] = ".MainActivity"
             manifestPlaceholders["crashlyticsCollectionEnabled"] = "false"
         }
     }

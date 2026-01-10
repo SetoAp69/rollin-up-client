@@ -11,6 +11,6 @@ interface GlobalSettingRepository {
     fun getGlobalSetting(): Flow<Result<GlobalSetting, NetworkError>>
     fun editGlobalSetting(body: EditGlobalSettingBody): Flow<Result<Unit, NetworkError>>
     suspend fun getCachedGlobalSetting(): GlobalSetting?
-    suspend fun updateCachedGlobalSetting(globalSetting: GlobalSetting): Unit
+    suspend fun updateCachedGlobalSetting(globalSetting: GlobalSetting):Unit
 
 }

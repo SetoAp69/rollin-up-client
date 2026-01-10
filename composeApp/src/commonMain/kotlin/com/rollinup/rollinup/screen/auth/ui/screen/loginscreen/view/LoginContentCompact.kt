@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.unit.dp
 import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.button.Button
@@ -87,6 +88,7 @@ private fun LoginForm(
         TextField(
             placeholder = stringResource(Res.string.ph_username_email),
             value = formData.email,
+            layoutId = "inputUsernameEmail",
             maxChar = 30,
             onValueChange = { value ->
                 onUpdateForm(
@@ -111,7 +113,9 @@ private fun LoginForm(
                 )
             },
             placeholder = stringResource(Res.string.ph_password),
-            modifier = Modifier.fillMaxWidth(),
+            layoutId = "inputPassword",
+            modifier = Modifier
+                .fillMaxWidth(),
             isError = formData.passwordError != null,
             errorMsg = formData.passwordError
         )
@@ -123,7 +127,9 @@ private fun LoginForm(
                 onSubmit(formData)
             },
             text = stringResource(Res.string.label_login),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .layoutId("btn_login")
+                .fillMaxWidth()
         )
     }
 }
