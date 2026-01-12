@@ -17,14 +17,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.rollinup.common.utils.Utils.toLocalDate
 import com.rollinup.rollinup.component.button.IconButton
-import com.rollinup.rollinup.component.date.FilterDatePicker
+import com.rollinup.rollinup.component.date.DateRangePicker
+import com.rollinup.rollinup.component.date.DesktopFilterDatePicker
 import com.rollinup.rollinup.component.export.ExportAlertDialog
 import com.rollinup.rollinup.component.filter.TableFilterRow
 import com.rollinup.rollinup.component.selector.MultiDropDownSelector
 import com.rollinup.rollinup.component.selector.SingleDropDownSelector
 import com.rollinup.rollinup.component.textfield.SearchTextField
 import com.rollinup.rollinup.component.theme.theme
+import com.rollinup.rollinup.component.utils.getFileName
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitFilterData
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitTab
 import com.rollinup.rollinup.screen.main.screen.permit.model.teacherpermit.TeacherPermitCallback
@@ -34,8 +37,8 @@ import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_print_line_24
 import rollin_up.composeapp.generated.resources.label_class
 import rollin_up.composeapp.generated.resources.label_date
+import rollin_up.composeapp.generated.resources.label_permit
 import rollin_up.composeapp.generated.resources.label_permit_type
-import rollin_up.composeapp.generated.resources.label_reason
 import rollin_up.composeapp.generated.resources.label_search
 import rollin_up.composeapp.generated.resources.label_status
 
@@ -46,6 +49,8 @@ fun TeacherPermitTableFilter(
     cb: TeacherPermitCallback,
 ) {
     var showExportDialog by remember { mutableStateOf(false) }
+    var showDatePicker by remember { mutableStateOf(false) }
+    val fileName = stringResource(Res.string.label_permit)
 
     Row(
         modifier = Modifier
@@ -70,13 +75,28 @@ fun TeacherPermitTableFilter(
         IconButton(
             icon = Res.drawable.ic_print_line_24,
         ) {
-            showExportDialog = true
+            showDatePicker = true
         }
         TeacherPermitTableFilterRow(uiState, cb)
     }
+    DateRangePicker(
+        isShowDatePicker = showDatePicker,
+        onDismissRequest = { showDatePicker = it },
+        value = uiState.filterData.dateRange.map { it.toLocalDate() },
+        onSelectDate = { value ->
+            cb.onUpdateExportDateRange(value)
+            showExportDialog = true
+        },
+        title = "Select date ranges",
+        isDisablePastSelection = false,
+        isAllSelectable = true,
+    )
     ExportAlertDialog(
         isShowDialog = showExportDialog,
-        fileName = stringResource(Res.string.label_reason),
+        fileName = getFileName(
+            dateRange = uiState.exportDateRange,
+            fileName = fileName
+        ),
         onDismissRequest = { showExportDialog = it },
         onConfirm = cb.onExportFile
     )
@@ -92,7 +112,7 @@ private fun TeacherPermitTableFilterRow(
         showReset = uiState.filterData != PermitFilterData(),
     ) {
         Box(modifier = Modifier.width(145.dp)) {
-            FilterDatePicker(
+            DesktopFilterDatePicker(
                 title = stringResource(Res.string.label_date),
                 value = uiState.filterData.dateRange,
                 enabled = true,

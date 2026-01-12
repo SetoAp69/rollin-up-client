@@ -54,12 +54,15 @@ import com.kizitonwose.calendar.core.minusMonths
 import com.kizitonwose.calendar.core.now
 import com.kizitonwose.calendar.core.plusDays
 import com.kizitonwose.calendar.core.plusMonths
+import com.rollinup.common.model.Severity
 import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.common.utils.Utils.toEpochMilli
 import com.rollinup.common.utils.Utils.toFormattedString
 import com.rollinup.common.utils.Utils.toLocalDate
+import com.rollinup.rollinup.component.chip.Chip
 import com.rollinup.rollinup.component.dropdown.DropDownMenu
 import com.rollinup.rollinup.component.dropdown.DropDownMenuItem
+import com.rollinup.rollinup.component.filter.FilterHeaderLoading
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
@@ -256,7 +259,7 @@ fun SingleFilterDatePicker(
  * @param onValueChange Callback returning the list of selected timestamps.
  */
 @Composable
-fun FilterDatePicker(
+fun DesktopFilterDatePicker(
     title: String,
     value: List<Long>,
     enabled: Boolean,
@@ -323,49 +326,64 @@ fun FilterDatePicker(
     )
 }
 
-/**
- * A wrapper around [DateRangePickerField] configured to allow only a single date selection.
- *
- * @param title The label displayed above the field.
- * @param placeholder The text displayed when empty.
- * @param value The selected date in milliseconds.
- * @param color Custom colors for the picker.
- * @param isError Error state flag.
- * @param isAllSelectable Allow selection of holidays/weekends.
- * @param errorText Text displayed in error state.
- * @param enabled Whether interaction is allowed.
- * @param isDisablePastSelection Prevent past date selection.
- * @param isRequired Visual indicator for required fields.
- * @param onValueChange Callback with the selected date.
- */
 @Composable
-fun SingleDatePickerField(
+fun FilterDatePicker(
     title: String,
-    placeholder: String,
-    value: Long?,
-    color: DatePickerColor = DatePickerDefault.color,
-    isError: Boolean = false,
-    isAllSelectable: Boolean = false,
-    errorText: String? = null,
-    enabled: Boolean = true,
-    isDisablePastSelection: Boolean = true,
-    isRequired: Boolean = false,
-    onValueChange: (Long?) -> Unit,
+    value: List<Long>,
+    isLoading: Boolean = false,
+    onValueChange: (List<Long>) -> Unit,
 ) {
-    DateRangePickerField(
-        title = title,
-        placeholder = placeholder,
-        value = value?.let { listOf(it) } ?: emptyList(),
-        maxRange = 1,
-        color = color,
-        isError = isError,
-        isAllSelectable = isAllSelectable,
-        errorText = errorText,
-        enabled = enabled,
-        isDisablePastSelection = isDisablePastSelection,
-        isRequired = isRequired
-    ) {
-        onValueChange(it.firstOrNull())
+    var showDatePicker by remember { mutableStateOf(false) }
+    val value = value.sortedBy { it }.map { it.toLocalDate() }
+    val valueString = when {
+        value.isEmpty() -> null
+        value.size == 1 -> value.first().toString()
+        else -> value.first().toString() + " - " + value.last().toString()
+    }
+    Box {
+        Column(
+            modifier = Modifier.padding(top = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            if (isLoading) {
+                FilterHeaderLoading()
+            } else {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .clickable {
+                            showDatePicker = true
+                        }
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = title,
+                        style = Style.popupTitle,
+                        color = theme.textPrimary
+                    )
+                    valueString?.let {
+                        Chip(
+                            text = it,
+                            severity = Severity.SECONDARY
+                        )
+                    }
+                }
+            }
+            HorizontalDivider(thickness = 1.dp, color = theme.lineStroke)
+        }
+        DateRangePicker(
+            isShowDatePicker = showDatePicker,
+            onDismissRequest = { showDatePicker = it },
+            value = value,
+            onSelectDate = { value ->
+                onValueChange(
+                    value.map { it.toEpochMilli() }
+                )
+            },
+            title = title,
+            isDisablePastSelection = true,
+            isAllSelectable = true,
+        )
     }
 }
 
@@ -387,6 +405,7 @@ fun SingleDatePickerField(
  * @param isRequired Visual indicator for required fields.
  * @param onValueChange Callback with the list of selected timestamps.
  */
+
 @Composable
 fun DateRangePickerField(
     title: String,
@@ -423,7 +442,7 @@ fun DateRangePickerField(
     val lineColor = if (isError) theme.danger else theme.textPrimary
     val interactionSource = remember { MutableInteractionSource() }
 
-    Box{
+    Box {
         TextFieldTitle(
             title = title,
             isRequired = isRequired

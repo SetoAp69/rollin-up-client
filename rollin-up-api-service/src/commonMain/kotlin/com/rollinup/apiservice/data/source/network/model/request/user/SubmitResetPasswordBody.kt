@@ -7,6 +7,6 @@ import kotlinx.serialization.Serializable
 data class SubmitResetPasswordBody(
     @SerialName("token")
     val token: String = "",
-    @SerialName("newPasword")
+    @SerialName("newPassword")
     val newPassword: String = "",
 )

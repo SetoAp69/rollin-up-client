@@ -14,13 +14,13 @@ data class CreateEditUserFormData(
     val phone: String? = null,
     val email: String? = null,
 
-    val userNameError: String? = null,
-    val firstNameError: String? = null,
-    val lastNameError: String? = null,
-    val studentIdError: String? = null,
-    val addressError: String? = null,
-    val phoneError: String? = null,
-    val emailError: String? = null,
+    val userNameError: CreateEditUserFormErrorType? = null,
+    val firstNameError: CreateEditUserFormErrorType? = null,
+    val lastNameError: CreateEditUserFormErrorType? = null,
+    val studentIdError: CreateEditUserFormErrorType? = null,
+    val addressError: CreateEditUserFormErrorType? = null,
+    val phoneError: CreateEditUserFormErrorType? = null,
+    val emailError: CreateEditUserFormErrorType? = null,
 
     //SelectorError
     val genderError: Boolean = false,

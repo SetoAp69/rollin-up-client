@@ -2,7 +2,7 @@
     <string name="app_name">Aplikasi Keren Saya</string>
     <string name="welcome_message">Halo, %1$s!</string>
 
-    <string name="msg_export_alert_dialog">Data %1$s akan diekspor ke folder unduhan default sebagai **%1$s**</string>
+    <string name="msg_export_alert_dialog">Data akan diekspor ke folder unduhan default sebagai **%1$s**.xlsx</string>
     <string name="msg_camera_permission_denied">Izin kamera belum diberikan, Anda dapat mengubah izin melalui pengaturan</string>
     <string name="msg_camera_face_position">Pastikan wajah Anda dapat terdeteksi dengan jelas</string>
     <string name="msg_location_permission_denied">Izin lokasi belum diberikan, Anda dapat mengubah izin melalui pengaturan</string>
@@ -17,7 +17,10 @@
     <string name="msg_user_edit_success">Sukses, data pengguna berhasil diperbarui.</string>
     <string name="msg_user_edit_error">Error, data pengguna tidak berhasil diperbarui, silakan coba lagi.</string>
     <string name="msg_first_name_max_error">Nama depan tidak boleh lebih dari 15 karakter</string>
+    <string name="msg_first_name_empty_error">Nama depan tidak boleh kosong</string>
     <string name="msg_last_name_max_error">Nama belakang tidak boleh lebih dari 15 karakter</string>
+    <string name = "msg_student_id_contain_space_error">Nomor induk siswa tidak boleh mengandung spasi </string>
+    <string name="msg_last_name_empty_error">Nama belakang tidak boleh kosong</string>
     <string name="msg_birthday_error_empty">Kesalahan, tanggal lahir tidak boleh kosong</string>
     <string name="msg_phone_error_max">Nomor telepon tidak boleh lebih dari 16 karakter</string>
     <string name="msg_address_error_max">Alamat tidak boleh lebih dari 30 karakter</string>
@@ -36,6 +39,13 @@
     <string name="msg_otp_send_error">Error, OTP tidak berhasil dikirim, silakan coba lagi.</string>
     <string name="msg_password_update_success">Sukses, kata sandi berhasil diperbarui.</string>
     <string name="msg_password_update_error">Error, kata sandi tidak berhasil diperbarui, silakan coba lagi.</string>
+    <string name="msg_email_invalid_error">Format email invalid</string>
+    <string name="msg_email_empty_error">Email tidak boleh kosong</string>
+    <string name="msg_email_exist_error">Email telah terdaftar</string>
+    <string name="msg_username_empty_error">Nama pengguna tidak boleh kosong</string>
+    <string name="msg_username_exist_error">Nama pengguna telah terpakai</string>
+    <string name="msg_username_invalid_error">Nama pengguna tidak boleh mengandung spasi</string>
+    <string name="msg_student_id_empty_error">Nomor induk siswa tidak boleh kosong</string>
     <string name="msg_otp_already_sent">Kode OTP sudah dikirim ke email Anda. Anda dapat meminta OTP baru setelah 2 menit.</string>
 
     <string name="label_cancel">Batal</string>
@@ -51,7 +61,7 @@
     <string name="label_name">Nama</string>
     <string name="label_created_at">Dibuat pada</string>
     <string name="label_id">ID</string>
-    <string name="label_student_id">ID Siswa</string>
+    <string name="label_student_id">Nomor Induk</string>
     <string name="label_view_attachment">Lihat Lampiran</string>
     <string name="label_class">Kelas</string>
     <string name="label_duration">Durasi</string>
@@ -129,4 +139,6 @@
     <string name="ph_new_password">Masukkan kata sandi baru</string>
     <string name="ph_reenter_new_password">Masukkan ulang kata sandi baru</string>
     <string name="ph_email">Masukkan email Anda</string>
+    <string name="ph_student_id">Masukan nomor induk siswa</string>
+
 </resources>

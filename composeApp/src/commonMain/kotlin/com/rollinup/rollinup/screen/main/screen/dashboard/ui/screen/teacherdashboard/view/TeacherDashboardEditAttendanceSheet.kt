@@ -230,7 +230,7 @@ private fun Header(
                 Chip(
                     text = formData.status.label,
                     trailingIcon = Res.drawable.ic_edit_line_24,
-                    onClickTrailIcon = {
+                    onClick = {
                         showSelectStatus = true
                     },
                     severity = formData.status.severity
@@ -303,9 +303,9 @@ private fun PermitFormContent(
     val duration = formData.permitFormData.duration
     LaunchedEffect(duration) {
         if (duration.isNotEmpty()) {
-            val from = duration.first()!!.parseToLocalDateTime()
-            val to = duration.last()!!.parseToLocalDateTime()
-            val today = LocalDateTime(LocalDate.now(), LocalTime(0, 0, 0))
+            val from = duration.first()!!.parseToLocalDateTime().date
+            val to = duration.last()!!.parseToLocalDateTime().date
+            val today = LocalDate.now()
             if (today !in from..to) {
                 onUpdateFormData(
                     formData.copy(

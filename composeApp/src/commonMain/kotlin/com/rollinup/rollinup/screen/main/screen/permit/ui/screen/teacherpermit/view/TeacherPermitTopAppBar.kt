@@ -5,9 +5,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.rollinup.common.utils.Utils.toLocalDate
+import com.rollinup.rollinup.component.date.DateRangePicker
 import com.rollinup.rollinup.component.export.ExportAlertDialog
 import com.rollinup.rollinup.component.model.Menu
 import com.rollinup.rollinup.component.topbar.TopBar
+import com.rollinup.rollinup.component.utils.getFileName
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitTab
 import com.rollinup.rollinup.screen.main.screen.permit.model.teacherpermit.TeacherPermitCallback
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.uistate.TeacherPermitUiState
@@ -25,6 +28,8 @@ fun TeacherPermitTopAppBar(
     var showFilter by remember { mutableStateOf(false) }
     var showAction by remember { mutableStateOf(false) }
     var showExportDialog by remember { mutableStateOf(false) }
+    var showDatePicker by remember { mutableStateOf(false) }
+    val fileName = stringResource(Res.string.label_permit)
 
     TopBar(
         onSearch = cb.onSearch,
@@ -36,7 +41,7 @@ fun TeacherPermitTopAppBar(
                 }
 
                 Menu.ACTION -> showAction = true
-                Menu.PRINT -> showExportDialog = true
+                Menu.PRINT -> showDatePicker = true
 
 
                 else -> {}
@@ -59,10 +64,24 @@ fun TeacherPermitTopAppBar(
         items = uiState.itemSelected,
         cb = cb
     )
-
+    DateRangePicker(
+        isShowDatePicker = showDatePicker,
+        onDismissRequest = { showDatePicker = it },
+        value = uiState.filterData.dateRange.map { it.toLocalDate() },
+        onSelectDate = { value ->
+            cb.onUpdateExportDateRange(value)
+            showExportDialog = true
+        },
+        title = "Select date ranges",
+        isDisablePastSelection = false,
+        isAllSelectable = true,
+    )
     ExportAlertDialog(
         isShowDialog = showExportDialog,
-        fileName = stringResource(Res.string.label_permit),
+        fileName = getFileName(
+            dateRange = uiState.exportDateRange,
+            fileName = fileName
+        ),
         onDismissRequest = { showExportDialog = it },
         onConfirm = cb.onExportFile
     )

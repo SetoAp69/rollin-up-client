@@ -32,7 +32,7 @@ import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.textfield.SearchTextField
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
-import com.rollinup.rollinup.component.utils.getAttendanceRecordFileName
+import com.rollinup.rollinup.component.utils.getFileName
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardFilterData
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
@@ -106,7 +106,7 @@ fun AttendanceTableHeader(
 
     ExportAlertDialog(
         isShowDialog = showExportDialog,
-        fileName = getAttendanceRecordFileName(uiState.exportDateRanges, "attendance"),
+        fileName = getFileName(uiState.exportDateRanges, "attendance"),
         onDismissRequest = { showExportDialog = it },
         onConfirm = {
             cb.onExportFile(it)

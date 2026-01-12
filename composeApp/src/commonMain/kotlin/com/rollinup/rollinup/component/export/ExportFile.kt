@@ -1,10 +1,8 @@
 package com.rollinup.rollinup.component.export
 
 import androidx.compose.runtime.Composable
-import com.rollinup.common.utils.Utils.now
 import com.rollinup.rollinup.component.dialog.AlertDialog
 import com.rollinup.rollinup.component.utils.toAnnotatedString
-import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 import org.koin.core.module.Module
 import rollin_up.composeapp.generated.resources.Res
@@ -12,7 +10,6 @@ import rollin_up.composeapp.generated.resources.ic_file_export_line_24
 import rollin_up.composeapp.generated.resources.label_cancel
 import rollin_up.composeapp.generated.resources.label_confirm
 import rollin_up.composeapp.generated.resources.msg_export_alert_dialog
-import rollin_up.composeapp.generated.resources.welcome_message
 
 /**
  * Koin module provider for the file export functionality.
@@ -47,14 +44,12 @@ fun ExportAlertDialog(
     onDismissRequest: (Boolean) -> Unit,
     onConfirm: (String) -> Unit,
 ) {
-    val exportedFileName = "$fileName-${LocalDate.now()}"
-    val string = stringResource(Res.string.welcome_message, exportedFileName)
     AlertDialog(
         title = "Export File",
         icon = Res.drawable.ic_file_export_line_24,
-        content = stringResource(Res.string.msg_export_alert_dialog).toAnnotatedString(),
+        content = stringResource(Res.string.msg_export_alert_dialog, fileName).toAnnotatedString(),
         onClickCancel = { onDismissRequest(false) },
-        onClickConfirm = { onConfirm(exportedFileName) },
+        onClickConfirm = { onConfirm(fileName) },
         btnCancelText = stringResource(Res.string.label_cancel),
         btnConfirmText = stringResource(Res.string.label_confirm),
         isShowDialog = isShowDialog,

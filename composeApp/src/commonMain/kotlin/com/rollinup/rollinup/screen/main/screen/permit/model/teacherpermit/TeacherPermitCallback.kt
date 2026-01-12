@@ -2,6 +2,7 @@ package com.rollinup.rollinup.screen.main.screen.permit.model.teacherpermit
 
 import com.rollinup.apiservice.model.permit.PermitByClassEntity
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitFilterData
+import kotlinx.datetime.LocalDate
 
 data class TeacherPermitCallback(
     val onUpdateSelection: (PermitByClassEntity) -> Unit = {},
@@ -13,4 +14,5 @@ data class TeacherPermitCallback(
     val onResetSelection: () -> Unit = {},
     val onExportFile: (String) -> Unit = {},
     val onResetMessageState: () -> Unit = {},
+    val onUpdateExportDateRange:(List<LocalDate>)->Unit = {}
 )

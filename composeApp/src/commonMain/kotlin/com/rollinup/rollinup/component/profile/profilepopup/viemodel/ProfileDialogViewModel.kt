@@ -17,6 +17,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.msg_first_name_empty_error
+import rollin_up.composeapp.generated.resources.msg_last_name_empty_error
 
 class ProfileDialogViewModel(
     private val getUserByIdUseCase: GetUserByIdUseCase,
@@ -24,7 +27,6 @@ class ProfileDialogViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProfileDialogUiState())
     val uiState = _uiState.asStateFlow()
-
     fun init(id: String, showEdit: Boolean) {
         _uiState.update { it.copy(isLoading = true, showEdit = showEdit) }
         viewModelScope.launch {
@@ -84,20 +86,14 @@ class ProfileDialogViewModel(
         var formData = formData
         if (formData.firstName?.isBlank() ?: false) {
             formData = formData.copy(
-                firstNameError = "First name can\'t be empty"
+                firstNameError = Res.string.msg_first_name_empty_error.toString()
             )
         }
         if (formData.lastName?.isBlank() ?: false) {
             formData = formData.copy(
-                lastNameError = "Last name can\'t be empty"
+                lastNameError = Res.string.msg_last_name_empty_error.toString()
             )
         }
-        if (formData.email?.isBlank() ?: false) {
-            formData = formData.copy(
-                emailError = "Email can\'t be empty"
-            )
-        }
-
         _uiState.update {
             it.copy(formData = formData)
         }

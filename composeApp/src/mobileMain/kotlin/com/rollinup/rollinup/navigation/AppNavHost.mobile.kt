@@ -74,7 +74,7 @@ actual fun AppNavHost(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = paddingValues.calculateBottomPadding())
+                .padding(bottom = if(showBottomBar) paddingValues.calculateBottomPadding() else 0.dp)
             ,
             contentAlignment = Alignment.BottomCenter
         ) {

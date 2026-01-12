@@ -1,11 +1,11 @@
-package com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view
+package com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
@@ -17,7 +17,9 @@ fun TeacherDashboardContentDesktop(
     uiState: TeacherDashboardUiState,
     cb: TeacherDashboardCallback,
 ) {
-    Scaffold {
+    Scaffold(
+        showLoadingOverlay = uiState.isLoadingOverlay
+    ) {
         Column(
             modifier = Modifier.padding(24.dp)
         ) {

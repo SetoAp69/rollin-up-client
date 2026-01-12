@@ -12,27 +12,10 @@ class TableState<T>(
 ) {
     var currentPage by mutableStateOf(1)
     var pageSize by mutableStateOf(pageSizeOptions.first())
-//    var selectedItem by mutableStateOf(emptyList<T>())
-
-//    fun toggleSelection(item: T) {
-//        selectedItem = if (item in selectedItem) {
-//            selectedItem.filter { it != item }
-//        } else {
-//            selectedItem + item
-//        }
-//    }
 
     fun updatePageSize(size: Int) {
         pageSize = size
     }
-
-//    fun toggleSelectAll(items: List<T>) {
-//        selectedItem = if (items.size == selectedItem.size) {
-//            emptyList()
-//        } else {
-//            items
-//        }
-//    }
 
     fun nextPage() {
         currentPage++

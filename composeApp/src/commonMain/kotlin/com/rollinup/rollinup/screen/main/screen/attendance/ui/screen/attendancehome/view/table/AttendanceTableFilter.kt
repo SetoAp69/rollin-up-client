@@ -26,7 +26,7 @@ import com.rollinup.rollinup.component.selector.SingleDropDownSelector
 import com.rollinup.rollinup.component.spacer.popupPadding
 import com.rollinup.rollinup.component.textfield.SearchTextField
 import com.rollinup.rollinup.component.theme.theme
-import com.rollinup.rollinup.component.utils.getAttendanceRecordFileName
+import com.rollinup.rollinup.component.utils.getFileName
 import com.rollinup.rollinup.screen.main.screen.attendance.model.attendancehome.AttendanceCallback
 import com.rollinup.rollinup.screen.main.screen.attendance.model.attendancehome.AttendanceFilterData
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancehome.uistate.AttendanceUiState
@@ -107,7 +107,7 @@ fun AttendanceTableFilter(
 
     ExportAlertDialog(
         isShowDialog = showExportDialog,
-        fileName = getAttendanceRecordFileName(uiState.exportDateRanges, "Attendance"),
+        fileName = getFileName(uiState.exportDateRanges, "Attendance"),
         onDismissRequest = { showExportDialog = it },
         onConfirm = {
             cb.onExportFile(it)

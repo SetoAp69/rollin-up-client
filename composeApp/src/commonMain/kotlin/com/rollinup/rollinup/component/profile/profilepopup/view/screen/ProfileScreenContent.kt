@@ -205,7 +205,7 @@ private fun ProfileInfoSection(
         ProfileInfoField(
             title = stringResource(string.label_student_id),
             icon = Res.drawable.ic_id_card_line_24,
-            value = userDetail.id
+            value = userDetail.studentId.ifBlank { "-" }
         )
         ProfileInfoField(
             title = stringResource(string.label_class),
@@ -348,12 +348,11 @@ private fun EditProfileFormAdditionalSection(
         Box(modifier = Modifier.weight(1f)) {
             SingleDatePickerField(
                 title = stringResource(string.label_birthday),
-                placeholder = stringResource(string.ph_select_birthday),
+                placeHolder = stringResource(string.ph_select_birthday),
                 value = formData.birthDay,
                 isError = formData.birthDayError,
                 isAllSelectable = true,
-                errorText = stringResource(string.msg_birthday_error_empty),
-                enabled = true,
+                textError = stringResource(string.msg_birthday_error_empty),
                 isDisablePastSelection = false,
                 onValueChange = {
                     onUpdateFormData(

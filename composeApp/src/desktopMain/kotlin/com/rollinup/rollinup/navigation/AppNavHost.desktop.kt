@@ -2,6 +2,7 @@ package com.rollinup.rollinup.navigation
 
 import SnackBarHost
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -34,6 +36,7 @@ import com.rollinup.rollinup.component.button.IconButton
 import com.rollinup.rollinup.component.dropdown.DropDownMenu
 import com.rollinup.rollinup.component.dropdown.DropDownMenuItem
 import com.rollinup.rollinup.component.navigationrail.NavigationRail
+import com.rollinup.rollinup.component.profile.profilepopup.view.dialog.ProfileDialog
 import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
@@ -49,6 +52,7 @@ import kotlinx.coroutines.launch
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_drop_down_arrow_line_down_24
 import rollin_up.composeapp.generated.resources.ic_exit_line_24
+import rollin_up.composeapp.generated.resources.ic_user_line_24
 
 @Composable
 actual fun AppNavHost(
@@ -144,6 +148,7 @@ private fun NavHostTopBarContent(
     onLogOut: () -> Unit,
 ) {
     var showDropDown by remember { mutableStateOf(false) }
+    var showProfile by remember { mutableStateOf(false) }
 
     Row(verticalAlignment = Alignment.CenterVertically) {
         Column(horizontalAlignment = Alignment.End) {
@@ -163,10 +168,13 @@ private fun NavHostTopBarContent(
         Box(
             modifier = Modifier
                 .size(44.dp)
+                .clip(RoundedCornerShape(50))
                 .background(
                     color = theme.primary,
                     shape = RoundedCornerShape(50)
-                ),
+                )
+                .clickable{ showProfile = true }
+            ,
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -179,9 +187,15 @@ private fun NavHostTopBarContent(
         ActionDropDown(
             showDropDown = showDropDown,
             onToggleDropDown = { showDropDown = it },
-            onLogOut = onLogOut
+            onLogOut = onLogOut,
+            onClickProfile = { showProfile = true }
         )
     }
+    ProfileDialog(
+        id = userData.id,
+        isShowDialog = showProfile,
+        onDismissRequest = {showProfile = it},
+    )
 }
 
 @Composable
@@ -189,6 +203,7 @@ private fun ActionDropDown(
     showDropDown: Boolean,
     onToggleDropDown: (Boolean) -> Unit,
     onLogOut: () -> Unit,
+    onClickProfile:()->Unit,
 ) {
     val uiModeViewModel = LocalUiModeViewModel.current
     val uiMode = uiModeViewModel.uiMode.collectAsStateWithLifecycle().value
@@ -221,6 +236,11 @@ private fun ActionDropDown(
                     onValueChanges = { value -> uiModeViewModel.updateUiMode(value) }
                 )
             }
+            DropDownMenuItem(
+                label = "Profile",
+                icon = Res.drawable.ic_user_line_24,
+                onClick = onClickProfile
+            )
             DropDownMenuItem(
                 label = "Logout",
                 icon = Res.drawable.ic_exit_line_24,

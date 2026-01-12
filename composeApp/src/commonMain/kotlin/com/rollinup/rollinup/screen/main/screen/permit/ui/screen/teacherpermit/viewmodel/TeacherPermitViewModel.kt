@@ -3,11 +3,14 @@ package com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import com.rollinup.apiservice.data.source.network.model.request.permit.GetPermitListQueryParams
 import com.rollinup.apiservice.domain.permit.GetPermitByClassListUseCase
 import com.rollinup.apiservice.domain.permit.GetPermitByClassPagingUseCase
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.Result
 import com.rollinup.apiservice.model.permit.PermitByClassEntity
+import com.rollinup.apiservice.utils.Utils.toJsonString
+import com.rollinup.common.utils.Utils.toEpochMilli
 import com.rollinup.rollinup.component.date.DateFormatter
 import com.rollinup.rollinup.component.export.FileWriter
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitFilterData
@@ -19,6 +22,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 
 class TeacherPermitViewModel(
     private val getPermitByClassListUseCase: GetPermitByClassListUseCase,
@@ -52,6 +56,7 @@ class TeacherPermitViewModel(
             onResetSelection = ::resetSelection,
             onExportFile = ::exportFile,
             onResetMessageState = ::resetMessageState,
+            onUpdateExportDateRange = ::updateExportDateRange
         )
 
     private fun getItemList() {
@@ -176,10 +181,22 @@ class TeacherPermitViewModel(
         }
     }
 
+    private fun updateExportDateRange(dateRange: List<LocalDate>) {
+        _uiState.update {
+            it.copy(
+                exportDateRange = dateRange.sorted()
+            )
+        }
+    }
+
     private fun exportFile(fileName: String) {
         _uiState.update { it.copy(isLoadingOverlay = true, exportState = null) }
         viewModelScope.launch {
-            val queryParams = _uiState.value.queryParams
+            val dateRange = _uiState.value.exportDateRange.map { it.toEpochMilli() }
+            val queryParams = GetPermitListQueryParams(
+                dateRange = dateRange.toJsonString(),
+                isActive = (_uiState.value.currentTab == PermitTab.ACTIVE).toString(),
+            )
             val classKey = _uiState.value.user.classKey ?: return@launch
 
             getPermitByClassListUseCase(classKey, queryParams).collectLatest { result ->
@@ -207,7 +224,7 @@ class TeacherPermitViewModel(
                     }
 
                 }
-
+                _uiState.update { it.copy(exportDateRange = emptyList()) }
             }
         }
     }

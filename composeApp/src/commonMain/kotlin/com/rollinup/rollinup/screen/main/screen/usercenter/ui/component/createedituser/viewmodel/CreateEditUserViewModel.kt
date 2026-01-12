@@ -15,6 +15,7 @@ import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.common.utils.Utils.toEpochMillis
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.CreateEditUserCallback
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.CreateEditUserFormData
+import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.CreateEditUserFormErrorType
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.createedituser.uistate.CreateEditUserUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -120,23 +121,23 @@ class CreateEditUserViewModel(
                 formOptions.role.find { it.label.equals("Student", true) }?.value
 
         if (!isEdit && formData.userName.isNullOrBlank()) {
-            formData = formData.copy(userNameError = "Username can't be empty")
+            formData = formData.copy(userNameError = CreateEditUserFormErrorType.USERNAME_EMPTY)
         }
 
         if (!isEdit && formData.lastName.isNullOrBlank()) {
-            formData = formData.copy(lastNameError = "Last name can't be empty")
+            formData = formData.copy(lastNameError = CreateEditUserFormErrorType.LAST_NAME_EMPTY)
         }
 
         if (!isEdit && formData.firstName.isNullOrBlank()) {
-            formData = formData.copy(firstNameError = "First bane can't be empty")
+            formData = formData.copy(firstNameError = CreateEditUserFormErrorType.FIRST_NAME_EMPTY)
         }
 
         if (!isEdit && formData.studentId.isNullOrBlank() && isStudentRole) {
-            formData = formData.copy(studentIdError = "Student ID can't be empty")
+            formData = formData.copy(studentIdError = CreateEditUserFormErrorType.STUDENT_ID_EMPTY)
         }
 
         if (!isEdit && formData.email.isNullOrBlank()) {
-            formData = formData.copy(emailError = "Email can't be empty")
+            formData = formData.copy(emailError = CreateEditUserFormErrorType.EMAIL_EMPTY)
         }
 
         if (!isEdit && formData.selectorData.any { it == null }) {
@@ -179,7 +180,7 @@ class CreateEditUserViewModel(
             val query = CheckEmailOrUsernameQueryParams(username = username)
             checkEmailOrUsernameUseCase(query).collectLatest { result ->
                 val errorMessage =
-                    if (result is Result.Error) "Username is already used" else null
+                    if (result is Result.Error) CreateEditUserFormErrorType.USERNAME_EXIST else null
 
                 _uiState.update { state ->
                     state.copy(
@@ -197,7 +198,7 @@ class CreateEditUserViewModel(
             val query = CheckEmailOrUsernameQueryParams(email = email)
             checkEmailOrUsernameUseCase(query).collectLatest { result ->
                 val errorMessage =
-                    if (result is Result.Error) "Email is already used" else null
+                    if (result is Result.Error) CreateEditUserFormErrorType.EMAIL_EXIST else null
 
                 _uiState.update { state ->
                     state.copy(

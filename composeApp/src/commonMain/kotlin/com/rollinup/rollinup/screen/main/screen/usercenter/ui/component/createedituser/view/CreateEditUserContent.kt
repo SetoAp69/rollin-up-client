@@ -37,10 +37,30 @@ import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.CreateEditUserCallback
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.CreateEditUserFormData
+import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.CreateEditUserFormErrorType
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.CreateEditUserFormOption
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.createedituser.uistate.CreateEditUserUiState
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.createedituser.viewmodel.CreateEditUserViewModel
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_address
+import rollin_up.composeapp.generated.resources.label_birthday
+import rollin_up.composeapp.generated.resources.label_class
+import rollin_up.composeapp.generated.resources.label_first_name
+import rollin_up.composeapp.generated.resources.label_last_name
+import rollin_up.composeapp.generated.resources.label_phone
+import rollin_up.composeapp.generated.resources.label_role
+import rollin_up.composeapp.generated.resources.label_student_id
+import rollin_up.composeapp.generated.resources.msg_email_invalid_error
+import rollin_up.composeapp.generated.resources.msg_student_id_contain_space_error
+import rollin_up.composeapp.generated.resources.ph_address
+import rollin_up.composeapp.generated.resources.ph_email
+import rollin_up.composeapp.generated.resources.ph_first_name
+import rollin_up.composeapp.generated.resources.ph_last_name
+import rollin_up.composeapp.generated.resources.ph_phone
+import rollin_up.composeapp.generated.resources.ph_student_id
 
 @Composable
 fun CreateEditUserContent(
@@ -178,8 +198,8 @@ fun UserNameSection(
             }
         },
         onValueChange = { newValue ->
-            val errorMessage: String? = if (newValue.contains(" ")) {
-                "Username cannot contain space"
+            val errorMessage = if (newValue.contains(" ")) {
+                CreateEditUserFormErrorType.USERNAME_INVALID
             } else {
                 null
             }
@@ -195,7 +215,7 @@ fun UserNameSection(
         placeholder = "Enter username",
         title = "Username",
         isError = formData.userNameError != null,
-        errorMsg = formData.userNameError
+        errorMsg = formData.userNameError?.getErrorMessage()
     )
 }
 
@@ -208,11 +228,11 @@ fun NameSection(
     Row {
         Box(modifier = Modifier.weight(1f)) {
             TextField(
-                title = "First Name",
+                title = stringResource(Res.string.label_first_name),
                 isRequired = !isEdit,
                 maxChar = 15,
                 value = formData.firstName ?: "",
-                placeholder = "Enter first name",
+                placeholder = stringResource(Res.string.ph_first_name),
                 onValueChange = { value ->
                     onUpdateForm(
                         formData.copy(
@@ -222,28 +242,27 @@ fun NameSection(
                     )
                 },
                 isError = formData.firstNameError != null,
-                errorMsg = formData.firstNameError
+                errorMsg = formData.firstNameError?.getErrorMessage()
             )
         }
         Spacer(itemGap8)
         Box(modifier = Modifier.weight(1f)) {
             TextField(
                 isRequired = !isEdit,
-                title = "Last Name",
+                title = stringResource(Res.string.label_last_name),
                 maxChar = 15,
                 value = formData.lastName ?: "",
-                placeholder = "Enter last name",
+                placeholder = stringResource(Res.string.ph_last_name),
                 onValueChange = { value ->
                     onUpdateForm(
                         formData.copy(
                             lastName = value.ifBlank { null },
                             lastNameError = null
-
                         )
                     )
                 },
                 isError = formData.firstNameError != null,
-                errorMsg = formData.firstNameError
+                errorMsg = formData.firstNameError?.getErrorMessage()
             )
         }
     }
@@ -279,7 +298,7 @@ private fun SelectorSection(
             },
         )
         SingleDatePickerField(
-            title = "Birth day",
+            title = stringResource(Res.string.label_birthday),
             value = formData.birthDay,
             width = 120.dp,
             isError = formData.birthDayError,
@@ -293,7 +312,7 @@ private fun SelectorSection(
             }
         )
         SingleDropDownSelector(
-            title = "Role",
+            title = stringResource(Res.string.label_role),
             value = formData.role,
             isError = formData.roleError,
             isLoading = isLoading,
@@ -318,7 +337,7 @@ private fun SelectorSection(
                 )
             }
             SingleDropDownSelector(
-                title = "Class",
+                title = stringResource(Res.string.label_class),
                 value = formData.classId,
                 isError = formData.classError,
                 isLoading = isLoading,
@@ -353,8 +372,8 @@ private fun AdditionalInfoSection(
         TextField(
             isRequired = !uiState.isEdit,
             onValueChange = { newValue ->
-                val errorMessage: String? = if (newValue.contains(" ")) {
-                    "Student Id can't contain spaces"
+                val errorMessage = if (newValue.contains(" ")) {
+                    CreateEditUserFormErrorType.STUDENT_ID_INVALID
                 } else {
                     null
                 }
@@ -367,18 +386,18 @@ private fun AdditionalInfoSection(
                 )
             },
             value = formData.studentId ?: "",
-            placeholder = "Enter student id",
-            title = "Student Id",
+            placeholder = stringResource(Res.string.ph_student_id),
+            title = stringResource(Res.string.label_student_id),
             isError = formData.studentIdError != null,
-            errorMsg = formData.studentIdError
+            errorMsg = formData.studentIdError?.getErrorMessage()
         )
     }
 
     TextField(
-        title = "Address",
+        title = stringResource(Res.string.label_address),
         maxChar = 120,
         value = formData.address ?: "",
-        placeholder = "Enter address",
+        placeholder = stringResource(Res.string.ph_address),
         onValueChange = {
             onUpdateForm(
                 formData.copy(
@@ -388,10 +407,10 @@ private fun AdditionalInfoSection(
             )
         },
         isError = formData.addressError != null,
-        errorMsg = formData.addressError,
+        errorMsg = formData.addressError?.getErrorMessage(),
     )
     PhoneNumberTextField(
-        title = "Phone",
+        title = stringResource(Res.string.label_phone),
         value = formData.phone ?: "",
         maxChar = 16,
         onValueChange = {
@@ -402,9 +421,9 @@ private fun AdditionalInfoSection(
                 )
             )
         },
-        placeholder = "Enter phone number",
+        placeholder = stringResource(Res.string.ph_phone),
         isError = formData.phoneError != null,
-        errorMsg = formData.phoneError
+        errorMsg = formData.phoneError?.getErrorMessage()
     )
     TextField(
         title = "Email",
@@ -413,10 +432,10 @@ private fun AdditionalInfoSection(
         maxChar = 30,
         onValueChange = { newValue ->
             val errorMsg =
-                if (newValue.isNotBlank() && newValue.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex())) {
+                if (newValue.isBlank() ||  newValue.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex())) {
                     null
                 } else {
-                    "Invalid email format"
+                    CreateEditUserFormErrorType.EMAIL_INVALID
                 }
             onUpdateForm(
                 formData.copy(
@@ -430,9 +449,9 @@ private fun AdditionalInfoSection(
                 onCheckEmail(formData.email)
             }
         },
-        placeholder = "Enter email",
+        placeholder = stringResource(Res.string.ph_email),
         isError = formData.emailError != null,
-        errorMsg = formData.emailError
+        errorMsg = formData.emailError?.getErrorMessage()
     )
 }
 

@@ -28,4 +28,11 @@ fun TeacherDashboardStateHandler(
         onSuccess = onRefresh,
         onShowSnackBar = onShowSnackBar
     )
+    HandleState(
+        state = uiState.exportState,
+        successMsg = "Success, data successfully exported",
+        errorMsg = "Error, failed to export data, please try again",
+        onDispose = onResetMessageState,
+        onShowSnackBar = onShowSnackBar,
+    )
 }

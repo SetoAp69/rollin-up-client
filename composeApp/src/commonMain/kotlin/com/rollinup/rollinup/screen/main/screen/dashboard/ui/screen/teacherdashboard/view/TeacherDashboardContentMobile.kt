@@ -35,7 +35,8 @@ fun TeacherDashboardContentMobile(
     val selectedList = uiState.itemSelected.ifEmpty { listOf(selectedAttendance) }
 
     Scaffold(
-        showLoadingOverlay = uiState.isLoadingOverlay
+        showLoadingOverlay = uiState.isLoadingOverlay,
+        showBottomBar = true
     ) {
         Box(
             modifier = Modifier

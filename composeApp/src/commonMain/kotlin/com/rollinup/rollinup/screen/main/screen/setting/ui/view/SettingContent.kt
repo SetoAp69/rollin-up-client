@@ -44,7 +44,8 @@ fun SettingContent(
                 menu = emptyList(),
                 onNavigateUp = {},
             )
-        }
+        },
+        showBottomBar = true
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(itemGap4),

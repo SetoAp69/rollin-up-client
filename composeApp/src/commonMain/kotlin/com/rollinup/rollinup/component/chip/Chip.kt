@@ -31,6 +31,56 @@ import com.rollinup.rollinup.component.tooltip.ToolTip
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
+
+@Composable
+fun Chip(
+    text: String,
+    severity: Severity = Severity.PRIMARY,
+    textStyle: TextStyle = Style.chipContent,
+    leadingIcon: DrawableResource? = null,
+    trailingIcon: DrawableResource? = null,
+    onClick: () -> Unit = {},
+    toolTipContent: String = text,
+) {
+    val chipColor = generateChipColor(severity)
+
+    Chip(
+        text = text,
+        severity = severity,
+        textStyle = textStyle,
+        onClick = onClick,
+        leadingContent = leadingIcon?.let {
+            @Composable
+            {
+                CustomRipple(
+                    Color.Transparent
+                ) {
+                    Icon(
+                        painter = painterResource(it),
+                        contentDescription = null,
+                        tint = chipColor.contentColor,
+                        modifier = Modifier
+                            .size(16.dp)
+                    )
+                }
+            }
+        },
+        trailingContent = trailingIcon?.let {
+            @Composable
+            {
+                Icon(
+                    painter = painterResource(it),
+                    contentDescription = null,
+                    tint = chipColor.contentColor,
+                    modifier = Modifier
+                        .size(16.dp)
+                )
+            }
+        },
+        toolTipContent = toolTipContent
+    )
+}
+
 /**
  * A compact element that represents an input, attribute, or action.
  *
@@ -46,7 +96,7 @@ import org.jetbrains.compose.resources.painterResource
  * @param toolTipContent Optional text to display in a tooltip when hovering/long-pressing.
  */
 @Composable
-fun Chip(
+private fun Chip(
     text: String,
     severity: Severity = Severity.PRIMARY,
     textStyle: TextStyle = Style.chipContent,
@@ -121,13 +171,14 @@ fun Chip(
  * @param toolTipContent Optional text to display in a tooltip.
  */
 @Composable
-fun Chip(
+private fun Chip(
     text: String,
     severity: Severity = Severity.PRIMARY,
     textStyle: TextStyle = Style.chipContent,
     leadingContent: (@Composable () -> Unit)? = null,
     trailingContent: (@Composable () -> Unit)? = null,
     toolTipContent: String? = null,
+    onClick: () -> Unit = {},
 ) {
     val chipColor = generateChipColor(severity)
     val interactionSource = remember { MutableInteractionSource() }
@@ -143,7 +194,7 @@ fun Chip(
                 .clickable(
                     interactionSource = interactionSource,
                     indication = LocalIndication.current,
-                ) {}
+                ) { onClick() }
                 .background(
                     shape = RoundedCornerShape(50),
                     color = chipColor.containerColor

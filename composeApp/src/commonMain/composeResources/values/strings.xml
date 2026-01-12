@@ -2,7 +2,7 @@
     <string name="app_name">My Awesome App</string>
     <string name="welcome_message">Hello, %1$s!</string>
 
-    <string name="msg_export_alert_dialog">The %1$s data will be exported to your default download path as **%1$s**</string>
+    <string name="msg_export_alert_dialog">Data will be exported to your default download path as **%1$s**.xlsx</string>
     <string name="msg_camera_permission_denied">Camera permission is not granted, you can change the permission via settings</string>
     <string name="msg_camera_face_position">Make sure your face can be identified easily</string>
     <string name="msg_location_permission_denied">Location permission is not granted, you can change the permission via settings</string>
@@ -17,8 +17,12 @@
     <string name="msg_user_edit_success">Success, user data successfully edited.</string>
     <string name="msg_user_edit_error">Error, failed to edit user data, please try again.</string>
     <string name="msg_first_name_max_error">First name can\'t be more than 15 characters</string>
+    <string name="msg_first_name_empty_error">First name can\'t be empty</string>
+    <string name="msg_last_name_empty_error">Last name can\'t be empty</string>
     <string name="msg_last_name_max_error">First name can\'t be more than 15 characters</string>
-    <string name="msg_birthday_error_empty">Error, birthday can't be empty</string>
+    <string name="msg_birthday_error_empty">Error, birthday can\'t be empty</string>
+    <string name="msg_student_id_contain_space_error">Student ID can\'t contain space</string>
+    <string name="msg_email_invalid_error">Email format is invalid</string>
     <string name="msg_phone_error_max">Phone number can\'t be more than 16 characters</string>
     <string name="msg_address_error_max">Address can\'t be more than 30 characters</string>
     <string name="msg_multiple_security_alert">For security reasons, this application cannot continue running on this devices because multiple security issues</string>
@@ -37,6 +41,12 @@
     <string name="msg_password_update_success">Success, password successfully updated.</string>
     <string name="msg_password_update_error">Error, failed to update password please try again. </string>
     <string name="msg_otp_already_sent">We've already sent an OTP code to your email. You can request new otp after 2 minutes.</string>
+    <string name="msg_email_empty_error">Email can\'t be empty</string>
+    <string name="msg_username_empty_error">Username can\'t be empty</string>
+    <string name="msg_username_invalid_error">Username can\'t contain space</string>
+    <string name="msg_username_exist_error">Username is already been used</string>
+    <string name="msg_email_exist_error">Email is already been used</string>
+    <string name="msg_student_id_empty_error">Student id can\'t be empty</string>
 
     <string name="label_cancel">Cancel</string>
     <string name="label_all">All</string>
@@ -129,4 +139,6 @@
     <string name="ph_new_password">Enter new password</string>
     <string name="ph_reenter_new_password">Re-enter new password</string>
     <string name="ph_email">Enter your email</string>
+    <string name="ph_student_id">Enter student ID</string>
+
 </resources>

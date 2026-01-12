@@ -16,7 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.rollinup.rollinup.component.button.IconButton
-import com.rollinup.rollinup.component.date.FilterDatePicker
+import com.rollinup.rollinup.component.date.DesktopFilterDatePicker
 import com.rollinup.rollinup.component.export.ExportAlertDialog
 import com.rollinup.rollinup.component.filter.TableFilterRow
 import com.rollinup.rollinup.component.selector.MultiDropDownSelector
@@ -75,7 +75,7 @@ private fun AttendanceByStudentFilterRow(
         showReset = uiState.filterData != AttendanceByStudentFilterData(),
     ) {
         Box(modifier = Modifier.width(150.dp)) {
-            FilterDatePicker(
+            DesktopFilterDatePicker(
                 title = "Date",
                 value = uiState.filterData.dateRange,
                 enabled = true,

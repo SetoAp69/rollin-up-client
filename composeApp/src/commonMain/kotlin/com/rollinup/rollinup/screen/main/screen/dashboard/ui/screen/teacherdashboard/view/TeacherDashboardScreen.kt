@@ -12,6 +12,7 @@ import com.rollinup.rollinup.component.theme.localUser
 import com.rollinup.rollinup.component.utils.getPlatform
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
+import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardContentDesktop
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardContentMobile
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardStateHandler
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.viewmodel.TeacherDashboardViewModel

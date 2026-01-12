@@ -9,7 +9,7 @@ import com.rollinup.rollinup.component.date.DateRangePicker
 import com.rollinup.rollinup.component.export.ExportAlertDialog
 import com.rollinup.rollinup.component.model.Menu
 import com.rollinup.rollinup.component.topbar.TopBar
-import com.rollinup.rollinup.component.utils.getAttendanceRecordFileName
+import com.rollinup.rollinup.component.utils.getFileName
 import com.rollinup.rollinup.screen.main.screen.attendance.model.attendancehome.AttendanceCallback
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancehome.uistate.AttendanceUiState
 
@@ -67,7 +67,7 @@ fun AttendanceHomeTopBar(
 
     ExportAlertDialog(
         isShowDialog = showExportDialog,
-        fileName = getAttendanceRecordFileName(uiState.exportDateRanges, "attendance"),
+        fileName = getFileName(uiState.exportDateRanges, "attendance"),
         onDismissRequest = { showExportDialog = it },
         onConfirm = {
             cb.onExportFile(it)

@@ -9,6 +9,7 @@ import com.rollinup.apiservice.utils.Utils.toJsonString
 import com.rollinup.common.model.OptionData
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitFilterData
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitTab
+import kotlinx.datetime.LocalDate
 
 data class TeacherPermitUiState(
     val user: LoginEntity = LoginEntity(),
@@ -20,6 +21,7 @@ data class TeacherPermitUiState(
     val currentTab: PermitTab = PermitTab.ACTIVE,
     val filterData: PermitFilterData = PermitFilterData(),
     val exportState: Boolean? = null,
+    val exportDateRange:List<LocalDate> = emptyList(),
     val isMobile: Boolean = false,
 ) {
     val statusOptions

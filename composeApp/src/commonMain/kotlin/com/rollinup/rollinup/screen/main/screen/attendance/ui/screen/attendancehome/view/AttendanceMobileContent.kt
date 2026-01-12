@@ -108,15 +108,6 @@ private fun SelectorSection(
                 placeHolder = "",
                 value = uiState.filterData.date,
                 onValueChange = { millis ->
-//                    val newValue =
-//                        if (millis == null) emptyList<Long>()
-//                        else {
-//                            val from = LocalDateTime(millis.toLocalDate(), LocalTime(0, 0, 0))
-//                            val to = LocalDateTime(millis.toLocalDate(), LocalTime(23, 59, 59))
-//
-//                            listOf(from.toEpochMillis(), to.toEpochMillis())
-//                        }
-
                     cb.onFilter(
                         uiState.filterData.copy(
                             date = millis

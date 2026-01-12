@@ -13,7 +13,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.core.now
-import com.rollinup.rollinup.component.date.DateFormatter
 import com.rollinup.rollinup.component.model.Orientation
 import com.rollinup.rollinup.component.model.Platform
 import kotlinx.datetime.LocalDate
@@ -106,11 +105,13 @@ fun getCurrentDateAsList(): List<LocalDateTime> {
     return listOf(from, to)
 }
 
-fun getAttendanceRecordFileName(dateRange: List<LocalDate>, fileName: String): String {
+fun getFileName(dateRange: List<LocalDate>, fileName: String): String {
     return if (dateRange.isEmpty())
         fileName
-    else
-        DateFormatter.formatDateRange(dateRange.first(), dateRange.last()) + "-" + fileName
+    else{
+        val date = if(dateRange.size==1) dateRange.first().toString() else "${dateRange.first()}-${dateRange.last()}"
+        "${fileName}_$date"
+    }
 }
 
 @Composable

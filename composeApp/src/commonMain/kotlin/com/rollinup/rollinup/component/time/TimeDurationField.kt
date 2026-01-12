@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
 import com.rollinup.rollinup.component.model.Platform
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.textfield.TextError
@@ -83,7 +84,7 @@ fun TimeDurationTextField(
                 HorizontalDivider(
                     modifier = Modifier.weight(0.2f),
                     color = theme.textPrimary,
-                    thickness = itemGap8
+                    thickness = 2.dp
                 )
                 Box(modifier = Modifier.weight(1f)) {
                     TimeDurationItem(
@@ -162,7 +163,7 @@ private fun TimeDurationItem(
             )
             HorizontalDivider(
                 color = textColor,
-                thickness = itemGap8
+                thickness = 2.dp
             )
         }
 

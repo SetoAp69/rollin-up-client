@@ -1,5 +1,5 @@
 [versions]
-version="1.0.4"
+version="1.0.5"
 name="com.rollinup.rollinup"
 applicationId = "com.rollinup.rollinup"
 vendor = "com.rollinup"

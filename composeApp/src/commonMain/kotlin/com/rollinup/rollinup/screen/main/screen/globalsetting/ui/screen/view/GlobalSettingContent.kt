@@ -146,7 +146,7 @@ fun GlobalSettingTimeSectionContent(
         verticalArrangement = Arrangement.spacedBy(itemGap8),
     ) {
         TimePickerTextField(
-            title = "Attendance Period",
+            title = "Attendance Period Start",
             placeholder = "-",
             value = formData.attendanceStart,
             onValueChange = {

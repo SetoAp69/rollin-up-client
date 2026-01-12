@@ -21,7 +21,6 @@ class UiModeViewModel(
     fun getUiMode() {
         viewModelScope.launch {
             val value = getUiModeUseCase()
-            L.wtf { "$value" }
             _uiMode.update { value }
         }
     }

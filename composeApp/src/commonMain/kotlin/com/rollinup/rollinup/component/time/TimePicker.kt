@@ -165,8 +165,8 @@ fun TimePickerTextField(
                 )
             },
             onDismissRequest = { showBottomSheet = it },
-            min = minTime,
-            max = maxTime,
+            min = generalSetting.checkInPeriodStart,
+            max = generalSetting.schoolPeriodEnd,
         )
     }
 }

@@ -43,7 +43,7 @@ data class GlobalSetting(
         get() = _schoolPeriodEnd.toLocalTime()
 
     val checkInPeriodStart
-        get() = _checkInPeriodEnd.toLocalTime()
+        get() = _checkInPeriodStart.toLocalTime()
 
     val checkInPeriodEnd
         get() = _checkInPeriodEnd.toLocalTime()

@@ -17,16 +17,11 @@ class JVMFileWriter() : FileWriter {
             }
         }
         val dataFrame = dataFrameOf(*data.toTypedArray())
-        val os = file.outputStream()
-
         try {
             dataFrame.writeExcel(
                 file = file,
-//                outputStream = os,
                 sheetName = fileName,
-//                keepFile = true,
                 writeHeader = true,
-//                factory = HSSFWorkbook()
             )
         } catch (e: Exception) {
             e.printStackTrace()

@@ -34,7 +34,7 @@ class AndroidFileWriter(
 
 
         val values = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, "$fileName.csv")
+            put(MediaStore.MediaColumns.DISPLAY_NAME, "$fileName.xlsx")
             put(MediaStore.MediaColumns.IS_DOWNLOAD, true)
             put(MediaStore.MediaColumns.MIME_TYPE, MimeType.DOCUMENT_EXCEL_TYPE)
             put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)

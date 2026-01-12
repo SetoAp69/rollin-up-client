@@ -547,7 +547,7 @@ class TeacherDashboardViewModel(
                         _uiState.update {
                             it.copy(
                                 isLoadingOverlay = false,
-                                exportState = true
+                                exportState = false
                             )
                         }
                     }

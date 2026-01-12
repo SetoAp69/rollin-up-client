@@ -46,6 +46,9 @@ data class CreateEditUserBody(
         gender?.let {
             hashMap["gender"] = it
         }
+        birthDay?.let {
+            hashMap["birthday"] = it.toString()
+        }
         return hashMap
     }
 }

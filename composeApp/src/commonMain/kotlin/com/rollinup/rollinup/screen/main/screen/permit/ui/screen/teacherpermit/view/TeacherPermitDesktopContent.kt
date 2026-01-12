@@ -23,7 +23,9 @@ fun TeacherPermitDesktopContent(
     uiState: TeacherPermitUiState,
     cb: TeacherPermitCallback,
 ) {
-    Scaffold {
+    Scaffold(
+        showLoadingOverlay = uiState.isLoadingOverlay
+    ) {
         Column(
             modifier = Modifier.padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
