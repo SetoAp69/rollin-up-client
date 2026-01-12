@@ -24,3 +24,4 @@ composeApp/src/release/google-services.json
 composeApp/src/debug/google-services.json
 doc/*
 script/*
+base64/*

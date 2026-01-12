@@ -2,6 +2,8 @@
 
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Properties
 
 plugins {
@@ -22,6 +24,12 @@ if (envPropertiesFile.exists()) {
     envPropertiesFile.inputStream().use { envProperties.load(it) }
 }
 
+val secret = Properties()
+val secretFile = rootProject.file("secret.properties")
+if (secretFile.exists()) {
+    secretFile.inputStream().use { secret.load(it) }
+}
+
 val appVersion = "1.0.4"
 
 val buildConfigGenerator by tasks.registering(Sync::class) {
@@ -32,7 +40,7 @@ val buildConfigGenerator by tasks.registering(Sync::class) {
                 object BuildConfig{
                    const val MAP_URL = "${envProperties["MAP_URL"]}"
                    const val IS_PROD = ${envProperties["IS_PROD"]}
-                   const val SIGNING_CERTIFICATE = "${envProperties["SIGNING_CERTIFICATE"]}"
+                   const val SIGNING_CERTIFICATE = "${secret["SIGNING_CERTIFICATE"]}"
                }
             """.trimIndent()
         )
@@ -65,7 +73,7 @@ kotlin {
         }
     }
 
-    jvm() {
+    jvm {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_21)
         }
@@ -239,7 +247,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.rollinup.rollinup"
+    namespace = libs.versions.name.get()
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     androidResources {
@@ -251,18 +259,18 @@ android {
     signingConfigs {
         create("release") {
             storeFile = rootProject.file("/keystore/release-keystore.jks")
-            storePassword = envProperties["KEYSTORE_PASSWORD"]?.toString()
-            keyAlias = envProperties["KEYSTORE_ALIAS"]?.toString()
-            keyPassword = envProperties["KEY_PASSWORD"]?.toString()
+            storePassword = secret["KEYSTORE_PASSWORD"]?.toString()
+            keyAlias = secret["KEYSTORE_ALIAS"]?.toString()
+            keyPassword = secret["KEY_PASSWORD"]?.toString()
         }
     }
 
     defaultConfig {
-        applicationId = "com.rollinup.rollinup"
+        applicationId = libs.versions.applicationId.get()
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
-        versionName = appVersion
+        versionName = libs.versions.version.get()
     }
 
     packaging {
@@ -299,6 +307,61 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
         isCoreLibraryDesugaringEnabled = true
     }
+
+    applicationVariants.all {
+        val sdf = SimpleDateFormat("ddMMyyyy_HHmmss")
+        val currentDateTime = sdf.format(Date())
+        val appName = libs.versions.name.get()
+        val version = libs.versions.version.get()
+
+        outputs
+            .map {
+                it as com.android.build.gradle.internal.api.ApkVariantOutputImpl
+            }
+            .forEach { output ->
+                val variant = this.buildType.name
+                val fileExtension = output.outputFile.name.substringAfterLast(".")
+                output.outputFileName =
+                    "$appName-${variant}_v$version-$currentDateTime.$fileExtension"
+            }
+
+        outputs
+            .forEach { _ ->
+                val variant = buildType.name
+                val bundleTaskName = "bundle${variant.replaceFirstChar { it.uppercase() }}"
+                tasks.named(bundleTaskName).configure {
+                    doLast {
+                        val newFileName = "$appName-${variant}_v$version-$currentDateTime.aab"
+                        val bundleOutputDir = file("build/outputs/bundle/$variant")
+                        val bundle =
+                            bundleOutputDir.listFiles()?.firstOrNull { it.name.endsWith(".aab") }
+
+                        bundle?.let {
+                            val newFile = File(bundleOutputDir, newFileName)
+                            newFile.createNewFile()
+                            bundle.renameTo(newFile)
+                        } ?: run {
+                            println("Bundle file not found!")
+                        }
+                    }
+                }
+            }
+        applicationVariants.forEach { variant->
+            if(variant.buildType.isMinifyEnabled){
+                variant.assembleProvider.get().doLast {
+                    val mappingFiles = variant.mappingFileProvider.get().files
+                    mappingFiles.forEach { file->
+                        if(file.exists()){
+                            val mapName = "$appName-${variant.name}_v$version-$currentDateTime-mapping.${file.extension}"
+                            val mapFile = File(file.parent, mapName)
+
+                            file.copyTo(mapFile)
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 dependencies {
@@ -327,13 +390,26 @@ repositories {
 compose.desktop {
     application {
         mainClass = "com.rollinup.rollinup.MainKt"
-        version = appVersion
+        version = libs.versions.version.get()
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Exe)
             packageName = "com.rollinup.rollinup"
-            packageVersion = appVersion
+            packageVersion = libs.versions.version.get()
             includeAllModules = true
             modules("jdk.jcef")
+
+            windows{
+                iconFile.set(rootProject.file("assets/icon/rollin-up-logo-512.ico"))
+                exePackageVersion = libs.versions.version.get()
+                msiPackageVersion = libs.versions.version.get()
+                shortcut = true
+                dirChooser = true
+            }
+            linux{
+                iconFile.set(rootProject.file("assets/icon/rollin-up-logo-512.png"))
+                debMaintainer = libs.versions.vendor.get()
+                shortcut = true
+            }
         }
 
         buildTypes.release.proguard {
