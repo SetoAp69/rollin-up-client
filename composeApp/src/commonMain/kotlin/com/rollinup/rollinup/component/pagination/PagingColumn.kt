@@ -60,7 +60,7 @@ fun <T : Any> PagingColumn(
                     item { loadingContent() }
                 }
             } else {
-                if (pagingData.loadState.isIdle && pagingData.itemCount == 0) {
+                if (pagingData.itemCount == 0) {
                     item {
                         EmptyRecord()
                     }

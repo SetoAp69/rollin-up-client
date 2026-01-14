@@ -56,9 +56,8 @@ data class TeacherDashboardUiState(
                     reason = permit.reason,
                     type = permit.type,
                     note = permit.note,
-                    fileName = permit.attachment.substringAfter("/"),
-
-                    )
+                    fileName = permit.attachment.substringAfterLast("/"),
+                )
             } ?: PermitFormData(),
             location =
                 if (listOf(attendanceDetail.longitude, attendanceDetail.latitude)

@@ -29,8 +29,8 @@ fun UnauthorizedDeviceDialog(
         content = stringResource(Res.string.msg_unauthorized_device),
         onClickConfirm = onClickConfirm,
         isSingleButton = true,
-        showCancelButton = true,
-        btnCancelText = stringResource(Res.string.label_close),
+        showCancelButton = false,
+        btnConfirmText = stringResource(Res.string.label_close),
         severity = Severity.DANGER,
         onClickCancel = { onDismissRequest(false) }
     )

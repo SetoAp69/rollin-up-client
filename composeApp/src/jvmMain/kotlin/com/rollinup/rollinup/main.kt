@@ -10,15 +10,13 @@ import com.michaelflisar.lumberjack.implementation.plant
 import com.michaelflisar.lumberjack.loggers.console.ConsoleLogger
 import com.multiplatform.webview.util.addTempDirectoryRemovalHook
 import com.rollinup.apiservice.di.JVMDataModule
-import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.rollinup.di.AppModule
+import io.github.orioneee.Axer
 import io.github.orioneee.AxerTrayWindow
-import kotlinx.datetime.TimeZone
 import org.koin.core.context.startKoin
 
 fun main() = application {
-    L.init(LumberjackLogger)
-    L.plant(ConsoleLogger())
+    initLogger()
     addTempDirectoryRemovalHook()
     startKoin {
         modules(
@@ -32,5 +30,22 @@ fun main() = application {
     ) {
         App(onFinish = ::exitApplication)
     }
-    AxerTrayWindow()
+    if (!BuildConfig.IS_PROD) {
+        AxerTrayWindow(initialValue = false)
+    }
 }
+
+private fun initLogger() {
+    val enableLogging = !BuildConfig.IS_PROD
+
+    L.init(LumberjackLogger)
+    L.plant(ConsoleLogger())
+
+    Axer.configure {
+        enableRequestMonitor = enableLogging
+        enableExceptionMonitor = enableLogging
+        enableLogMonitor = enableLogging
+        enableDatabaseMonitor = enableLogging
+    }
+}
+

@@ -440,4 +440,37 @@ class StudentDashboardViewModelTest {
         // Assert
         assertEquals(newUser, viewModel.uiState.value.user)
     }
+
+    @Test
+    fun `resetMessageState() should set checkInState to null`() {
+        // Arrange
+        val cb = viewModel.getCallback()
+        val mockfile = mockk<MultiPlatformFile>(relaxed = true)
+        val mockLocation = mockk<Location>(relaxed = true)
+
+        cb.onCheckIn(mockfile, mockLocation)
+
+        arrangeCheckIn(Result.Success(Unit))
+
+        // Act
+        cb.onResetMessageState()
+
+        // Assert
+        val state = viewModel.uiState.value
+        assertNull(state.checkInState)
+    }
+
+    @Test
+    fun `updateTempPhoto() should update tempPhoto in uiState`() {
+        // Arrange
+        val cb = viewModel.getCallback()
+        val mockfile = mockk<MultiPlatformFile>(relaxed = true)
+
+        // Act
+        cb.onUpdateTempPhoto(mockfile)
+
+        // Assert
+        val state = viewModel.uiState.value
+        assertEquals(mockfile, state.tempPhoto)
+    }
 }

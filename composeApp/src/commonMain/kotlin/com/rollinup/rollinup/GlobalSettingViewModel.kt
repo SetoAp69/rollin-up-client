@@ -23,17 +23,20 @@ class GlobalSettingViewModel(
     private var _globalSetting = MutableStateFlow(GlobalSetting())
     val globalSetting = _globalSetting.asStateFlow()
 
+    private var _initState = MutableStateFlow<Boolean?>(null)
+    val initState = _initState.asStateFlow()
+
     fun init() {
         viewModelScope.launch {
-            getGlobalSetting().collect { result ->
+            getGlobalSettingUseCase().collect { result ->
+                _initState.value = result is Result.Success
                 if (result is Result.Success) {
                     updateCachedGlobalSettingUseCase(result.data)
+                    _globalSetting.update { result.data }
                 }
             }
         }
     }
-
-    private fun getGlobalSetting() = getGlobalSettingUseCase()
 
     fun fetchLocalSetting() {
         viewModelScope.launch {
@@ -46,7 +49,7 @@ class GlobalSettingViewModel(
     fun listen() {
         viewModelScope.launch {
             listenGlobalSettingSSE().collect {
-                getGlobalSetting().collect { result ->
+                getGlobalSettingUseCase().collect { result ->
                     if (result is Result.Success) {
                         _globalSetting.value = result.data
                         updateCachedGlobalSetting(result.data)

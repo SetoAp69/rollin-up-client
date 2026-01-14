@@ -30,8 +30,6 @@ if (secretFile.exists()) {
     secretFile.inputStream().use { secret.load(it) }
 }
 
-val appVersion = "1.0.4"
-
 val buildConfigGenerator by tasks.registering(Sync::class) {
     from(
         resources.text.fromString(
@@ -39,7 +37,7 @@ val buildConfigGenerator by tasks.registering(Sync::class) {
                 package com.rollinup.rollinup
                 object BuildConfig{
                    const val MAP_URL = "${envProperties["MAP_URL"]}"
-                   const val IS_PROD = ${envProperties["IS_PROD"]}
+                   val IS_PROD = ${envProperties["IS_PROD"]}
                    const val SIGNING_CERTIFICATE = "${secret["SIGNING_CERTIFICATE"]}"
                }
             """.trimIndent()

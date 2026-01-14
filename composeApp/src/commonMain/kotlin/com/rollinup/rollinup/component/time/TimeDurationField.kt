@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.rollinup.rollinup.component.model.Platform
+import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.textfield.TextError
 import com.rollinup.rollinup.component.textfield.TextFieldTitle
@@ -82,7 +84,7 @@ fun TimeDurationTextField(
                     )
                 }
                 HorizontalDivider(
-                    modifier = Modifier.weight(0.2f),
+                    modifier = Modifier.width(itemGap4),
                     color = theme.textPrimary,
                     thickness = 2.dp
                 )
@@ -131,7 +133,7 @@ private fun TimeDurationItem(
     val textColor: Color
 
     val label =
-        if (isFrom) stringResource(Res.string.label_end) else stringResource(Res.string.label_start)
+        if (isFrom) stringResource(Res.string.label_start) else stringResource(Res.string.label_end)
 
     if (selectedValue != null) {
         textStyle = Style.title

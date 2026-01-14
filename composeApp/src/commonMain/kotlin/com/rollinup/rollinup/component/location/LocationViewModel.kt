@@ -92,6 +92,7 @@ class LocationViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun listenLocation() {
         collectActiveStatus().flatMapLatest { isActive ->
+            _state.update { it.copy(isAvailable = isActive) }
             if (!isActive) {
                 emptyFlow()
             } else {

@@ -3,6 +3,8 @@ package com.rollinup.apiservice.domain.globalsetting
 import com.rollinup.apiservice.data.repository.generalsetting.GlobalSettingRepository
 import com.rollinup.apiservice.data.source.network.model.request.globalsetting.EditGlobalSettingBody
 import com.rollinup.apiservice.model.common.GlobalSetting
+import com.rollinup.apiservice.model.common.Result
+import kotlinx.coroutines.flow.first
 
 class ListenGlobalSettingSSE(
     private val repository: GlobalSettingRepository,

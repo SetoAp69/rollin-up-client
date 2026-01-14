@@ -238,7 +238,7 @@ private fun DayContent(
                 Spacer(itemGap4)
                 if (!(isHoliday || isWeekend)) {
                     if (isLoading) {
-                        ShimmerEffect(itemGap4, itemGap4)
+                        ShimmerEffect(12.dp)
                     } else {
                         Box(
                             modifier = Modifier

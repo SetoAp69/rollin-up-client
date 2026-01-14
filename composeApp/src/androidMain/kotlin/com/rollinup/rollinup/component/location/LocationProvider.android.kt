@@ -50,6 +50,12 @@ actual fun LocationHandler(
         onLocationChanges(state.location)
     }
 
+    LaunchedEffect(state.isAvailable) {
+        if(!state.isAvailable){
+            onLocationChanges(null)
+        }
+    }
+
     LaunchedEffect(geofence) {
         viewModel.restartTracking()
     }

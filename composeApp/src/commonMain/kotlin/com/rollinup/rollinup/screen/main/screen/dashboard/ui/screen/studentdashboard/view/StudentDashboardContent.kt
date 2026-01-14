@@ -49,6 +49,7 @@ fun StudentDashboardContent(
     var showDetail: Boolean by remember { mutableStateOf(false) }
     var showPermitForm: Boolean by remember { mutableStateOf(false) }
     var showCamera: Boolean by remember { mutableStateOf(false) }
+    var showConfirmDialog: Boolean by remember { mutableStateOf(false) }
 
     val quickAccessCallback = StudentDashboardQuickAccessCallback(
         onCreatePermit = { showPermitForm = true },
@@ -137,10 +138,14 @@ fun StudentDashboardContent(
     )
 
     CameraView(
-        onDismissRequest = { showCamera = it },
+        onDismissRequest = {
+            showCamera = it
+            cb.onUpdateTempPhoto(null)
+        },
         onCapture = { photo ->
+            cb.onUpdateTempPhoto(photo)
+            showConfirmDialog = true
             showCamera = false
-            cb.onCheckIn(photo, uiState.currentLocation!!)
         },
         notification = {
             Chip(
@@ -155,4 +160,14 @@ fun StudentDashboardContent(
         },
         errorMsg = "Error, failed to take photo please try again",
     )
+
+    uiState.tempPhoto?.let {
+        CheckInConfirmDialog(
+            onConfirm = {
+                cb.onCheckIn(it, uiState.currentLocation!!)
+            },
+            onDismissRequest = { state -> showConfirmDialog = state },
+            showDialog = showConfirmDialog
+        )
+    }
 }

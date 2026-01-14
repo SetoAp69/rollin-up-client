@@ -37,6 +37,7 @@ fun App(
     val authState = authViewModel.uiState.collectAsStateWithLifecycle().value
     val securityAlerts = securityViewModel.securityAlert.collectAsStateWithLifecycle().value
     val globalSetting = generalSettingViewModel.globalSetting.collectAsStateWithLifecycle().value
+    val globalSettingInitState = generalSettingViewModel.initState.collectAsStateWithLifecycle().value
 
     DisposableEffect(authState.loginState) {
         if (authState.loginState == AuthUiState.LoginState.Login) {
@@ -49,6 +50,12 @@ fun App(
     LaunchedEffect(Unit) {
         uiModeViewModel.getUiMode()
         generalSettingViewModel.init()
+    }
+
+    LaunchedEffect(globalSettingInitState){
+        if(globalSettingInitState == false){
+            generalSettingViewModel.init()
+        }
     }
 
     CompositionLocalProvider(

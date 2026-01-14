@@ -40,7 +40,9 @@ class StudentDashboardViewmodel(
         onUpdateLocation = ::updateLocation,
         onCheckIn = ::checkIn,
         onUpdateDateRangeSelected = ::updateDateRangeSelected,
-        onUpdateLoginData = ::updateLoginData
+        onUpdateLoginData = ::updateLoginData,
+        onUpdateTempPhoto = ::updatePhoto,
+        onResetMessageState = ::resetMessageState
     )
 
     fun init(userData: LoginEntity?) {
@@ -197,6 +199,14 @@ class StudentDashboardViewmodel(
                 user = loginData
             )
         }
+    }
+
+    private fun updatePhoto(photo: MultiPlatformFile?) {
+        _uiState.update { it.copy(tempPhoto = photo) }
+    }
+
+    private fun resetMessageState() {
+        _uiState.update { it.copy(checkInState = null) }
     }
 
 }

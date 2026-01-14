@@ -19,7 +19,7 @@
     <string name="msg_first_name_max_error">Nama depan tidak boleh lebih dari 15 karakter</string>
     <string name="msg_first_name_empty_error">Nama depan tidak boleh kosong</string>
     <string name="msg_last_name_max_error">Nama belakang tidak boleh lebih dari 15 karakter</string>
-    <string name = "msg_student_id_contain_space_error">Nomor induk siswa tidak boleh mengandung spasi </string>
+    <string name="msg_student_id_contain_space_error">Nomor induk siswa tidak boleh mengandung spasi </string>
     <string name="msg_last_name_empty_error">Nama belakang tidak boleh kosong</string>
     <string name="msg_birthday_error_empty">Kesalahan, tanggal lahir tidak boleh kosong</string>
     <string name="msg_phone_error_max">Nomor telepon tidak boleh lebih dari 16 karakter</string>
@@ -47,6 +47,9 @@
     <string name="msg_username_invalid_error">Nama pengguna tidak boleh mengandung spasi</string>
     <string name="msg_student_id_empty_error">Nomor induk siswa tidak boleh kosong</string>
     <string name="msg_otp_already_sent">Kode OTP sudah dikirim ke email Anda. Anda dapat meminta OTP baru setelah 2 menit.</string>
+    <string name="msg_confirm_check_in"> Lokasi terkini dan foto anda akan dikirim ke server sebagai bukti, lanjutkan proses presensi?</string>
+    <string name ="msg_check_in_success">Sukses, presensi berhasil dilakukan.</string>
+    <string name ="msg_check_in_error">Error, presensi gagal dilakukan, silakan coba lagi. </string>
 
     <string name="label_cancel">Batal</string>
     <string name="label_all">Semua</string>
@@ -124,6 +127,7 @@
     <string name="label_new_password">Kata sandi baru</string>
     <string name="label_repeat_new_password">Ulangi kata sandi baru</string>
     <string name="label_back_to_login">Kembali ke Login</string>
+    <string name ="label_confirm_check_in">Konfirmasi Presensi</string>
 
     <string name="ph_permit_note">Masukkan catatan izin</string>
     <string name="ph_permit_reason">Masukkan alasan izin</string>

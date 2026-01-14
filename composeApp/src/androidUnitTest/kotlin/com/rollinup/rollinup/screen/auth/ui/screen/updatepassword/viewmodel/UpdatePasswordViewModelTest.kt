@@ -247,8 +247,6 @@ class UpdatePasswordViewModelTest {
         val body = SubmitVerificationOTPBody(otp)
         arrangeSubmitVerificationUseCase(body, Result.Error(NetworkError.RESPONSE_ERROR))
 
-
-        //TODO: RECHECK THE RUN TEST IF IT'S ACTUALLY WOWKING553
         //Act
         cb.onSubmitOtp(otp)
 

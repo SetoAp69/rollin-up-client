@@ -47,6 +47,7 @@
     <string name="msg_username_exist_error">Username is already been used</string>
     <string name="msg_email_exist_error">Email is already been used</string>
     <string name="msg_student_id_empty_error">Student id can\'t be empty</string>
+    <string name="msg_confirm_check_in">You're current location and picture will be sent to the server as proof. Are you sure you want to check in?</string>
 
     <string name="label_cancel">Cancel</string>
     <string name="label_all">All</string>
@@ -124,6 +125,9 @@
     <string name="label_new_password">New password</string>
     <string name="label_repeat_new_password">Repeat New password</string>
     <string name="label_back_to_login">Back to Login</string>
+    <string name ="label_confirm_check_in">Confirm Check-In</string>
+    <string name ="msg_check_in_success">Success, check-in data successfully submitted.</string>
+    <string name ="msg_check_in_error">Error, failed to check-in please try again. </string>
 
     <string name="ph_permit_note">Enter permit note</string>
     <string name="ph_permit_reason">Enter permit reason</string>

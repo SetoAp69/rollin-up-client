@@ -11,4 +11,6 @@ data class StudentDashboardCallback(
     val onCheckIn: (MultiPlatformFile, Location) -> Unit = { _, _ -> },
     val onUpdateDateRangeSelected: (List<Long>) -> Unit = {},
     val onUpdateLoginData: (LoginEntity) -> Unit = {},
+    val onUpdateTempPhoto: (MultiPlatformFile?) -> Unit = {},
+    val onResetMessageState: () -> Unit = {},
 )

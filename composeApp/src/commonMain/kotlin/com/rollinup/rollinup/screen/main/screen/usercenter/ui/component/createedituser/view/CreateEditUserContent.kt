@@ -41,7 +41,6 @@ import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.CreateEditUserFormOption
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.createedituser.uistate.CreateEditUserUiState
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.createedituser.viewmodel.CreateEditUserViewModel
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import rollin_up.composeapp.generated.resources.Res
@@ -53,8 +52,6 @@ import rollin_up.composeapp.generated.resources.label_last_name
 import rollin_up.composeapp.generated.resources.label_phone
 import rollin_up.composeapp.generated.resources.label_role
 import rollin_up.composeapp.generated.resources.label_student_id
-import rollin_up.composeapp.generated.resources.msg_email_invalid_error
-import rollin_up.composeapp.generated.resources.msg_student_id_contain_space_error
 import rollin_up.composeapp.generated.resources.ph_address
 import rollin_up.composeapp.generated.resources.ph_email
 import rollin_up.composeapp.generated.resources.ph_first_name
@@ -432,7 +429,7 @@ private fun AdditionalInfoSection(
         maxChar = 30,
         onValueChange = { newValue ->
             val errorMsg =
-                if (newValue.isBlank() ||  newValue.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex())) {
+                if (newValue.isBlank() || newValue.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex())) {
                     null
                 } else {
                     CreateEditUserFormErrorType.EMAIL_INVALID

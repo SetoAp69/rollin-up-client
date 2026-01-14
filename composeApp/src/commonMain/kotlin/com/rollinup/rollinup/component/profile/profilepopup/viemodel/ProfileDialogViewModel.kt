@@ -135,6 +135,7 @@ class ProfileDialogViewModel(
         email = formData.email,
         address = formData.address,
         phoneNumber = formData.phone,
-        gender = formData.gender
+        gender = formData.gender,
+        birthDay = formData.birthDay
     )
 }

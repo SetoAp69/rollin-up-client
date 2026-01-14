@@ -10,7 +10,7 @@ import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.platformwarning.PlatformWarning
 import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.utils.getPlatform
-import com.rollinup.rollinup.screen.dashboard.ui.screen.studentdashboard.view.StudentDashboardScreen
+import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.view.StudentDashboardScreen
 import com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardScreen
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.navigation.AttendanceRoute
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.navigation.attendanceGraph

@@ -50,8 +50,6 @@ import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
 import dev.jordond.compass.Coordinates
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.LocalTime
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_edit_line_24
 
@@ -126,9 +124,8 @@ fun TeacherDashboardEditAttendanceContent(
 
             in listOf(
                 AttendanceStatus.ON_TIME,
-                AttendanceStatus.ON_TIME
-            ),
-                -> {
+                AttendanceStatus.LATE
+            ), -> {
                 cb.onUpdateEditForm(
                     uiState.editAttendanceFormData.copy(
                         location = Coordinates(
@@ -149,7 +146,8 @@ fun TeacherDashboardEditAttendanceContent(
     ) {
         Column(
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Header(
                 onUpdateFormData = cb.onUpdateEditForm,
@@ -302,11 +300,13 @@ private fun PermitFormContent(
 ) {
     val duration = formData.permitFormData.duration
     LaunchedEffect(duration) {
-        if (duration.isNotEmpty()) {
+        if (formData.permitFormData.type == PermitType.ABSENCE && duration.isNotEmpty()) {
             val from = duration.first()!!.parseToLocalDateTime().date
             val to = duration.last()!!.parseToLocalDateTime().date
             val today = LocalDate.now()
-            if (today !in from..to) {
+            val dateRange = (from..to)
+
+            if (today !in dateRange) {
                 onUpdateFormData(
                     formData.copy(
                         permitFormData = formData.permitFormData.copy(

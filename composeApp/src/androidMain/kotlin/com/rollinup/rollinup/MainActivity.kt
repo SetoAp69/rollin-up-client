@@ -2,7 +2,6 @@ package com.rollinup.rollinup
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
@@ -17,6 +16,7 @@ import com.michaelflisar.lumberjack.implementation.plant
 import com.michaelflisar.lumberjack.loggers.console.ConsoleLogger
 import com.rollinup.CounterViewModel
 import com.rollinup.common.model.SecurityAlert
+import io.github.orioneee.Axer
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity() : ComponentActivity(), ThreatListener.ThreatDetected {
@@ -39,8 +39,6 @@ class MainActivity() : ComponentActivity(), ThreatListener.ThreatDetected {
                 finishAndRemoveTask()
             }
         }
-
-
     }
 
     override fun onDestroy() {
@@ -77,8 +75,17 @@ class MainActivity() : ComponentActivity(), ThreatListener.ThreatDetected {
     }
 
     private fun initLogger() {
+        val enableLogging = !BuildConfig.IS_PROD
+
         L.init(LumberjackLogger)
         L.plant(ConsoleLogger())
+
+        Axer.configure {
+            enableRequestMonitor = enableLogging
+            enableExceptionMonitor = enableLogging
+            enableLogMonitor = enableLogging
+            enableDatabaseMonitor = enableLogging
+        }
     }
 
     override fun onRootDetected() {

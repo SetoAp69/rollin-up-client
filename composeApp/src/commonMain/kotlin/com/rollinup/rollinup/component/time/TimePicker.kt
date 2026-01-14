@@ -41,7 +41,6 @@ import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.spacer.screenPadding
 import com.rollinup.rollinup.component.textfield.TextError
 import com.rollinup.rollinup.component.textfield.TextFieldTitle
-import com.rollinup.rollinup.component.theme.LocalGlobalSetting
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.globalSetting
 import com.rollinup.rollinup.component.theme.theme
@@ -82,8 +81,6 @@ fun TimePickerTextField(
 
     val maxTime = max ?: globalSetting.schoolPeriodEnd
     val minTime = min ?: globalSetting.checkInPeriodStart
-
-    val generalSetting = LocalGlobalSetting.current
 
     when {
         isError -> {
@@ -151,8 +148,8 @@ fun TimePickerTextField(
                 )
             },
             onDismissRequest = { showBottomSheet = it },
-            min = generalSetting.checkInPeriodStart,
-            max = generalSetting.schoolPeriodEnd,
+            min = minTime,
+            max = maxTime,
         )
     } else {
         TimePickerDialog(
@@ -165,8 +162,8 @@ fun TimePickerTextField(
                 )
             },
             onDismissRequest = { showBottomSheet = it },
-            min = generalSetting.checkInPeriodStart,
-            max = generalSetting.schoolPeriodEnd,
+            min = minTime,
+            max = maxTime,
         )
     }
 }

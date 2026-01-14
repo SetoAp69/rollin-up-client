@@ -26,6 +26,9 @@ import androidx.compose.ui.unit.dp
 import com.rollinup.apiservice.model.common.MultiPlatformFile
 import com.rollinup.apiservice.model.permit.PermitType
 import com.rollinup.common.model.OptionData
+import com.rollinup.common.utils.Utils.now
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
+import com.rollinup.common.utils.Utils.toEpochMillis
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.date.DateRangePickerField
 import com.rollinup.rollinup.component.filepicker.FilePicker
@@ -45,7 +48,9 @@ import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.globalSetting
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.time.TimeDurationTextField
-import kotlinx.datetime.LocalTime
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
@@ -313,14 +318,16 @@ fun PermitFormDurationSection(
             val tooEarlyMsgError = stringResource(Res.string.msg_duration_error_too_early)
             val tooLateMsgError = stringResource(Res.string.msg_duration_error_too_late)
             val invalidDurationError = stringResource(Res.string.msg_duration_error_invalid)
+            val today = LocalDate.now()
+
+            val durationTime = formData.duration.map {
+                it?.parseToLocalDateTime(TimeZone.UTC)?.time
+            }
 
             TimeDurationTextField(
-                value = with(formData.duration) {
+                value = with(durationTime) {
                     if (isEmpty()) listOf(null, null)
-                    else map { second ->
-                        if (second == null) null
-                        else LocalTime.fromSecondOfDay(second.toInt())
-                    }
+                    else durationTime
                 },
                 onValueChange = { value ->
                     val from = value.first()
@@ -341,7 +348,7 @@ fun PermitFormDurationSection(
                         formData.copy(
                             duration = value.map { time ->
                                 if (time == null) null
-                                else time.toSecondOfDay().toLong()
+                                else LocalDateTime(today,time).toEpochMillis()
                             },
                             durationError = errorMessage
                         )
