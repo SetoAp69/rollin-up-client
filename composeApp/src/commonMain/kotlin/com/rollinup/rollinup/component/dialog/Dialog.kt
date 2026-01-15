@@ -431,7 +431,7 @@ private fun AlertDialogButton(
                 text = btnCancelText,
                 onClick = onClickCancel,
                 severity = severity,
-                type = ButtonType.FILLED
+                type = ButtonType.OUTLINED
             )
         }
         if (showConfirmButtonState) {

@@ -19,7 +19,7 @@ class JVMLocalDataStore : LocalDataStore {
     val userHome = System.getProperty("user.home") as String
     val dataStore: DataStore<Preferences> = PreferenceDataStoreFactory.createWithPath {
         val file =
-            File(userHome + "/." + Constant.LOCAL_DATA_STORE_PATH + Constant.LOCAL_DATA_STORE_NAME).apply { parentFile?.mkdirs() }
+            File(userHome + "/" + Constant.LOCAL_DATA_STORE_PATH + Constant.LOCAL_DATA_STORE_NAME).apply { parentFile?.mkdirs() }
 
         if (!file.exists()) {
             file.createNewFile()

@@ -1,0 +1,169 @@
+package com.rollinup.apiservice.di
+
+import com.rollinup.apiservice.BuildConfig
+import com.rollinup.apiservice.data.source.datastore.LocalDataStore
+import com.rollinup.apiservice.utils.JSON_TYPE
+import io.github.orioneee.Axer
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.engine.darwin.Darwin
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.providers.BearerTokens
+import io.ktor.client.plugins.auth.providers.bearer
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.DEFAULT
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.plugins.sse.SSE
+import io.ktor.client.plugins.sse.SSEBufferPolicy
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.HttpHeaders
+import io.ktor.http.URLProtocol
+import io.ktor.http.contentType
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
+import kotlin.time.Duration.Companion.seconds
+
+actual fun getHttpClient(localDataStore: LocalDataStore): HttpClient {
+    return HttpClient(Darwin) {
+        expectSuccess = true
+
+        defaultRequest {
+            url {
+                protocol = URLProtocol.HTTPS
+                host = BuildConfig.BASE_URL
+            }
+        }
+
+        install(HttpTimeout) {
+            requestTimeoutMillis = 10000
+        }
+
+        install(ContentNegotiation) {
+            json(
+                json = Json {
+                    encodeDefaults = true
+                    ignoreUnknownKeys = true
+                    this.prettyPrint = true
+                }
+            )
+        }
+
+        install(Logging) {
+            logger = Logger.DEFAULT
+            level = LogLevel.ALL
+            this.sanitizeHeader { header -> header == HttpHeaders.Authorization }
+        }
+
+        install(Auth) {
+            bearer {
+                sendWithoutRequest { true }
+                loadTokens {
+                    val accessToken = localDataStore.getToken()
+                    val refreshToken = localDataStore.getRefreshToken()
+                    BearerTokens(
+                        accessToken = accessToken,
+                        refreshToken = refreshToken
+                    )
+                }
+
+                refreshTokens {
+                    val refreshToken = oldTokens?.refreshToken ?: ""
+                    val body = hashMapOf("refreshToken" to refreshToken)
+
+                    val response = client.post("auth/refresh-token") {
+                        headers.remove(HttpHeaders.Authorization)
+                        contentType(JSON_TYPE)
+                        setBody(body)
+                    }.body<HashMap<String, String>>()
+
+                    val newAccessToken = response["accessToken"] ?: ""
+
+                    localDataStore.updateToken(refreshToken)
+                    localDataStore.updateRefreshToken(newAccessToken)
+
+                    BearerTokens(
+                        accessToken = newAccessToken,
+                        refreshToken = refreshToken
+                    )
+                }
+            }
+        }
+
+        install(Axer.ktorPlugin) {
+        }
+    }
+}
+
+
+actual fun getSSEClient(localDataStore: LocalDataStore) = HttpClient(Darwin) {
+    expectSuccess = true
+    defaultRequest {
+        url {
+            protocol = URLProtocol.HTTPS
+            host = BuildConfig.BASE_URL
+        }
+    }
+
+    install(ContentNegotiation) {
+        json(
+            json = Json {
+                encodeDefaults = true
+                ignoreUnknownKeys = true
+                this.prettyPrint = true
+            }
+        )
+    }
+
+    install(Logging) {
+        logger = Logger.DEFAULT
+        level = LogLevel.ALL
+        this.sanitizeHeader { header -> header == HttpHeaders.Authorization }
+    }
+
+    install(Auth) {
+        bearer {
+            sendWithoutRequest { true }
+            loadTokens {
+                val accessToken = localDataStore.getToken()
+                val refreshToken = localDataStore.getRefreshToken()
+
+                BearerTokens(
+                    accessToken = accessToken,
+                    refreshToken = refreshToken
+                )
+            }
+
+            refreshTokens {
+                val refreshToken = oldTokens?.refreshToken ?: ""
+                val body = hashMapOf("refreshToken" to refreshToken)
+
+                val response = client.post("auth/refresh-token") {
+                    headers.remove(HttpHeaders.Authorization)
+                    contentType(JSON_TYPE)
+                    setBody(body)
+                }.body<HashMap<String, String>>()
+
+                val newAccessToken = response["accessToken"] ?: ""
+
+                localDataStore.updateToken(refreshToken)
+                localDataStore.updateRefreshToken(newAccessToken)
+
+                BearerTokens(
+                    accessToken = newAccessToken,
+                    refreshToken = refreshToken
+                )
+            }
+        }
+    }
+
+    install(SSE) {
+        maxReconnectionAttempts = 100
+        reconnectionTime = 2.seconds
+        bufferPolicy = SSEBufferPolicy.LastEvents(10)
+    }
+}

@@ -13,9 +13,11 @@ import com.rollinup.apiservice.di.JVMDataModule
 import com.rollinup.rollinup.di.AppModule
 import io.github.orioneee.Axer
 import io.github.orioneee.AxerTrayWindow
+import io.github.orioneee.stopServerIfRunning
 import org.koin.core.context.startKoin
 
 fun main() = application {
+    Axer.stopServerIfRunning()
     initLogger()
     addTempDirectoryRemovalHook()
     startKoin {
@@ -23,15 +25,15 @@ fun main() = application {
             JVMDataModule() + AppModule()
         )
     }
+    if (!BuildConfig.IS_PROD) {
+        AxerTrayWindow(initialValue = true)
+    }
     Window(
         state = rememberWindowState(placement = WindowPlacement.Maximized),
         onCloseRequest = ::exitApplication,
         title = "rollin-up",
     ) {
         App(onFinish = ::exitApplication)
-    }
-    if (!BuildConfig.IS_PROD) {
-        AxerTrayWindow(initialValue = false)
     }
 }
 
@@ -45,7 +47,7 @@ private fun initLogger() {
         enableRequestMonitor = enableLogging
         enableExceptionMonitor = enableLogging
         enableLogMonitor = enableLogging
-        enableDatabaseMonitor = enableLogging
+        enableDatabaseMonitor = false
     }
 }
 

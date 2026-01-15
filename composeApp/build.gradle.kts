@@ -344,14 +344,15 @@ android {
                     }
                 }
             }
-        applicationVariants.forEach { variant->
-            if(variant.buildType.isMinifyEnabled){
+        applicationVariants.forEach { variant ->
+            if (variant.buildType.isMinifyEnabled) {
                 variant.assembleProvider.get().doLast {
                     val mappingFiles = variant.mappingFileProvider.get().files
-                    mappingFiles.forEach { file->
-                        if(file.exists()){
-                            val mapName = "$appName-${variant.name}_v$version-$currentDateTime-mapping.${file.extension}"
-                            val mapFile = File(file.parent, mapName)
+                    mappingFiles.forEach { file ->
+                        if (file.exists()) {
+                            val mapName =
+                                "$appName-${variant.name}_v$version-$currentDateTime-mapping.${file.extension}"
+                            val mapFile = File("${file.parent}/android", mapName)
 
                             file.copyTo(mapFile)
                         }
@@ -389,21 +390,27 @@ compose.desktop {
     application {
         mainClass = "com.rollinup.rollinup.MainKt"
         version = libs.versions.version.get()
-        nativeDistributions {
+        nativeDistributions{
+            modules(
+                "java.net.http",
+                "jdk.crypto.ec",
+                "java.security.jgss",
+                "jdk.jcef"
+            )
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Exe)
-            packageName = "com.rollinup.rollinup"
+            packageName = "Rollin-Up"
             packageVersion = libs.versions.version.get()
             includeAllModules = true
-            modules("jdk.jcef")
 
-            windows{
+            windows {
                 iconFile.set(rootProject.file("assets/icon/rollin-up-logo-512.ico"))
                 exePackageVersion = libs.versions.version.get()
                 msiPackageVersion = libs.versions.version.get()
                 shortcut = true
+                console = true
                 dirChooser = true
             }
-            linux{
+            linux {
                 iconFile.set(rootProject.file("assets/icon/rollin-up-logo-512.png"))
                 debMaintainer = libs.versions.vendor.get()
                 shortcut = true

@@ -20,7 +20,7 @@ val buildGenerator by tasks.registering(Sync::class) {
                 package com.rollinup.apiservice
                 object BuildConfig{
                    const val BASE_URL = "${envProperties["BASE_URL"]}"
-                   const val IS_PROD = ${envProperties["IS_PROD"]}
+                   val IS_PROD = ${envProperties["IS_PROD"]}
                    const val FILE_URL = "${envProperties["FILE_URL"]}"
                }
             """.trimIndent()
@@ -121,12 +121,12 @@ kotlin {
             dependencies {
                 implementation(libs.ktor.okhttp)
                 implementation(libs.koin.logger)
+                implementation(libs.ktor.android)
             }
         }
 
         nativeMain {
             dependencies {
-                implementation(libs.ktor.darwin)
             }
         }
 
@@ -134,6 +134,7 @@ kotlin {
             dependencies {
                 implementation(libs.ktor.okhttp)
                 implementation(libs.koin.logger)
+                implementation(libs.ktor.java)
             }
         }
 
@@ -151,6 +152,12 @@ kotlin {
                 implementation(libs.kotlin.test)
                 implementation(libs.coroutine.test)
                 implementation(libs.ktor.mock)
+            }
+        }
+
+        appleMain{
+            dependencies {
+                implementation(libs.ktor.darwin)
             }
         }
 

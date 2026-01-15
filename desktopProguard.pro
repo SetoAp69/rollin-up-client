@@ -1,3 +1,4 @@
+-dontwarn **
 -dontwarn aQute.bnd.annotation.baseline.BaselineIgnore
 -dontwarn aQute.bnd.annotation.spi.ServiceConsumer
 -dontwarn aQute.bnd.annotation.spi.ServiceProvider
