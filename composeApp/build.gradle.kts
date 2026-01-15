@@ -390,14 +390,20 @@ compose.desktop {
     application {
         mainClass = "com.rollinup.rollinup.MainKt"
         version = libs.versions.version.get()
-        nativeDistributions{
+        nativeDistributions {
+            jvmArgs(
+                "-Dsun.java2d.uiScale=1.25",
+            )
+
             modules(
                 "java.net.http",
                 "jdk.crypto.ec",
                 "java.security.jgss",
                 "jdk.jcef"
             )
+
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Exe)
+
             packageName = "Rollin-Up"
             packageVersion = libs.versions.version.get()
             includeAllModules = true
@@ -410,6 +416,7 @@ compose.desktop {
                 console = true
                 dirChooser = true
             }
+
             linux {
                 iconFile.set(rootProject.file("assets/icon/rollin-up-logo-512.png"))
                 debMaintainer = libs.versions.vendor.get()

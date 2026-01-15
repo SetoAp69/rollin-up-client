@@ -48,5 +48,5 @@ class TableState<T>(
 
 @Composable
 fun <T> rememberTableState(
-    pageSizeOptions: List<Int> = listOf(5, 10, 25, 50),
+    pageSizeOptions: List<Int> = listOf(25, 50, 100),
 ) = remember { TableState<T>(pageSizeOptions) }

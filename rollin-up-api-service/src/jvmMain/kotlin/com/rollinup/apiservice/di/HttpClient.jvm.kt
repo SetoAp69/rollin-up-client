@@ -54,7 +54,6 @@ actual fun getHttpClient(localDataStore: LocalDataStore): HttpClient {
         }
 
         install(Logging) {
-//        logger = if (BuildConfig.IS_PROD) createCustomLogger() else Logger.DEFAULT
             logger = Logger.DEFAULT
             level = LogLevel.ALL
             this.sanitizeHeader { header -> header == HttpHeaders.Authorization }
@@ -120,7 +119,6 @@ actual fun getSSEClient(localDataStore: LocalDataStore) = HttpClient(Java) {
     }
 
     install(Logging) {
-//        logger = if (BuildConfig.IS_PROD) createCustomLogger() else Logger.DEFAULT
         logger = Logger.DEFAULT
         level = LogLevel.ALL
         this.sanitizeHeader { header ->
@@ -169,22 +167,3 @@ actual fun getSSEClient(localDataStore: LocalDataStore) = HttpClient(Java) {
         bufferPolicy = SSEBufferPolicy.LastEvents(10)
     }
 }
-//
-//@OptIn(ExperimentalTime::class)
-//private fun createCustomLogger(): Logger {
-//    return object : Logger {
-//        val userHome = System.getProperty("user.home")
-//        val logSession = Clock.System.now()
-//        val logDir = "$userHome/${Constant.LOG_PATH}"
-//
-//        override fun log(message: String) {
-//            val logFile = File(logDir, "network_log_$logSession.log").let { file ->
-//                if (!file.exists()) {
-//                    file.createNewFile()
-//                }
-//                file
-//            }
-//            logFile.appendText(message)
-//        }
-//    }
-//}

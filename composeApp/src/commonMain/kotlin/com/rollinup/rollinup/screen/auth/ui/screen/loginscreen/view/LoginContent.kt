@@ -21,9 +21,7 @@ fun LoginContent(
 
     Scaffold(
         topBar = {
-            LoginTopAppBar(
-                onInfoClick = {}
-            )
+            LoginTopAppBar()
         },
         showLoadingOverlay = uiState.isLoadingOverlay
     ) {

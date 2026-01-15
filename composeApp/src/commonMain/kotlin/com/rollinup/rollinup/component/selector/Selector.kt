@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -40,7 +39,6 @@ import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.spacer.screenPadding
 import com.rollinup.rollinup.component.textfield.TextError
-import com.rollinup.rollinup.component.textfield.TextFieldDefaults
 import com.rollinup.rollinup.component.textfield.TextFieldTitle
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
@@ -105,7 +103,6 @@ fun <T> SingleSelectorField(
                     showSelector = true
                 }
                 .fillMaxWidth()
-                .height(TextFieldDefaults.height)
                 .background(color = backgroundColor, shape = RoundedCornerShape(8.dp))
                 .padding(horizontal = itemGap4),
             verticalAlignment = Alignment.CenterVertically,
