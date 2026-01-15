@@ -413,7 +413,7 @@ compose.desktop {
                 exePackageVersion = libs.versions.version.get()
                 msiPackageVersion = libs.versions.version.get()
                 shortcut = true
-                console = true
+                console = false
                 dirChooser = true
             }
 
@@ -425,6 +425,7 @@ compose.desktop {
         }
 
         buildTypes.release.proguard {
+            obfuscate = false
             configurationFiles.from(rootProject.file("desktopProguard.pro"))
         }
     }

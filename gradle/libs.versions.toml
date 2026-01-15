@@ -69,7 +69,7 @@ compose-navigation = { group = "org.jetbrains.androidx.navigation", name = "navi
 ui-backhandler = { group = "org.jetbrains.compose.ui", name = "ui-backhandler", version.ref = "composeMultiplatform" }
 
 #Axer
-axer = { group = "io.github.orioneee", name = "axer", version.ref = "axer" }
+axer = { group = "io.github.orioneee", name = "axer-no-op", version.ref = "axer" }
 
 #datetime
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }

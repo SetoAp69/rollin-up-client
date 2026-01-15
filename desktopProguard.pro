@@ -370,6 +370,8 @@
 -keep class org.apache.logging.log4j.spi.** {
     public <init>();
 }
+-keep class io.ktor.serialization.**{*;}
+
 -keep class org.apache.logging.log4j.message.** {
     public <init>();
 }
