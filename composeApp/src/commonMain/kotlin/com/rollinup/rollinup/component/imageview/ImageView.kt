@@ -232,6 +232,10 @@ fun ImageView(
             BoxWithConstraints(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clickable {
+                        onDismissRequests(false)
+                    },
+                contentAlignment = Alignment.Center
             ) {
                 val transformableState = rememberTransformableState { zoomChange, panChange, _ ->
                     zoomScale = (zoomScale * zoomChange).coerceIn(1f, 5f)
@@ -280,36 +284,45 @@ private fun AsyncImage(
     when (state) {
         is AsyncImagePainter.State.Error, AsyncImagePainter.State.Empty -> {
             Box(
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .clip(RoundedCornerShape(itemGap4))
-                    .background(theme.textFieldBackGround)
-                    .padding(itemGap4)
-                    .then(modifier),
+                modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_image_broken_fill_24),
-                    contentDescription = null,
-                    tint = theme.textFieldText,
-                    modifier = Modifier.fillMaxSize()
-                )
+                Box(
+                    modifier = Modifier
+                        .aspectRatio(1f)
+                        .clip(RoundedCornerShape(itemGap4))
+                        .background(theme.textFieldBackGround)
+                        .padding(itemGap4),
+                    contentAlignment = Alignment.Center
+                ) {
+
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_image_broken_fill_24),
+                        contentDescription = null,
+                        tint = theme.textFieldText,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
             }
         }
 
         is AsyncImagePainter.State.Loading -> {
             Box(
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .clip(RoundedCornerShape(itemGap4))
-                    .background(theme.textFieldBackGround)
-                    .then(modifier),
+                modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp),
-                    color = theme.primary,
-                )
+                Box(
+                    modifier = Modifier
+                        .aspectRatio(1f)
+                        .clip(RoundedCornerShape(itemGap4))
+                        .background(theme.textFieldBackGround),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = theme.primary,
+                    )
+                }
             }
         }
 

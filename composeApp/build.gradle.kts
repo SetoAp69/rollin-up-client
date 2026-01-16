@@ -425,7 +425,6 @@ compose.desktop {
         }
 
         buildTypes.release.proguard {
-            obfuscate = false
             configurationFiles.from(rootProject.file("desktopProguard.pro"))
         }
     }

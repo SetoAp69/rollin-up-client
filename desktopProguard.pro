@@ -94,8 +94,6 @@
 -dontwarn androidx.window.sidecar.SidecarProvider
 -dontwarn androidx.window.sidecar.SidecarWindowLayoutInfo
 -dontwarn software.amazon.awssdk.auth.credentials.AwsCredentialsProvider
-# Please add these rules to your existing keep rules in order to suppress warnings.
-# This is generated automatically by the Android Gradle plugin.
 -dontwarn com.github.javaparser.ParseResult
 -dontwarn com.github.javaparser.ParserConfiguration$LanguageLevel
 -dontwarn com.github.javaparser.ParserConfiguration
@@ -356,6 +354,9 @@
 -dontwarn org.osgi.framework.wiring.BundleWire
 -dontwarn org.osgi.framework.wiring.BundleWiring
 
+-dontshrink
+-dontoptimize
+
 -keep class com.rollinup.rollinup.BuildConfig {*;}
 
 -keepclassmembers enum * {
@@ -363,6 +364,7 @@
     public static ** valueOf(java.lang.String);
 }
 -printmapping "build/compose/binaries/main-release/mapping.txt"
+
 -keep class org.apache.poi.** { *; }
 -keep class javax.xml.** { *; }
 -keep class org.apache.xmlbeans.** { *; }
@@ -375,3 +377,7 @@
 -keep class org.apache.logging.log4j.message.** {
     public <init>();
 }
+-keep class io.github.alexzhirkevich.**{ *; }
+-keep class kotlinx.coroutines.swing.SwingDispatcherFactory
+-keep class org.cef.** { *; }
+-keep class rollin_up.composeapp.generated.resources.** {*;}
