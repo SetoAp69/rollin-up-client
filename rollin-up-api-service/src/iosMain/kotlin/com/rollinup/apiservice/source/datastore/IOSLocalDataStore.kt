@@ -8,11 +8,12 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.rollinup.apiservice.Constant
+import com.rollinup.apiservice.data.source.datastore.LocalDataStore
 import com.rollinup.apiservice.model.common.GlobalSetting
-import com.rollinup.apiservice.source.datastore.LocalDataStore
+import com.rollinup.common.model.UiMode
 import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
 import okio.Path.Companion.toPath
@@ -33,21 +34,23 @@ class IOSLocalDataStore : LocalDataStore {
     }
 
     override suspend fun getToken(): String {
-        val key = stringPreferencesKey(Constant.ACCESS_TOKEN_KEY)
-        return dataStore.data.map { preferences -> preferences[key] }.first() ?: ""
+        return dataStore.data.map { datastore -> datastore[stringPreferencesKey(Constant.ACCESS_TOKEN_KEY)] }
+            .first() ?: ""
     }
 
     override suspend fun clearToken() {
-        val key = stringPreferencesKey(Constant.ACCESS_TOKEN_KEY)
-        dataStore.edit { preferences ->
-            preferences.remove(key)
+        dataStore.edit { dataStore ->
+            val key = stringPreferencesKey(Constant.ACCESS_TOKEN_KEY)
+
+            dataStore.remove(key)
         }
     }
 
     override suspend fun updateToken(token: String) {
-        val key = stringPreferencesKey(Constant.ACCESS_TOKEN_KEY)
-        dataStore.edit { preferences ->
-            preferences[key] = token
+        dataStore.edit { dataStore ->
+            val key = stringPreferencesKey(Constant.ACCESS_TOKEN_KEY)
+
+            dataStore[key] = token
         }
     }
 
@@ -71,30 +74,39 @@ class IOSLocalDataStore : LocalDataStore {
         }
     }
 
-    override suspend fun getLocalGeneralSetting(): Flow<GlobalSetting?> {
+    override suspend fun getLocalGlobalSetting(): GlobalSetting? {
         val key = stringPreferencesKey(Constant.GLOBAL_SETTING_KEY)
         val setting = dataStore.data.map { datastore -> datastore[key] }
 
-        return setting.let { flow ->
-            flow.map { value ->
-                value?.let {
-                    Json.decodeFromString<GlobalSetting>(it)
-                }
-            }
-        }
+        return setting.firstOrNull()
+            ?.let { data -> data.let { Json.decodeFromString<GlobalSetting>(it) } }
     }
 
-    override suspend fun updateGeneralSetting(generalSetting: GlobalSetting) {
+    override suspend fun updateGlobalSetting(globalSetting: GlobalSetting) {
         val key = stringPreferencesKey(Constant.GLOBAL_SETTING_KEY)
         dataStore.edit { prefs ->
-            prefs[key] = Json.encodeToString(generalSetting)
+            prefs[key] = Json.encodeToString(globalSetting)
         }
     }
 
-    override suspend fun clearGeneralSetting() {
+    override suspend fun clearGlobalSetting() {
         val key = stringPreferencesKey(Constant.GLOBAL_SETTING_KEY)
         dataStore.edit { prefs ->
             prefs.remove(key)
+        }
+    }
+
+    override suspend fun getLocalUiModeSetting(): UiMode {
+        val key = stringPreferencesKey(Constant.UI_MODE_KEY)
+        val uiMode = dataStore.data.map { dataStore -> dataStore[key] }.first()
+
+        return UiMode.entries.find { it.name.equals(uiMode, true) } ?: UiMode.AUTO
+    }
+
+    override suspend fun updateLocalUiModeSetting(uiMode: UiMode) {
+        val key = stringPreferencesKey(Constant.UI_MODE_KEY)
+        dataStore.edit { prefs ->
+            prefs[key] = uiMode.name
         }
     }
 
