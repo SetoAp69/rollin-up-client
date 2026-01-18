@@ -363,7 +363,6 @@
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
--printmapping "build/compose/binaries/main-release/mapping.txt"
 
 -keep class org.apache.poi.** { *; }
 -keep class javax.xml.** { *; }

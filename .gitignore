@@ -17,7 +17,6 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 *.properties
-***/network_security_config.xml
 *./kcef-bundle/
 composeApp/google-services.json
 composeApp/src/release/google-services.json

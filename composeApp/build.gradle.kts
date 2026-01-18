@@ -2,6 +2,7 @@
 
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Properties
@@ -37,7 +38,7 @@ val buildConfigGenerator by tasks.registering(Sync::class) {
                 package com.rollinup.rollinup
                 object BuildConfig{
                    const val MAP_URL = "${envProperties["MAP_URL"]}"
-                   val IS_PROD = ${envProperties["IS_PROD"]}
+                   val IS_PROD : Boolean = ${envProperties["IS_PROD"]}
                    const val SIGNING_CERTIFICATE = "${secret["SIGNING_CERTIFICATE"]}"
                }
             """.trimIndent()
@@ -47,6 +48,14 @@ val buildConfigGenerator by tasks.registering(Sync::class) {
         into("com/rollinup/rollinup")
     }
     into(layout.buildDirectory.dir("generated-src/kotlin/"))
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    dependsOn(buildConfigGenerator)
+}
+
+tasks.named("generateComposeResClass") {
+    dependsOn(buildConfigGenerator)
 }
 
 kotlin {
@@ -256,7 +265,7 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = rootProject.file("/keystore/release-keystore.jks")
+            storeFile = rootProject.file("keystore/release-keystore.jks")
             storePassword = secret["KEYSTORE_PASSWORD"]?.toString()
             keyAlias = secret["KEYSTORE_ALIAS"]?.toString()
             keyPassword = secret["KEY_PASSWORD"]?.toString()
@@ -320,7 +329,7 @@ android {
                 val variant = this.buildType.name
                 val fileExtension = output.outputFile.name.substringAfterLast(".")
                 output.outputFileName =
-                    "$appName-${variant}_v$version-$currentDateTime.$fileExtension"
+                    "$appName-${variant}-v$version-$currentDateTime.$fileExtension"
             }
 
         outputs
@@ -329,7 +338,7 @@ android {
                 val bundleTaskName = "bundle${variant.replaceFirstChar { it.uppercase() }}"
                 tasks.named(bundleTaskName).configure {
                     doLast {
-                        val newFileName = "$appName-${variant}_v$version-$currentDateTime.aab"
+                        val newFileName = "$appName-${variant}-v$version-$currentDateTime.aab"
                         val bundleOutputDir = file("build/outputs/bundle/$variant")
                         val bundle =
                             bundleOutputDir.listFiles()?.firstOrNull { it.name.endsWith(".aab") }
@@ -351,8 +360,8 @@ android {
                     mappingFiles.forEach { file ->
                         if (file.exists()) {
                             val mapName =
-                                "$appName-${variant.name}_v$version-$currentDateTime-mapping.${file.extension}"
-                            val mapFile = File("${file.parent}/android", mapName)
+                                "$appName-${variant.name}-v$version-$currentDateTime-mapping.${file.extension}"
+                            val mapFile = File("${file.parent}", mapName)
 
                             file.copyTo(mapFile)
                         }
