@@ -357,11 +357,9 @@
 
 -keep class com.rollinup.rollinup.BuildConfig {*;}
 
--keepclassmembers enum * {
-    public static **[] values();
-    public static ** valueOf(java.lang.String);
-}
+-keepclassmembers enum * {*;}
 
+-keep class kotlin.reflect.** { *; }
 -keep class org.apache.poi.** { *; }
 -keep class javax.xml.** { *; }
 -keep class org.apache.xmlbeans.** { *; }

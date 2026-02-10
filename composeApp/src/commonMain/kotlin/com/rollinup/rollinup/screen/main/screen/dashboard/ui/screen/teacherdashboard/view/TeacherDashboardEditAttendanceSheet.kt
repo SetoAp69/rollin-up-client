@@ -31,7 +31,9 @@ import com.rollinup.rollinup.component.bottomsheet.BottomSheet
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.chip.Chip
 import com.rollinup.rollinup.component.dialog.Dialog
+import com.rollinup.rollinup.component.handlestate.HandleState
 import com.rollinup.rollinup.component.loading.ShimmerEffect
+import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.permitform.view.PermitFormContent
 import com.rollinup.rollinup.component.selector.SingleSelector
@@ -50,8 +52,17 @@ import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
 import dev.jordond.compass.Coordinates
 import kotlinx.datetime.LocalDate
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_edit_line_24
+import rollin_up.composeapp.generated.resources.label_check_in_time
+import rollin_up.composeapp.generated.resources.label_select_attendance_status
+import rollin_up.composeapp.generated.resources.label_status
+import rollin_up.composeapp.generated.resources.label_submit
+import rollin_up.composeapp.generated.resources.msg_edit_attendance_error
+import rollin_up.composeapp.generated.resources.msg_edit_attendance_success
+import rollin_up.composeapp.generated.resources.msg_permit_current_date_missing
+import rollin_up.composeapp.generated.resources.ph_select_check_in_time
 
 @Composable
 fun TeacherDashboardEditAttendance(
@@ -65,11 +76,12 @@ fun TeacherDashboardEditAttendance(
             isShowSheet = isShowForm,
             onDismissRequest = onDismissRequest,
             modifier = Modifier.padding(horizontal = screenPadding)
-        ) {
+        ) { onShowSnackBar ->
             TeacherDashboardEditAttendanceContent(
                 uiState = uiState,
                 cb = cb,
-                onDismissRequest = onDismissRequest
+                onDismissRequest = onDismissRequest,
+                onShowSnackBar = onShowSnackBar
             )
         }
     } else {
@@ -82,11 +94,12 @@ fun TeacherDashboardEditAttendance(
             modifier = Modifier
                 .sizeIn(maxWidth = widthMax, maxHeight = heightMax)
                 .padding(screenPadding),
-        ) {
+        ) { onShowSnackBar ->
             TeacherDashboardEditAttendanceContent(
                 uiState = uiState,
                 cb = cb,
-                onDismissRequest = onDismissRequest
+                onDismissRequest = onDismissRequest,
+                onShowSnackBar = onShowSnackBar
             )
         }
     }
@@ -97,6 +110,7 @@ fun TeacherDashboardEditAttendanceContent(
     uiState: TeacherDashboardUiState,
     cb: TeacherDashboardCallback,
     onDismissRequest: (Boolean) -> Unit,
+    onShowSnackBar: OnShowSnackBar,
 ) {
     val detail = uiState.attendanceDetail
     val initialStatus = detail.status
@@ -104,6 +118,14 @@ fun TeacherDashboardEditAttendanceContent(
     var showDialog by remember { mutableStateOf(false) }
     val generalSetting = LocalGlobalSetting.current
 
+    HandleState(
+        state = uiState.submitEditAttendanceState,
+        errorMsg = stringResource(Res.string.msg_edit_attendance_error),
+        successMsg = stringResource(Res.string.msg_edit_attendance_success),
+        onDispose = cb.onResetMessageState,
+        onSuccess = cb.onRefresh,
+        onShowSnackBar = onShowSnackBar
+    )
     LaunchedEffect(uiState.submitEditAttendanceState) {
         if (uiState.submitEditAttendanceState == true) onDismissRequest(false)
     }
@@ -125,7 +147,8 @@ fun TeacherDashboardEditAttendanceContent(
             in listOf(
                 AttendanceStatus.ON_TIME,
                 AttendanceStatus.LATE
-            ), -> {
+            ),
+                -> {
                 cb.onUpdateEditForm(
                     uiState.editAttendanceFormData.copy(
                         location = Coordinates(
@@ -152,7 +175,8 @@ fun TeacherDashboardEditAttendanceContent(
             Header(
                 onUpdateFormData = cb.onUpdateEditForm,
                 formData = formData,
-                isLoading = uiState.isLoadingDetail
+                isLoading = uiState.isLoadingDetail,
+                initialStatus = uiState.attendanceDetail.status
             )
 
             if (uiState.isLoadingDetail) {
@@ -181,7 +205,7 @@ fun TeacherDashboardEditAttendanceContent(
         Button(
             modifier = Modifier
                 .fillMaxWidth(),
-            text = "Submit"
+            text = stringResource(Res.string.label_submit)
         ) {
             if (formData == uiState.fetchEditAttendanceForm()) onDismissRequest(false)
             if (!cb.onValidateEditForm(formData, initialStatus)) return@Button
@@ -206,6 +230,7 @@ private fun Header(
     isLoading: Boolean,
     onUpdateFormData: (EditAttendanceFormData) -> Unit,
     formData: EditAttendanceFormData,
+    initialStatus: AttendanceStatus,
 ) {
     var showSelectStatus by remember { mutableStateOf(false) }
 
@@ -217,7 +242,7 @@ private fun Header(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "Status",
+            text = stringResource(Res.string.label_status),
             color = theme.bodyText,
             style = Style.body
         )
@@ -234,9 +259,7 @@ private fun Header(
                     severity = formData.status.severity
                 )
                 SingleSelector(
-                    options = AttendanceStatus.entries.map {
-                        OptionData(it.label, it)
-                    },
+                    options = getEditStatusOptions(initialStatus),
                     value = formData.status,
                     onDismissRequest = { showSelectStatus = it },
                     isShowSelector = showSelectStatus,
@@ -263,7 +286,7 @@ private fun Header(
                         }
                         onUpdateFormData(newFormData)
                     },
-                    title = "Select Attendance Status"
+                    title = stringResource(Res.string.label_select_attendance_status)
                 )
             }
         }
@@ -278,8 +301,8 @@ fun AttendanceForm(
     onUpdateFormData: (EditAttendanceFormData) -> Unit,
 ) {
     TimePickerTextField(
-        title = "Check in time",
-        placeholder = "Select time",
+        title = stringResource(Res.string.label_check_in_time),
+        placeholder = stringResource(Res.string.ph_select_check_in_time),
         value = formData.checkInTime,
         onValueChange = {
             onUpdateFormData(
@@ -298,6 +321,7 @@ private fun PermitFormContent(
     formData: EditAttendanceFormData,
     onUpdateFormData: (EditAttendanceFormData) -> Unit,
 ) {
+    val durationError = stringResource(Res.string.msg_permit_current_date_missing)
     val duration = formData.permitFormData.duration
     LaunchedEffect(duration) {
         if (formData.permitFormData.type == PermitType.ABSENCE && duration.isNotEmpty()) {
@@ -310,7 +334,7 @@ private fun PermitFormContent(
                 onUpdateFormData(
                     formData.copy(
                         permitFormData = formData.permitFormData.copy(
-                            durationError = "Permit must include current date"
+                            durationError = durationError
                         )
                     )
                 )
@@ -343,4 +367,22 @@ private fun EditAttendanceLoading() {
             )
         }
     }
+}
+
+
+private fun getEditStatusOptions(prevStatus: AttendanceStatus): List<OptionData<AttendanceStatus>> {
+    return AttendanceStatus.entries
+        .filter {
+            if (prevStatus == AttendanceStatus.ON_TIME || prevStatus == AttendanceStatus.LATE) {
+                it != AttendanceStatus.EXCUSED && it != AttendanceStatus.APPROVAL_PENDING
+            } else {
+                it != AttendanceStatus.APPROVAL_PENDING
+            }
+        }
+        .map {
+            OptionData(
+                value = it,
+                label = it.label
+            )
+        }
 }
