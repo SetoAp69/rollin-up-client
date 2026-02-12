@@ -48,6 +48,14 @@
     <string name="msg_email_exist_error">Email is already been used</string>
     <string name="msg_student_id_empty_error">Student id can\'t be empty</string>
     <string name="msg_confirm_check_in">You're current location and picture will be sent to the server as proof. Are you sure you want to check in?</string>
+    <string name="msg_check_in_success">Success, check-in data successfully submitted.</string>
+    <string name="msg_check_in_error">Error, failed to check-in please try again. </string>
+    <string name="msg_edit_attendance_success">Success, attendance data successfully edited</string>
+    <string name="msg_edit_attendance_error">Error, failed to edit attendance data please try again</string>
+    <string name="msg_approval_error">Error, failed to submit permit approval please try again</string>
+    <string name="msg_approval_success">Success, permit approval successfully submitted</string>
+    <string name="msg_permit_current_date_missing">Permit duration must include current date</string>
+
 
     <string name="label_cancel">Cancel</string>
     <string name="label_all">All</string>
@@ -125,10 +133,11 @@
     <string name="label_new_password">New password</string>
     <string name="label_repeat_new_password">Repeat New password</string>
     <string name="label_back_to_login">Back to Login</string>
-    <string name ="label_confirm_check_in">Confirm Check-In</string>
-    <string name ="msg_check_in_success">Success, check-in data successfully submitted.</string>
-    <string name ="msg_check_in_error">Error, failed to check-in please try again. </string>
+    <string name="label_confirm_check_in">Confirm Check-In</string>
+    <string name="label_select_attendance_status">Select Attendance Status</string>
+    <string name="label_check_in_time">Check in time</string>
 
+    <string name="ph_select_check_in_time">Select check-in time</string>
     <string name="ph_permit_note">Enter permit note</string>
     <string name="ph_permit_reason">Enter permit reason</string>
     <string name="ph_first_name">Enter first name</string>

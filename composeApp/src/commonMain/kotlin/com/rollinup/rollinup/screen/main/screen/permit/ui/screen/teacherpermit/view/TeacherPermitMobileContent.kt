@@ -32,6 +32,7 @@ fun TeacherPermitMobileContent(
                 cb = cb
             )
         },
+        showLoadingOverlay = uiState.isLoadingOverlay
     ) {
         TeacherPermitMobileContent(
             pagingData = pagingData,

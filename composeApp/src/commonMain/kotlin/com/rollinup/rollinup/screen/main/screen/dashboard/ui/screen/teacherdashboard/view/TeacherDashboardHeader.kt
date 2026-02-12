@@ -1,4 +1,4 @@
-package com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view
+package com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

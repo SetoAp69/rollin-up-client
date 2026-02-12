@@ -16,6 +16,7 @@ import com.rollinup.apiservice.model.user.UserOptionEntity
 import com.rollinup.common.model.OptionData
 import com.rollinup.rollinup.CoroutineTestRule
 import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.CreateEditUserFormData
+import com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser.CreateEditUserFormErrorType
 import com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.createedituser.uistate.CreateEditUserUiState
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -280,15 +281,12 @@ class CreateEditUserViewModelTest {
         // Assert
         assertFalse(result)
         val state = viewModel.uiState.value.formData
-        assertEquals("Username can't be empty", state.userNameError)
-        assertEquals("Last name can't be empty", state.lastNameError)
-        assertEquals(
-            "First bane can't be empty",
-            state.firstNameError
-        ) // Typo "bane" matches source code
-        assertEquals("Email can't be empty", state.emailError)
-        assertTrue(state.genderError == true)
-        assertTrue(state.roleError == true)
+        assertEquals( CreateEditUserFormErrorType.USERNAME_EMPTY, state.userNameError)
+        assertEquals(CreateEditUserFormErrorType.LAST_NAME_EMPTY, state.lastNameError)
+        assertEquals(CreateEditUserFormErrorType.FIRST_NAME_EMPTY, state.firstNameError)
+        assertEquals(CreateEditUserFormErrorType.EMAIL_EMPTY, state.emailError)
+        assertTrue(state.genderError)
+        assertTrue(state.roleError)
     }
 
     @Test
@@ -320,8 +318,8 @@ class CreateEditUserViewModelTest {
         // Assert
         assertFalse(result)
         val state = viewModel.uiState.value.formData
-        assertEquals("Student ID can't be empty", state.studentIdError)
-        assertTrue(state.classError == true)
+        assertEquals(CreateEditUserFormErrorType.STUDENT_ID_EMPTY, state.studentIdError)
+        assertTrue(state.classError)
     }
 
     @Test
@@ -459,7 +457,7 @@ class CreateEditUserViewModelTest {
         advanceUntilIdle()
 
         // Assert
-        assertEquals("Username is already used", viewModel.uiState.value.formData.userNameError)
+        assertEquals(CreateEditUserFormErrorType.USERNAME_EXIST, viewModel.uiState.value.formData.userNameError)
     }
 
     @Test
@@ -493,7 +491,7 @@ class CreateEditUserViewModelTest {
         advanceUntilIdle()
 
         // Assert
-        assertEquals("Email is already used", viewModel.uiState.value.formData.emailError)
+        assertEquals(CreateEditUserFormErrorType.EMAIL_EXIST, viewModel.uiState.value.formData.emailError)
     }
 
     @Test

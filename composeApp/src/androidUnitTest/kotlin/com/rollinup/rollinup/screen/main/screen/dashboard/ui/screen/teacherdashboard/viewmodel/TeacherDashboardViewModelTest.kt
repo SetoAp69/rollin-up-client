@@ -662,7 +662,7 @@ class TeacherDashboardViewModelTest {
         // Assert
         // Logic in VM sets exportState to true even on error (based on provided code snippet: isLoadingOverlay=false, exportState=true)
         // This might be a bug in source, but test must match source logic
-        assertTrue(viewModel.uiState.value.exportState == true)
+        assertTrue(viewModel.uiState.value.exportState == false)
         coVerify(exactly = 0) { fileWriter.writeExcel(any(), any()) }
     }
 

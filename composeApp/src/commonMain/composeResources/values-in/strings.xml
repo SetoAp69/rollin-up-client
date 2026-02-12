@@ -48,8 +48,14 @@
     <string name="msg_student_id_empty_error">Nomor induk siswa tidak boleh kosong</string>
     <string name="msg_otp_already_sent">Kode OTP sudah dikirim ke email Anda. Anda dapat meminta OTP baru setelah 2 menit.</string>
     <string name="msg_confirm_check_in"> Lokasi terkini dan foto anda akan dikirim ke server sebagai bukti, lanjutkan proses presensi?</string>
-    <string name ="msg_check_in_success">Sukses, presensi berhasil dilakukan.</string>
-    <string name ="msg_check_in_error">Error, presensi gagal dilakukan, silakan coba lagi. </string>
+    <string name="msg_check_in_success">Sukses, presensi berhasil dilakukan.</string>
+    <string name="msg_check_in_error">Error, presensi gagal dilakukan, silakan coba lagi. </string>
+    <string name="msg_edit_attendance_success">Sukses, data presensi berhasil diedit</string>
+    <string name="msg_edit_attendance_error">Error, gagal mengedit data presensi, silahkan coba lagi</string>
+    <string name="msg_approval_error">Error, approval gagal dilakukan, silahkan coba lagi</string>
+    <string name="msg_approval_success">Sukses, approval berhasil</string>
+    <string name="msg_permit_current_date_missing">Permohonan izin harus mencakup hari ini</string>
+
 
     <string name="label_cancel">Batal</string>
     <string name="label_all">Semua</string>
@@ -127,8 +133,11 @@
     <string name="label_new_password">Kata sandi baru</string>
     <string name="label_repeat_new_password">Ulangi kata sandi baru</string>
     <string name="label_back_to_login">Kembali ke Login</string>
-    <string name ="label_confirm_check_in">Konfirmasi Presensi</string>
+    <string name="label_confirm_check_in">Konfirmasi Presensi</string>
+    <string name="label_select_attendance_status">Pilih status kehadiran</string>
+    <string name="label_check_in_time">Waktu kehadiran</string>
 
+    <string name="ph_select_check_in_time">Masukan waktu kehadiran</string>
     <string name="ph_permit_note">Masukkan catatan izin</string>
     <string name="ph_permit_reason">Masukkan alasan izin</string>
     <string name="ph_first_name">Masukkan nama depan</string>
