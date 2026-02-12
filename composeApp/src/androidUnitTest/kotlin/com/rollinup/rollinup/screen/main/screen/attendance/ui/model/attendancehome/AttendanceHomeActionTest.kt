@@ -15,7 +15,7 @@ class AttendanceHomeActionTest {
         val action = AttendanceHomeAction.HISTORY_BY_STUDENT
 
         // Act & Assert
-        assertEquals("History by student", action.label)
+        assertEquals("Attendance by student", action.label)
         assertEquals(Res.drawable.ic_document_line_24, action.icon)
     }
 

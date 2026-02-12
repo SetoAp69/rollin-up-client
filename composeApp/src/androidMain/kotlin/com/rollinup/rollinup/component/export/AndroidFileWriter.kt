@@ -22,7 +22,7 @@ class AndroidFileWriter(
         val dataFrame = dataFrameOf(*data.toTypedArray())
         val resolver = context.contentResolver
 
-        val tempFile = File(context.cacheDir, "fileName.xlsx")
+        val tempFile = File(context.cacheDir, "$fileName.xlsx")
         if (!tempFile.exists())
             tempFile.createNewFile()
 
@@ -41,22 +41,25 @@ class AndroidFileWriter(
         }
 
         val newUri = resolver.insert(uri, values) ?: return
-        try {
-            val outputStream = resolver.openOutputStream(newUri)
-            val inputStream = tempFile.inputStream()
+        val outputStream = resolver.openOutputStream(newUri)
+        val inputStream = tempFile.inputStream()
 
+        try {
+            dataFrame.writeExcel(
+                file = tempFile,
+                sheetName = fileName,
+                writeHeader = true
+            )
             outputStream?.let {
                 inputStream.copyTo(outputStream)
             }
-            dataFrame.writeExcel(
-                file = tempFile,
-                workBookType = WorkBookType.XLSX,
-                sheetName = fileName
-            )
-            outputStream?.flush()
         } catch (e: Exception) {
             e.printStackTrace()
             L.e { e.stackTraceToString() }
+        } finally {
+            outputStream?.close()
+            inputStream.close()
+            tempFile.delete()
         }
     }
 
