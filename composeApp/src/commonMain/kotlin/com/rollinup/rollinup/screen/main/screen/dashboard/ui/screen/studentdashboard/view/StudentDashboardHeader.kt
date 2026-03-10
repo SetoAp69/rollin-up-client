@@ -1,4 +1,4 @@
-package com.rollinup.rollinup.screen.dashboard.ui.screen.studentdashboard.view
+package com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -35,9 +35,14 @@ import com.rollinup.rollinup.component.utils.isCompact
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.uistate.StudentDashboardUiState
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_location_invalid_line_24
 import rollin_up.composeapp.generated.resources.ic_location_line_24
+import rollin_up.composeapp.generated.resources.label_absent
+import rollin_up.composeapp.generated.resources.label_excused
+import rollin_up.composeapp.generated.resources.label_late
+import rollin_up.composeapp.generated.resources.label_on_time
 
 @Composable
 fun StudentDashboardHeader(
@@ -185,25 +190,25 @@ fun SummarySection(
         ) {
             SummaryItem(
                 amount = summary.checkedIn.toString(),
-                title = "On Time",
+                title = stringResource(Res.string.label_on_time),
                 severity = Severity.SUCCESS
             )
             CircleSpacer()
             SummaryItem(
                 amount = summary.late.toString(),
-                title = "Late",
+                title = stringResource(Res.string.label_late),
                 severity = Severity.WARNING
             )
             CircleSpacer()
             SummaryItem(
                 amount = summary.excused.toString(),
-                title = "Excused",
+                title = stringResource(Res.string.label_excused),
                 severity = Severity.WARNING
             )
             CircleSpacer()
             SummaryItem(
                 amount = summary.absent.toString(),
-                title = "Absent",
+                title = stringResource(Res.string.label_absent),
                 severity = Severity.DANGER
             )
         }

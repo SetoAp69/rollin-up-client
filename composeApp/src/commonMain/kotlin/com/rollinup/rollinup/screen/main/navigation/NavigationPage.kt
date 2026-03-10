@@ -111,7 +111,10 @@ fun NavGraphBuilder.mainGraph(
 
         when (role) {
             Role.STUDENT -> {
-                StudentPermitScreen { onNavigateUp() }
+                StudentPermitScreen(
+                    onNavigateUp = onNavigateUp,
+                    onShowSnackBar = onShowSnackBar
+                )
             }
 
             Role.ADMIN -> {

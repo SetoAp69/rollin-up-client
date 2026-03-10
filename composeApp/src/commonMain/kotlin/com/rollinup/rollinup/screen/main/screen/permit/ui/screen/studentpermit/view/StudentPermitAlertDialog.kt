@@ -10,6 +10,7 @@ import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.label_cancel
 import rollin_up.composeapp.generated.resources.label_cancel_permit
 import rollin_up.composeapp.generated.resources.label_confirm
+import rollin_up.composeapp.generated.resources.msg_cancel_permit_alert
 
 @Composable
 fun CancelPermitAlertDialog(
@@ -18,13 +19,11 @@ fun CancelPermitAlertDialog(
     onConfirm: () -> Unit,
     item: PermitByStudentEntity,
 ) {
-    val message =
-        "${item.type} permit for **${
-            generateDuration(
-                item.startTime,
-                item.endTime
-            )
-        }** will be cancelled"
+
+    val message = stringResource(
+        Res.string.msg_cancel_permit_alert,
+        generateDuration(item.startTime, item.endTime)
+    )
 
     AlertDialog(
         isShowDialog = showDialog,

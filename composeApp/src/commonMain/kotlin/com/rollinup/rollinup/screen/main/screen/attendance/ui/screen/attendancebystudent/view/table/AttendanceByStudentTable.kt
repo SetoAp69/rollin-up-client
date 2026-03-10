@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import com.rollinup.apiservice.model.attendance.AttendanceByStudentEntity
 import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.rollinup.component.chip.Chip
+import com.rollinup.rollinup.component.date.DateFormatter
 import com.rollinup.rollinup.component.date.DateText
 import com.rollinup.rollinup.component.date.DateTextFormat
 import com.rollinup.rollinup.component.dropdown.DropDownMenu
@@ -14,6 +15,7 @@ import com.rollinup.rollinup.component.table.TableColumn
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancebystudent.uistate.AttendanceByStudentUiState
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_info_line_24
@@ -57,7 +59,13 @@ fun AttendanceByStudentTable(
 private fun getColumn(): List<TableColumn<AttendanceByStudentEntity>> =
     listOf(
         TableColumn("Date") {
-            DateText(it.date)
+            val localDate = LocalDate.parse(it.date)
+            Text(
+                text = DateFormatter.formatDateShort(localDate,false),
+                color = theme.bodyText,
+                style = Style.body
+            )
+
         },
         TableColumn("Status", 0.5f) {
             Chip(
@@ -75,7 +83,6 @@ private fun getColumn(): List<TableColumn<AttendanceByStudentEntity>> =
         },
         TableColumn("Duration", 0.5f) { data ->
             val text = data.permit?.durationString ?: "-"
-
             Text(
                 text = text,
                 color = theme.bodyText,

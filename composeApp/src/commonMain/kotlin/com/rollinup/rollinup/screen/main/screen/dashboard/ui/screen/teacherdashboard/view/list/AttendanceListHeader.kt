@@ -27,6 +27,10 @@ import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardActionSheet
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardFilterSheet
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_attendance
+import rollin_up.composeapp.generated.resources.ph_date_range_picker
 
 @Composable
 fun AttendanceListHeader(
@@ -45,7 +49,7 @@ fun AttendanceListHeader(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Attendance",
+                text = stringResource(Res.string.label_attendance),
                 style = Style.label,
                 color = theme.bodyText
             )
@@ -110,7 +114,7 @@ fun AttendanceListHeader(
             cb.onUpdateExportDateRanges(value.sorted())
             showExportDialog = true
         },
-        title = "Select date ranges",
+        title = stringResource(Res.string.ph_date_range_picker),
         isDisablePastSelection = false,
         isAllSelectable = true,
     )

@@ -24,6 +24,9 @@ import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashb
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardApprovalSheet
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardEditAttendance
 import kotlinx.datetime.TimeZone
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_todays_attendance
 
 @Composable
 fun AttendanceTable(
@@ -40,7 +43,7 @@ fun AttendanceTable(
         columns = getTableColumn(),
         headerContent = {
             Text(
-                text = "Today's Attendance",
+                text = stringResource(Res.string.label_todays_attendance),
                 color = theme.textPrimary,
                 style = Style.popupTitle
             )

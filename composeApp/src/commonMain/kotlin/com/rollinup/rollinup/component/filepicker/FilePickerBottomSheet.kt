@@ -65,13 +65,7 @@ fun FilePickerBottomSheet(
             showCamera = false
             onDismissRequest(false)
         },
-        notification = {
-            Chip(
-                text = stringResource(Res.string.msg_camera_face_position),
-                severity = Severity.SECONDARY,
-                textStyle = Style.body
-            )
-        },
+        notification = {},
         isShowCamera = showCamera,
         errorMsg = stringResource(Res.string.msg_camera_error_capture),
     )

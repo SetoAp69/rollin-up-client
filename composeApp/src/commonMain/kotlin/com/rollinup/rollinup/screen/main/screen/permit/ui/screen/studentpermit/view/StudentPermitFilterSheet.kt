@@ -15,8 +15,10 @@ import com.rollinup.rollinup.screen.main.screen.permit.model.PermitFilterData
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.studentpermit.uistate.StudentPermitUiState
 import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_date_range
 import rollin_up.composeapp.generated.resources.label_status
 import rollin_up.composeapp.generated.resources.label_type
+import rollin_up.composeapp.generated.resources.ph_date_range_picker
 
 @Composable
 fun StudentPermitFilterSheet(
@@ -58,7 +60,7 @@ fun StudentPermitFilterSheet(
         )
         Spacer(itemGap8)
         FilterDatePicker(
-            title = "Date Range",
+            title = stringResource(Res.string.label_date_range),
             value = tempFilterData.dateRange,
             isLoading = uiState.isLoading,
             onValueChange = {

@@ -63,7 +63,7 @@ fun AttendanceListItem(
                     color = theme.bodyText
                 )
                 Chip(
-                    text = status.name,
+                    text = status.label,
                     severity = status.severity,
                 )
             }

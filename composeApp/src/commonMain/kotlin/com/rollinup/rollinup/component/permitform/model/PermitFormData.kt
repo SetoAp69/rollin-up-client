@@ -13,10 +13,10 @@ data class PermitFormData(
     val fileName: String? = null,
     val approvalStatus: Boolean? = null,
 
-    val durationError: String? = null,
-    val reasonError: String? = null,
-    val attachmentError: String? = null,
-    val noteError: String? = null,
+    val durationError: PermitFormErrorType? = null,
+    val reasonError: PermitFormErrorType? = null,
+    val attachmentError: PermitFormErrorType? = null,
+    val noteError: PermitFormErrorType? = null,
 ) {
     val isValid
         get() = listOf(durationError, reasonError, attachmentError, noteError).all { it == null }
