@@ -47,5 +47,5 @@ class EditPermitUseCase(private val repository: PermitRepository) {
 
 class CancelPermitUseCase(private val repository: PermitRepository) {
     operator fun invoke(id: String) =
-        repository.editPermit(id, CreateEditPermitBody())
+        repository.cancelPermit(id)
 }

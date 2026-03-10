@@ -260,7 +260,7 @@ android {
     androidResources {
         generateLocaleConfig = true
         localeFilters.add("en")
-        localeFilters.add("id")
+        localeFilters.add("in")
     }
 
     signingConfigs {
@@ -301,10 +301,11 @@ android {
         }
 
         getByName("debug") {
-            versionNameSuffix = "-debug"
+            manifestPlaceholders += mapOf()
+            versionNameSuffix = "debug"
             applicationIdSuffix = ".debug"
             manifestPlaceholders["version"] = defaultConfig.versionName + "-" + versionNameSuffix
-            manifestPlaceholders["appName"] = "@string/app_name"
+            manifestPlaceholders["appName"] = "@string/app_name_debug"
             manifestPlaceholders["crashlyticsCollectionEnabled"] = "false"
         }
     }

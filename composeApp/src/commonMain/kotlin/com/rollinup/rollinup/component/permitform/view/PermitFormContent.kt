@@ -38,6 +38,7 @@ import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.permitform.model.PermitFormCallback
 import com.rollinup.rollinup.component.permitform.model.PermitFormData
+import com.rollinup.rollinup.component.permitform.model.PermitFormErrorType
 import com.rollinup.rollinup.component.permitform.uistate.PermitFormUiState
 import com.rollinup.rollinup.component.radio.RadioSelectorRow
 import com.rollinup.rollinup.component.selector.SingleSelector
@@ -66,10 +67,6 @@ import rollin_up.composeapp.generated.resources.label_permit_type
 import rollin_up.composeapp.generated.resources.label_reason
 import rollin_up.composeapp.generated.resources.label_select_permit_duration
 import rollin_up.composeapp.generated.resources.label_submit
-import rollin_up.composeapp.generated.resources.msg_duration_error_invalid
-import rollin_up.composeapp.generated.resources.msg_duration_error_too_early
-import rollin_up.composeapp.generated.resources.msg_duration_error_too_late
-import rollin_up.composeapp.generated.resources.msg_file_error_max_size
 import rollin_up.composeapp.generated.resources.msg_permit_submit_error
 import rollin_up.composeapp.generated.resources.msg_permit_submit_success
 import rollin_up.composeapp.generated.resources.ph_permit_note
@@ -102,22 +99,22 @@ fun PermitFormContent(
             formData = formData
         )
     }
-    val maxFileSizeError = stringResource(Res.string.msg_file_error_max_size)
+
     FilePicker(
         title = stringResource(Res.string.label_attachment),
         isRequired = true,
         isError = formData.attachmentError != null,
-        errorMsg = formData.attachmentError,
+        errorMsg = formData.attachmentError?.getErrorMessage(),
         value = formData.attachment,
         fileName = formData.fileName,
         showCameraOption = true,
         onValueChange = {
             val newValue: MultiPlatformFile?
-            val textError: String?
+            val textError: PermitFormErrorType?
 
             if ((it?.readBytes()?.size ?: 0) > 1 * 1024 * 1024) {
                 newValue = null
-                textError = maxFileSizeError
+                textError = PermitFormErrorType.ATTACHMENT_EMPTY
             } else {
                 newValue = it
                 textError = null
@@ -144,7 +141,7 @@ fun PermitFormContent(
         },
         placeholder = stringResource(Res.string.ph_permit_note),
         isError = formData.noteError != null,
-        errorMsg = formData.noteError
+        errorMsg = formData.noteError?.getErrorMessage()
     )
 }
 
@@ -176,6 +173,7 @@ fun PermitFormContent(
     val title =
         if (isEdit) stringResource(Res.string.label_edit_permit_request)
         else stringResource(Res.string.label_create_permit_request)
+    var showAlertDialog by remember { mutableStateOf(false) }
 
     LoadingOverlay(uiState.isLoadingOverlay)
 
@@ -223,6 +221,19 @@ fun PermitFormContent(
             cb.onSubmit(formData, onSuccess, onError)
         }
 
+    }
+    if(isEdit){
+        EditPermitAlertDialog(
+            showDialog = showAlertDialog,
+            onDismissRequest = { showAlertDialog = it },
+            onConfirm = { cb.onSubmit(formData, onSuccess, onError) },
+        )
+    }else{
+        CreatePermitAlertDialog(
+            showDialog = showAlertDialog,
+            onDismissRequest = {showAlertDialog = it},
+            onConfirm = {cb.onSubmit(formData, onSuccess, onError)}
+        )
     }
 }
 
@@ -275,7 +286,7 @@ fun PermitReasonSection(
                 },
                 placeholder = stringResource(Res.string.ph_permit_reason),
                 isError = formData.reasonError != null,
-                errorMsg = formData.reasonError
+                errorMsg = formData.reasonError?.getErrorMessage()
             )
         }
     }
@@ -300,11 +311,11 @@ fun PermitFormDurationSection(
                 placeholder = stringResource(Res.string.label_select_permit_duration),
                 value = formData.duration.filter { it != null } as List<Long>,
                 isError = formData.durationError != null,
-                errorText = formData.durationError
+                errorText = formData.durationError?.getErrorMessage()
             ) {
                 onUpdateFormData(
                     formData.copy(
-                        duration = it,
+                        duration = it.sorted(),
                         durationError = null
                     )
                 )
@@ -314,10 +325,6 @@ fun PermitFormDurationSection(
         PermitType.DISPENSATION -> {
             val schoolStart = globalSetting.schoolPeriodStart
             val schoolEnd = globalSetting.schoolPeriodEnd
-
-            val tooEarlyMsgError = stringResource(Res.string.msg_duration_error_too_early)
-            val tooLateMsgError = stringResource(Res.string.msg_duration_error_too_late)
-            val invalidDurationError = stringResource(Res.string.msg_duration_error_invalid)
             val today = LocalDate.now()
 
             val durationTime = formData.duration.map {
@@ -337,10 +344,10 @@ fun PermitFormDurationSection(
                     val max = value[1] ?: schoolEnd
 
                     val errorMessage = when {
-                        from != null && to == null && from < schoolStart -> tooEarlyMsgError
-                        to != null && from == null && to > schoolEnd -> tooLateMsgError
-                        (to != null && to < min) || (from != null && from > max) -> invalidDurationError
-                        (value.all { it != null } && to!! > schoolEnd && from!! < schoolStart) -> invalidDurationError
+                        from != null && to == null && from < schoolStart -> PermitFormErrorType.DURATION_TOO_EARLY
+                        to != null && from == null && to > schoolEnd -> PermitFormErrorType.DURATION_TOO_LATE
+                        (to != null && to < min) || (from != null && from > max) -> PermitFormErrorType.DURATION_INVALID
+                        (value.all { it != null } && to!! > schoolEnd && from!! < schoolStart) -> PermitFormErrorType.DURATION_INVALID
                         else -> null
                     }
 
@@ -348,7 +355,7 @@ fun PermitFormDurationSection(
                         formData.copy(
                             duration = value.map { time ->
                                 if (time == null) null
-                                else LocalDateTime(today,time).toEpochMillis()
+                                else LocalDateTime(today, time).toEpochMillis()
                             },
                             durationError = errorMessage
                         )
@@ -356,7 +363,7 @@ fun PermitFormDurationSection(
                 },
                 isRequired = true,
                 isError = formData.durationError != null,
-                textError = formData.durationError,
+                textError = formData.durationError?.getErrorMessage(),
                 title = stringResource(Res.string.label_duration)
             )
         }

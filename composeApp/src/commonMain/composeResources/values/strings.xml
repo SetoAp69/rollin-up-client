@@ -55,6 +55,15 @@
     <string name="msg_approval_error">Error, failed to submit permit approval please try again</string>
     <string name="msg_approval_success">Success, permit approval successfully submitted</string>
     <string name="msg_permit_current_date_missing">Permit duration must include current date</string>
+    <string name="msg_permit_duration_error_empty">Permit duration cannot be empty</string>
+    <string name="msg_permit_reason_error_empty">Permit reason cannot be empty</string>
+    <string name="msg_permit_attachment_error_empty">Permit attachment cannot be empty</string>
+    <string name="msg_permit_note_max_char_120">Note cannot exceed 120 characters</string>
+    <string name="msg_cancel_permit_alert">Permit for %1$s will be cancelled</string>
+    <string name="msg_edit_permit_request_alert">Permit request will be edited with new data. Any overlapped permit will be cancelled</string>
+    <string name="msg_create_permit_request_alert">Permit request will be submitted. Any overlapped permit will be cancelled</string>
+    <string name="msg_cancel_permit_success">Success, permit request canceled successfully.</string>
+    <string name="msg_cancel_permit_error">Error, failed to cancel permit request. Please try again.</string>
 
 
     <string name="label_cancel">Cancel</string>
@@ -136,6 +145,16 @@
     <string name="label_confirm_check_in">Confirm Check-In</string>
     <string name="label_select_attendance_status">Select Attendance Status</string>
     <string name="label_check_in_time">Check in time</string>
+    <string name="label_attendance">Attendance</string>
+    <string name="label_permit_request">Permit Request</string>
+    <string name="label_create_permit">Create Permit</string>
+    <string name="label_excused">Excused</string>
+    <string name="label_late">Late</string>
+    <string name="label_on_time">Present</string>
+    <string name="label_sick">Sick</string>
+    <string name="label_todays_attendance">Today\'s Attendance</string>
+    <string name="label_present">Present</string>
+    <string name="label_alpha">Alpha</string>
 
     <string name="ph_select_check_in_time">Select check-in time</string>
     <string name="ph_permit_note">Enter permit note</string>

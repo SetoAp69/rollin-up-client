@@ -55,6 +55,15 @@
     <string name="msg_approval_error">Error, approval gagal dilakukan, silahkan coba lagi</string>
     <string name="msg_approval_success">Sukses, approval berhasil</string>
     <string name="msg_permit_current_date_missing">Permohonan izin harus mencakup hari ini</string>
+    <string name="msg_permit_duration_error_empty">Durasi izin tidak boleh kosong</string>
+    <string name="msg_permit_reason_error_empty">Alasan izin tidak boleh kosong</string>
+    <string name="msg_permit_attachment_error_empty">Lampiran izin tidak boleh kosong</string>
+    <string name="msg_permit_note_max_char_120">Catatan tidak boleh lebih dari 120 karakter</string>
+    <string name="msg_cancel_permit_alert">Permohonan izin akan dibatalkan</string>
+    <string name="msg_edit_permit_request_alert">Permohonan izin akan diperbarui dengan data baru. Izin yang tumpang tindih akan dibatalkan.</string>
+    <string name="msg_create_permit_request_alert">Permohonan izin akan dibuat. Izin yang tumpang tindih akan dibatalkan.</string>
+    <string name="msg_cancel_permit_success">Sukses, permohonan izin berhasil dibatalkan</string>
+    <string name="msg_cancel_permit_error">Error, permohonan izin gagal dibatalkan, silakan coba lagi</string>
 
 
     <string name="label_cancel">Batal</string>
@@ -87,7 +96,7 @@
     <string name="label_edit_permit_request">Ubah Pengajuan Izin</string>
     <string name="label_create_permit_request">Buat Pengajuan Izin</string>
     <string name="label_select_permit_duration">Pilih durasi izin</string>
-    <string name="label_absent">Tidak Hadir</string>
+    <string name="label_absent">Absen</string>
     <string name="label_dispensation">Dispensasi</string>
     <string name="label_permit_type">Jenis Izin</string>
     <string name="label_full_name">Nama Lengkap</string>
@@ -136,6 +145,16 @@
     <string name="label_confirm_check_in">Konfirmasi Presensi</string>
     <string name="label_select_attendance_status">Pilih status kehadiran</string>
     <string name="label_check_in_time">Waktu kehadiran</string>
+    <string name="label_attendance">Presensi</string>
+    <string name="label_permit_request">Permohonan Izin</string>
+    <string name="label_create_permit">Pengajuan Izin</string>
+    <string name="label_excused">Dispensasi</string>
+    <string name="label_late">Terlambat</string>
+    <string name="label_on_time">Hadir</string>
+    <string name="label_sick">Sakit</string>
+    <string name="label_todays_attendance">Presensi Hari Ini</string>
+    <string name="label_present">Hadir</string>
+    <string name="label_alpha">Alpha</string>
 
     <string name="ph_select_check_in_time">Masukan waktu kehadiran</string>
     <string name="ph_permit_note">Masukkan catatan izin</string>

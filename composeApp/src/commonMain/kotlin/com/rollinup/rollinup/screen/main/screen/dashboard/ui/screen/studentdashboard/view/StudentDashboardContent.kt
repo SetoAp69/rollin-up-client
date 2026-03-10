@@ -29,12 +29,17 @@ import com.rollinup.rollinup.component.spacer.screenPaddingValues
 import com.rollinup.rollinup.component.theme.LocalGlobalSetting
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.screen.dashboard.ui.component.DashboardCalendar
-import com.rollinup.rollinup.screen.dashboard.ui.screen.studentdashboard.view.StudentDashboardHeader
 import com.rollinup.rollinup.screen.main.navigation.MainRoute
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.navigation.AttendanceRoute
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.studentdashboard.StudentDashboardCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.studentdashboard.StudentDashboardQuickAccessCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.uistate.StudentDashboardUiState
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_attendance
+import rollin_up.composeapp.generated.resources.msg_camera_error_capture
+import rollin_up.composeapp.generated.resources.msg_camera_face_position
+import rollin_up.composeapp.generated.resources.msg_permit_submit_success
 
 @Composable
 fun StudentDashboardContent(
@@ -115,7 +120,7 @@ fun StudentDashboardContent(
                             showDetail = true
                         }
                     },
-                    title = "Attendance"
+                    title = stringResource(Res.string.label_attendance)
                 )
             }
         }
@@ -128,15 +133,18 @@ fun StudentDashboardContent(
         detail = uiState.attendanceDetail
     )
 
+    val snackBarPermitSuccess = stringResource(Res.string.msg_permit_submit_success)
     PermitForm(
         showPermitForm = showPermitForm,
         onDismissRequest = { showPermitForm = it },
         onSuccess = {
-            onShowSnackBar("Success, Permit data successfully submitted", true)
+            onShowSnackBar(snackBarPermitSuccess, true)
             showPermitForm = false
         }
     )
 
+    val cameraPositionMsg = stringResource(Res.string.msg_camera_face_position)
+    val cameraErrorMsg = stringResource(Res.string.msg_camera_error_capture)
     CameraView(
         onDismissRequest = {
             showCamera = it
@@ -149,16 +157,16 @@ fun StudentDashboardContent(
         },
         notification = {
             Chip(
-                text = "Make sure your face can be identified easily",
+                text = cameraPositionMsg,
                 severity = Severity.SECONDARY,
                 textStyle = Style.body
             )
         },
         isShowCamera = showCamera,
         onError = {
-            onShowSnackBar("Error, failed to take photo please try again", false)
+            onShowSnackBar(cameraErrorMsg, false)
         },
-        errorMsg = "Error, failed to take photo please try again",
+        errorMsg = cameraErrorMsg,
     )
 
     uiState.tempPhoto?.let {

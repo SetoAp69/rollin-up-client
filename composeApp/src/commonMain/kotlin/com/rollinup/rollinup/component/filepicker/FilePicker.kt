@@ -195,6 +195,7 @@ fun FilePicker(
                 fileName = tempValue?.name ?: fileName!!,
                 onClickDelete = {
                     tempValue = null
+                    fileName == null
                 },
                 onClickEdit = {
                     showHandler = true

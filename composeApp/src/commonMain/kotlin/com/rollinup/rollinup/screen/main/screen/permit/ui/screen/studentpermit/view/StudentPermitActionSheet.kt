@@ -64,6 +64,14 @@ fun StudentPermitActionSheet(
         id = item.id,
         showPermitForm = showEdit,
         onDismissRequest = { showEdit = it },
+        onSuccess = {
+            showEdit = false
+            cb.onRefresh()
+        },
+        onError = {
+            showEdit = false
+            cb.onRefresh()
+        }
     )
     PermitDetailDialog(
         id = item.id,

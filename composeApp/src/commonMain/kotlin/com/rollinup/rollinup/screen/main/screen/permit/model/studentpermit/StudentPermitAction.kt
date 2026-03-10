@@ -4,6 +4,7 @@ import com.rollinup.apiservice.model.permit.ApprovalStatus
 import com.rollinup.common.model.Severity
 import org.jetbrains.compose.resources.DrawableResource
 import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.ic_close_line_24
 import rollin_up.composeapp.generated.resources.ic_edit_line_24
 import rollin_up.composeapp.generated.resources.ic_info_line_24
 
@@ -19,7 +20,7 @@ enum class StudentPermitAction(
         show = { status -> status == ApprovalStatus.APPROVAL_PENDING }
     ),
     CANCEL(
-        icon = Res.drawable.ic_edit_line_24,
+        icon = Res.drawable.ic_close_line_24,
         label = "Cancel permit",
         show = { status -> status == ApprovalStatus.APPROVAL_PENDING }
     ),
