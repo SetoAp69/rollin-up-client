@@ -19,11 +19,11 @@ data class CreateEditUserBody(
         username?.let {
             hashMap["username"] = it
         }
-        firstName?.let {
-            hashMap["firstname"] = it
-        }
+//        firstName?.let {
+//            hashMap["firstname"] = it
+//        }
         lastName?.let {
-            hashMap["lastname"] = it
+            hashMap["fullName"] = it
         }
         email?.let {
             hashMap["email"] = it

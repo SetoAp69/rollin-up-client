@@ -143,12 +143,12 @@ private fun getColumn(): List<TableColumn<PermitByClassEntity>> {
             )
         },
 
-        TableColumn(stringResource(Res.string.label_start)) {
+        TableColumn(stringResource(Res.string.label_start), 0.5f) {
             DateText(
                 dateString = it.startTime,
             )
         },
-        TableColumn(stringResource(Res.string.label_end)) {
+        TableColumn(stringResource(Res.string.label_end), 0.5f) {
             DateText(
                 dateString = it.endTime,
             )

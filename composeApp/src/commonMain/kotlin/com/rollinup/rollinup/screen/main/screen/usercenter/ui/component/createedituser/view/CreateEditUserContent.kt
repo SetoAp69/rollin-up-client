@@ -47,14 +47,12 @@ import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.label_address
 import rollin_up.composeapp.generated.resources.label_birthday
 import rollin_up.composeapp.generated.resources.label_class
-import rollin_up.composeapp.generated.resources.label_first_name
-import rollin_up.composeapp.generated.resources.label_last_name
+import rollin_up.composeapp.generated.resources.label_full_name
 import rollin_up.composeapp.generated.resources.label_phone
 import rollin_up.composeapp.generated.resources.label_role
 import rollin_up.composeapp.generated.resources.label_student_id
 import rollin_up.composeapp.generated.resources.ph_address
 import rollin_up.composeapp.generated.resources.ph_email
-import rollin_up.composeapp.generated.resources.ph_first_name
 import rollin_up.composeapp.generated.resources.ph_last_name
 import rollin_up.composeapp.generated.resources.ph_phone
 import rollin_up.composeapp.generated.resources.ph_student_id
@@ -225,29 +223,9 @@ fun NameSection(
     Row {
         Box(modifier = Modifier.weight(1f)) {
             TextField(
-                title = stringResource(Res.string.label_first_name),
                 isRequired = !isEdit,
-                maxChar = 15,
-                value = formData.firstName ?: "",
-                placeholder = stringResource(Res.string.ph_first_name),
-                onValueChange = { value ->
-                    onUpdateForm(
-                        formData.copy(
-                            firstName = value.ifBlank { null },
-                            firstNameError = null
-                        )
-                    )
-                },
-                isError = formData.firstNameError != null,
-                errorMsg = formData.firstNameError?.getErrorMessage()
-            )
-        }
-        Spacer(itemGap8)
-        Box(modifier = Modifier.weight(1f)) {
-            TextField(
-                isRequired = !isEdit,
-                title = stringResource(Res.string.label_last_name),
-                maxChar = 15,
+                title = stringResource(Res.string.label_full_name),
+                maxChar = 60,
                 value = formData.lastName ?: "",
                 placeholder = stringResource(Res.string.ph_last_name),
                 onValueChange = { value ->
@@ -306,7 +284,8 @@ private fun SelectorSection(
                         birthDayError = false
                     )
                 )
-            }
+            },
+            isAllSelectable = true,
         )
         SingleDropDownSelector(
             title = stringResource(Res.string.label_role),

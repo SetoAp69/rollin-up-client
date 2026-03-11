@@ -36,7 +36,7 @@ fun AttendanceTable(
     var showEdit by remember { mutableStateOf(false) }
     var showApproval by remember { mutableStateOf(false) }
     var showDetail by remember { mutableStateOf(false) }
-
+    var selectedId by remember { mutableStateOf(emptyList<String>()) }
     Table(
         items = uiState.attendanceList,
         isLoading = uiState.isLoadingList,
@@ -68,6 +68,7 @@ fun AttendanceTable(
                     }
 
                     TeacherDashboardAction.APPROVAL -> {
+                        selectedId = state.selectedItem.filter { it.permit!=null }.map { it.permit!!.id }
                         showApproval = true
                     }
 
@@ -96,7 +97,8 @@ fun AttendanceTable(
         showSheet = showApproval,
         onDismissRequest = { showApproval = it },
         uiState = uiState,
-        cb = cb
+        cb = cb,
+        selectedId = selectedId
     )
 
     TeacherDashboardEditAttendance(
