@@ -18,6 +18,7 @@ import com.rollinup.apiservice.data.source.network.model.request.user.UpdatePass
 import com.rollinup.apiservice.data.source.network.model.response.ApiResponse
 import com.rollinup.apiservice.model.common.NetworkError
 import com.rollinup.apiservice.model.common.Result
+import com.rollinup.apiservice.model.user.OtpStatusEntity
 import com.rollinup.apiservice.model.user.UserDetailEntity
 import com.rollinup.apiservice.model.user.UserEntity
 import com.rollinup.apiservice.model.user.UserOptionEntity
@@ -177,7 +178,7 @@ class UserRepositoryImpl(
      * @param body The body containing the user's identifier (email/username).
      * @return A Flow emitting a Result containing the user's email on success.
      */
-    override fun createResetPasswordRequest(body: CreateResetPasswordRequestBody): Flow<Result<String, NetworkError>> =
+    override fun createResetPasswordRequest(body: CreateResetPasswordRequestBody): Flow<Result<OtpStatusEntity, NetworkError>> =
         flow {
 
             val response = userApiService.createResetPasswordRequest(body)
@@ -188,7 +189,7 @@ class UserRepositoryImpl(
 
                 is ApiResponse.Success -> {
                     if (response.statusCode == HttpStatusCode.OK) {
-                        emit(Result.Success(response.data.data.email))
+                        emit(Result.Success(mapper.mapResetPasswordOtpStatus(response.data.data)))
                     } else {
                         emit(Result.Error(NetworkError.RESPONSE_ERROR))
                     }
@@ -378,7 +379,7 @@ class UserRepositoryImpl(
      *
      * @return A Flow emitting a Result indicating success or failure.
      */
-    override fun resendVerificationOtp(): Flow<Result<Unit, NetworkError>> =
+    override fun resendVerificationOtp(): Flow<Result<OtpStatusEntity, NetworkError>> =
         flow {
             val response = userApiService.resetVerificationOtp()
 
@@ -388,7 +389,7 @@ class UserRepositoryImpl(
                 }
 
                 is ApiResponse.Success -> {
-                    emit(Result.Success(Unit))
+                    emit(Result.Success(mapper.mapResendVerificationOtpStatus(response.data.data)))
                 }
             }
         }.catch {

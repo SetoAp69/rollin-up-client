@@ -4,7 +4,7 @@ import com.rollinup.common.model.Severity
 
 enum class AttendanceStatus(
     val value: String,
-    val label: String,
+    val labelString: String,
     val severity: Severity,
 ) {
     ON_TIME("checked_in", "On Time", Severity.SUCCESS),

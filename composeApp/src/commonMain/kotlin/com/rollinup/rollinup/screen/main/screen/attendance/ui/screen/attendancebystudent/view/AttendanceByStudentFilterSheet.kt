@@ -13,6 +13,10 @@ import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.screen.main.screen.attendance.model.attendancebystudent.AttendanceByStudentFilterData
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancebystudent.uistate.AttendanceByStudentUiState
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_date_range
+import rollin_up.composeapp.generated.resources.label_status
 
 @Composable
 fun AttendanceByStudentFilterSheet(
@@ -33,14 +37,14 @@ fun AttendanceByStudentFilterSheet(
         showReset = tempFilterData != AttendanceByStudentFilterData(),
     ) {
         FilterSelector(
-            title = "Status",
+            title = stringResource(Res.string.label_status),
             options = uiState.statusOptions,
             value = tempFilterData.status,
             onValueChange = { tempFilterData = tempFilterData.copy(status = it) }
         )
         Spacer(itemGap8)
         FilterDatePicker(
-            title = "Date Range",
+            title = stringResource(Res.string.label_date_range),
             value = tempFilterData.dateRange,
             isLoading = uiState.isLoading,
             onValueChange = {

@@ -22,6 +22,10 @@ import com.rollinup.rollinup.screen.main.screen.attendance.model.attendancebystu
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancebystudent.uistate.AttendanceByStudentUiState
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancebystudent.view.table.AttendanceByStudentTable
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancebystudent.view.table.AttendanceByStudentTableFilter
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.msg_export_error
+import rollin_up.composeapp.generated.resources.msg_export_success
 
 @Composable
 fun AttendanceByStudentDialogContent(
@@ -31,8 +35,8 @@ fun AttendanceByStudentDialogContent(
 ) {
     HandleState(
         state = uiState.exportState,
-        successMsg = "Success, data successfully exported",
-        errorMsg = "Error, failed to export data, please try again",
+        successMsg = stringResource(Res.string.msg_export_success),
+        errorMsg = stringResource(Res.string.msg_export_error),
         onDispose = cb.onResetMessageState,
         onShowSnackBar = onShowSnackBar,
     )

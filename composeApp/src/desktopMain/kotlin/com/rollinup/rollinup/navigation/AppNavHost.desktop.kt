@@ -31,28 +31,38 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.Role
+import com.rollinup.common.model.LocaleEnum
 import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.button.IconButton
 import com.rollinup.rollinup.component.dropdown.DropDownMenu
 import com.rollinup.rollinup.component.dropdown.DropDownMenuItem
+import com.rollinup.rollinup.component.language.AppLocale
 import com.rollinup.rollinup.component.navigationrail.NavigationRail
 import com.rollinup.rollinup.component.profile.profilepopup.view.dialog.ProfileDialog
 import com.rollinup.rollinup.component.scaffold.Scaffold
+import com.rollinup.rollinup.component.selector.SingleSelector
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
+import com.rollinup.rollinup.component.theme.AppLocaleViewModel
 import com.rollinup.rollinup.component.theme.LocalUiModeViewModel
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.component.topbar.BaseTopBar
 import com.rollinup.rollinup.component.topbar.TopAppBarDefaults
 import com.rollinup.rollinup.screen.main.navigation.MainRoute
+import com.rollinup.rollinup.screen.main.screen.setting.ui.view.SettingDropDown
 import com.rollinup.rollinup.screen.main.screen.setting.ui.view.UiModeSwitch
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_drop_down_arrow_line_down_24
 import rollin_up.composeapp.generated.resources.ic_exit_line_24
+import rollin_up.composeapp.generated.resources.ic_translate_2_line_24
 import rollin_up.composeapp.generated.resources.ic_user_line_24
+import rollin_up.composeapp.generated.resources.label_language
+import rollin_up.composeapp.generated.resources.label_profile
+import rollin_up.composeapp.generated.resources.msg_hello
 
 @Composable
 actual fun AppNavHost(
@@ -149,11 +159,13 @@ private fun NavHostTopBarContent(
 ) {
     var showDropDown by remember { mutableStateOf(false) }
     var showProfile by remember { mutableStateOf(false) }
+    val locale = AppLocale.current
+    val localeViewModel = AppLocaleViewModel.current
 
     Row(verticalAlignment = Alignment.CenterVertically) {
         Column(horizontalAlignment = Alignment.End) {
             Text(
-                text = "Hello",
+                text = stringResource(Res.string.msg_hello),
                 color = theme.bodyText,
                 style = Style.body
             )
@@ -173,8 +185,7 @@ private fun NavHostTopBarContent(
                     color = theme.primary,
                     shape = RoundedCornerShape(50)
                 )
-                .clickable{ showProfile = true }
-            ,
+                .clickable { showProfile = true },
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -184,17 +195,15 @@ private fun NavHostTopBarContent(
             )
         }
         Spacer(itemGap4)
-        ActionDropDown(
-            showDropDown = showDropDown,
-            onToggleDropDown = { showDropDown = it },
-            onLogOut = onLogOut,
-            onClickProfile = { showProfile = true }
+        SettingDropDown(
+            onLogout = onLogOut,
+            onShowProfile = { showProfile = true }
         )
     }
     ProfileDialog(
         id = userData.id,
         isShowDialog = showProfile,
-        onDismissRequest = {showProfile = it},
+        onDismissRequest = { showProfile = it },
     )
 }
 
@@ -203,7 +212,9 @@ private fun ActionDropDown(
     showDropDown: Boolean,
     onToggleDropDown: (Boolean) -> Unit,
     onLogOut: () -> Unit,
-    onClickProfile:()->Unit,
+    locale: LocaleEnum,
+    onClickProfile: () -> Unit,
+    onLocaleChange: (LocaleEnum) -> Unit,
 ) {
     val uiModeViewModel = LocalUiModeViewModel.current
     val uiMode = uiModeViewModel.uiMode.collectAsStateWithLifecycle().value
@@ -237,7 +248,7 @@ private fun ActionDropDown(
                 )
             }
             DropDownMenuItem(
-                label = "Profile",
+                label = stringResource(Res.string.label_profile),
                 icon = Res.drawable.ic_user_line_24,
                 onClick = onClickProfile
             )
@@ -246,8 +257,36 @@ private fun ActionDropDown(
                 icon = Res.drawable.ic_exit_line_24,
                 onClick = onLogOut
             )
+            LocaleSettings(
+                locale = locale,
+                onLocaleChange = onLocaleChange
+            )
         }
     }
+}
+
+@Composable
+private fun LocaleSettings(
+    locale: LocaleEnum,
+    onLocaleChange: (LocaleEnum) -> Unit,
+) {
+    val options = LocaleEnum.getOptions()
+    var showSelector by remember { mutableStateOf(false) }
+
+    DropDownMenuItem(
+        label = locale.label,
+        icon = Res.drawable.ic_translate_2_line_24,
+        onClick = { showSelector = true }
+    )
+
+    SingleSelector(
+        isShowSelector = showSelector,
+        onDismissRequest = { showSelector = it },
+        title = stringResource(Res.string.label_language),
+        value = locale,
+        options = options,
+        onValueChange = onLocaleChange
+    )
 }
 
 private fun showNavRail(navBackStackEntry: NavBackStackEntry?) =

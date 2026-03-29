@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import com.rollinup.apiservice.model.user.UserEntity
 import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.chip.Chip
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.component.table.Table
 import com.rollinup.rollinup.component.table.TableColumn
 import com.rollinup.rollinup.component.theme.Style
@@ -52,44 +53,44 @@ fun StudentCenterTable(
 @Composable
 private fun getColumn(): List<TableColumn<UserEntity>> {
     return listOf(
-        TableColumn(stringResource(Res.string.label_student_id)) {
+        TableColumn(Res.string.label_student_id) {
             Text(
                 text = it.studentId.ifBlank { "-" },
                 color = theme.bodyText,
                 style = Style.body
             )
         },
-        TableColumn(stringResource(Res.string.label_full_name)) {
+        TableColumn(Res.string.label_full_name) {
             Text(
                 text = it.fullName.ifBlank { "-" },
                 color = theme.bodyText,
                 style = Style.body
             )
         },
-        TableColumn(stringResource(Res.string.label_class)) {
+        TableColumn(Res.string.label_class) {
             Text(
                 text = it.classX.ifBlank { "-" },
                 color = theme.bodyText,
                 style = Style.body
             )
         },
-        TableColumn(stringResource(Res.string.label_email)) {
+        TableColumn(Res.string.label_email) {
             Text(
                 text = it.email.ifBlank { "-" },
                 color = theme.bodyText,
                 style = Style.body
             )
         },
-        TableColumn(stringResource(Res.string.label_address)) {
+        TableColumn(Res.string.label_address) {
             Text(
                 text = it.address.ifBlank { "-" },
                 color = theme.bodyText,
                 style = Style.body
             )
         },
-        TableColumn(stringResource(Res.string.label_gender)) {
+        TableColumn(Res.string.label_gender) {
             Chip(
-                text = it.gender.label.ifBlank { "-" },
+                text = it.gender.getLabel().ifBlank { "-" },
                 severity = Severity.SECONDARY
             )
         },

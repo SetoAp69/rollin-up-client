@@ -172,7 +172,7 @@ class UserApiDataSourceTest {
                 id = "user1",
                 username = "jdoe",
                 firstName = "John",
-                lastName = "Doe",
+                fullName = "Doe",
                 email = "john@example.com",
                 role = GetUserByIdResponse.Data.Role(id = "1", name = "Student", key = 1),
                 gender = "M",

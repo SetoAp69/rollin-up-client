@@ -10,6 +10,7 @@ import com.rollinup.rollinup.component.date.DateText
 import com.rollinup.rollinup.component.date.DateTextFormat
 import com.rollinup.rollinup.component.dropdown.DropDownMenu
 import com.rollinup.rollinup.component.dropdown.DropDownMenuItem
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.component.table.Table
 import com.rollinup.rollinup.component.table.TableColumn
 import com.rollinup.rollinup.component.theme.Style
@@ -17,8 +18,16 @@ import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancebystudent.uistate.AttendanceByStudentUiState
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_info_line_24
+import rollin_up.composeapp.generated.resources.label_attendance_history
+import rollin_up.composeapp.generated.resources.label_check_in_time
+import rollin_up.composeapp.generated.resources.label_date
+import rollin_up.composeapp.generated.resources.label_duration
+import rollin_up.composeapp.generated.resources.label_reason
+import rollin_up.composeapp.generated.resources.label_status
+import rollin_up.composeapp.generated.resources.label_detail
 
 @Composable
 fun AttendanceByStudentTable(
@@ -33,7 +42,7 @@ fun AttendanceByStudentTable(
         isLoading = uiState.isLoading,
         headerContent = {
             Text(
-                text = "Attendance History",
+                text = stringResource(Res.string.label_attendance_history),
                 color = theme.textPrimary,
                 style = Style.popupTitle
             )
@@ -45,7 +54,7 @@ fun AttendanceByStudentTable(
                 onDismissRequest = state.onDismissRequest,
             ) {
                 DropDownMenuItem(
-                    label = "Detail",
+                    label = stringResource(Res.string.label_detail),
                     icon = Res.drawable.ic_info_line_24
                 ) {
                     onClickDetail(state.selectedItem.first())
@@ -58,22 +67,22 @@ fun AttendanceByStudentTable(
 
 private fun getColumn(): List<TableColumn<AttendanceByStudentEntity>> =
     listOf(
-        TableColumn("Date") {
+        TableColumn(Res.string.label_date, 0.5f) {
             val localDate = LocalDate.parse(it.date)
             Text(
-                text = DateFormatter.formatDateShort(localDate,false),
+                text = DateFormatter.formatDateShort(localDate, false),
                 color = theme.bodyText,
                 style = Style.body
             )
 
         },
-        TableColumn("Status", 0.5f) {
+        TableColumn(Res.string.label_status, 0.5f) {
             Chip(
-                text = it.status.label,
+                text = it.status.getLabel(),
                 severity = it.status.severity
             )
         },
-        TableColumn("Check in Time") { data ->
+        TableColumn(Res.string.label_check_in_time) { data ->
             data.checkInTime?.let {
                 DateText(
                     dateTime = it.parseToLocalDateTime(TimeZone.UTC),
@@ -81,7 +90,7 @@ private fun getColumn(): List<TableColumn<AttendanceByStudentEntity>> =
                 )
             }
         },
-        TableColumn("Duration", 0.5f) { data ->
+        TableColumn(Res.string.label_duration) { data ->
             val text = data.permit?.durationString ?: "-"
             Text(
                 text = text,
@@ -89,7 +98,7 @@ private fun getColumn(): List<TableColumn<AttendanceByStudentEntity>> =
                 style = Style.body
             )
         },
-        TableColumn("Reason") { data ->
+        TableColumn(Res.string.label_reason, 0.5f) { data ->
             Text(
                 text = data.permit?.reason ?: "-",
                 color = theme.bodyText,

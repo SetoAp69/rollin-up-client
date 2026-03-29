@@ -165,7 +165,7 @@ class StudentCenterViewModel(
             "Class" to data.map { d -> d.classX },
             "Email" to data.map { d -> d.email },
             "Address" to data.map { d -> d.address },
-            "Gender" to data.map { d -> d.gender.label }
+            "Gender" to data.map { d -> d.gender.labelString }
         )
     }
 

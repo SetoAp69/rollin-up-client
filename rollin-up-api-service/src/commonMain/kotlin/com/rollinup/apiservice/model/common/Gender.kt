@@ -1,13 +1,13 @@
 package com.rollinup.apiservice.model.common
 
-enum class Gender(val value: String, val label: String) {
+enum class Gender(val value: String, val labelString: String) {
     MALE(
         value = "M",
-        label = "Male"
+        labelString = "Male"
     ),
     FEMALE(
         value = "F",
-        label = "Female"
+        labelString = "Female"
     )
     ;
 

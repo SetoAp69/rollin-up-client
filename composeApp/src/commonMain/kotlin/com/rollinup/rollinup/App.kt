@@ -10,6 +10,8 @@ import com.rollinup.common.model.SecurityAlert
 import com.rollinup.common.model.Severity
 import com.rollinup.common.model.UiMode
 import com.rollinup.rollinup.component.dialog.AlertDialog
+import com.rollinup.rollinup.component.language.AppLocale
+import com.rollinup.rollinup.component.theme.AppLocaleViewModel
 import com.rollinup.rollinup.component.theme.LocalAuthViewmodel
 import com.rollinup.rollinup.component.theme.LocalGlobalSetting
 import com.rollinup.rollinup.component.theme.LocalTheme
@@ -33,11 +35,12 @@ fun App(
 ) {
     val generalSettingViewModel: GlobalSettingViewModel = koinViewModel()
     val uiModeViewModel: UiModeViewModel = koinViewModel()
+    val localeViewModel: LocaleViewModel = koinViewModel()
+
     val uiMode = uiModeViewModel.uiMode.collectAsStateWithLifecycle().value
     val authState = authViewModel.uiState.collectAsStateWithLifecycle().value
     val securityAlerts = securityViewModel.securityAlert.collectAsStateWithLifecycle().value
-    val globalSetting = generalSettingViewModel.globalSetting.collectAsStateWithLifecycle().value
-    val globalSettingInitState = generalSettingViewModel.initState.collectAsStateWithLifecycle().value
+    val locale = localeViewModel.locale.collectAsStateWithLifecycle().value
 
     DisposableEffect(authState.loginState) {
         if (authState.loginState == AuthUiState.LoginState.Login) {
@@ -46,14 +49,18 @@ fun App(
         }
         onDispose {}
     }
+    val globalSetting = generalSettingViewModel.globalSetting.collectAsStateWithLifecycle().value
+
+    val globalSettingInitState =
+        generalSettingViewModel.initState.collectAsStateWithLifecycle().value
 
     LaunchedEffect(Unit) {
         uiModeViewModel.getUiMode()
         generalSettingViewModel.init()
     }
 
-    LaunchedEffect(globalSettingInitState){
-        if(globalSettingInitState == false){
+    LaunchedEffect(globalSettingInitState) {
+        if (globalSettingInitState == false) {
             generalSettingViewModel.init()
         }
     }
@@ -62,7 +69,9 @@ fun App(
         LocalTheme provides generateTheme(uiMode),
         LocalUiModeViewModel provides uiModeViewModel,
         LocalAuthViewmodel provides authViewModel,
-        LocalGlobalSetting provides globalSetting
+        AppLocaleViewModel provides localeViewModel,
+        LocalGlobalSetting provides globalSetting,
+        AppLocale provides locale
     ) {
         RollinUpTheme {
             NavigationHost(

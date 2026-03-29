@@ -23,6 +23,7 @@ import com.rollinup.apiservice.model.user.UserDetailEntity
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.date.SingleDatePickerField
 import com.rollinup.rollinup.component.loading.ShimmerEffect
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.component.profile.ProfileInfoField
 import com.rollinup.rollinup.component.profile.profilepopup.model.EditProfileFormData
 import com.rollinup.rollinup.component.profile.profilepopup.model.ProfileCallback
@@ -35,6 +36,7 @@ import com.rollinup.rollinup.component.textfield.PhoneNumberTextField
 import com.rollinup.rollinup.component.textfield.TextField
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_calendar_fill_24
 import rollin_up.composeapp.generated.resources.ic_female_line_24
@@ -45,6 +47,22 @@ import rollin_up.composeapp.generated.resources.ic_male_line_24
 import rollin_up.composeapp.generated.resources.ic_phone_line_24
 import rollin_up.composeapp.generated.resources.ic_user_board_line_24
 import rollin_up.composeapp.generated.resources.ic_user_line_24
+import rollin_up.composeapp.generated.resources.label_address
+import rollin_up.composeapp.generated.resources.label_birthday
+import rollin_up.composeapp.generated.resources.label_class
+import rollin_up.composeapp.generated.resources.label_edit
+import rollin_up.composeapp.generated.resources.label_email
+import rollin_up.composeapp.generated.resources.label_full_name
+import rollin_up.composeapp.generated.resources.label_gender
+import rollin_up.composeapp.generated.resources.label_id
+import rollin_up.composeapp.generated.resources.label_phone
+import rollin_up.composeapp.generated.resources.label_role
+import rollin_up.composeapp.generated.resources.msg_error_max_char
+import rollin_up.composeapp.generated.resources.ph_address
+import rollin_up.composeapp.generated.resources.ph_email
+import rollin_up.composeapp.generated.resources.ph_full_name
+import rollin_up.composeapp.generated.resources.ph_phone
+import rollin_up.composeapp.generated.resources.ph_select_birthday
 
 @Composable
 fun ProfileDialogContent(
@@ -118,7 +136,7 @@ private fun ProfileDialogHeader(
         if (showEdit) {
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = "Edit",
+                text = stringResource(Res.string.label_edit),
                 modifier = Modifier.clickable {
                     onToggleEdit()
                 },
@@ -144,58 +162,38 @@ private fun ProfileEditForm(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         maxItemsInEachRow = 2
     ) {
+        val fullName = stringResource(Res.string.label_full_name)
+        val fullNameError = stringResource(Res.string.msg_error_max_char, fullName, 60)
+
         Box(modifier = Modifier.weight(1f)) {
             TextField(
-                title = "First name",
-                value = formData.firstName ?: "",
-                maxChar = 15,
+                title = fullName,
+                value = formData.fullName ?: "",
+                maxChar = 60,
                 onValueChange = { value ->
-                    val errorMsg = if (value.length > 15) {
-                        "First name can't be more than 15 characters"
+                    val errorMsg = if (value.length > 60) {
+                        fullNameError
                     } else {
                         null
                     }
                     onUpdateFormData(
                         formData.copy(
-                            firstName = value,
-                            firstNameError = errorMsg
+                            fullName = value,
+                            fullNameError = errorMsg
                         )
                     )
                 },
-                isError = formData.firstNameError != null,
-                errorMsg = formData.firstNameError,
-                placeholder = "Enter first name",
-            )
-        }
-        Box(modifier = Modifier.weight(1f)) {
-            TextField(
-                title = "Last name",
-                value = formData.lastName ?: "",
-                maxChar = 15,
-                onValueChange = { value ->
-                    val errorMsg = if (value.length > 15) {
-                        "Last name can't be more than 15 characters"
-                    } else {
-                        null
-                    }
-                    onUpdateFormData(
-                        formData.copy(
-                            lastName = value,
-                            lastNameError = errorMsg
-                        )
-                    )
-                },
-                isError = formData.lastNameError != null,
-                errorMsg = formData.lastName,
-                placeholder = "Enter last name",
+                isError = formData.fullNameError != null,
+                errorMsg = formData.fullName,
+                placeholder = stringResource(Res.string.ph_full_name),
             )
         }
         Box(modifier = Modifier.weight(1f)) {
             SingleDatePickerField(
-                title = "Birthday",
+                title = stringResource(Res.string.label_birthday),
                 value = formData.birthDay,
                 enable = true,
-                placeHolder = "Select birthday",
+                placeHolder = stringResource(Res.string.ph_select_birthday),
                 width = null,
                 onValueChange = {
                     onUpdateFormData(
@@ -210,14 +208,14 @@ private fun ProfileEditForm(
         Box(modifier = Modifier.weight(1f)) {
             ProfileInfoField(
                 enabled = false,
-                title = "ID",
+                title = stringResource(Res.string.label_id),
                 icon = Res.drawable.ic_id_card_line_24,
                 value = userDetail.id
             )
         }
         Box(modifier = Modifier.weight(1f)) {
             SingleDropDownSelector(
-                title = "Gender",
+                title = stringResource(Res.string.label_gender),
                 value = formData.gender,
                 options = uiState.genderOptions,
                 onValueChange = {
@@ -232,17 +230,19 @@ private fun ProfileEditForm(
         Box(modifier = Modifier.weight(1f)) {
             ProfileInfoField(
                 enabled = false,
-                title = "Class",
+                title = stringResource(Res.string.label_class),
                 icon = Res.drawable.ic_user_board_line_24,
                 value = userDetail.classX?.name ?: "-"
             )
         }
         Box(modifier = Modifier.weight(1f)) {
+            val phoneNumberLabel = stringResource(Res.string.label_phone)
+            val phoneError = stringResource(Res.string.msg_error_max_char, phoneNumberLabel, 16)
             PhoneNumberTextField(
                 value = formData.phone ?: "",
                 onValueChange = { value ->
                     val errorMsg = if (value.length > 16) {
-                        "Phone number can't be more than 16 characters"
+                        phoneError
                     } else {
                         null
                     }
@@ -253,8 +253,8 @@ private fun ProfileEditForm(
                         )
                     )
                 },
-                placeholder = "Enter phone number",
-                title = "Phone",
+                placeholder = stringResource(Res.string.ph_phone),
+                title = phoneNumberLabel,
                 isError = formData.phoneError != null,
                 errorMsg = formData.phoneError,
             )
@@ -262,19 +262,21 @@ private fun ProfileEditForm(
         Box(modifier = Modifier.weight(1f)) {
             ProfileInfoField(
                 enabled = false,
-                title = "Role",
+                title = stringResource(Res.string.label_role),
                 icon = Res.drawable.ic_user_board_line_24,
                 value = userDetail.role.name
             )
         }
         Box(modifier = Modifier.weight(1f)) {
+            val addressLabel = stringResource(Res.string.label_address)
+            val addressError = stringResource(Res.string.msg_error_max_char, addressLabel, 120)
             TextField(
-                title = "Address",
+                title = stringResource(Res.string.label_address),
                 value = formData.address ?: "",
                 maxChar = 15,
                 onValueChange = { value ->
                     val errorMsg = if (value.length > 120) {
-                        "Address can't be more than 30 characters"
+                        addressError
                     } else {
                         null
                     }
@@ -287,17 +289,20 @@ private fun ProfileEditForm(
                 },
                 isError = formData.addressError != null,
                 errorMsg = formData.address,
-                placeholder = "Enter address",
+                placeholder = stringResource(Res.string.ph_address),
             )
         }
         Box(modifier = Modifier.weight(1f)) {
+            val emailLabel = stringResource(Res.string.label_email)
+            val emailError = stringResource(Res.string.msg_error_max_char, emailLabel, 30)
+
             TextField(
-                title = "Email",
+                title = emailLabel,
                 value = formData.email ?: "",
                 maxChar = 15,
                 onValueChange = { value ->
                     val errorMsg = if (value.length > 30) {
-                        "Email can't be more than 30 characters"
+                        emailError
                     } else {
                         null
                     }
@@ -310,7 +315,7 @@ private fun ProfileEditForm(
                 },
                 isError = formData.emailError != null,
                 errorMsg = formData.email,
-                placeholder = "Enter email",
+                placeholder = stringResource(Res.string.ph_email),
             )
         }
     }
@@ -332,63 +337,63 @@ private fun ProfileInfoSection(
     ) {
         Box(modifier = Modifier.weight(1f)) {
             ProfileInfoField(
-                title = "Full Name",
+                title = stringResource(Res.string.label_full_name),
                 icon = Res.drawable.ic_user_line_24,
                 value = userDetail.fullName
             )
         }
         Box(modifier = Modifier.weight(1f)) {
             ProfileInfoField(
-                title = "Birthday",
+                title = stringResource(Res.string.label_birthday),
                 icon = Res.drawable.ic_calendar_fill_24,
                 value = userDetail.birthDay
             )
         }
         Box(modifier = Modifier.weight(1f)) {
             ProfileInfoField(
-                title = "ID",
+                title = stringResource(Res.string.label_id),
                 icon = Res.drawable.ic_id_card_line_24,
                 value = userDetail.id
             )
         }
         Box(modifier = Modifier.weight(1f)) {
             ProfileInfoField(
-                title = "Gender",
+                title = stringResource(Res.string.label_gender),
                 icon = genderIcon,
-                value = userDetail.gender.label
+                value = userDetail.gender.getLabel()
             )
         }
         Box(modifier = Modifier.weight(1f)) {
             ProfileInfoField(
-                title = "Class",
+                title = stringResource(Res.string.label_class),
                 icon = Res.drawable.ic_user_board_line_24,
                 value = userDetail.classX?.name ?: "-"
             )
         }
         Box(modifier = Modifier.weight(1f)) {
             ProfileInfoField(
-                title = "Phone",
+                title = stringResource(Res.string.label_phone),
                 icon = Res.drawable.ic_phone_line_24,
                 value = userDetail.phoneNumber
             )
         }
         Box(modifier = Modifier.weight(1f)) {
             ProfileInfoField(
-                title = "Role",
+                title = stringResource(Res.string.label_role),
                 icon = Res.drawable.ic_user_board_line_24,
                 value = userDetail.role.name
             )
         }
         Box(modifier = Modifier.weight(1f)) {
             ProfileInfoField(
-                title = "Address",
+                title = stringResource(Res.string.label_address),
                 icon = Res.drawable.ic_home_line_24,
                 value = userDetail.address
             )
         }
         Box(modifier = Modifier.weight(1f)) {
             ProfileInfoField(
-                title = "Email",
+                title = stringResource(Res.string.label_email),
                 icon = Res.drawable.ic_mail_user_line_24,
                 value = userDetail.email
             )

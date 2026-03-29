@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import rollin_up.composeapp.generated.resources.Res
-import rollin_up.composeapp.generated.resources.msg_first_name_empty_error
 import rollin_up.composeapp.generated.resources.msg_last_name_empty_error
 
 class ProfileDialogViewModel(
@@ -84,14 +83,9 @@ class ProfileDialogViewModel(
 
     private fun validateForm(formData: EditProfileFormData): Boolean {
         var formData = formData
-        if (formData.firstName?.isBlank() ?: false) {
+        if (formData.fullName?.isBlank() ?: false) {
             formData = formData.copy(
-                firstNameError = Res.string.msg_first_name_empty_error.toString()
-            )
-        }
-        if (formData.lastName?.isBlank() ?: false) {
-            formData = formData.copy(
-                lastNameError = Res.string.msg_last_name_empty_error.toString()
+                fullNameError = Res.string.msg_last_name_empty_error.toString()
             )
         }
         _uiState.update {
@@ -118,8 +112,7 @@ class ProfileDialogViewModel(
         profile: UserDetailEntity,
     ) = EditProfileFormData(
         id = profile.id,
-        firstName = profile.firstName,
-        lastName = profile.lastName,
+        fullName = profile.fullName,
         userName = profile.userName,
         gender = profile.gender.value,
         birthDay = profile.birthDay.parseToLocalDateTime().toEpochMillis(),
@@ -130,8 +123,7 @@ class ProfileDialogViewModel(
 
     private fun mapFormToBody(formData: EditProfileFormData) = CreateEditUserBody(
         username = formData.userName,
-        firstName = formData.firstName,
-        lastName = formData.lastName,
+        fullName = formData.fullName,
         email = formData.email,
         address = formData.address,
         phoneNumber = formData.phone,

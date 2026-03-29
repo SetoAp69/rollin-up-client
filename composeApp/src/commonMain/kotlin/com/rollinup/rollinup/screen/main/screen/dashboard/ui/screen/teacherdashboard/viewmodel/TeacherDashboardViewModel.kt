@@ -2,8 +2,6 @@ package com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.LoadState
-import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import com.rollinup.apiservice.data.source.network.model.request.attendance.CreateAttendanceBody
 import com.rollinup.apiservice.data.source.network.model.request.attendance.EditAttendanceBody
@@ -32,7 +30,6 @@ import com.rollinup.common.utils.Utils.now
 import com.rollinup.common.utils.Utils.toEpochMillis
 import com.rollinup.rollinup.component.export.FileWriter
 import com.rollinup.rollinup.component.permitform.model.PermitFormErrorType
-import com.rollinup.rollinup.screen.dashboard.getAttendanceByClassDummy
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.EditAttendanceFormData
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardApprovalFormData
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
@@ -138,15 +135,6 @@ class TeacherDashboardViewModel(
 
         viewModelScope.launch {
             _uiState.update { it.copy(itemSelected = emptyList()) }
-            _pagingData.value = PagingData.from(
-                data = getAttendanceByClassDummy(),
-                sourceLoadStates = LoadStates(
-                    refresh = LoadState.NotLoading(endOfPaginationReached = true),
-                    prepend = LoadState.NotLoading(endOfPaginationReached = true),
-                    append = LoadState.NotLoading(endOfPaginationReached = true)
-                )
-            )
-
             getAttendanceByClassPagingUseCase(
                 classKey = classKey,
                 queryParams = _uiState.value.filterData.toQueryParams()
@@ -266,27 +254,6 @@ class TeacherDashboardViewModel(
             }
         }
     }
-
-//    private fun validateEditAttendanceForm(formData: EditAttendanceFormData): Boolean {
-//        return formData.isValid()
-//    }
-//
-//    private fun validateEditPermitForm(formData: PermitFormData): Boolean {
-//        var formData = formData
-//
-//        if ((formData.duration.isEmpty() || formData.duration.any { it == null }))
-//            formData = formData.copy(durationError = PermitFormErrorType.DURATION_EMPTY)
-//
-//        if (formData.reason.isNullOrBlank() && formData.type == PermitType.ABSENCE)
-//            formData = formData.copy(reasonError = PermitFormErrorType.REASON_EMPTY)
-//
-//        _uiState.update {
-//            it.copy(
-//                editAttendanceFormData = it.editAttendanceFormData.copy(permitFormData = formData)
-//            )
-//        }
-//        return formData.isValid
-//    }
 
     private fun validateCreatePermitForm(
         formData: EditAttendanceFormData,

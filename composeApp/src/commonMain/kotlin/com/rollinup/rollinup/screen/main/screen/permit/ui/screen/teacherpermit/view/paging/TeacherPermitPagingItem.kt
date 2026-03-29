@@ -19,6 +19,7 @@ import com.rollinup.rollinup.component.chip.Chip
 import com.rollinup.rollinup.component.date.DateText
 import com.rollinup.rollinup.component.date.PermitDateText
 import com.rollinup.rollinup.component.loading.ShimmerEffect
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.theme.Style
@@ -57,7 +58,7 @@ fun TeacherPermitPagingItem(
                 },
                 rightContent = {
                     Chip(
-                        text = item.type.label,
+                        text = item.type.getLabel(),
                         severity = Severity.SECONDARY
                     )
                 }

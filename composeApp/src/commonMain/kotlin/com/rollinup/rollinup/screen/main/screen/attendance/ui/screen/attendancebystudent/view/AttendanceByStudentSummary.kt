@@ -21,6 +21,14 @@ import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.theme.theme
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_absent
+import rollin_up.composeapp.generated.resources.label_excused
+import rollin_up.composeapp.generated.resources.label_late
+import rollin_up.composeapp.generated.resources.label_on_time
+import rollin_up.composeapp.generated.resources.label_sick
+import rollin_up.composeapp.generated.resources.label_other
 
 @Composable
 fun AttendanceByStudentSummary(
@@ -40,18 +48,18 @@ fun AttendanceByStudentSummaryContent(summary: AttendanceSummaryEntity) {
         leftContent = {
             Column {
                 RecordFieldWithNotation(
-                    label = "On Time",
+                    label = stringResource(Res.string.label_on_time),
                     color = theme.success,
                     content = summary.checkedIn.toString(),
                 )
 
                 RecordFieldWithNotation(
-                    label = "Late",
+                    label = stringResource(Res.string.label_late),
                     color = theme.warning,
                     content = summary.late.toString(),
                 )
                 RecordFieldWithNotation(
-                    label = "Excused",
+                    label = stringResource(Res.string.label_excused),
                     color = theme.warning,
                     content = summary.excused.toString(),
                 )
@@ -60,17 +68,17 @@ fun AttendanceByStudentSummaryContent(summary: AttendanceSummaryEntity) {
         rightContent = {
             Column {
                 RecordFieldWithNotation(
-                    label = "Absent",
+                    label = stringResource(Res.string.label_absent),
                     color = theme.danger,
                     content = summary.absent.toString(),
                 )
                 RecordFieldWithNotation(
-                    label = "Sick",
+                    label = stringResource(Res.string.label_sick),
                     color = theme.danger,
                     content = summary.sick.toString(),
                 )
                 RecordFieldWithNotation(
-                    label = "Other",
+                    label = stringResource(Res.string.label_other),
                     color = theme.danger,
                     content = summary.other.toString(),
                 )

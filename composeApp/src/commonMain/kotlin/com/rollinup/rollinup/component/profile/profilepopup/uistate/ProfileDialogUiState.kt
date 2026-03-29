@@ -1,8 +1,10 @@
 package com.rollinup.rollinup.component.profile.profilepopup.uistate
 
+import androidx.compose.runtime.Composable
 import com.rollinup.apiservice.model.common.Gender
 import com.rollinup.apiservice.model.user.UserDetailEntity
 import com.rollinup.common.model.OptionData
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.component.profile.profilepopup.model.EditProfileFormData
 
 data class ProfileDialogUiState(
@@ -15,7 +17,8 @@ data class ProfileDialogUiState(
     val formData: EditProfileFormData = EditProfileFormData(),
 ) {
     val genderOptions
+        @Composable
         get() = Gender.entries.map {
-            OptionData(it.label, it.value)
+            OptionData(it.getLabel(), it.value)
         }
 }

@@ -29,6 +29,7 @@ import com.rollinup.rollinup.component.handlestate.HandleState
 import com.rollinup.rollinup.component.loading.LoadingOverlay
 import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.model.OnShowSnackBar
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.component.profile.ProfileInfoField
 import com.rollinup.rollinup.component.profile.profilepopup.model.EditProfileFormData
 import com.rollinup.rollinup.component.profile.profilepopup.model.ProfileCallback
@@ -60,25 +61,21 @@ import rollin_up.composeapp.generated.resources.label_cancel
 import rollin_up.composeapp.generated.resources.label_class
 import rollin_up.composeapp.generated.resources.label_edit
 import rollin_up.composeapp.generated.resources.label_email
-import rollin_up.composeapp.generated.resources.label_first_name
 import rollin_up.composeapp.generated.resources.label_full_name
 import rollin_up.composeapp.generated.resources.label_gender
 import rollin_up.composeapp.generated.resources.label_id
-import rollin_up.composeapp.generated.resources.label_last_name
 import rollin_up.composeapp.generated.resources.label_phone
 import rollin_up.composeapp.generated.resources.label_role
 import rollin_up.composeapp.generated.resources.label_student_id
 import rollin_up.composeapp.generated.resources.label_submit
 import rollin_up.composeapp.generated.resources.msg_address_error_max
 import rollin_up.composeapp.generated.resources.msg_birthday_error_empty
-import rollin_up.composeapp.generated.resources.msg_first_name_max_error
 import rollin_up.composeapp.generated.resources.msg_last_name_max_error
 import rollin_up.composeapp.generated.resources.msg_phone_error_max
 import rollin_up.composeapp.generated.resources.msg_user_edit_error
 import rollin_up.composeapp.generated.resources.msg_user_edit_success
 import rollin_up.composeapp.generated.resources.ph_address
-import rollin_up.composeapp.generated.resources.ph_first_name
-import rollin_up.composeapp.generated.resources.ph_last_name
+import rollin_up.composeapp.generated.resources.ph_full_Name
 import rollin_up.composeapp.generated.resources.ph_phone
 import rollin_up.composeapp.generated.resources.ph_select_birthday
 
@@ -153,7 +150,7 @@ private fun ProfileHeaderSection(
     ) {
         Box(
             modifier = Modifier
-                .size(42.dp)
+                .size(64.dp)
                 .background(color = theme.primary, shape = CircleShape),
             contentAlignment = Alignment.Center
         ) {
@@ -163,16 +160,6 @@ private fun ProfileHeaderSection(
                 color = theme.textBtnPrimary
             )
         }
-        Text(
-            text = uiState.userDetail.fullName,
-            style = Style.popupTitle,
-            color = theme.textPrimary,
-        )
-        Text(
-            text = uiState.userDetail.userName,
-            style = Style.body,
-            color = theme.bodyText,
-        )
         if (uiState.showEdit) {
             val text =
                 if (uiState.isEdit) stringResource(string.label_cancel) else stringResource(string.label_edit)
@@ -230,7 +217,7 @@ private fun ProfileInfoSection(
         ProfileInfoField(
             title = stringResource(string.label_gender),
             icon = genderIcon,
-            value = userDetail.gender.label
+            value = userDetail.gender.getLabel()
         )
         ProfileInfoField(
             title = stringResource(string.label_phone),
@@ -271,62 +258,31 @@ private fun EditProfileFormNameSection(
     formData: EditProfileFormData,
     onUpdateFormData: (EditProfileFormData) -> Unit,
 ) {
-    val firstNameErrorMsg = stringResource(string.msg_first_name_max_error)
-    val lastNameErrorMsg = stringResource(string.msg_last_name_max_error)
+    val fullNameErrorMessage = stringResource(string.msg_last_name_max_error)
 
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.Top
-    ) {
-        Box(modifier = Modifier.weight(1f)) {
-            TextField(
-                title = stringResource(string.label_first_name),
-                value = formData.firstName ?: "",
-                maxChar = 15,
-                onValueChange = { value ->
-                    val errorMsg = if (value.length > 15) {
-                        firstNameErrorMsg
-                    } else {
-                        null
-                    }
-                    onUpdateFormData(
-                        formData.copy(
-                            firstName = value,
-                            firstNameError = errorMsg
-                        )
-                    )
-                },
-                isError = formData.firstNameError != null,
-                errorMsg = formData.firstNameError,
-                placeholder = stringResource(string.ph_first_name),
+    TextField(
+        title = stringResource(string.label_full_name),
+        value = formData.fullName ?: "",
+        maxChar = 15,
+        onValueChange = { value ->
+            val errorMsg = if (value.length > 15) {
+                fullNameErrorMessage
+            } else {
+                null
+            }
+            onUpdateFormData(
+                formData.copy(
+                    fullName = value,
+                    fullNameError = errorMsg
+                )
             )
-        }
-        Spacer(itemGap8)
-        Box(modifier = Modifier.weight(1f)) {
-            TextField(
-                title = stringResource(string.label_last_name),
-                value = formData.lastName ?: "",
-                maxChar = 15,
-                onValueChange = { value ->
-                    val errorMsg = if (value.length > 15) {
-                        lastNameErrorMsg
-                    } else {
-                        null
-                    }
-                    onUpdateFormData(
-                        formData.copy(
-                            lastName = value,
-                            lastNameError = errorMsg
-                        )
-                    )
-                },
-                isError = formData.lastNameError != null,
-                errorMsg = formData.lastName,
-                placeholder = stringResource(string.ph_last_name),
-            )
-        }
-    }
+        },
+        isError = formData.fullNameError != null,
+        errorMsg = formData.fullName,
+        placeholder = stringResource(string.ph_full_Name),
+    )
 }
+
 
 @Composable
 private fun EditProfileFormAdditionalSection(

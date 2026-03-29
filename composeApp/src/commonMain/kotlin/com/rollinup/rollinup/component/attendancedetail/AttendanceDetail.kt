@@ -31,6 +31,7 @@ import com.rollinup.rollinup.component.date.DateTextFormat
 import com.rollinup.rollinup.component.dialog.Dialog
 import com.rollinup.rollinup.component.imageview.ImageView
 import com.rollinup.rollinup.component.loading.ShimmerEffect
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.component.record.RecordField
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
@@ -171,7 +172,7 @@ private fun AttendanceDetailHeaderSection(
             modifier = Modifier.size(42.dp)
         )
         Text(
-            text = detail.status.label,
+            text = detail.status.getLabel(),
             color = tint,
             style = Style.headerBold
         )

@@ -2,8 +2,7 @@ package com.rollinup.rollinup.component.profile.profilepopup.model
 
 data class EditProfileFormData(
     val id: String = "",
-    val firstName: String? = null,
-    val lastName: String? = null,
+    val fullName: String? = null,
     val userName: String? = null,
     val gender: String? = null,
     val birthDay: Long? = null,
@@ -13,7 +12,7 @@ data class EditProfileFormData(
 
     val userNameError: String? = null,
     val firstNameError: String? = null,
-    val lastNameError: String? = null,
+    val fullNameError: String? = null,
     val studentIdError: String? = null,
     val addressError: String? = null,
     val phoneError: String? = null,
@@ -37,7 +36,7 @@ data class EditProfileFormData(
     fun isValid(): Boolean {
         return listOf(
             firstNameError,
-            lastNameError,
+            fullNameError,
             studentIdError,
             addressError,
             phoneError,

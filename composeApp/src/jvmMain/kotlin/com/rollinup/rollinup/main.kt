@@ -20,6 +20,7 @@ fun main() = application {
     Axer.stopServerIfRunning()
     initLogger()
     addTempDirectoryRemovalHook()
+
     startKoin {
         modules(
             JVMDataModule() + AppModule()

@@ -6,6 +6,8 @@ import com.rollinup.apiservice.data.repository.auth.AuthRepository
 import com.rollinup.apiservice.data.repository.auth.AuthRepositoryImpl
 import com.rollinup.apiservice.data.repository.generalsetting.GlobalSettingRepository
 import com.rollinup.apiservice.data.repository.generalsetting.GlobalSettingRepositoryImpl
+import com.rollinup.apiservice.data.repository.language.LocaleRepository
+import com.rollinup.apiservice.data.repository.language.LocaleRepositoryImpl
 import com.rollinup.apiservice.data.repository.permit.PermitRepository
 import com.rollinup.apiservice.data.repository.permit.PermitRepositoryImpl
 import com.rollinup.apiservice.data.repository.token.TokenRepository
@@ -64,6 +66,10 @@ object RepositoryModule {
 
         single<UiModeRepository> {
             UiModeRepositoryImpl(get())
+        }
+
+        single<LocaleRepository> {
+            LocaleRepositoryImpl(get())
         }
     }
 }

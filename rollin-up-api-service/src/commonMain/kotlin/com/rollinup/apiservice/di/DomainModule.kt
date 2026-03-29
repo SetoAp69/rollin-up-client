@@ -21,6 +21,8 @@ import com.rollinup.apiservice.domain.globalsetting.GetCachedGlobalSettingUseCas
 import com.rollinup.apiservice.domain.globalsetting.GetGlobalSettingUseCase
 import com.rollinup.apiservice.domain.globalsetting.ListenGlobalSettingSSE
 import com.rollinup.apiservice.domain.globalsetting.UpdateCachedGlobalSettingUseCase
+import com.rollinup.apiservice.domain.locale.GetLocaleUseCase
+import com.rollinup.apiservice.domain.locale.SetLocaleUseCase
 import com.rollinup.apiservice.domain.permit.CancelPermitUseCase
 import com.rollinup.apiservice.domain.permit.CreatePermitUseCase
 import com.rollinup.apiservice.domain.permit.DoApprovalUseCase
@@ -65,6 +67,7 @@ object DomainModule {
         attendanceDomain()
         tokenDomain()
         uiModeDomain()
+        localeDomain()
     }
 
     private fun Module.authDomain() {
@@ -138,6 +141,11 @@ object DomainModule {
     private fun Module.uiModeDomain() {
         singleOf(::GetUiModeUseCase)
         singleOf(::UpdateUiModeUseCase)
+    }
+
+    private fun Module.localeDomain() {
+        singleOf(::GetLocaleUseCase)
+        singleOf(::SetLocaleUseCase)
     }
 }
 

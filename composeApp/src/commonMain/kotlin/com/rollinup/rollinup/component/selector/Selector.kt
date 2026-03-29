@@ -104,7 +104,8 @@ fun <T> SingleSelectorField(
                 }
                 .fillMaxWidth()
                 .background(color = backgroundColor, shape = RoundedCornerShape(8.dp))
-                .padding(horizontal = itemGap4),
+                .padding( itemGap4)
+            ,
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(itemGap4),
         ) {

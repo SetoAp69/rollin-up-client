@@ -12,6 +12,7 @@ import com.rollinup.apiservice.data.source.network.model.request.user.SubmitVeri
 import com.rollinup.apiservice.data.source.network.model.request.user.UpdatePasswordAndVerificationBody
 import com.rollinup.apiservice.model.common.NetworkError
 import com.rollinup.apiservice.model.common.Result
+import com.rollinup.apiservice.model.user.OtpStatusEntity
 import com.rollinup.apiservice.model.user.UserDetailEntity
 import com.rollinup.apiservice.model.user.UserEntity
 import com.rollinup.apiservice.model.user.UserOptionEntity
@@ -28,7 +29,7 @@ interface UserRepository {
 
     fun editUser(id: String, body: CreateEditUserBody): Flow<Result<Unit, NetworkError>>
 
-    fun createResetPasswordRequest(body: CreateResetPasswordRequestBody): Flow<Result<String, NetworkError>>
+    fun createResetPasswordRequest(body: CreateResetPasswordRequestBody): Flow<Result<OtpStatusEntity, NetworkError>>
 
     fun submitResetOtp(body: SubmitResetPasswordOTPBody): Flow<Result<String, NetworkError>>
 
@@ -44,5 +45,5 @@ interface UserRepository {
 
     fun updatePasswordAndVerification(body: UpdatePasswordAndVerificationBody): Flow<Result<Unit, NetworkError>>
 
-    fun resendVerificationOtp(): Flow<Result<Unit, NetworkError>>
+    fun resendVerificationOtp(): Flow<Result<OtpStatusEntity, NetworkError>>
 }

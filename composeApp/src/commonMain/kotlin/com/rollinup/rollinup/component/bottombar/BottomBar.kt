@@ -43,6 +43,7 @@ import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.main.navigation.MainRoute
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * A custom Bottom Navigation Bar component that features a distinctive, floating center button.
@@ -190,7 +191,7 @@ private fun BottomBarMainMenu(
             )
         }
         Text(
-            text = menu.title,
+            text = stringResource(menu.title),
             color = contentColor,
             style = Style.body
         )
@@ -246,7 +247,7 @@ fun BottomBarMenu(
                 )
             }
             Text(
-                text = menu.title,
+                text = stringResource(menu.title),
                 color = contentColor,
                 style = Style.body
             )

@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.rollinup.apiservice.Constant
 import com.rollinup.apiservice.model.common.GlobalSetting
+import com.rollinup.common.model.LocaleEnum
 import com.rollinup.common.model.UiMode
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -101,6 +102,20 @@ class JVMLocalDataStore : LocalDataStore {
         val key = stringPreferencesKey(Constant.UI_MODE_KEY)
         dataStore.edit { prefs ->
             prefs[key] = uiMode.name
+        }
+    }
+
+    override suspend fun getLocale(): LocaleEnum {
+        val key = stringPreferencesKey(Constant.LOCALE_KEY)
+        val locale = dataStore.data.map { dataStore -> dataStore[key] }.first() ?: "in"
+
+        return LocaleEnum.fromValues(locale)
+    }
+
+    override suspend fun setLocale(locale: LocaleEnum) {
+        val key = stringPreferencesKey(Constant.LOCALE_KEY)
+        dataStore.edit { pref ->
+            pref[key] = locale.value
         }
     }
 }

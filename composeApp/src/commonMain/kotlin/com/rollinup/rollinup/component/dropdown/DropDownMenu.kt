@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.rollinup.rollinup.component.checkbox.CheckBox
 import com.rollinup.rollinup.component.ripple.CustomRipple
@@ -132,6 +133,7 @@ fun DropDownMenuItem(
     textColor: Color = theme.bodyText,
     iconTint: Color = theme.primary,
     backgroundColor: Color = Color.Transparent,
+    width: Dp = 150.dp,
     onClick: () -> Unit,
 ) {
     val gap = if (isCompact) 8.dp else 12.dp
@@ -147,7 +149,7 @@ fun DropDownMenuItem(
                     vertical = itemGap8,
                     horizontal = 16.dp
                 )
-                .width(150.dp),
+                .width(width),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {

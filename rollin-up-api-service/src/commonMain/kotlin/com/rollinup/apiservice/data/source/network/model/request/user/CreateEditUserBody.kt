@@ -3,7 +3,7 @@ package com.rollinup.apiservice.data.source.network.model.request.user
 data class CreateEditUserBody(
     val username: String? = null,
     val firstName: String? = null,
-    val lastName: String? = null,
+    val fullName: String? = null,
     val email: String? = null,
     val role: String? = null,
     val address: String? = null,
@@ -22,7 +22,7 @@ data class CreateEditUserBody(
 //        firstName?.let {
 //            hashMap["firstname"] = it
 //        }
-        lastName?.let {
+        fullName?.let {
             hashMap["fullName"] = it
         }
         email?.let {

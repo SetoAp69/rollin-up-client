@@ -17,9 +17,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.rollinup.apiservice.model.common.Role
+import com.rollinup.common.model.OptionData
 import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.button.IconButton
 import com.rollinup.rollinup.component.filter.TableFilterRow
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.component.selector.MultiDropDownSelector
 import com.rollinup.rollinup.component.textfield.SearchTextField
 import com.rollinup.rollinup.component.theme.theme
@@ -118,7 +121,7 @@ private fun UserCenterFilterRow(
             isLoading = isLoading,
             placeHolder = stringResource(Res.string.label_all),
             value = filterData.role,
-            options = filterOptions.roleOptions,
+            options = mapRoleOptionsString(filterOptions.roleOptions),
             onValueChange = {
                 onFilter(
                     filterData.copy(
@@ -140,6 +143,16 @@ private fun UserCenterFilterRow(
                     )
                 )
             }
+        )
+    }
+}
+
+@Composable
+private fun mapRoleOptionsString(optionData: List<OptionData<Int>>): List<OptionData<Int>> {
+    return optionData.map { option ->
+        OptionData(
+            label = Role.fromValue(option.label).getLabel(),
+            value = option.value
         )
     }
 }

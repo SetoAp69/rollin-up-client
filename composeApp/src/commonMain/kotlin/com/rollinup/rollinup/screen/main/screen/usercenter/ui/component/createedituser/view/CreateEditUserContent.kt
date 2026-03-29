@@ -20,13 +20,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.michaelflisar.lumberjack.core.L
+import com.rollinup.apiservice.model.common.Role
+import com.rollinup.common.model.OptionData
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.checkbox.CheckBox
 import com.rollinup.rollinup.component.date.SingleDatePickerField
 import com.rollinup.rollinup.component.loading.LoadingOverlay
 import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.model.OnShowSnackBar
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.component.selector.SingleDropDownSelector
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
@@ -45,17 +47,23 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.label_address
+import rollin_up.composeapp.generated.resources.label_admin
 import rollin_up.composeapp.generated.resources.label_birthday
 import rollin_up.composeapp.generated.resources.label_class
+import rollin_up.composeapp.generated.resources.label_email
 import rollin_up.composeapp.generated.resources.label_full_name
+import rollin_up.composeapp.generated.resources.label_gender
 import rollin_up.composeapp.generated.resources.label_phone
 import rollin_up.composeapp.generated.resources.label_role
 import rollin_up.composeapp.generated.resources.label_student_id
+import rollin_up.composeapp.generated.resources.label_username
+import rollin_up.composeapp.generated.resources.msg_stay_in_form
 import rollin_up.composeapp.generated.resources.ph_address
 import rollin_up.composeapp.generated.resources.ph_email
-import rollin_up.composeapp.generated.resources.ph_last_name
+import rollin_up.composeapp.generated.resources.ph_full_Name
 import rollin_up.composeapp.generated.resources.ph_phone
 import rollin_up.composeapp.generated.resources.ph_student_id
+import rollin_up.composeapp.generated.resources.ph_username
 
 @Composable
 fun CreateEditUserContent(
@@ -72,11 +80,9 @@ fun CreateEditUserContent(
     DisposableEffect(Unit) {
         if (showDialog) {
             viewModel.init(id)
-            L.wtf { uiState.submitState.toString() }
         }
         onDispose {
             viewModel.resetUiState()
-            L.wtf { "Disposed:" + uiState.submitState.toString() }
         }
     }
     CreateEditUserStateHandler(
@@ -161,7 +167,7 @@ private fun UserFormFooter(
                     onCheckedChange = cb.onToggleStay
                 )
                 Text(
-                    text = "Stay in form",
+                    text = stringResource(Res.string.msg_stay_in_form),
                     style = Style.body,
                     color = theme.bodyText
                 )
@@ -207,8 +213,8 @@ fun UserNameSection(
             )
         },
         value = formData.userName ?: "",
-        placeholder = "Enter username",
-        title = "Username",
+        placeholder = stringResource(Res.string.ph_username),
+        title = stringResource(Res.string.label_username),
         isError = formData.userNameError != null,
         errorMsg = formData.userNameError?.getErrorMessage()
     )
@@ -226,12 +232,12 @@ fun NameSection(
                 isRequired = !isEdit,
                 title = stringResource(Res.string.label_full_name),
                 maxChar = 60,
-                value = formData.lastName ?: "",
-                placeholder = stringResource(Res.string.ph_last_name),
+                value = formData.fullName ?: "",
+                placeholder = stringResource(Res.string.ph_full_Name),
                 onValueChange = { value ->
                     onUpdateForm(
                         formData.copy(
-                            lastName = value.ifBlank { null },
+                            fullName = value.ifBlank { null },
                             lastNameError = null
                         )
                     )
@@ -250,17 +256,21 @@ private fun SelectorSection(
     formData: CreateEditUserFormData,
     onUpdateForm: (CreateEditUserFormData) -> Unit,
 ) {
-    val adminRole = options.role.find { it.label.equals("admin", true) }
+    val roleOptions = mapRoleOptionsString(options.role)
+    val adminRole =
+        options.role.find { it.label.equals(stringResource(Res.string.label_admin), true) }
     val isAdmin = formData.role == adminRole?.value
 
     FlowRow(
         modifier = Modifier.fillMaxWidth(),
         itemVerticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.spacedBy(itemGap8)
+        horizontalArrangement = Arrangement.spacedBy(itemGap8),
+        verticalArrangement = Arrangement.spacedBy(itemGap8)
     ) {
         SingleDropDownSelector(
-            title = "Gender",
+            title = stringResource(Res.string.label_gender),
             value = formData.gender,
+            width = 120.dp,
             isError = formData.genderError,
             options = options.gender,
             onValueChange = {
@@ -292,7 +302,8 @@ private fun SelectorSection(
             value = formData.role,
             isError = formData.roleError,
             isLoading = isLoading,
-            options = options.role,
+            width = 120.dp,
+            options = roleOptions,
             onValueChange = {
                 onUpdateForm(
                     formData.copy(
@@ -341,7 +352,9 @@ private fun AdditionalInfoSection(
 ) {
     val formData = uiState.formData
     val initialDetail = uiState.initialDetail
-    val studentRole = uiState.formOptions.role.find { it.label.equals("Student", true) }
+    val studentRole = uiState.formOptions.role.find {
+        it.label.equals("Student", true)
+    }
     val isStudent = formData.role == studentRole?.value
 
     if (isStudent) {
@@ -402,7 +415,7 @@ private fun AdditionalInfoSection(
         errorMsg = formData.phoneError?.getErrorMessage()
     )
     TextField(
-        title = "Email",
+        title = stringResource(Res.string.label_email),
         isRequired = true,
         value = formData.email ?: "",
         maxChar = 30,
@@ -446,6 +459,12 @@ fun CreateEditUserFormLoading() {
     }
 }
 
-
-
-
+@Composable
+private fun mapRoleOptionsString(optionData: List<OptionData<String>>): List<OptionData<String>> {
+    return optionData.map { option ->
+        OptionData(
+            label = Role.fromValue(option.label).getLabel(),
+            value = option.value
+        )
+    }
+}

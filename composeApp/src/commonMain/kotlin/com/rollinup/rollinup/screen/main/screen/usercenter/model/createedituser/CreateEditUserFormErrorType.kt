@@ -14,6 +14,7 @@ import rollin_up.composeapp.generated.resources.msg_username_exist_error
 import rollin_up.composeapp.generated.resources.msg_username_invalid_error
 import rollin_up.composeapp.generated.resources.msg_email_exist_error
 import rollin_up.composeapp.generated.resources.msg_last_name_max_error
+import rollin_up.composeapp.generated.resources.msg_selector_field_incomplete_error
 import rollin_up.composeapp.generated.resources.msg_student_id_contain_space_error
 
 enum class CreateEditUserFormErrorType {
@@ -28,7 +29,8 @@ enum class CreateEditUserFormErrorType {
     USERNAME_EXIST,
     USERNAME_INVALID,
     STUDENT_ID_EMPTY,
-    STUDENT_ID_INVALID
+    STUDENT_ID_INVALID,
+    FIELD_INCOMPLETE
     ;
 
     @Composable
@@ -46,6 +48,7 @@ enum class CreateEditUserFormErrorType {
             LAST_NAME_EMPTY -> stringResource(Res.string.msg_last_name_empty_error)
             FIRST_NAME_MAX -> stringResource(Res.string.msg_first_name_max_error)
             LAST_NAME_MAX -> stringResource(Res.string.msg_last_name_max_error)
+            FIELD_INCOMPLETE->stringResource(Res.string.msg_selector_field_incomplete_error)
         }
     }
 }

@@ -1,10 +1,10 @@
 package com.rollinup.apiservice.model.common
 
-enum class Role(val value: String) {
-    ADMIN("admin"),
-    STUDENT("student"),
-    TEACHER("teacher"),
-    UNKNOWN("unknown")
+enum class Role(val value: String, val labelString: String) {
+    ADMIN("admin", "Admin"),
+    STUDENT("student", "Student"),
+    TEACHER("teacher","Teacher"),
+    UNKNOWN("unknown", "Unknown")
     ;
 
     companion object {

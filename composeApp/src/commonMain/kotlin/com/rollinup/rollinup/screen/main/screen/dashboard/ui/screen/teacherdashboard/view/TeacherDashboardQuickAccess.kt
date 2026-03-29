@@ -10,10 +10,15 @@ import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.textfield.TextFieldTitle
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.screen.dashboard.ui.component.DashBoardButton
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_mail_line_24
 import rollin_up.composeapp.generated.resources.ic_user_check_line_24
 import rollin_up.composeapp.generated.resources.ic_user_line_24
+import rollin_up.composeapp.generated.resources.label_permit
+import rollin_up.composeapp.generated.resources.label_quick_access
+import rollin_up.composeapp.generated.resources.label_student_attendance
+import rollin_up.composeapp.generated.resources.label_student_center
 
 @Composable
 fun TeacherDashboardQuickAccess(
@@ -22,7 +27,7 @@ fun TeacherDashboardQuickAccess(
     onStudentAttendance: () -> Unit,
 ) {
     TextFieldTitle(
-        title = "Quick Access",
+        title = stringResource(Res.string.label_quick_access),
         textStyle = Style.label
     ) {
         FlowRow(
@@ -33,17 +38,17 @@ fun TeacherDashboardQuickAccess(
             itemVerticalAlignment = Alignment.CenterVertically,
         ) {
             DashBoardButton(
-                text = "Permit",
+                text = stringResource(Res.string.label_permit),
                 icon = Res.drawable.ic_mail_line_24,
                 onClick = onPermit,
             )
             DashBoardButton(
-                text = "Student Attendance",
+                text = stringResource(Res.string.label_student_attendance),
                 icon = Res.drawable.ic_user_check_line_24,
                 onClick = onStudentAttendance
             )
             DashBoardButton(
-                text = "Student Center",
+                text = stringResource(Res.string.label_student_center),
                 icon = Res.drawable.ic_user_line_24,
                 onClick = onStudent
             )

@@ -25,6 +25,7 @@ import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.chip.Chip
 import com.rollinup.rollinup.component.loading.ShimmerEffect
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
@@ -142,83 +143,50 @@ private fun HeaderContent(
     ) {
         UserInfoSection(
             userData = uiState.user ?: LoginEntity(),
-            attendanceStatus = uiState.currentStatus
+            attendanceStatus = uiState.currentStatus,
+            isLocationValid = uiState.isLocationValid
         )
         SummarySection(
             summary = uiState.summary,
-            isLocationValid = uiState.isLocationValid == true
         )
     }
 }
 
+
 @Composable
 fun SummarySection(
     summary: AttendanceSummaryEntity,
-    isLocationValid: Boolean?,
 ) {
-    val locationIcon: DrawableResource
-    val iconColor: Color
-
-    when (isLocationValid) {
-        true -> {
-            locationIcon = Res.drawable.ic_location_line_24
-            iconColor = theme.success
-        }
-
-        false -> {
-            locationIcon = Res.drawable.ic_location_invalid_line_24
-            iconColor = theme.danger
-        }
-
-        null -> {
-            locationIcon = Res.drawable.ic_location_invalid_line_24
-            iconColor = theme.chipDisabledBg
-        }
-    }
-
     Row(
         modifier = Modifier
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+            .fillMaxWidth()
+            .padding(itemGap8),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(
-            modifier = Modifier
-                .weight(1f)
-                .padding(itemGap8),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(itemGap8)
-        ) {
-            SummaryItem(
-                amount = summary.checkedIn.toString(),
-                title = stringResource(Res.string.label_on_time),
-                severity = Severity.SUCCESS
-            )
-            CircleSpacer()
-            SummaryItem(
-                amount = summary.late.toString(),
-                title = stringResource(Res.string.label_late),
-                severity = Severity.WARNING
-            )
-            CircleSpacer()
-            SummaryItem(
-                amount = summary.excused.toString(),
-                title = stringResource(Res.string.label_excused),
-                severity = Severity.WARNING
-            )
-            CircleSpacer()
-            SummaryItem(
-                amount = summary.absent.toString(),
-                title = stringResource(Res.string.label_absent),
-                severity = Severity.DANGER
-            )
-        }
-        Icon(
-            modifier = Modifier.size(if (isCompact) 36.dp else 42.dp),
-            painter = painterResource(locationIcon),
-            contentDescription = null,
-            tint = iconColor
+        SummaryItem(
+            amount = summary.checkedIn.toString(),
+            title = stringResource(Res.string.label_on_time),
+            severity = Severity.SUCCESS
         )
-
+        CircleSpacer()
+        SummaryItem(
+            amount = summary.late.toString(),
+            title = stringResource(Res.string.label_late),
+            severity = Severity.WARNING
+        )
+        CircleSpacer()
+        SummaryItem(
+            amount = summary.excused.toString(),
+            title = stringResource(Res.string.label_excused),
+            severity = Severity.WARNING
+        )
+        CircleSpacer()
+        SummaryItem(
+            amount = summary.absent.toString(),
+            title = stringResource(Res.string.label_absent),
+            severity = Severity.DANGER
+        )
     }
 }
 
@@ -259,6 +227,7 @@ private fun SummaryItem(
 @Composable
 private fun UserInfoSection(
     userData: LoginEntity,
+    isLocationValid: Boolean?,
     attendanceStatus: AttendanceStatus,
 ) {
     Row(
@@ -306,10 +275,50 @@ private fun UserInfoSection(
                 )
             }
         }
-        Chip(
-            text = attendanceStatus.label,
-            severity = attendanceStatus.severity
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(itemGap8)
+        ) {
+            Chip(
+                text = attendanceStatus.getLabel(),
+                severity = attendanceStatus.severity
+            )
+            LocationStatus(
+                isLocationValid = isLocationValid
+            )
+        }
 
     }
+}
+
+@Composable
+private fun LocationStatus(
+    isLocationValid: Boolean?,
+) {
+    val locationIcon: DrawableResource
+    val iconColor: Color
+
+    when (isLocationValid) {
+        true -> {
+            locationIcon = Res.drawable.ic_location_line_24
+            iconColor = theme.success
+        }
+
+        false -> {
+            locationIcon = Res.drawable.ic_location_invalid_line_24
+            iconColor = theme.danger
+        }
+
+        null -> {
+            locationIcon = Res.drawable.ic_location_invalid_line_24
+            iconColor = theme.chipDisabledBg
+        }
+    }
+    Icon(
+        modifier = Modifier.size(if (isCompact) 36.dp else 42.dp),
+        painter = painterResource(locationIcon),
+        contentDescription = null,
+        tint = iconColor
+    )
+
 }

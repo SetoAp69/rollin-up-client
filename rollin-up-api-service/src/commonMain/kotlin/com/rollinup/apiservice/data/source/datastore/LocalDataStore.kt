@@ -1,6 +1,7 @@
 package com.rollinup.apiservice.data.source.datastore
 
 import com.rollinup.apiservice.model.common.GlobalSetting
+import com.rollinup.common.model.LocaleEnum
 import com.rollinup.common.model.UiMode
 
 interface LocalDataStore {
@@ -18,5 +19,8 @@ interface LocalDataStore {
 
     suspend fun getLocalUiModeSetting(): UiMode
     suspend fun updateLocalUiModeSetting(uiMode: UiMode)
+
+    suspend fun getLocale(): LocaleEnum
+    suspend fun setLocale(locale: LocaleEnum)
 }
 

@@ -84,7 +84,7 @@ class UserMapperTest {
             id = "u1",
             username = "john_d",
             firstName = "John",
-            lastName = "Doe",
+            fullName = "Doe",
             classX = GetUserByIdResponse.Data.Class(id = "c1", name = "10A", key = 101),
             email = "john@mail.com",
             studentId = "123",
@@ -112,7 +112,7 @@ class UserMapperTest {
             id = "u1",
             username = "john_d",
             firstName = "John",
-            lastName = "Doe",
+            fullName = "Doe",
             classX = null, // Testing null
             email = "john@mail.com",
             studentId = null, // Testing null

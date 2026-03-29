@@ -36,6 +36,7 @@ fun UserCenterContent(
     var selectedId by remember { mutableStateOf("") }
     var showEdit by remember { mutableStateOf(false) }
     var showDetail by remember { mutableStateOf(false) }
+
     HandleState(
         state = uiState.deleteUserState,
         successMsg = stringResource(Res.string.msg_delete_user_success),

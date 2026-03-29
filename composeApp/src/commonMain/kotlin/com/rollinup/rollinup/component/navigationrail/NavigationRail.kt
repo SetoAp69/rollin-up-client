@@ -35,6 +35,7 @@ import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.main.navigation.MainRoute
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_close_line_24
 import rollin_up.composeapp.generated.resources.ic_hamburger_line_24
@@ -167,14 +168,14 @@ fun NavigationMenu(
         ) {
             Icon(
                 painter = painterResource(menu.icon),
-                contentDescription = menu.title,
+                contentDescription = stringResource(menu.title),
                 tint = if (isSelected) theme.textBtnPrimary else theme.secondary50
             )
 
             if (isExpanded) {
                 Spacer(itemGap4)
                 Text(
-                    text = menu.title,
+                    text = stringResource(menu.title),
                     style = Style.label,
                     color = if (isSelected) theme.textBtnPrimary else theme.secondary50
                 )

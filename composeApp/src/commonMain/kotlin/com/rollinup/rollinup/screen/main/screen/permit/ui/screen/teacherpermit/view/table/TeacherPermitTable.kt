@@ -13,6 +13,7 @@ import com.rollinup.apiservice.model.permit.PermitByClassEntity
 import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.chip.Chip
 import com.rollinup.rollinup.component.date.DateText
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.component.tab.TabRow
 import com.rollinup.rollinup.component.table.Table
 import com.rollinup.rollinup.component.table.TableColumn
@@ -23,7 +24,6 @@ import com.rollinup.rollinup.screen.main.screen.permit.model.teacherpermit.Teach
 import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitapproval.view.PermitApprovalFormDialog
 import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitdetail.view.PermitDetailDialog
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.uistate.TeacherPermitUiState
-import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.label_class
 import rollin_up.composeapp.generated.resources.label_created_at
@@ -109,33 +109,33 @@ private fun TeacherPermitTableHeader(
 @Composable
 private fun getColumn(): List<TableColumn<PermitByClassEntity>> {
     return listOf(
-        TableColumn(stringResource(Res.string.label_full_name)) {
+        TableColumn(Res.string.label_full_name) {
             Text(
                 text = it.student.name,
                 style = Style.body,
                 color = theme.bodyText
             )
         },
-        TableColumn(stringResource(Res.string.label_class), 0.5f) {
+        TableColumn(Res.string.label_class, 0.5f) {
             Text(
                 text = it.student.xClass,
                 style = Style.body,
                 color = theme.bodyText
             )
         },
-        TableColumn(stringResource(Res.string.label_permit_type), 0.5f) {
+        TableColumn(Res.string.label_permit_type, 0.5f) {
             Chip(
-                text = it.type.label,
+                text = it.type.getLabel(),
                 severity = Severity.SECONDARY
             )
         },
-        TableColumn(stringResource(Res.string.label_status), 0.8f) {
+        TableColumn(Res.string.label_status, 0.8f) {
             Chip(
                 text = it.approvalStatus.label,
                 severity = it.approvalStatus.severity
             )
         },
-        TableColumn(title = stringResource(Res.string.label_reason), weight = 0.5f) {
+        TableColumn(Res.string.label_reason, weight = 0.5f) {
             Text(
                 text = it.reason ?: "-",
                 style = Style.body,
@@ -143,17 +143,17 @@ private fun getColumn(): List<TableColumn<PermitByClassEntity>> {
             )
         },
 
-        TableColumn(stringResource(Res.string.label_start), 0.5f) {
+        TableColumn(Res.string.label_start, 0.5f) {
             DateText(
                 dateString = it.startTime,
             )
         },
-        TableColumn(stringResource(Res.string.label_end), 0.5f) {
+        TableColumn(Res.string.label_end, 0.5f) {
             DateText(
                 dateString = it.endTime,
             )
         },
-        TableColumn(stringResource(Res.string.label_created_at)) {
+        TableColumn(Res.string.label_created_at) {
             DateText(
                 dateString = it.createdAt,
             )

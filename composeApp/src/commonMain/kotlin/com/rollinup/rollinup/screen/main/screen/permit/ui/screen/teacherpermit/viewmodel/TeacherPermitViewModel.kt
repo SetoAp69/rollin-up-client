@@ -233,7 +233,7 @@ class TeacherPermitViewModel(
         return listOf(
             "Name" to data.map { d -> d.student.name },
             "Class" to data.map { d -> d.student.xClass },
-            "Type" to data.map { d -> d.type.label },
+            "Type" to data.map { d -> d.type.labelString },
             "Duration" to data.map { d ->
                 DateFormatter.formatPermitDateRange(
                     type = d.type,

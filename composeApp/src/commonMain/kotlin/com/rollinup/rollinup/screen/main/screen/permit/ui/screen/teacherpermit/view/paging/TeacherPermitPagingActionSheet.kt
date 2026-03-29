@@ -42,7 +42,7 @@ fun TeacherPermitPagingActionSheet(
         } else {
             actions.fastForEach { action ->
                 ActionButton(
-                    label = action.label,
+                    label = stringResource(action.label),
                     icon = action.icon,
                     onClick = {
                         when (action) {

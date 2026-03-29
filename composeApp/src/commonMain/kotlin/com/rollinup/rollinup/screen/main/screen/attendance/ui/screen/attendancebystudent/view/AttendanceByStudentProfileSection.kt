@@ -18,12 +18,14 @@ import androidx.compose.ui.unit.dp
 import com.rollinup.apiservice.model.common.Gender
 import com.rollinup.apiservice.model.user.UserDetailEntity
 import com.rollinup.rollinup.component.loading.ShimmerEffect
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.component.profile.ProfileInfoField
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_calendar_fill_24
 import rollin_up.composeapp.generated.resources.ic_female_line_24
@@ -34,6 +36,15 @@ import rollin_up.composeapp.generated.resources.ic_male_line_24
 import rollin_up.composeapp.generated.resources.ic_phone_line_24
 import rollin_up.composeapp.generated.resources.ic_user_board_line_24
 import rollin_up.composeapp.generated.resources.ic_user_line_24
+import rollin_up.composeapp.generated.resources.label_address
+import rollin_up.composeapp.generated.resources.label_birthday
+import rollin_up.composeapp.generated.resources.label_class
+import rollin_up.composeapp.generated.resources.label_email
+import rollin_up.composeapp.generated.resources.label_full_name
+import rollin_up.composeapp.generated.resources.label_gender
+import rollin_up.composeapp.generated.resources.label_phone
+import rollin_up.composeapp.generated.resources.label_role
+import rollin_up.composeapp.generated.resources.label_student_id
 
 
 @Composable
@@ -99,62 +110,62 @@ private fun ProfileInfoSection(
     }
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         ProfileInfoField(
-            title = "Full Name",
+            title = stringResource(Res.string.label_full_name),
             icon = Res.drawable.ic_user_line_24,
             value = userDetail.fullName
         )
         Box(modifier = Modifier.weight(1f)) {
             ProfileInfoField(
-                title = "ID",
+                title = stringResource(Res.string.label_student_id),
                 icon = Res.drawable.ic_id_card_line_24,
-                value = userDetail.id
+                value = userDetail.studentId.ifBlank { "-" }
             )
         }
         Box(modifier = Modifier.weight(1f)) {
             ProfileInfoField(
-                title = "Class",
+                title = stringResource(Res.string.label_class),
                 icon = Res.drawable.ic_user_board_line_24,
                 value = userDetail.classX?.name ?: "-"
             )
         }
         Box(modifier = Modifier.weight(1f)) {
             ProfileInfoField(
-                title = "Role",
+                title = stringResource(Res.string.label_role),
                 icon = Res.drawable.ic_user_board_line_24,
                 value = userDetail.role.name
             )
         }
         Box(modifier = Modifier.weight(1f)) {
             ProfileInfoField(
-                title = "Email",
+                title = stringResource(Res.string.label_email),
                 icon = Res.drawable.ic_mail_user_line_24,
                 value = userDetail.email
             )
         }
         Box(modifier = Modifier.weight(1f)) {
             ProfileInfoField(
-                title = "Birthday",
+                title = stringResource(Res.string.label_birthday),
                 icon = Res.drawable.ic_calendar_fill_24,
                 value = userDetail.birthDay
             )
         }
         Box(modifier = Modifier.weight(1f)) {
             ProfileInfoField(
-                title = "Gender",
+                title = stringResource(Res.string.label_gender),
                 icon = genderIcon,
-                value = userDetail.gender.label
+                value = userDetail.gender.getLabel()
             )
         }
         Box(modifier = Modifier.weight(1f)) {
             ProfileInfoField(
-                title = "Phone",
+                title = stringResource(Res.string.label_phone),
                 icon = Res.drawable.ic_phone_line_24,
                 value = userDetail.phoneNumber
             )
         }
         Box(modifier = Modifier.weight(1f)) {
             ProfileInfoField(
-                title = "Address",
+                title = stringResource(Res.string.label_address),
                 icon = Res.drawable.ic_home_line_24,
                 value = userDetail.address
             )

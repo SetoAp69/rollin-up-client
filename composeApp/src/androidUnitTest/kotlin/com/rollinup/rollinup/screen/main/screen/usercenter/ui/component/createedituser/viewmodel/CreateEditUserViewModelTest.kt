@@ -135,7 +135,7 @@ class CreateEditUserViewModelTest {
         val userDetail = UserDetailEntity(
             id = userId,
             firstName = "John",
-            lastName = "Doe",
+            fullName = "Doe",
             userName = "jdoe",
             email = "jdoe@example.com",
             role = UserDetailEntity.Data("123", "Student"),
@@ -251,7 +251,7 @@ class CreateEditUserViewModelTest {
     fun `resetMessageState() should clear submitState`() = runTest {
         // Arrange: Simulate a success state first
         val formData = CreateEditUserFormData(
-            userName = "u", firstName = "f", lastName = "l", email = "e",
+            userName = "u", firstName = "f", fullName = "l", email = "e",
             role = "1", gender = "M", birthDay = 100L
         )
         arrangeRegisterUser(Result.Success(Unit))
@@ -303,7 +303,7 @@ class CreateEditUserViewModelTest {
         advanceUntilIdle()
 
         val formWithStudentRole = CreateEditUserFormData(
-            userName = "valid", firstName = "valid", lastName = "valid", email = "valid",
+            userName = "valid", firstName = "valid", fullName = "valid", email = "valid",
             gender = "M", birthDay = 100L,
             role = studentRoleId,
             // Missing studentId and classId
@@ -329,7 +329,7 @@ class CreateEditUserViewModelTest {
         val validForm = CreateEditUserFormData(
             userName = "user",
             firstName = "first",
-            lastName = "last",
+            fullName = "last",
             email = "email@test.com",
             role = "123",
             gender = "123",
@@ -370,7 +370,7 @@ class CreateEditUserViewModelTest {
         // Arrange
         val cb = viewModel.getCallback()
         val formData = CreateEditUserFormData(
-            userName = "u", firstName = "f", lastName = "l", email = "e",
+            userName = "u", firstName = "f", fullName = "l", email = "e",
             role = "123", gender = "123", birthDay = 100L
         )
         arrangeRegisterUser(Result.Success(Unit))
@@ -425,7 +425,7 @@ class CreateEditUserViewModelTest {
         // Arrange
         val cb = viewModel.getCallback()
         val formData = CreateEditUserFormData(
-            userName = "u", firstName = "f", lastName = "l", email = "e",
+            userName = "u", firstName = "f", fullName = "l", email = "e",
             role = "123", gender = "F", birthDay = 100L
         )
         arrangeRegisterUser(Result.Error(NetworkError.RESPONSE_ERROR))

@@ -11,6 +11,7 @@ object AndroidDataModule {
         RepositoryModule(),
         MapperModule(),
         DispatcherModule(),
-        DomainModule()
+        DomainModule(),
+
     )
 }

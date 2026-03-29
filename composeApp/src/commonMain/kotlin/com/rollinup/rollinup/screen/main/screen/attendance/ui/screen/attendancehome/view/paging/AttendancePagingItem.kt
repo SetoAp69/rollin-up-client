@@ -18,6 +18,7 @@ import com.rollinup.rollinup.component.card.Card
 import com.rollinup.rollinup.component.chip.Chip
 import com.rollinup.rollinup.component.date.DateText
 import com.rollinup.rollinup.component.loading.ShimmerEffect
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.theme.Style
@@ -50,7 +51,7 @@ fun AttendancePagingItem(
                 rightContent = {
                     val status = item.attendance?.status ?: AttendanceStatus.NO_DATA
                     Chip(
-                        text = status.label,
+                        text = status.getLabel(),
                         severity = status.severity
                     )
                 }

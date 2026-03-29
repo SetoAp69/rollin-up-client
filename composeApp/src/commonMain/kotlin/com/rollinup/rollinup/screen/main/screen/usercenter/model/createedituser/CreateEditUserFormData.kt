@@ -3,7 +3,7 @@ package com.rollinup.rollinup.screen.main.screen.usercenter.model.createedituser
 data class CreateEditUserFormData(
     val id: String = "",
     val firstName: String? = null,
-    val lastName: String? = null,
+    val fullName: String? = null,
     val userName: String? = null,
     val gender: String? = null,
     val birthDay: Long? = null,
@@ -34,8 +34,8 @@ data class CreateEditUserFormData(
     val selectorError
         get() = listOf(genderError, birthDayError, classError, roleError)
 
-    val selectorErrorMsg: String?
-        get() = if (selectorError.any { it }) "Please select all fields" else null
+    val selectorErrorMsg: CreateEditUserFormErrorType?
+        get() = if (selectorError.any { it }) CreateEditUserFormErrorType.FIELD_INCOMPLETE else null
 
     fun isValid(): Boolean {
         return listOf(

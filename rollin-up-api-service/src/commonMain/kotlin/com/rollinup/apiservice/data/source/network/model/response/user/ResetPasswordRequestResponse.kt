@@ -16,5 +16,7 @@ data class ResetPasswordRequestResponse(
     data class Data(
         @SerialName("email")
         val email: String = "",
+        @SerialName("expired_at")
+        val duration: String = "",
     )
 }

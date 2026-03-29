@@ -38,7 +38,7 @@ actual fun getOrientation(): Orientation {
 actual fun getVersion(): String {
     val context = LocalContext.current
     val appInfo = PackageManagerWrapper(context).getApplicationInfo(
-        "com.rollinup.rollinup",
+        "com.rollinup.rollinup.debug",
         PackageManager.GET_META_DATA
     ).metaData
     return appInfo.getString("version") ?: ""

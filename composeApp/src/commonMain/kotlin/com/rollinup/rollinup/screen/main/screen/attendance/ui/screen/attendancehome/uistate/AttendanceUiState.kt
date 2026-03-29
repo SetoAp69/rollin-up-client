@@ -1,5 +1,6 @@
 package com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancehome.uistate
 
+import androidx.compose.runtime.Composable
 import com.rollinup.apiservice.data.source.network.model.request.attendance.GetAttendanceListByClassQueryParams
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
@@ -8,6 +9,7 @@ import com.rollinup.apiservice.model.attendance.AttendanceSummaryEntity
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.utils.Utils.toJsonString
 import com.rollinup.common.model.OptionData
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.screen.main.screen.attendance.model.attendancehome.AttendanceFilterData
 import kotlinx.datetime.LocalDate
 
@@ -34,7 +36,8 @@ data class AttendanceUiState(
         )
 
     val statusOptions
+        @Composable
         get() = AttendanceStatus.entries.map {
-            OptionData(it.label, it)
+            OptionData(it.getLabel(), it)
         }
 }

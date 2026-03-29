@@ -3,11 +3,16 @@ package com.rollinup.apiservice.data.mapper
 import com.rollinup.apiservice.data.source.network.model.response.user.GetUserByIdResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.GetUserListResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.GetUserOptionsResponse
+import com.rollinup.apiservice.data.source.network.model.response.user.ResendVerificationOtpResponse
+import com.rollinup.apiservice.data.source.network.model.response.user.ResetPasswordRequestResponse
 import com.rollinup.apiservice.model.common.Gender
+import com.rollinup.apiservice.model.common.Role
+import com.rollinup.apiservice.model.user.OtpStatusEntity
 import com.rollinup.apiservice.model.user.UserDetailEntity
 import com.rollinup.apiservice.model.user.UserEntity
 import com.rollinup.apiservice.model.user.UserOptionEntity
 import com.rollinup.common.model.OptionData
+import com.rollinup.common.utils.Utils.parseToLocalDateTime
 
 class UserMapper {
     fun mapGetUserList(data: List<GetUserListResponse.Data.UserData>): List<UserEntity> {
@@ -20,7 +25,7 @@ class UserMapper {
                 fullName = it.firstName + " " + it.lastName,
                 studentId = it.studentId ?: "",
                 address = it.address,
-                role = it.role,
+                role = Role.fromValue(it.role),
                 gender = Gender.fromValue(it.gender),
             )
         }
@@ -30,8 +35,7 @@ class UserMapper {
         return UserDetailEntity(
             id = data.id,
             userName = data.username,
-            firstName = data.firstName,
-            lastName = data.lastName,
+            fullName = data.fullName,
             classX = data.classX?.let {
                 UserDetailEntity.Data(
                     id = it.id,
@@ -40,7 +44,6 @@ class UserMapper {
                 )
             },
             email = data.email,
-            fullName = data.firstName + " " + data.lastName,
             studentId = data.studentId ?: "-",
             address = data.address,
             gender = Gender.fromValue(data.gender),
@@ -81,4 +84,17 @@ class UserMapper {
                 )
             },
         )
+
+    fun mapResendVerificationOtpStatus(data: ResendVerificationOtpResponse.Data): OtpStatusEntity {
+        return OtpStatusEntity(
+            expiredAt = data.expiredAt.parseToLocalDateTime().time,
+        )
+    }
+
+    fun mapResetPasswordOtpStatus(data: ResetPasswordRequestResponse.Data): OtpStatusEntity {
+        return OtpStatusEntity(
+            expiredAt = data.duration.parseToLocalDateTime().time,
+            email = data.email
+        )
+    }
 }

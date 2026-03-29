@@ -1,5 +1,6 @@
 package com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.uistate
 
+import androidx.compose.runtime.Composable
 import com.rollinup.apiservice.data.source.network.model.request.permit.GetPermitListQueryParams
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.permit.ApprovalStatus
@@ -7,6 +8,7 @@ import com.rollinup.apiservice.model.permit.PermitByClassEntity
 import com.rollinup.apiservice.model.permit.PermitType
 import com.rollinup.apiservice.utils.Utils.toJsonString
 import com.rollinup.common.model.OptionData
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitFilterData
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitTab
 import kotlinx.datetime.LocalDate
@@ -31,10 +33,11 @@ data class TeacherPermitUiState(
             .map { OptionData(it.label, it.name) }
 
     val typeOptions
+        @Composable
         get() = PermitType
             .entries
             .map {
-                OptionData(it.label, it.value)
+                OptionData(it.getLabel(), it.value)
             }
 
     val queryParams

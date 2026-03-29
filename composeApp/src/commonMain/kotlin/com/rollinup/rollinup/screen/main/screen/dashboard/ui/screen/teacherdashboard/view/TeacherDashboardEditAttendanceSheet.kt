@@ -35,6 +35,7 @@ import com.rollinup.rollinup.component.handlestate.HandleState
 import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.component.permitform.model.PermitFormErrorType
 import com.rollinup.rollinup.component.permitform.view.PermitFormContent
 import com.rollinup.rollinup.component.selector.SingleSelector
@@ -255,7 +256,7 @@ private fun Header(
         } else {
             Box {
                 Chip(
-                    text = formData.status.label,
+                    text = formData.status.getLabel(),
                     trailingIcon = Res.drawable.ic_edit_line_24,
                     onClick = {
                         showSelectStatus = true
