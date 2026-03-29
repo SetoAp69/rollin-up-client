@@ -294,7 +294,7 @@ class PermitFormViewModelTest() {
                 studentId = "123"
             ),
             startTime = "2025-10-28T09:00:00+07:00",
-            endTime = "2025-10-28T09:00:00+09:00",
+            endTime = "2025-11-28T09:00:00+09:00",
             attachment = "attachment",
             note = "note",
             reason = "reason",
@@ -316,7 +316,7 @@ class PermitFormViewModelTest() {
 
         //Act
         val cb = viewModel.getCallback()
-        val isValid = cb.onValidateForm(formData)
+        val isValid = cb.onValidateForm(viewModel.uiState.value.formData)
 
         //Assert
         assertTrue(isValid)

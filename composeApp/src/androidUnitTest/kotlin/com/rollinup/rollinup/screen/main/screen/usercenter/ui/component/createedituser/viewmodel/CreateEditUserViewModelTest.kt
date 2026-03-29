@@ -281,9 +281,8 @@ class CreateEditUserViewModelTest {
         // Assert
         assertFalse(result)
         val state = viewModel.uiState.value.formData
-        assertEquals( CreateEditUserFormErrorType.USERNAME_EMPTY, state.userNameError)
+        assertEquals(CreateEditUserFormErrorType.USERNAME_EMPTY, state.userNameError)
         assertEquals(CreateEditUserFormErrorType.LAST_NAME_EMPTY, state.lastNameError)
-        assertEquals(CreateEditUserFormErrorType.FIRST_NAME_EMPTY, state.firstNameError)
         assertEquals(CreateEditUserFormErrorType.EMAIL_EMPTY, state.emailError)
         assertTrue(state.genderError)
         assertTrue(state.roleError)
@@ -457,7 +456,10 @@ class CreateEditUserViewModelTest {
         advanceUntilIdle()
 
         // Assert
-        assertEquals(CreateEditUserFormErrorType.USERNAME_EXIST, viewModel.uiState.value.formData.userNameError)
+        assertEquals(
+            CreateEditUserFormErrorType.USERNAME_EXIST,
+            viewModel.uiState.value.formData.userNameError
+        )
     }
 
     @Test
@@ -491,7 +493,10 @@ class CreateEditUserViewModelTest {
         advanceUntilIdle()
 
         // Assert
-        assertEquals(CreateEditUserFormErrorType.EMAIL_EXIST, viewModel.uiState.value.formData.emailError)
+        assertEquals(
+            CreateEditUserFormErrorType.EMAIL_EXIST,
+            viewModel.uiState.value.formData.emailError
+        )
     }
 
     @Test

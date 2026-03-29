@@ -11,8 +11,12 @@ import com.rollinup.apiservice.domain.user.UpdatePasswordAndVerificationUseCase
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.NetworkError
 import com.rollinup.apiservice.model.common.Result
+import com.rollinup.apiservice.model.user.OtpStatusEntity
+import com.rollinup.common.utils.Utils.now
 import com.rollinup.rollinup.CoroutineTestRule
+import com.rollinup.rollinup.component.password.PasswordErrorType
 import com.rollinup.rollinup.screen.auth.model.updatepassword.UpdatePasswordCallback
+import com.rollinup.rollinup.screen.auth.model.updatepassword.UpdatePasswordErrorType
 import com.rollinup.rollinup.screen.auth.model.updatepassword.UpdatePasswordFormData
 import com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.uistate.VerifyAccountUiState
 import io.mockk.MockKAnnotations
@@ -25,12 +29,14 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.LocalTime
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 class UpdatePasswordViewModelTest {
@@ -85,7 +91,7 @@ class UpdatePasswordViewModelTest {
     }
 
     private fun arrangeResendVerificationUseCase(
-        result: Result<Unit, NetworkError>,
+        result: Result<OtpStatusEntity, NetworkError>,
     ) {
         coEvery {
             resendVerificationUseCase()
@@ -93,24 +99,46 @@ class UpdatePasswordViewModelTest {
     }
 
     @Test
-    fun `init() should set user data and start timer`() {
+    fun `init() should set user data and start timer`() = runTest {
         //Arrange
         val expectedUser = LoginEntity(id = "MyUser")
+        val expectedOtpStatus = OtpStatusEntity(
+            email = "email",
+            expiredAt = LocalTime(
+                hour = LocalTime.now().hour,
+                minute = LocalTime.now().minute + 5
+            )
+        )
+
+        arrangeResendVerificationUseCase(Result.Success(expectedOtpStatus))
+
         //Act
         viewModel.init(expectedUser)
 
         //Assert
+        coVerify {
+            resendVerificationUseCase()
+        }
+
         val state = viewModel.uiState.value
         assertEquals(expectedUser, state.user)
-        assertTrue(state.startTimer)
+        assertNotEquals(0, state.countdown)
     }
 
     @Test
-    fun `reset()_should reset ui state with default value`() {
+    fun `reset()_should reset ui state with default value`() = runTest {
         //Arrange
         val user = LoginEntity(id = "myUser")
         val expected = VerifyAccountUiState()
+        val expectedResult = OtpStatusEntity(
+            email = "email",
+            expiredAt = LocalTime(
+                hour = LocalTime.now().hour,
+                minute = LocalTime.now().minute + 5
+            )
+        )
 
+        arrangeResendVerificationUseCase(Result.Success(expectedResult))
         viewModel.init(user)
 
         //Act
@@ -146,8 +174,8 @@ class UpdatePasswordViewModelTest {
             passwordOne = "pass1",
             passwordTwo = "pass2",
             deviceId = "device",
-            passwordOneError = "sdasd",
-            passwordTwoError = "asdsad"
+            passwordOneError = PasswordErrorType.REQUIRE_NUMBER,
+            passwordTwoError = PasswordErrorType.REQUIRE_NUMBER
         )
 
         //Act
@@ -161,7 +189,14 @@ class UpdatePasswordViewModelTest {
     @Test
     fun `resendOtp() should return Result Success`() = runTest {
         //Arrange
-        arrangeResendVerificationUseCase(Result.Success(Unit))
+        val expected = OtpStatusEntity(
+            email = "email",
+            expiredAt = LocalTime(
+                hour = LocalTime.now().hour,
+                minute = LocalTime.now().minute + 5
+            )
+        )
+        arrangeResendVerificationUseCase(Result.Success(expected))
         //Act
         cb.onResendOtp()
 
@@ -195,7 +230,7 @@ class UpdatePasswordViewModelTest {
     fun `submitOtp() should do nothing when otp is empty `() {
         //Arrange
         val otp = ""
-        val expected = "OTP cannot be empty"
+        val expected = UpdatePasswordErrorType.OTP_EMPTY
 
         //Act
         cb.onSubmitOtp(otp)
@@ -209,7 +244,7 @@ class UpdatePasswordViewModelTest {
     fun `submitOtp() should do nothing when otp is less than 5`() {
         //Arrange
         val otp = "123"
-        val expected = "You need to fills all the digits"
+        val expected = UpdatePasswordErrorType.OTP_INVALID
 
         //Act
         cb.onSubmitOtp(otp)

@@ -13,6 +13,7 @@ import com.rollinup.apiservice.domain.attendance.GetAttendanceByIdUseCase
 import com.rollinup.apiservice.domain.attendance.GetExportAttendanceDataUseCase
 import com.rollinup.apiservice.domain.permit.CreatePermitUseCase
 import com.rollinup.apiservice.domain.permit.DoApprovalUseCase
+import com.rollinup.apiservice.domain.permit.EditPermitUseCase
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
@@ -27,6 +28,7 @@ import com.rollinup.common.utils.Utils.toEpochMilli
 import com.rollinup.rollinup.CoroutineTestRule
 import com.rollinup.rollinup.component.export.FileWriter
 import com.rollinup.rollinup.component.permitform.model.PermitFormData
+import com.rollinup.rollinup.component.permitform.model.PermitFormErrorType
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.EditAttendanceFormData
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardApprovalFormData
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardFilterData
@@ -35,6 +37,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -78,6 +81,9 @@ class TeacherDashboardViewModelTest {
 
     @MockK
     private lateinit var getExportAttendanceDataUseCase: GetExportAttendanceDataUseCase
+
+    @MockK
+    private lateinit var editPermitUseCase: EditPermitUseCase
 
     @MockK
     private lateinit var fileWriter: FileWriter
@@ -126,6 +132,7 @@ class TeacherDashboardViewModelTest {
             permitDoApprovalUseCase,
             createPermitUseCase,
             createAttendanceDataUseCase,
+            editPermitUseCase,
             editAttendanceDataUseCase,
             getExportAttendanceDataUseCase,
             fileWriter
@@ -383,13 +390,13 @@ class TeacherDashboardViewModelTest {
     @Test
     fun `validateEditForm() Permit validation - Non-Absence type with empty reason should be Valid`() {
         // Arrange
-        // Logic: if (formData.reason.isNullOrBlank() && formData.type == PermitType.ABSENCE)
-        // Here we test type = DISPENSATION (not ABSENCE), so empty reason should NOT trigger error.
         val permitData = PermitFormData(
             duration = listOf(1000L),
             type = PermitType.DISPENSATION,
-            reason = "" // Empty reason
+            reason = "",
+            attachment = mockk(relaxed = true)
         )
+
         val formData = EditAttendanceFormData(
             status = AttendanceStatus.EXCUSED,
             permitFormData = permitData
@@ -400,6 +407,7 @@ class TeacherDashboardViewModelTest {
         val isValid = cb.onValidateEditForm(formData, AttendanceStatus.NO_DATA)
 
         // Assert
+        println(viewModel.uiState.value.editAttendanceFormData)
         assertTrue("Should be valid because reason is only required for ABSENCE", isValid)
         assertNull(viewModel.uiState.value.editAttendanceFormData.permitFormData.reasonError)
     }
@@ -423,7 +431,7 @@ class TeacherDashboardViewModelTest {
         // Assert
         assertFalse(isValid)
         assertEquals(
-            "Duration can't be empty",
+            PermitFormErrorType.DURATION_EMPTY,
             viewModel.uiState.value.editAttendanceFormData.permitFormData.durationError
         )
     }
@@ -448,7 +456,7 @@ class TeacherDashboardViewModelTest {
         // Assert
         assertFalse(isValid)
         assertEquals(
-            "Please select a reason",
+            PermitFormErrorType.REASON_EMPTY,
             viewModel.uiState.value.editAttendanceFormData.permitFormData.reasonError
         )
     }
@@ -858,7 +866,7 @@ class TeacherDashboardViewModelTest {
         // Assert
         assertFalse(result)
         assertEquals(
-            "Duration can't be empty",
+            PermitFormErrorType.DURATION_EMPTY,
             viewModel.uiState.value.editAttendanceFormData.permitFormData.durationError
         )
     }
@@ -883,7 +891,7 @@ class TeacherDashboardViewModelTest {
         // Assert
         assertFalse(result)
         assertEquals(
-            "Please select a reason",
+            PermitFormErrorType.REASON_EMPTY,
             viewModel.uiState.value.editAttendanceFormData.permitFormData.reasonError
         )
     }
@@ -894,11 +902,12 @@ class TeacherDashboardViewModelTest {
         val permitData = PermitFormData(
             duration = listOf(1000L),
             type = PermitType.ABSENCE,
-            reason = "Flu"
+            reason = "Flu",
+            attachment = mockk(relaxed = true)
         )
         val formData = EditAttendanceFormData(
             status = AttendanceStatus.EXCUSED,
-            permitFormData = permitData
+            permitFormData = permitData,
         )
         val cb = viewModel.getCallback()
 

@@ -1,5 +1,6 @@
 package com.rollinup.rollinup.screen.auth.model.updatepassword
 
+import com.rollinup.rollinup.component.password.PasswordErrorType
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -41,7 +42,7 @@ class UpdatePasswordFormDataTest {
     fun `isValid should return false when passwordOneError is present`() {
         // Arrange
         val formData = UpdatePasswordFormData(
-            passwordOneError = "Password cannot be empty",
+            passwordOneError = PasswordErrorType.EMPTY,
             passwordTwoError = null
         )
 
@@ -55,7 +56,7 @@ class UpdatePasswordFormDataTest {
         // Arrange
         val formData = UpdatePasswordFormData(
             passwordOneError = null,
-            passwordTwoError = "Passwords do not match"
+            passwordTwoError = PasswordErrorType.NOT_MATCH
         )
 
         // Act & Assert
@@ -67,8 +68,8 @@ class UpdatePasswordFormDataTest {
     fun `isValid should return false when both errors are present`() {
         // Arrange
         val formData = UpdatePasswordFormData(
-            passwordOneError = "Error 1",
-            passwordTwoError = "Error 2"
+            passwordOneError = PasswordErrorType.REQUIRE_NUMBER,
+            passwordTwoError = PasswordErrorType.REQUIRE_NUMBER
         )
 
         // Act & Assert

@@ -7,8 +7,12 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.ic_close_line_24
 import rollin_up.composeapp.generated.resources.ic_edit_line_24
 import rollin_up.composeapp.generated.resources.ic_info_line_24
+import rollin_up.composeapp.generated.resources.label_cancel_permit
+import rollin_up.composeapp.generated.resources.label_detail
+import rollin_up.composeapp.generated.resources.label_edit_permit
 
 class StudentPermitActionTest {
 
@@ -18,7 +22,7 @@ class StudentPermitActionTest {
         val action = StudentPermitAction.EDIT
 
         // Properties
-        assertEquals("Edit permit", action.label)
+        assertEquals(Res.string.label_edit_permit, action.label)
         assertEquals(Severity.PRIMARY, action.severity) // Default
         assertEquals(Res.drawable.ic_edit_line_24, action.icon)
 
@@ -35,9 +39,9 @@ class StudentPermitActionTest {
         val action = StudentPermitAction.CANCEL
 
         // Properties
-        assertEquals("Cancel permit", action.label)
+        assertEquals(Res.string.label_cancel_permit, action.label)
         assertEquals(Severity.PRIMARY, action.severity) // Default
-        assertEquals(Res.drawable.ic_edit_line_24, action.icon)
+        assertEquals(Res.drawable.ic_close_line_24, action.icon)
 
         // Show Logic: Only visible if pending
         assertTrue(action.show(ApprovalStatus.APPROVAL_PENDING))
@@ -52,7 +56,7 @@ class StudentPermitActionTest {
         val action = StudentPermitAction.DETAIL
 
         // Properties
-        assertEquals("Detail", action.label)
+        assertEquals(Res.string.label_detail, action.label)
         assertEquals(Severity.PRIMARY, action.severity) // Default
         assertEquals(Res.drawable.ic_info_line_24, action.icon)
 

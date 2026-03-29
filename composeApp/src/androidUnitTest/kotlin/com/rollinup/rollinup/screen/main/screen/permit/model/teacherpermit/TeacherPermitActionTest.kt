@@ -9,6 +9,8 @@ import org.junit.Test
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_info_line_24
 import rollin_up.composeapp.generated.resources.ic_user_check_line_24
+import rollin_up.composeapp.generated.resources.label_approval
+import rollin_up.composeapp.generated.resources.label_detail
 
 class TeacherPermitActionTest {
 
@@ -16,7 +18,7 @@ class TeacherPermitActionTest {
     @Test
     fun `APPROVAL properties should be correct`() {
         val action = TeacherPermitAction.APPROVAL
-        assertEquals("Approval", action.label)
+        assertEquals(Res.string.label_approval, action.label)
         assertEquals(Res.drawable.ic_user_check_line_24, action.icon)
     }
 
@@ -42,7 +44,7 @@ class TeacherPermitActionTest {
     @Test
     fun `DETAIL properties should be correct`() {
         val action = TeacherPermitAction.DETAIL
-        assertEquals("Detail", action.label)
+        assertEquals(Res.string.label_detail, action.label)
         assertEquals(Res.drawable.ic_info_line_24, action.icon)
     }
 
