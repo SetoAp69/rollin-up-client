@@ -27,8 +27,8 @@ import rollin_up.composeapp.generated.resources.label_absent
 import rollin_up.composeapp.generated.resources.label_excused
 import rollin_up.composeapp.generated.resources.label_late
 import rollin_up.composeapp.generated.resources.label_on_time
-import rollin_up.composeapp.generated.resources.label_sick
 import rollin_up.composeapp.generated.resources.label_other
+import rollin_up.composeapp.generated.resources.label_sick
 
 @Composable
 fun AttendanceByStudentSummary(

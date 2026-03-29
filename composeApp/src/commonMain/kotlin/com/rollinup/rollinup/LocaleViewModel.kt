@@ -2,7 +2,6 @@ package com.rollinup.rollinup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.michaelflisar.lumberjack.core.L
 import com.rollinup.apiservice.domain.locale.GetLocaleUseCase
 import com.rollinup.apiservice.domain.locale.SetLocaleUseCase
 import com.rollinup.common.model.LocaleEnum

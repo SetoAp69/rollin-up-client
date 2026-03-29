@@ -23,7 +23,7 @@ data class StudentDashboardUiState(
     val isLocationValid: Boolean? = null,
     val currentLocation: Location? = null,
     val selectedDateRange: List<Long> = emptyList(),
-    val tempPhoto: MultiPlatformFile? = null
+    val tempPhoto: MultiPlatformFile? = null,
 ) {
     val isLoadingRefresh
         get() = listOf(isLoadingHeader, isLoadingCalendar).any { it }

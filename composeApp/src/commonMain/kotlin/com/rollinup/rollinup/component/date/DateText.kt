@@ -7,7 +7,6 @@ import androidx.compose.ui.text.TextStyle
 import com.rollinup.apiservice.model.permit.PermitType
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 
 /**

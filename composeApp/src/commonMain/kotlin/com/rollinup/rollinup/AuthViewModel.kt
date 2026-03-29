@@ -41,7 +41,7 @@ class AuthViewModel(
         }
     }
 
-    fun resetLoginData(){
+    fun resetLoginData() {
         _uiState.update {
             it.copy(
                 loginData = null,

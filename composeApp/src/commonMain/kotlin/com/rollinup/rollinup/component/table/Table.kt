@@ -556,7 +556,7 @@ class TableColumn<T>(
     val weight: Float = 1f,
     val content: @Composable (T) -> Unit,
 ) {
-    val title :String
+    val title: String
         @Composable
         get() = stringResource(titleRes)
 }

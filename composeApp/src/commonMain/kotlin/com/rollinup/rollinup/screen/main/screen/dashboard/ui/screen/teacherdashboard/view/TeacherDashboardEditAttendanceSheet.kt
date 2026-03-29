@@ -66,7 +66,6 @@ import rollin_up.composeapp.generated.resources.label_status
 import rollin_up.composeapp.generated.resources.label_submit
 import rollin_up.composeapp.generated.resources.msg_edit_attendance_error
 import rollin_up.composeapp.generated.resources.msg_edit_attendance_success
-import rollin_up.composeapp.generated.resources.msg_permit_current_date_missing
 import rollin_up.composeapp.generated.resources.ph_select_check_in_time
 
 @Composable

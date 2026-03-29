@@ -7,6 +7,6 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 data class OtpStatusEntity(
-    val email:String = "",
-    val expiredAt: LocalTime = LocalTime.now()
+    val email: String = "",
+    val expiredAt: LocalTime = LocalTime(0,0),
 )

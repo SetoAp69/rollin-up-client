@@ -20,6 +20,7 @@ import com.rollinup.rollinup.component.table.TableColumn
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitTab
+import com.rollinup.rollinup.screen.main.screen.permit.model.getLabel
 import com.rollinup.rollinup.screen.main.screen.permit.model.teacherpermit.TeacherPermitCallback
 import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitapproval.view.PermitApprovalFormDialog
 import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitdetail.view.PermitDetailDialog
@@ -131,7 +132,7 @@ private fun getColumn(): List<TableColumn<PermitByClassEntity>> {
         },
         TableColumn(Res.string.label_status, 0.8f) {
             Chip(
-                text = it.approvalStatus.label,
+                text = it.approvalStatus.getLabel(),
                 severity = it.approvalStatus.severity
             )
         },

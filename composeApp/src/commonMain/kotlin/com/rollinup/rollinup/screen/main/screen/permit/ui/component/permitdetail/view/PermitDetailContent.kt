@@ -33,6 +33,7 @@ import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import com.rollinup.rollinup.screen.main.screen.permit.model.getLabel
 import kotlinx.datetime.TimeZone
 
 @Composable
@@ -107,7 +108,7 @@ private fun DataRecordSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Chip(
-                text = detail.approvalStatus.label,
+                text = detail.approvalStatus.getLabel(),
                 severity = detail.approvalStatus.severity
             )
         }

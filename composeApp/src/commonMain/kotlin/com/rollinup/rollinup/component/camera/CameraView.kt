@@ -237,7 +237,7 @@ fun ImagePreview(
             } ?: Box(
                 modifier = Modifier.weight(1f).fillMaxWidth(),
                 contentAlignment = Alignment.Center
-            ){
+            ) {
                 CircularProgressIndicator(
                     color = Color.White,
                     strokeWidth = 2.dp,

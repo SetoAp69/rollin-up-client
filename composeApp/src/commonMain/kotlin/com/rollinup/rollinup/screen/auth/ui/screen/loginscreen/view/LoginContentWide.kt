@@ -46,7 +46,7 @@ import rollin_up.composeapp.generated.resources.ph_password
 import rollin_up.composeapp.generated.resources.ph_username_email
 
 @Composable
-fun     LoginContentWide(
+fun LoginContentWide(
     uiState: LoginUiState,
     cb: LoginCallback,
     onNavigateTo: (String) -> Unit,
@@ -73,7 +73,7 @@ fun     LoginContentWide(
                     onSubmit = cb.onLogin,
                     onNavigateTo = onNavigateTo
                 )
-                Column (
+                Column(
                     modifier = Modifier
                         .background(theme.primary)
                         .weight(1f)
@@ -81,14 +81,14 @@ fun     LoginContentWide(
                     verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Spacer(modifier= Modifier.weight(1f))
+                    Spacer(modifier = Modifier.weight(1f))
                     Icon(
                         painter = painterResource(Res.drawable.ic_launcher_logo_foreground_24),
                         contentDescription = null,
                         tint = theme.textBtnPrimary,
                         modifier = Modifier.size(128.dp)
                     )
-                    Spacer(modifier= Modifier.weight(1f))
+                    Spacer(modifier = Modifier.weight(1f))
                     Text(
                         text = getVersion(),
                         color = theme.chipSecondaryBg,

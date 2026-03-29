@@ -4,7 +4,6 @@ import com.rollinup.apiservice.model.common.Role
 import com.rollinup.rollinup.component.navigationrail.NavigationMenu
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_gear_fill_24
 import rollin_up.composeapp.generated.resources.ic_gear_line_24

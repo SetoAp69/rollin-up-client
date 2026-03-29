@@ -166,7 +166,7 @@ class PermitApiDataSource(
         body: CreateEditPermitBody,
     ): ApiResponse<Unit> {
         return try {
-            val response = httpClient.patch ("$baseUrl/$id") {
+            val response = httpClient.patch("$baseUrl/$id") {
                 contentType(ContentType.MultiPart.FormData)
                 setBody(body.toMultiPart())
             }

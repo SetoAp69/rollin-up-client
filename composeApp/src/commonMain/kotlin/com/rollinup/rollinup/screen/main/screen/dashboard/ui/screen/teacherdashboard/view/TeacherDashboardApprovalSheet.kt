@@ -46,7 +46,7 @@ import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashb
 @Composable
 fun TeacherDashboardApprovalSheet(
     showSheet: Boolean,
-    selectedId:List<String>,
+    selectedId: List<String>,
     onDismissRequest: (Boolean) -> Unit,
     uiState: TeacherDashboardUiState,
     cb: TeacherDashboardCallback,
@@ -62,8 +62,8 @@ fun TeacherDashboardApprovalSheet(
         }
     }
 
-    LaunchedEffect(showSheet){
-        if(showSheet){
+    LaunchedEffect(showSheet) {
+        if (showSheet) {
             cb.onUpdateApprovalForm(
                 uiState.approvalFormData.copy(
                     id = selectedId

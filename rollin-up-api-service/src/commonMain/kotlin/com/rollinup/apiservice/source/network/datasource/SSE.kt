@@ -2,7 +2,6 @@ package com.rollinup.apiservice.source.network.datasource
 
 import com.rollinup.apiservice.model.GeneralSetting
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.sse.deserialize
 import io.ktor.client.plugins.sse.sse
 import kotlinx.coroutines.flow.flow

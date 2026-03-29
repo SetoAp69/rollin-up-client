@@ -45,7 +45,7 @@ fun LoginScreen(
                     }
 
                     deviceIsNotValid -> {
-                        L.wtf{deviceId}
+                        L.wtf { deviceId }
                         showUnauthorizedDeviceDialog = true
                     }
 

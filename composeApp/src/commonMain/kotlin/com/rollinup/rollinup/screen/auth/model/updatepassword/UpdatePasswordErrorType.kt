@@ -12,8 +12,9 @@ enum class UpdatePasswordErrorType(private val res: StringResource) {
     OTP_EMPTY(Res.string.msg_otp_empty_error),
 
     ;
+
     @Composable
-    fun getMessage():String{
+    fun getMessage(): String {
         return stringResource(res)
     }
 }

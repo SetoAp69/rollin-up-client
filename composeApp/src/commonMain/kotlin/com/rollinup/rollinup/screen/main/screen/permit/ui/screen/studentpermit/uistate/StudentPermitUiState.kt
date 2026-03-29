@@ -10,6 +10,7 @@ import com.rollinup.common.model.OptionData
 import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitFilterData
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitTab
+import com.rollinup.rollinup.screen.main.screen.permit.model.getLabel
 
 data class StudentPermitUiState(
     val user: LoginEntity = LoginEntity(),
@@ -27,8 +28,11 @@ data class StudentPermitUiState(
         get() = PermitTab.entries.indexOf(currentTab)
 
     val statusOptions
-        get() = ApprovalStatus.entries.map {
-            OptionData(it.label, it.value)
+        @Composable
+        get() = ApprovalStatus.entries.filter {
+            it != ApprovalStatus.APPROVAL_PENDING
+        }.map {
+            OptionData(it.getLabel(), it.value)
         }
 
     val typeOptions

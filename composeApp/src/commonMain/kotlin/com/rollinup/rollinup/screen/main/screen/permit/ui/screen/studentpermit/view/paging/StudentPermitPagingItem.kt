@@ -20,6 +20,7 @@ import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import com.rollinup.rollinup.screen.main.screen.permit.model.getLabel
 
 @Composable
 fun StudentPermitItem(
@@ -60,7 +61,7 @@ fun StudentPermitItem(
                 },
                 rightContent = {
                     Chip(
-                        text = item.approvalStatus.label,
+                        text = item.approvalStatus.getLabel(),
                         severity = item.approvalStatus.severity
                     )
                 }

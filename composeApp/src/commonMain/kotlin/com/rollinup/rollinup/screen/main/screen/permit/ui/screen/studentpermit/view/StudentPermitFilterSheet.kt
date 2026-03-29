@@ -18,7 +18,6 @@ import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.label_date_range
 import rollin_up.composeapp.generated.resources.label_status
 import rollin_up.composeapp.generated.resources.label_type
-import rollin_up.composeapp.generated.resources.ph_date_range_picker
 
 @Composable
 fun StudentPermitFilterSheet(
@@ -42,7 +41,7 @@ fun StudentPermitFilterSheet(
         showReset = tempFilterData != filterData,
     ) {
 
-        if (uiState.isActive) {
+        if (!uiState.isActive) {
             FilterSelector(
                 isLoading = uiState.isLoading,
                 title = stringResource(Res.string.label_status),

@@ -6,7 +6,7 @@ import com.rollinup.apiservice.model.Result
 
 object Utils {
     fun handleApiError(e: Exception): Result.Error<NetworkError> {
-        L.w (e) { e.message.toString() }
+        L.w(e) { e.message.toString() }
 
         return when (e) {
             else -> Result.Error(NetworkError.UNKNOWN)

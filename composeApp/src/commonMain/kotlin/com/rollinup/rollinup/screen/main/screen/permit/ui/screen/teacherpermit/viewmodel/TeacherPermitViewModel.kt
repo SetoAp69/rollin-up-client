@@ -242,7 +242,7 @@ class TeacherPermitViewModel(
                 )
             },
             "Reason" to data.map { d -> d.reason ?: "-" },
-            "Status" to data.map { d -> d.approvalStatus.label },
+            "Status" to data.map { d -> d.approvalStatus.labelString },
             "Created at" to data.map { d -> DateFormatter.formateDateTimeFromString(d.createdAt) }
         )
     }

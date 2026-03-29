@@ -17,7 +17,6 @@ import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.v
 import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.label_permit
-import rollin_up.composeapp.generated.resources.label_teacher_permit
 
 @Composable
 fun TeacherPermitDesktopContent(

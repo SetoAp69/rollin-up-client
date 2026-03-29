@@ -51,7 +51,7 @@ actual fun LocationHandler(
     }
 
     LaunchedEffect(state.isAvailable) {
-        if(!state.isAvailable){
+        if (!state.isAvailable) {
             onLocationChanges(null)
         }
     }

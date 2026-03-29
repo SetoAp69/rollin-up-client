@@ -24,10 +24,10 @@ import rollin_up.composeapp.generated.resources.ic_info_line_24
 import rollin_up.composeapp.generated.resources.label_attendance_history
 import rollin_up.composeapp.generated.resources.label_check_in_time
 import rollin_up.composeapp.generated.resources.label_date
+import rollin_up.composeapp.generated.resources.label_detail
 import rollin_up.composeapp.generated.resources.label_duration
 import rollin_up.composeapp.generated.resources.label_reason
 import rollin_up.composeapp.generated.resources.label_status
-import rollin_up.composeapp.generated.resources.label_detail
 
 @Composable
 fun AttendanceByStudentTable(

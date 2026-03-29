@@ -108,8 +108,9 @@ fun getCurrentDateAsList(): List<LocalDateTime> {
 fun getFileName(dateRange: List<LocalDate>, fileName: String): String {
     return if (dateRange.isEmpty())
         fileName
-    else{
-        val date = if(dateRange.size==1) dateRange.first().toString() else "${dateRange.first()}-${dateRange.last()}"
+    else {
+        val date = if (dateRange.size == 1) dateRange.first()
+            .toString() else "${dateRange.first()}-${dateRange.last()}"
         "${fileName}_$date"
     }
 }
@@ -121,4 +122,4 @@ expect fun getDeviceId(): String
 expect fun getOrientation(): Orientation
 
 @Composable
-expect fun getVersion():String
+expect fun getVersion(): String

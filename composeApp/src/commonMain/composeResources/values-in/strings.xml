@@ -199,6 +199,10 @@
     <string name="label_attendance_by_student">Presensi Persiswa</string>
     <string name="label_dashboard">Dashboard</string>
     <string name="label_setting">Setting</string>
+    <string name="label_approved">Disetujui</string>
+    <string name="label_declined">Ditolak</string>
+    <string name="label_canceled">Dibatalkan</string>
+
 
     <string name="ph_select_check_in_time">Masukan waktu kehadiran</string>
     <string name="ph_permit_note">Masukkan catatan izin</string>

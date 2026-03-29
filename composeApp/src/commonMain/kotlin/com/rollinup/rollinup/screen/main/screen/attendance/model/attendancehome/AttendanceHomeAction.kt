@@ -5,8 +5,8 @@ import org.jetbrains.compose.resources.StringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_document_line_24
 import rollin_up.composeapp.generated.resources.ic_info_line_24
-import rollin_up.composeapp.generated.resources.label_detail
 import rollin_up.composeapp.generated.resources.label_attendance_by_student
+import rollin_up.composeapp.generated.resources.label_detail
 
 enum class AttendanceHomeAction(val label: StringResource, val icon: DrawableResource) {
     HISTORY_BY_STUDENT(

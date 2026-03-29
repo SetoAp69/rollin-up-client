@@ -11,6 +11,7 @@ import com.rollinup.common.model.OptionData
 import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitFilterData
 import com.rollinup.rollinup.screen.main.screen.permit.model.PermitTab
+import com.rollinup.rollinup.screen.main.screen.permit.model.getLabel
 import kotlinx.datetime.LocalDate
 
 data class TeacherPermitUiState(
@@ -23,14 +24,15 @@ data class TeacherPermitUiState(
     val currentTab: PermitTab = PermitTab.ACTIVE,
     val filterData: PermitFilterData = PermitFilterData(),
     val exportState: Boolean? = null,
-    val exportDateRange:List<LocalDate> = emptyList(),
+    val exportDateRange: List<LocalDate> = emptyList(),
     val isMobile: Boolean = false,
 ) {
     val statusOptions
+        @Composable
         get() = ApprovalStatus
             .entries
             .filter { it != ApprovalStatus.APPROVAL_PENDING }
-            .map { OptionData(it.label, it.name) }
+            .map { OptionData(it.getLabel(), it.name) }
 
     val typeOptions
         @Composable

@@ -146,12 +146,7 @@ class CreateEditUserViewModel(
             )
         }
         updateForm(formData)
-        L.wtf{
-            "is form valid : ${formData.isValid()}"
-        }
-        L.wtf{
-            "Form data : $formData"
-        }
+
         return formData.isValid()
     }
 

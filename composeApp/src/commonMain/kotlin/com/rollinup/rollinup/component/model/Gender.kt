@@ -8,8 +8,8 @@ import rollin_up.composeapp.generated.resources.label_female
 import rollin_up.composeapp.generated.resources.label_male
 
 @Composable
-fun Gender.getLabel():String{
-    val res = when(this){
+fun Gender.getLabel(): String {
+    val res = when (this) {
         Gender.MALE -> Res.string.label_male
         Gender.FEMALE -> Res.string.label_female
     }

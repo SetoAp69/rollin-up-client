@@ -168,10 +168,6 @@ class ResetPasswordViewModel(
         val duration =
             (until.toSecondOfDay() - LocalTime.now().toSecondOfDay()).coerceAtLeast(0)
 
-        L.wtf {
-            "until : $until \n " +
-                    "duration : $duration"
-        }
         _uiState.update { it.copy(otpCountdown = duration) }
 
         countDownJob = viewModelScope.launch {

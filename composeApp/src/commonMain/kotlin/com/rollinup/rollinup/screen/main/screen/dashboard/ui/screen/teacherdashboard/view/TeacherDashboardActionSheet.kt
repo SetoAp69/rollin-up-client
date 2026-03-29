@@ -68,7 +68,7 @@ fun TeacherDashboardActionSheet(
     var showEdit by remember { mutableStateOf(false) }
     var showApproval by remember { mutableStateOf(false) }
     var showDetail by remember { mutableStateOf(false) }
-    val selectedId = itemList.filter { it.permit!=null}.map { it.permit!!.id }
+    val selectedId = itemList.filter { it.permit != null }.map { it.permit!!.id }
 
     BottomSheet(
         isShowSheet = showActionSheet,

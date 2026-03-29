@@ -24,6 +24,7 @@ import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import com.rollinup.rollinup.screen.main.screen.permit.model.getLabel
 import com.rollinup.rollinup.screen.main.screen.permit.model.teacherpermit.TeacherPermitCallback
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.uistate.TeacherPermitUiState
 import org.jetbrains.compose.resources.painterResource
@@ -73,7 +74,7 @@ fun TeacherPermitPagingItem(
                 },
                 rightContent = {
                     Chip(
-                        text = item.approvalStatus.label,
+                        text = item.approvalStatus.getLabel(),
                         severity = item.approvalStatus.severity
                     )
                 }

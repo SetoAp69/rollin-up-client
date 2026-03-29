@@ -2,7 +2,7 @@ package com.rollinup.apiservice.model.permit
 
 import com.rollinup.common.model.Severity
 
-enum class ApprovalStatus(val value: String, val label: String, val severity: Severity) {
+enum class ApprovalStatus(val value: String, val labelString: String, val severity: Severity) {
     APPROVED("approved", "Approved", Severity.SUCCESS),
     APPROVAL_PENDING("approval_pending", "Approval Pending", Severity.WARNING),
     DECLINED("declined", "Declined", Severity.DANGER),

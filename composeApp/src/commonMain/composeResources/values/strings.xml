@@ -199,6 +199,9 @@
     <string name="label_attendance_by_student">Attendance by Student</string>
     <string name="label_dashboard">Dashboard</string>
     <string name="label_setting">Setting</string>
+    <string name="label_approved">Approved</string>
+    <string name="label_declined">Declined</string>
+    <string name="label_canceled">Canceled</string>
 
     <string name="ph_select_check_in_time">Select check-in time</string>
     <string name="ph_permit_note">Enter permit note</string>

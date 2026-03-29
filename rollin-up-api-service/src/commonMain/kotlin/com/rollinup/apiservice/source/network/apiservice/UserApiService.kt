@@ -18,15 +18,15 @@ interface UserApiService {
 
     suspend fun getUserById(userId: String): ApiResponse<GetUserByIdResponse>
 
-    suspend fun registerUser( body: CreateEditUserBody): ApiResponse<Unit>
+    suspend fun registerUser(body: CreateEditUserBody): ApiResponse<Unit>
 
-    suspend fun editUser(id:String, body: CreateEditUserBody): ApiResponse<Unit>
+    suspend fun editUser(id: String, body: CreateEditUserBody): ApiResponse<Unit>
 
     suspend fun createResetPasswordRequest(
         body: CreateResetPasswordRequestBody,
     ): ApiResponse<ResetPasswordRequestResponse>
 
-    suspend fun submitResetOtp( body: SubmitOTPBody): ApiResponse<SubmitResetOtpResponse>
+    suspend fun submitResetOtp(body: SubmitOTPBody): ApiResponse<SubmitResetOtpResponse>
 
     suspend fun submitResetPassword(body: SubmitResetPasswordBody): ApiResponse<Unit>
 

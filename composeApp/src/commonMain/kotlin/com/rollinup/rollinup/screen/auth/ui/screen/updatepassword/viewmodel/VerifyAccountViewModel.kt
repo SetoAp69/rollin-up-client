@@ -89,10 +89,6 @@ class VerifyAccountViewModel(
                             )
                         }
                         startCountdown(result.data.expiredAt)
-                        L.wtf {
-                            result.data.expiredAt.toString()
-                        }
-
                     }
 
                     is Result.Error -> {

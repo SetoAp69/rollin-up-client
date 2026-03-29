@@ -6,8 +6,8 @@ import org.jetbrains.compose.resources.StringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_info_line_24
 import rollin_up.composeapp.generated.resources.ic_user_check_line_24
-import rollin_up.composeapp.generated.resources.label_detail
 import rollin_up.composeapp.generated.resources.label_approval
+import rollin_up.composeapp.generated.resources.label_detail
 
 enum class TeacherPermitAction(
     val show: (List<PermitByClassEntity>, Boolean) -> Boolean,

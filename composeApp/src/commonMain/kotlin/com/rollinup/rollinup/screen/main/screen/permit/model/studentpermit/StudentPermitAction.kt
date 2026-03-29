@@ -8,9 +8,9 @@ import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_close_line_24
 import rollin_up.composeapp.generated.resources.ic_edit_line_24
 import rollin_up.composeapp.generated.resources.ic_info_line_24
+import rollin_up.composeapp.generated.resources.label_cancel_permit
 import rollin_up.composeapp.generated.resources.label_detail
 import rollin_up.composeapp.generated.resources.label_edit_permit
-import rollin_up.composeapp.generated.resources.label_cancel_permit
 
 enum class StudentPermitAction(
     val icon: DrawableResource,

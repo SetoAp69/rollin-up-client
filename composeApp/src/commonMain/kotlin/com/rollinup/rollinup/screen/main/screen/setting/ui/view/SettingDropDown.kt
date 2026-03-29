@@ -48,7 +48,7 @@ fun SettingDropDown(
     val locale = AppLocale.current
     val uiMode = uiModeViewModel.uiMode.collectAsStateWithLifecycle().value
 
-    L.wtf{"Current Locale : ${Locale.current}"}
+    L.wtf { "Current Locale : ${Locale.current}" }
 
     val callBack = SettingCallback(
         onSetUiMode = { uiModeViewModel.updateUiMode(it) },

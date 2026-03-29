@@ -222,17 +222,17 @@ fun PermitFormContent(
         }
 
     }
-    if(isEdit){
+    if (isEdit) {
         EditPermitAlertDialog(
             showDialog = showAlertDialog,
             onDismissRequest = { showAlertDialog = it },
             onConfirm = { cb.onSubmit(formData, onSuccess, onError) },
         )
-    }else{
+    } else {
         CreatePermitAlertDialog(
             showDialog = showAlertDialog,
-            onDismissRequest = {showAlertDialog = it},
-            onConfirm = {cb.onSubmit(formData, onSuccess, onError)}
+            onDismissRequest = { showAlertDialog = it },
+            onConfirm = { cb.onSubmit(formData, onSuccess, onError) }
         )
     }
 }
