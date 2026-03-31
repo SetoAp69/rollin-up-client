@@ -45,7 +45,12 @@ fun NavGraphBuilder.mainGraph(
         }
         when (role) {
             Role.ADMIN -> {
-                UserCenterScreen(onShowSnackBar)
+                val platform = getPlatform()
+                if (platform.isMobile()) {
+                    PlatformWarning(Role.STUDENT, platform)
+                } else {
+                    UserCenterScreen(onShowSnackBar)
+                }
             }
 
             Role.STUDENT -> {

@@ -25,8 +25,7 @@ class AuthMapperTest {
             deviceId = "device_001",
             userName = "jdoe",
             email = "jdoe@example.com",
-            firstName = "John",
-            lastName = "Doe",
+            fullName = "John Doe",
             role = "student",
             gender = "Laki-laki",
             classX = "10A",
@@ -49,8 +48,7 @@ class AuthMapperTest {
         assertEquals("device_001", result.deviceId)
         assertEquals("jdoe", result.userName)
         assertEquals("jdoe@example.com", result.email)
-        assertEquals("John", result.firstName)
-        assertEquals("Doe", result.lastName)
+        assertEquals("John Doe", result.fullName)
         assertEquals(Role.STUDENT, result.role)
         assertEquals(Gender.MALE, result.gender)
         assertEquals("refresh_token_xyz", result.refreshToken)
@@ -69,8 +67,7 @@ class AuthMapperTest {
             deviceId = null,
             userName = "jdoe",
             email = "jdoe@example.com",
-            firstName = "John",
-            lastName = "Doe",
+            fullName = "John Doe",
             role = "student",
             gender = "Laki-laki",
             classX = null,
@@ -100,8 +97,7 @@ class AuthMapperTest {
             deviceId = "dev1",
             userName = "jdoe",
             email = "jdoe@example.com",
-            firstName = "John",
-            lastName = "Doe",
+            fullName = "John Doe",
             role = "admin",
             gender = "Perempuan",
             classX = null, // Testing nulls

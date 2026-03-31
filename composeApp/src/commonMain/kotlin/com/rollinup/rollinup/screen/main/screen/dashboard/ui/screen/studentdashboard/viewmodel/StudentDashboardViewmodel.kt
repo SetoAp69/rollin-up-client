@@ -14,9 +14,9 @@ import com.rollinup.apiservice.model.common.Result
 import com.rollinup.apiservice.utils.Utils.toJsonString
 import com.rollinup.common.utils.Utils.now
 import com.rollinup.common.utils.Utils.toEpochMillis
+import com.rollinup.rollinup.component.location.Location
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.studentdashboard.StudentDashboardCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.uistate.StudentDashboardUiState
-import dev.jordond.compass.Location
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -149,13 +149,12 @@ class StudentDashboardViewmodel(
     private fun refresh() {
         getSummary()
         getAttendanceList()
-//                    _globalSetting.value = result.data
     }
 
     private fun checkIn(attachment: MultiPlatformFile, location: Location) {
         val body = CheckInBody(
-            latitude = location.coordinates.latitude,
-            longitude = location.coordinates.longitude,
+            latitude = location.latitude,
+            longitude = location.longitude,
             attachment = attachment,
             date = LocalDate.now().toString(),
             checkedInAt = LocalDateTime.now().toEpochMillis()

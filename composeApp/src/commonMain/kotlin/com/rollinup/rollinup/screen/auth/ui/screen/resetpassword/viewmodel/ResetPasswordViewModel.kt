@@ -2,7 +2,6 @@ package com.rollinup.rollinup.screen.auth.ui.screen.resetpassword.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.michaelflisar.lumberjack.core.L
 import com.rollinup.apiservice.data.source.network.model.request.user.CreateResetPasswordRequestBody
 import com.rollinup.apiservice.data.source.network.model.request.user.SubmitResetPasswordBody
 import com.rollinup.apiservice.data.source.network.model.request.user.SubmitResetPasswordOTPBody

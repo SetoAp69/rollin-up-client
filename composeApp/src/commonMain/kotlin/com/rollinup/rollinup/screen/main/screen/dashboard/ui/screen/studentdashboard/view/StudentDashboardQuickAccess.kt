@@ -55,6 +55,7 @@ fun StudentDashboardQuickAccess(
                 text = stringResource(Res.string.label_check_in),
                 icon = Res.drawable.ic_location_circled_bottom_line_24,
                 isEnabled = uiState.isLocationValid == true && uiState.currentStatus == AttendanceStatus.NO_DATA,
+//                isEnabled = true,
                 onClick = cb.onCheckIn
             )
             DashBoardButton(

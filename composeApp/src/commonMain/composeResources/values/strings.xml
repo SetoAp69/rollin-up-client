@@ -81,6 +81,8 @@
     <string name="msg_global_setting_update_error">Error, failed to update global setting</string>
     <string name="msg_stay_in_form">Stay in form</string>
     <string name="msg_selector_field_incomplete_error">Please select all fields</string>
+    <string name="msg_mock_location_detected">Mock location detected. Please disable mock location services to proceed with check-in.</string>
+    <string name="msg_invalid_platform_error">Account with **%1$s** role have no access on **%2$s** platform, please login using another type of platform</string>
 
     <string name="label_cancel">Cancel</string>
     <string name="label_all">All</string>
@@ -202,6 +204,8 @@
     <string name="label_approved">Approved</string>
     <string name="label_declined">Declined</string>
     <string name="label_canceled">Canceled</string>
+    <string name="label_mock_location_detected">Mock Location Detected</string>
+    <string name="label_access_denied">Access Denied</string>
 
     <string name="ph_select_check_in_time">Select check-in time</string>
     <string name="ph_permit_note">Enter permit note</string>

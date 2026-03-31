@@ -2,7 +2,6 @@ package com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.michaelflisar.lumberjack.core.L
 import com.rollinup.apiservice.data.source.network.model.request.user.SubmitVerificationOTPBody
 import com.rollinup.apiservice.data.source.network.model.request.user.UpdatePasswordAndVerificationBody
 import com.rollinup.apiservice.domain.user.ResendVerificationOtpUseCase

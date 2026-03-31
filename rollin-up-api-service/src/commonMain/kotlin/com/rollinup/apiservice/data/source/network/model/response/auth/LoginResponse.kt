@@ -31,10 +31,8 @@ data class LoginResponse(
             val userName: String = "",
             @SerialName("email")
             val email: String = "",
-            @SerialName("first_name")
-            val firstName: String = "",
-            @SerialName("last_name")
-            val lastName: String = "",
+            @SerialName("full_name")
+            val fullName: String = "",
             @SerialName("role")
             val role: String = "",
             @SerialName("gender")

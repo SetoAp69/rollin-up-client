@@ -70,7 +70,7 @@ fun SettingScreenContent(
                 onSetLocale = cb.onSetLocale
             )
             LogOut {
-                cb.onLogout
+                cb.onLogout()
             }
         }
     }

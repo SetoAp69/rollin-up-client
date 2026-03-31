@@ -81,6 +81,8 @@
     <string name="msg_global_setting_update_error">Error, gagal memperbarui global setting</string>
     <string name="msg_stay_in_form">Tetap buka form</string>
     <string name="msg_selector_field_incomplete_error">Mohon isi semua field</string>
+    <string name="msg_mock_location_detected">Lokasi palsu terdeteksi. Silakan nonaktifkan fitur mock location untuk melanjutkan proses check-in.</string>
+    <string name="msg_invalid_platform_error">Akun dengan peran **%1$s** tidak memiliki akses ke platform **%2$s**, silakan login menggunakan jenis platform lain</string>
 
     <string name="label_cancel">Batal</string>
     <string name="label_all">Semua</string>
@@ -179,7 +181,7 @@
     <string name="label_check_in">Check In</string>
     <string name="label_attendance_history">Riwayat Presensi</string>
     <string name="label_student_attendance">Presensi Siswa</string>
-    <string name="label_approval_pending">Menunggu Persetujuan</string>
+    <string name="label_approval_pending">Approval Pending</string>
     <string name="label_no_data">No Data</string>
     <string name="label_male">Laki-laki</string>
     <string name="label_female">Perempuan</string>
@@ -202,7 +204,8 @@
     <string name="label_approved">Disetujui</string>
     <string name="label_declined">Ditolak</string>
     <string name="label_canceled">Dibatalkan</string>
-
+    <string name="label_mock_location_detected">Lokasi Palsu Terdeteksi</string>
+    <string name="label_access_denied">Akses Ditolak</string>
 
     <string name="ph_select_check_in_time">Masukan waktu kehadiran</string>
     <string name="ph_permit_note">Masukkan catatan izin</string>

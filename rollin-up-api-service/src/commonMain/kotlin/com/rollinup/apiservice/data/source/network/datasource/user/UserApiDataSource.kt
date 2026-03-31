@@ -1,6 +1,5 @@
 package com.rollinup.apiservice.data.source.network.datasource.user
 
-import com.michaelflisar.lumberjack.core.L
 import com.rollinup.apiservice.data.source.network.apiservice.UserApiService
 import com.rollinup.apiservice.data.source.network.model.request.user.CreateEditUserBody
 import com.rollinup.apiservice.data.source.network.model.request.user.CreateResetPasswordRequestBody
@@ -145,9 +144,6 @@ class UserApiDataSource(
                 setBody(body)
             }
             val body = response.body<ResetPasswordRequestResponse>()
-            L.wtf {
-                "Body : $body"
-            }
             ApiResponse.Success(data = body, statusCode = response.status)
         } catch (e: Exception) {
             ApiResponse.Error(e)

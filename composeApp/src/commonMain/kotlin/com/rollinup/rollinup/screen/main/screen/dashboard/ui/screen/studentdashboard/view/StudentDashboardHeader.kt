@@ -44,6 +44,7 @@ import rollin_up.composeapp.generated.resources.label_absent
 import rollin_up.composeapp.generated.resources.label_excused
 import rollin_up.composeapp.generated.resources.label_late
 import rollin_up.composeapp.generated.resources.label_on_time
+import rollin_up.composeapp.generated.resources.msg_hello
 
 @Composable
 fun StudentDashboardHeader(
@@ -248,7 +249,7 @@ private fun UserInfoSection(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = userData.firstName.take(1).ifBlank { "-" },
+                    text = userData.fullName.take(1).ifBlank { "-" },
                     style = Style.header,
                     color = Color.White
                 )
@@ -257,13 +258,13 @@ private fun UserInfoSection(
                 verticalArrangement = Arrangement.spacedBy(itemGap4)
             ) {
                 Text(
-                    text = "Hello",
+                    text = stringResource(Res.string.msg_hello),
                     color = theme.chipDisabledBg,
                     style = Style.body
                 )
 
                 Text(
-                    text = userData.fullName,
+                    text = userData.fullName.split(" ").firstOrNull()?:"-",
                     color = theme.bodyText,
                     style = Style.popupTitle
                 )

@@ -2,7 +2,6 @@ package com.rollinup.rollinup.screen.main.screen.usercenter.ui.component.createe
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.michaelflisar.lumberjack.core.L
 import com.rollinup.apiservice.data.source.network.model.request.user.CheckEmailOrUsernameQueryParams
 import com.rollinup.apiservice.data.source.network.model.request.user.CreateEditUserBody
 import com.rollinup.apiservice.domain.user.CheckEmailOrUsernameUseCase

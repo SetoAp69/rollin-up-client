@@ -123,16 +123,17 @@ fun ProfileScreenContent(
                     } else {
                         ProfileInfoSection(uiState.userDetail)
                     }
-                }
-
-                if (uiState.isEdit) {
-                    Spacer(itemGap8)
-                    Button(
-                        text = stringResource(string.label_submit)
-                    ) {
-                        cb.onSubmit(uiState.formData)
+                    if (uiState.isEdit) {
+                        Spacer(itemGap8)
+                        Button(
+                            text = stringResource(string.label_submit)
+                        ) {
+                            cb.onSubmit(uiState.formData)
+                        }
                     }
                 }
+
+
             }
         }
     }

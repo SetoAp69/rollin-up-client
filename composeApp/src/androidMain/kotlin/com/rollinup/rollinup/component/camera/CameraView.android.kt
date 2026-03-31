@@ -203,22 +203,24 @@ actual fun CameraPermissionHandler(
         permissionFactory.createPermissionsController()
     }
 
-    val activity = LocalActivity.current as ComponentActivity
+    val activity = LocalActivity.current
 
-    CompositionLocalProvider(
-        LocalContext provides activity
-    ) {
-        BindEffect(permissionController)
-    }
+    activity?.let{
+        CompositionLocalProvider(
+            LocalContext provides it as ComponentActivity
+        ) {
+            BindEffect(permissionController)
+        }
 
-    LaunchedEffect(Unit) {
-        permissionState = permissionController.checkPermission()
-        if (permissionState == PermissionState.Granted) {
-            onGranted()
-        } else {
-            val result = permissionController.providePermission()
-            if (result == PermissionState.Granted) onGranted() else {
-                showDialog = true
+        LaunchedEffect(Unit) {
+            permissionState = permissionController.checkPermission()
+            if (permissionState == PermissionState.Granted) {
+                onGranted()
+            } else {
+                val result = permissionController.providePermission()
+                if (result == PermissionState.Granted) onGranted() else {
+                    showDialog = true
+                }
             }
         }
     }

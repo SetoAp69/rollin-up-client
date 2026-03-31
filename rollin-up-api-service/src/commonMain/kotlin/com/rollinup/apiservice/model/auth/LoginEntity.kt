@@ -8,8 +8,7 @@ data class LoginEntity(
     val deviceId: String = "",
     val userName: String = "",
     val email: String = "",
-    val firstName: String = "",
-    val lastName: String = "",
+    val fullName: String = "",
     val role: Role = Role.UNKNOWN,
     val gender: Gender = Gender.MALE,
     val accessToken: String = "",
@@ -19,6 +18,4 @@ data class LoginEntity(
     val classKey: Int? = null,
     val isVerified: Boolean = false,
 ) {
-    val fullName
-        get() = "$firstName $lastName"
 }

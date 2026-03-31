@@ -11,10 +11,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.michaelflisar.lumberjack.core.L
 import com.rollinup.common.model.LocaleEnum
 import com.rollinup.common.model.Severity
 import com.rollinup.common.model.UiMode
@@ -47,8 +45,6 @@ fun SettingDropDown(
     val appLocaleViewModel = AppLocaleViewModel.current
     val locale = AppLocale.current
     val uiMode = uiModeViewModel.uiMode.collectAsStateWithLifecycle().value
-
-    L.wtf { "Current Locale : ${Locale.current}" }
 
     val callBack = SettingCallback(
         onSetUiMode = { uiModeViewModel.updateUiMode(it) },

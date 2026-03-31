@@ -101,7 +101,7 @@ actual fun AppNavHost(
                     onNavigateTo(menu.withRole(role))
                 },
                 state = rememberBottomBarState(initialMenu = MainRoute.DashBoardRoute),
-                onGetHeight = { height -> bottomBarHeight = height + 16.dp },
+                onGetHeight = { height -> bottomBarHeight = height },
                 showBottomBar = showBottomBar,
                 onRefresh = {}
             )
