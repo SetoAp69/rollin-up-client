@@ -15,10 +15,13 @@ import com.rollinup.apiservice.data.source.network.model.response.ApiResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.GetUserByIdResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.GetUserListResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.GetUserOptionsResponse
+import com.rollinup.apiservice.data.source.network.model.response.user.ResendVerificationOtpResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.ResetPasswordRequestResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.SubmitResetOtpResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.ValidateVerificationOtpResponse
 import com.rollinup.apiservice.model.common.Result
+import com.rollinup.apiservice.model.common.Role
+import com.rollinup.apiservice.model.user.OtpStatusEntity
 import com.rollinup.apiservice.model.user.UserDetailEntity
 import com.rollinup.apiservice.model.user.UserEntity
 import com.rollinup.apiservice.model.user.UserOptionEntity
@@ -37,6 +40,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.LocalTime
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -100,7 +104,7 @@ class UserRepositoryTest {
         val expectedEntity = listOf(
             UserEntity(
                 id = "u1", fullName = "John ", userName = "johndoe", email = "john@mail.com",
-                role = "student", studentId = "123", classX = "10A"
+                role = Role.STUDENT, studentId = "123", classX = "10A"
             )
         )
 
@@ -153,16 +157,15 @@ class UserRepositoryTest {
         val mockResponse = GetUserByIdResponse(
             status = 200, message = "OK",
             data = GetUserByIdResponse.Data(
-                id = "u1", firstName = "John", username = "johndoe", email = "john@mail.com",
+                id = "u1", fullName = "John", username = "johndoe", email = "john@mail.com",
                 role = GetUserByIdResponse.Data.Role("123"), studentId = "123",
             )
         )
         val expectedEntity = UserDetailEntity(
             id = "u1",
-            firstName = "John",
+            fullName = "John",
             userName = "johndoe",
             email = "john@mail.com",
-            fullName = "John ",
             role = UserDetailEntity.Data(id = "123"),
             studentId = "123",
         )
@@ -278,7 +281,10 @@ class UserRepositoryTest {
         val body = CreateResetPasswordRequestBody(email = "test@mail.com")
         val mockResponse = ResetPasswordRequestResponse(
             status = 200, message = "OK",
-            data = ResetPasswordRequestResponse.Data(email = "test@mail.com")
+            data = ResetPasswordRequestResponse.Data(email = "test@mail.com", duration = "2025-01-01T00:00:00Z")
+        )
+        val expected = OtpStatusEntity(
+            email = "test@mail.com", expiredAt = LocalTime(7,0)
         )
         coEvery { dataSource.createResetPasswordRequest(body) } returns ApiResponse.Success(
             mockResponse,
@@ -288,7 +294,7 @@ class UserRepositoryTest {
         val result = repository.createResetPasswordRequest(body).first()
 
         assertTrue(result is Result.Success)
-        assertEquals("test@mail.com", result.data)
+        assertEquals(expected, result.data)
     }
 
     @Test
@@ -554,7 +560,7 @@ class UserRepositoryTest {
     @Test
     fun `resendVerificationOtp should return Success Unit`() = runTest {
         coEvery { dataSource.resetVerificationOtp() } returns ApiResponse.Success(
-            Unit,
+            ResendVerificationOtpResponse(),
             HttpStatusCode.OK
         )
         val result = repository.resendVerificationOtp().first()

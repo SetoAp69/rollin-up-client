@@ -103,7 +103,7 @@ class AuthRepositoryTest {
             deviceId = "dev1",
             userName = "john",
             email = "test@mail.com",
-            fullName = "Doe",
+            fullName = "John Doe",
             role = Role.STUDENT, // Assuming mapped from "student"
             gender = Gender.MALE, // Assuming mapped from "Laki-laki"
             refreshToken = "refresh_token",

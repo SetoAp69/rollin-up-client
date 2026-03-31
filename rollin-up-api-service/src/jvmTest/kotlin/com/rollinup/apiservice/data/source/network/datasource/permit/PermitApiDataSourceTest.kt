@@ -398,7 +398,7 @@ class PermitApiDataSourceTest {
             content = Unit.toString(),
             status = HttpStatusCode.OK
         )
-        method = HttpMethod.Post
+        method = HttpMethod.Patch
         baseUrl = MockUrl.BY_ID
 
         // Act
@@ -434,6 +434,6 @@ private object MockUrl {
     const val BY_STUDENT = "/permit/by-student/studentId"
     const val BY_CLASS = "/permit/by-class/1"
     const val BY_ID = "/permit/permitId"
-    const val CANCEL = "/permit/permitId/cancel"
+    const val CANCEL = "/permit/cancel/permitId"
     const val APPROVAL = "/permit/approval"
 }

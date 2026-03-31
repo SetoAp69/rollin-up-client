@@ -83,8 +83,7 @@ class UserMapperTest {
         val response = GetUserByIdResponse.Data(
             id = "u1",
             username = "john_d",
-            firstName = "John",
-            fullName = "Doe",
+            fullName = "John Doe",
             classX = GetUserByIdResponse.Data.Class(id = "c1", name = "10A", key = 101),
             email = "john@mail.com",
             studentId = "123",
@@ -111,8 +110,7 @@ class UserMapperTest {
         val response = GetUserByIdResponse.Data(
             id = "u1",
             username = "john_d",
-            firstName = "John",
-            fullName = "Doe",
+            fullName = "John Doe",
             classX = null, // Testing null
             email = "john@mail.com",
             studentId = null, // Testing null

@@ -145,7 +145,7 @@ class PermitUseCaseTest {
         val id = "p1"
         val expected = flowOf(Result.Success(Unit))
         // Current impl invokes repository.editPermit(id, CreateEditPermitBody())
-        every { repository.editPermit(id, any()) } returns expected
+        every { repository.cancelPermit(id) } returns expected
 
         val result = useCase(id)
 

@@ -15,6 +15,7 @@ import com.rollinup.apiservice.data.source.network.model.response.ApiResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.GetUserByIdResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.GetUserListResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.GetUserOptionsResponse
+import com.rollinup.apiservice.data.source.network.model.response.user.ResendVerificationOtpResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.ResetPasswordRequestResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.SubmitResetOtpResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.ValidateVerificationOtpResponse
@@ -171,8 +172,7 @@ class UserApiDataSourceTest {
             data = GetUserByIdResponse.Data(
                 id = "user1",
                 username = "jdoe",
-                firstName = "John",
-                fullName = "Doe",
+                fullName = "John Doe",
                 email = "john@example.com",
                 role = GetUserByIdResponse.Data.Role(id = "1", name = "Student", key = 1),
                 gender = "M",
@@ -609,8 +609,10 @@ class UserApiDataSourceTest {
     @Test
     fun `resetVerificationOtp() should return ApiResponse Success`() = runTest {
         //Arrange
+        val expected = ResendVerificationOtpResponse()
+
         response = HttpResponseData(
-            content = Unit.toString(),
+            content = Json.encodeToString(ResendVerificationOtpResponse.serializer(), expected),
             status = HttpStatusCode.OK
         )
         method = HttpMethod.Get
@@ -621,7 +623,7 @@ class UserApiDataSourceTest {
 
         //Assert
         assertTrue { result is ApiResponse.Success }
-        assertEquals(Unit, (result as ApiResponse.Success).data)
+        assertEquals(expected, (result as ApiResponse.Success).data)
     }
 
     @Test
