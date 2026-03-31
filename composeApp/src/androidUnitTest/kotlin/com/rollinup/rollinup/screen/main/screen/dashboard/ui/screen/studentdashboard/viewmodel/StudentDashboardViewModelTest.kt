@@ -18,8 +18,7 @@ import com.rollinup.apiservice.model.common.MultiPlatformFile
 import com.rollinup.apiservice.model.common.NetworkError
 import com.rollinup.apiservice.model.common.Result
 import com.rollinup.rollinup.CoroutineTestRule
-import dev.jordond.compass.Coordinates
-import dev.jordond.compass.Location
+import com.rollinup.rollinup.component.location.Location
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -352,10 +351,8 @@ class StudentDashboardViewModelTest {
         // Arrange
         val attachment = mockk<MultiPlatformFile>()
         val location = mockk<Location>()
-        val coordinates = mockk<Coordinates>()
-        every { location.coordinates } returns coordinates
-        every { coordinates.latitude } returns 10.0
-        every { coordinates.longitude } returns 20.0
+        every { location.latitude } returns 10.0
+        every { location.longitude } returns 20.0
 
         arrangeCheckIn(Result.Success(Unit))
         val cb = viewModel.getCallback()
@@ -381,10 +378,8 @@ class StudentDashboardViewModelTest {
         // Arrange
         val attachment = mockk<MultiPlatformFile>()
         val location = mockk<Location>()
-        val coordinates = mockk<Coordinates>()
-        every { location.coordinates } returns coordinates
-        every { coordinates.latitude } returns 10.0
-        every { coordinates.longitude } returns 20.0
+        every { location.latitude } returns 10.0
+        every { location.longitude } returns 20.0
 
         arrangeCheckIn(Result.Error(NetworkError.RESPONSE_ERROR))
         val cb = viewModel.getCallback()

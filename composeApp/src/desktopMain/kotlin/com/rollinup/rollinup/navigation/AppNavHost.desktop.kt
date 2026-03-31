@@ -189,7 +189,7 @@ private fun NavHostTopBarContent(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = userData.firstName.take(1).uppercase().ifBlank { "-" },
+                text = userData.fullName.take(1).uppercase().ifBlank { "-" },
                 style = Style.title,
                 color = Color.White
             )
