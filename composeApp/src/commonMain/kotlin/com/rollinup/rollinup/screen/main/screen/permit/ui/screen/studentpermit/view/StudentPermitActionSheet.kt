@@ -15,6 +15,7 @@ import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.main.screen.permit.model.studentpermit.StudentPermitAction
 import com.rollinup.rollinup.screen.main.screen.permit.model.studentpermit.StudentPermitCallback
 import com.rollinup.rollinup.screen.main.screen.permit.ui.component.permitdetail.view.PermitDetailDialog
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun StudentPermitActionSheet(
@@ -36,7 +37,7 @@ fun StudentPermitActionSheet(
     ) {
         actions.fastForEach { action ->
             ActionButton(
-                label = action.label,
+                label = stringResource(action.label),
                 icon = action.icon,
                 textColor = if (action.severity == Severity.DANGER) theme.danger else theme.bodyText,
                 iconTint = if (action.severity == Severity.DANGER) theme.danger else theme.textPrimary,
@@ -64,6 +65,14 @@ fun StudentPermitActionSheet(
         id = item.id,
         showPermitForm = showEdit,
         onDismissRequest = { showEdit = it },
+        onSuccess = {
+            showEdit = false
+            cb.onRefresh()
+        },
+        onError = {
+            showEdit = false
+            cb.onRefresh()
+        }
     )
     PermitDetailDialog(
         id = item.id,

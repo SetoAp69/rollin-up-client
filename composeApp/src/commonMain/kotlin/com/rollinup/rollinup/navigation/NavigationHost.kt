@@ -13,7 +13,7 @@ import com.rollinup.rollinup.screen.auth.navigation.AuthNavigationRoute
 fun NavigationHost(
     onRefreshSetting: () -> Unit,
     onLogout: () -> Unit,
-    onFinish:()->Unit
+    onFinish: () -> Unit,
 ) {
     val navController = rememberNavController()
     val loginState = LocalAuthViewmodel.current.uiState.value.loginState

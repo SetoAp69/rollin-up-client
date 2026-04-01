@@ -26,12 +26,14 @@ import com.rollinup.rollinup.component.date.DateText
 import com.rollinup.rollinup.component.date.DateTextFormat
 import com.rollinup.rollinup.component.imageview.ImageView
 import com.rollinup.rollinup.component.loading.ShimmerEffect
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.component.record.RecordField
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import com.rollinup.rollinup.screen.main.screen.permit.model.getLabel
 import kotlinx.datetime.TimeZone
 
 @Composable
@@ -74,7 +76,7 @@ private fun HeaderSection(detail: PermitDetailEntity) {
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
-            text = detail.type.label,
+            text = detail.type.getLabel(),
             style = Style.headerBold,
             color = theme.primary
         )
@@ -106,7 +108,7 @@ private fun DataRecordSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Chip(
-                text = detail.approvalStatus.label,
+                text = detail.approvalStatus.getLabel(),
                 severity = detail.approvalStatus.severity
             )
         }

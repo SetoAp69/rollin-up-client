@@ -6,6 +6,8 @@ import org.junit.Test
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_document_line_24
 import rollin_up.composeapp.generated.resources.ic_info_line_24
+import rollin_up.composeapp.generated.resources.label_attendance_by_student
+import rollin_up.composeapp.generated.resources.label_detail
 
 class AttendanceHomeActionTest {
 
@@ -15,7 +17,7 @@ class AttendanceHomeActionTest {
         val action = AttendanceHomeAction.HISTORY_BY_STUDENT
 
         // Act & Assert
-        assertEquals("Attendance by student", action.label)
+        assertEquals(Res.string.label_attendance_by_student, action.label)
         assertEquals(Res.drawable.ic_document_line_24, action.icon)
     }
 
@@ -25,7 +27,7 @@ class AttendanceHomeActionTest {
         val action = AttendanceHomeAction.DETAIL
 
         // Act & Assert
-        assertEquals("Detail", action.label)
+        assertEquals(Res.string.label_detail, action.label)
         assertEquals(Res.drawable.ic_info_line_24, action.icon)
     }
 

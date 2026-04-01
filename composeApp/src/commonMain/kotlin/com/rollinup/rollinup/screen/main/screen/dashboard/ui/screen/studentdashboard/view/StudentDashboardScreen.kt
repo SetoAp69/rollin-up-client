@@ -32,7 +32,7 @@ fun StudentDashboardScreen(
         successMsg = stringResource(Res.string.msg_check_in_success),
         errorMsg = stringResource(Res.string.msg_check_in_error),
         onDispose = cb.onResetMessageState,
-        onSuccess = cb.onRefresh ,
+        onSuccess = cb.onRefresh,
         onShowSnackBar = onShowSnackBar,
     )
     StudentDashboardContent(

@@ -18,6 +18,7 @@ import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.v
 import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.label_permit
+import rollin_up.composeapp.generated.resources.ph_date_range_picker
 
 @Composable
 fun TeacherPermitTopAppBar(
@@ -72,7 +73,7 @@ fun TeacherPermitTopAppBar(
             cb.onUpdateExportDateRange(value)
             showExportDialog = true
         },
-        title = "Select date ranges",
+        title = stringResource(Res.string.ph_date_range_picker),
         isDisablePastSelection = false,
         isAllSelectable = true,
     )

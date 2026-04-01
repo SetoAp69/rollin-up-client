@@ -14,5 +14,5 @@ data class TeacherPermitCallback(
     val onResetSelection: () -> Unit = {},
     val onExportFile: (String) -> Unit = {},
     val onResetMessageState: () -> Unit = {},
-    val onUpdateExportDateRange:(List<LocalDate>)->Unit = {}
+    val onUpdateExportDateRange: (List<LocalDate>) -> Unit = {},
 )

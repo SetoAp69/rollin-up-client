@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -46,8 +47,11 @@ import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.dialog.AlertDialog
 import com.rollinup.rollinup.component.dialog.DialogScreen
 import com.rollinup.rollinup.component.theme.theme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
@@ -176,8 +180,13 @@ fun ImagePreview(
     onDiscard: () -> Unit,
     onAccept: (MultiPlatformFile) -> Unit,
 ) {
-    val imageBitmap = image.readBytes().toImageBitmap()
+    var imageBitmap by remember(image) { mutableStateOf<ImageBitmap?>(null) }
 
+    LaunchedEffect(image) {
+        withContext(Dispatchers.IO) {
+            imageBitmap = image.readBytes().toImageBitmap()
+        }
+    }
     var zoomScale by remember { mutableStateOf(1f) }
     var offSet by remember { mutableStateOf(Offset.Zero) }
 
@@ -190,40 +199,52 @@ fun ImagePreview(
                 .background(Color.Black)
                 .fillMaxSize()
         ) {
-            BoxWithConstraints(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(imageBitmap.width.toFloat() / imageBitmap.height.toFloat())
-                    .weight(1f),
-            ) {
-                val state = rememberTransformableState { zoomChange, panChange, _ ->
-                    zoomScale = (zoomScale * zoomChange).coerceIn(1f, 5f)
+            imageBitmap?.let { loaded ->
+                BoxWithConstraints(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(loaded.width.toFloat() / loaded.height.toFloat())
+                        .weight(1f),
+                ) {
+                    val state = rememberTransformableState { zoomChange, panChange, _ ->
+                        zoomScale = (zoomScale * zoomChange).coerceIn(1f, 5f)
 
-                    val extraWidth = (zoomScale - 1) * constraints.maxWidth
-                    val extraHeight = (zoomScale - 1) * constraints.maxHeight
+                        val extraWidth = (zoomScale - 1) * constraints.maxWidth
+                        val extraHeight = (zoomScale - 1) * constraints.maxHeight
 
-                    val maxX = extraWidth / 2
-                    val maxY = extraHeight / 2
-                    offSet = Offset(
-                        x = (offSet.x + panChange.x).coerceIn(-maxX, maxX),
-                        y = (offSet.y + panChange.y).coerceIn(-maxY, maxY)
+                        val maxX = extraWidth / 2
+                        val maxY = extraHeight / 2
+                        offSet = Offset(
+                            x = (offSet.x + panChange.x).coerceIn(-maxX, maxX),
+                            y = (offSet.y + panChange.y).coerceIn(-maxY, maxY)
+                        )
+                    }
+                    Image(
+                        bitmap = loaded,
+                        contentScale = ContentScale.FillBounds,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .graphicsLayer(
+                                scaleX = zoomScale,
+                                scaleY = zoomScale,
+                                translationX = offSet.x,
+                                translationY = offSet.y
+                            )
+                            .transformable(state = state),
+                        contentDescription = null,
                     )
                 }
-                Image(
-                    bitmap = imageBitmap,
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .graphicsLayer(
-                            scaleX = zoomScale,
-                            scaleY = zoomScale,
-                            translationX = offSet.x,
-                            translationY = offSet.y
-                        )
-                        .transformable(state = state),
-                    contentDescription = null,
+            } ?: Box(
+                modifier = Modifier.weight(1f).fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    color = Color.White,
+                    strokeWidth = 2.dp,
+                    modifier = Modifier.size(48.dp)
                 )
             }
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

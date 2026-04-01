@@ -233,7 +233,7 @@ class TeacherPermitViewModel(
         return listOf(
             "Name" to data.map { d -> d.student.name },
             "Class" to data.map { d -> d.student.xClass },
-            "Type" to data.map { d -> d.type.label },
+            "Type" to data.map { d -> d.type.labelString },
             "Duration" to data.map { d ->
                 DateFormatter.formatPermitDateRange(
                     type = d.type,
@@ -242,7 +242,7 @@ class TeacherPermitViewModel(
                 )
             },
             "Reason" to data.map { d -> d.reason ?: "-" },
-            "Status" to data.map { d -> d.approvalStatus.label },
+            "Status" to data.map { d -> d.approvalStatus.labelString },
             "Created at" to data.map { d -> DateFormatter.formateDateTimeFromString(d.createdAt) }
         )
     }

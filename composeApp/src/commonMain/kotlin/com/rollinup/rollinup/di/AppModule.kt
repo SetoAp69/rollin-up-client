@@ -2,7 +2,7 @@ package com.rollinup.rollinup.di
 
 import com.rollinup.rollinup.AuthViewModel
 import com.rollinup.rollinup.GlobalSettingViewModel
-import com.rollinup.rollinup.SecurityViewModel
+import com.rollinup.rollinup.LocaleViewModel
 import com.rollinup.rollinup.UiModeViewModel
 import com.rollinup.rollinup.component.di.ComponentModule
 import com.rollinup.rollinup.component.export.ExportFileModule
@@ -32,7 +32,7 @@ object AppModule {
             viewModelOf(::AuthViewModel)
             viewModelOf(::GlobalSettingViewModel)
             singleOf(::UiModeViewModel)
-            viewModelOf(::SecurityViewModel)
+            viewModelOf(::LocaleViewModel)
         }
     )
 }

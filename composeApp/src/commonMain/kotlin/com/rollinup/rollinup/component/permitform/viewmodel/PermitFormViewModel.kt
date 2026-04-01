@@ -13,6 +13,7 @@ import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.common.utils.Utils.toEpochMillis
 import com.rollinup.rollinup.component.permitform.model.PermitFormCallback
 import com.rollinup.rollinup.component.permitform.model.PermitFormData
+import com.rollinup.rollinup.component.permitform.model.PermitFormErrorType
 import com.rollinup.rollinup.component.permitform.uistate.PermitFormUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -118,14 +119,14 @@ class PermitFormViewModel(
     ): Boolean {
         var formData = formData
 
-        if ((formData.duration.isEmpty() || formData.duration.any { it == null }) && !_uiState.value.isEdit)
-            formData = formData.copy(durationError = "Duration can't be empty")
+        if ((formData.duration.isEmpty() || formData.duration.any { it == null }))
+            formData = formData.copy(durationError = PermitFormErrorType.DURATION_EMPTY)
 
         if (formData.reason.isNullOrBlank() && formData.type == PermitType.ABSENCE && !_uiState.value.isEdit)
-            formData = formData.copy(reasonError = "Please select a reason")
+            formData = formData.copy(reasonError = PermitFormErrorType.REASON_EMPTY)
 
         if (formData.attachment == null && !_uiState.value.isEdit)
-            formData = formData.copy(reasonError = "Please put an attachment")
+            formData = formData.copy(reasonError = PermitFormErrorType.ATTACHMENT_EMPTY)
 
         _uiState.update { it.copy(formData = formData) }
 

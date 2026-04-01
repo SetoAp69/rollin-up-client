@@ -251,8 +251,10 @@ internal fun getButtonColor(
 enum class ButtonType {
     /** A solid background button. */
     FILLED,
+
     /** A transparent background button with a colored border. */
     OUTLINED,
+
     /** Reserved for icon-only variations (though usually handled by [IconButton]). */
     ICON
 }

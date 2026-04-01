@@ -15,6 +15,7 @@ import com.rollinup.rollinup.screen.main.screen.permit.model.PermitFilterData
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.studentpermit.uistate.StudentPermitUiState
 import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_date_range
 import rollin_up.composeapp.generated.resources.label_status
 import rollin_up.composeapp.generated.resources.label_type
 
@@ -40,7 +41,7 @@ fun StudentPermitFilterSheet(
         showReset = tempFilterData != filterData,
     ) {
 
-        if (uiState.isActive) {
+        if (!uiState.isActive) {
             FilterSelector(
                 isLoading = uiState.isLoading,
                 title = stringResource(Res.string.label_status),
@@ -58,7 +59,7 @@ fun StudentPermitFilterSheet(
         )
         Spacer(itemGap8)
         FilterDatePicker(
-            title = "Date Range",
+            title = stringResource(Res.string.label_date_range),
             value = tempFilterData.dateRange,
             isLoading = uiState.isLoading,
             onValueChange = {

@@ -155,7 +155,7 @@ kotlin {
             }
         }
 
-        appleMain{
+        appleMain {
             dependencies {
                 implementation(libs.ktor.darwin)
             }

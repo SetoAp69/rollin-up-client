@@ -32,7 +32,7 @@ fun TeacherPermitDropDown(
         } else {
             actions.fastForEach { action ->
                 DropDownMenuItem(
-                    label = action.label,
+                    label = stringResource(action.label),
                     icon = action.icon,
                     onClick = {
                         when (action) {

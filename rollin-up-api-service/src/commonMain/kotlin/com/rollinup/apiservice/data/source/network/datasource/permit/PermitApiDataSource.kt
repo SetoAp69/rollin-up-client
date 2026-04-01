@@ -11,6 +11,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
@@ -63,7 +64,7 @@ class PermitApiDataSource(
      */
     override suspend fun cancelPermitRequest(id: String): ApiResponse<Unit> {
         return try {
-            val response = httpClient.put("$baseUrl/$id/cancel")
+            val response = httpClient.put("$baseUrl/cancel/$id")
             val body = response.body<Unit>()
             ApiResponse.Success(body, response.status)
         } catch (e: Exception) {
@@ -165,7 +166,7 @@ class PermitApiDataSource(
         body: CreateEditPermitBody,
     ): ApiResponse<Unit> {
         return try {
-            val response = httpClient.post("$baseUrl/$id") {
+            val response = httpClient.patch("$baseUrl/$id") {
                 contentType(ContentType.MultiPart.FormData)
                 setBody(body.toMultiPart())
             }

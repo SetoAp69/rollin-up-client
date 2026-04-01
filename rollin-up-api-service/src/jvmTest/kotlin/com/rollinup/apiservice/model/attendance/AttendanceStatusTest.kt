@@ -35,7 +35,7 @@ class AttendanceStatusTest {
     fun `check properties of enum entries`() {
         val status = AttendanceStatus.ON_TIME
         assertEquals("checked_in", status.value)
-        assertEquals("On Time", status.label)
+        assertEquals("On Time", status.labelString)
         assertEquals(Severity.SUCCESS, status.severity)
     }
 }

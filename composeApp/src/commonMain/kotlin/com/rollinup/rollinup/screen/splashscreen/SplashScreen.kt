@@ -21,7 +21,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
-import com.rollinup.rollinup.component.utils.Utils
 import com.rollinup.rollinup.component.utils.getVersion
 import com.rollinup.rollinup.screen.splashscreen.viewmodel.SplashScreenViewmodel
 import org.jetbrains.compose.resources.painterResource
@@ -71,7 +70,7 @@ fun SplashScreen(
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
-            ){
+            ) {
                 Box(
                     modifier = Modifier
                         .background(

@@ -48,6 +48,7 @@ import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
@@ -551,10 +552,15 @@ private fun ActionButton(
 }
 
 class TableColumn<T>(
-    val title: String,
+    private val titleRes: StringResource,
     val weight: Float = 1f,
     val content: @Composable (T) -> Unit,
-)
+) {
+    val title: String
+        @Composable
+        get() = stringResource(titleRes)
+}
+
 
 
 

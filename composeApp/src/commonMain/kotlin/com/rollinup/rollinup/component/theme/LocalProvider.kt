@@ -7,6 +7,7 @@ import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.GlobalSetting
 import com.rollinup.common.model.UiMode
 import com.rollinup.rollinup.AuthViewModel
+import com.rollinup.rollinup.LocaleViewModel
 import com.rollinup.rollinup.UiModeViewModel
 import kotlinx.datetime.LocalDate
 
@@ -20,6 +21,10 @@ val LocalAuthViewmodel = compositionLocalOf<AuthViewModel>() {
 
 val LocalUiModeViewModel = compositionLocalOf<UiModeViewModel> {
     error("LocalUiModeViewModel not found")
+}
+
+val AppLocaleViewModel = compositionLocalOf<LocaleViewModel> {
+    error("LocaleViewModel not found")
 }
 
 val localUser: LoginEntity?

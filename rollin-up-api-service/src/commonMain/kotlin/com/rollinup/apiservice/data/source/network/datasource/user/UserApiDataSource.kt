@@ -13,6 +13,7 @@ import com.rollinup.apiservice.data.source.network.model.response.ApiResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.GetUserByIdResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.GetUserListResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.GetUserOptionsResponse
+import com.rollinup.apiservice.data.source.network.model.response.user.ResendVerificationOtpResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.ResetPasswordRequestResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.SubmitResetOtpResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.ValidateVerificationOtpResponse
@@ -284,10 +285,13 @@ class UserApiDataSource(
      *
      * @return [ApiResponse] containing [Unit] on success.
      */
-    override suspend fun resetVerificationOtp(): ApiResponse<Unit> =
+    override suspend fun resetVerificationOtp(): ApiResponse<ResendVerificationOtpResponse> =
         try {
-            val response = httpClient.get("$baseUrl/resend-verification-otp") { }
-            ApiResponse.Success(data = Unit, statusCode = response.status)
+            val response = httpClient.get("$baseUrl/resend-verification-otp") {
+                contentType(ContentType.Application.Json)
+            }
+            val body = response.body<ResendVerificationOtpResponse>()
+            ApiResponse.Success(data = body, statusCode = response.status)
         } catch (e: Exception) {
             ApiResponse.Error(e)
         }

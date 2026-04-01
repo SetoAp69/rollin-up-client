@@ -2,8 +2,6 @@ package com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.LoadState
-import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import com.rollinup.apiservice.data.source.network.model.request.attendance.CreateAttendanceBody
 import com.rollinup.apiservice.data.source.network.model.request.attendance.EditAttendanceBody
@@ -18,6 +16,7 @@ import com.rollinup.apiservice.domain.attendance.GetAttendanceByIdUseCase
 import com.rollinup.apiservice.domain.attendance.GetExportAttendanceDataUseCase
 import com.rollinup.apiservice.domain.permit.CreatePermitUseCase
 import com.rollinup.apiservice.domain.permit.DoApprovalUseCase
+import com.rollinup.apiservice.domain.permit.EditPermitUseCase
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
@@ -30,7 +29,7 @@ import com.rollinup.apiservice.utils.Utils.toJsonString
 import com.rollinup.common.utils.Utils.now
 import com.rollinup.common.utils.Utils.toEpochMillis
 import com.rollinup.rollinup.component.export.FileWriter
-import com.rollinup.rollinup.screen.dashboard.getAttendanceByClassDummy
+import com.rollinup.rollinup.component.permitform.model.PermitFormErrorType
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.EditAttendanceFormData
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardApprovalFormData
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardCallback
@@ -51,6 +50,7 @@ class TeacherDashboardViewModel(
     private val permitDoApprovalUseCase: DoApprovalUseCase,
     private val createPermitUseCase: CreatePermitUseCase,
     private val createAttendanceDataUseCase: CreateAttendanceDataUseCase,
+    private val editPermitUseCase: EditPermitUseCase,
     private val editAttendanceDataUseCase: EditAttendanceDataUseCase,
     private val getExportAttendanceDataUseCase: GetExportAttendanceDataUseCase,
     private val fileWriter: FileWriter,
@@ -135,15 +135,6 @@ class TeacherDashboardViewModel(
 
         viewModelScope.launch {
             _uiState.update { it.copy(itemSelected = emptyList()) }
-            _pagingData.value = PagingData.from(
-                data = getAttendanceByClassDummy(),
-                sourceLoadStates = LoadStates(
-                    refresh = LoadState.NotLoading(endOfPaginationReached = true),
-                    prepend = LoadState.NotLoading(endOfPaginationReached = true),
-                    append = LoadState.NotLoading(endOfPaginationReached = true)
-                )
-            )
-
             getAttendanceByClassPagingUseCase(
                 classKey = classKey,
                 queryParams = _uiState.value.filterData.toQueryParams()
@@ -246,38 +237,38 @@ class TeacherDashboardViewModel(
         formData: EditAttendanceFormData,
         initialStatus: AttendanceStatus,
     ): Boolean {
-        return when (initialStatus) {
-            AttendanceStatus.NO_DATA -> {
-                when (formData.status) {
-                    AttendanceStatus.ON_TIME, AttendanceStatus.LATE ->
-                        validateCheckInForm(formData)
+        val isNewPermit =
+            initialStatus !in listOf(AttendanceStatus.EXCUSED, AttendanceStatus.ABSENT)
 
-                    AttendanceStatus.EXCUSED, AttendanceStatus.ABSENT ->
-                        validateCreatePermitForm(formData)
-
-                    AttendanceStatus.NO_DATA -> true
-                    AttendanceStatus.APPROVAL_PENDING -> true
-                }
+        return when (formData.status) {
+            AttendanceStatus.ON_TIME, AttendanceStatus.LATE -> {
+                validateCheckInForm(formData)
             }
 
-            else -> {
-                validateEditAttendanceForm(formData)
+            AttendanceStatus.EXCUSED, AttendanceStatus.ABSENT -> {
+                validateCreatePermitForm(formData, isNewPermit)
+            }
+
+            AttendanceStatus.NO_DATA, AttendanceStatus.APPROVAL_PENDING -> {
+                true
             }
         }
     }
 
-    private fun validateEditAttendanceForm(formData: EditAttendanceFormData): Boolean {
-        return formData.isValid()
-    }
-
-    private fun validateCreatePermitForm(formData: EditAttendanceFormData): Boolean {
+    private fun validateCreatePermitForm(
+        formData: EditAttendanceFormData,
+        isNewPermit: Boolean,
+    ): Boolean {
         var formData = formData.permitFormData
 
         if ((formData.duration.isEmpty() || formData.duration.any { it == null }))
-            formData = formData.copy(durationError = "Duration can't be empty")
+            formData = formData.copy(durationError = PermitFormErrorType.DURATION_EMPTY)
 
         if (formData.reason.isNullOrBlank() && formData.type == PermitType.ABSENCE)
-            formData = formData.copy(reasonError = "Please select a reason")
+            formData = formData.copy(reasonError = PermitFormErrorType.REASON_EMPTY)
+
+        if (formData.attachment == null && isNewPermit)
+            formData = formData.copy(attachmentError = PermitFormErrorType.ATTACHMENT_EMPTY)
 
         _uiState.update {
             it.copy(
@@ -344,18 +335,30 @@ class TeacherDashboardViewModel(
         val formData = formData.copy(
             studentUserId = studentId
         )
-        when (initialData.status) {
-            AttendanceStatus.NO_DATA -> {
-                when (formData.status) {
-                    AttendanceStatus.LATE, AttendanceStatus.ON_TIME -> checkIn(formData)
-                    AttendanceStatus.EXCUSED, AttendanceStatus.ABSENT -> createPermit(formData)
-                    AttendanceStatus.NO_DATA, AttendanceStatus.APPROVAL_PENDING -> {
-                        return
-                    }
+        val isNewEntry = initialData.status == AttendanceStatus.NO_DATA
+
+        when (formData.status) {
+            AttendanceStatus.EXCUSED, AttendanceStatus.ABSENT -> {
+                if (isNewEntry) {
+                    createPermit(formData)
+                } else {
+                    editPermit(
+                        id = uiState.value.attendanceDetail.permit?.id.orEmpty(),
+                        formData = formData
+                    )
                 }
             }
 
-            else -> {
+            AttendanceStatus.LATE, AttendanceStatus.ON_TIME -> {
+                if (isNewEntry) {
+                    checkIn(formData)
+                } else {
+                    editAttendance(initialData.id, formData)
+                }
+            }
+
+            AttendanceStatus.NO_DATA, AttendanceStatus.APPROVAL_PENDING -> {
+                if (isNewEntry) return
                 editAttendance(initialData.id, formData)
             }
         }
@@ -380,6 +383,33 @@ class TeacherDashboardViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoadingOverlay = true) }
             createPermitUseCase(body).collectLatest { result ->
+                _uiState.update {
+                    it.copy(
+                        isLoadingOverlay = false,
+                        submitEditAttendanceState = result is Result.Success
+                    )
+                }
+            }
+        }
+    }
+
+    private fun editPermit(id: String, formData: EditAttendanceFormData) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoadingOverlay = true) }
+            editPermitUseCase(
+                id = id,
+                body = CreateEditPermitBody(
+                    studentId = formData.studentUserId,
+                    reason = formData.permitFormData.reason,
+                    duration = formData.permitFormData.duration.filter { it != null } as List<Long>,
+                    type = formData.permitFormData.type,
+                    note = formData.permitFormData.note,
+                    attachment = formData.permitFormData.attachment,
+                    approvalStatus = ApprovalStatus.APPROVED,
+                    approvedBy = _uiState.value.user.id,
+                    approvedAt = LocalDateTime.now().toEpochMillis(),
+                )
+            ).collectLatest { result ->
                 _uiState.update {
                     it.copy(
                         isLoadingOverlay = false,

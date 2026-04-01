@@ -124,12 +124,8 @@ class CreateEditUserViewModel(
             formData = formData.copy(userNameError = CreateEditUserFormErrorType.USERNAME_EMPTY)
         }
 
-        if (!isEdit && formData.lastName.isNullOrBlank()) {
+        if (!isEdit && formData.fullName.isNullOrBlank()) {
             formData = formData.copy(lastNameError = CreateEditUserFormErrorType.LAST_NAME_EMPTY)
-        }
-
-        if (!isEdit && formData.firstName.isNullOrBlank()) {
-            formData = formData.copy(firstNameError = CreateEditUserFormErrorType.FIRST_NAME_EMPTY)
         }
 
         if (!isEdit && formData.studentId.isNullOrBlank() && isStudentRole) {
@@ -149,6 +145,7 @@ class CreateEditUserViewModel(
             )
         }
         updateForm(formData)
+
         return formData.isValid()
     }
 
@@ -216,7 +213,7 @@ class CreateEditUserViewModel(
             id = data.id,
             firstName = data.firstName,
             userName = data.userName,
-            lastName = data.lastName,
+            fullName = data.fullName,
             gender = data.gender.value,
             birthDay = data.birthDay.parseToLocalDateTime().toEpochMillis(),
             role = data.role.id,
@@ -234,7 +231,7 @@ class CreateEditUserViewModel(
         return CreateEditUserBody(
             username = formData.userName,
             firstName = formData.firstName,
-            lastName = formData.lastName,
+            fullName = formData.fullName,
             email = formData.email,
             role = formData.role,
             address = formData.address,

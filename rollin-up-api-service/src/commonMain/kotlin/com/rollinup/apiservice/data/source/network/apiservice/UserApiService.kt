@@ -12,6 +12,7 @@ import com.rollinup.apiservice.data.source.network.model.response.ApiResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.GetUserByIdResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.GetUserListResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.GetUserOptionsResponse
+import com.rollinup.apiservice.data.source.network.model.response.user.ResendVerificationOtpResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.ResetPasswordRequestResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.SubmitResetOtpResponse
 import com.rollinup.apiservice.data.source.network.model.response.user.ValidateVerificationOtpResponse
@@ -45,5 +46,5 @@ interface UserApiService {
 
     suspend fun updatePasswordAndVerification(body: UpdatePasswordAndVerificationBody): ApiResponse<Unit>
 
-    suspend fun resetVerificationOtp(): ApiResponse<Unit>
+    suspend fun resetVerificationOtp(): ApiResponse<ResendVerificationOtpResponse>
 }

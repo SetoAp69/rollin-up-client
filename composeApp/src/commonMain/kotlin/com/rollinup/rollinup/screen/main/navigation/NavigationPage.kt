@@ -10,10 +10,10 @@ import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
 import com.rollinup.rollinup.component.platformwarning.PlatformWarning
 import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.utils.getPlatform
-import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.view.StudentDashboardScreen
 import com.rollinup.rollinup.screen.dashboard.ui.screen.teacherdashboard.view.TeacherDashboardScreen
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.navigation.AttendanceRoute
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.navigation.attendanceGraph
+import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.view.StudentDashboardScreen
 import com.rollinup.rollinup.screen.main.screen.globalsetting.ui.screen.view.GlobalSettingScreen
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.studentpermit.view.StudentPermitScreen
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.view.TeacherPermitScreen
@@ -45,7 +45,12 @@ fun NavGraphBuilder.mainGraph(
         }
         when (role) {
             Role.ADMIN -> {
-                UserCenterScreen(onShowSnackBar)
+                val platform = getPlatform()
+                if (platform.isMobile()) {
+                    PlatformWarning(Role.STUDENT, platform)
+                } else {
+                    UserCenterScreen(onShowSnackBar)
+                }
             }
 
             Role.STUDENT -> {
@@ -111,7 +116,10 @@ fun NavGraphBuilder.mainGraph(
 
         when (role) {
             Role.STUDENT -> {
-                StudentPermitScreen { onNavigateUp() }
+                StudentPermitScreen(
+                    onNavigateUp = onNavigateUp,
+                    onShowSnackBar = onShowSnackBar
+                )
             }
 
             Role.ADMIN -> {

@@ -9,5 +9,5 @@ actual fun getDeviceId(): String {
 
 @Composable
 actual fun getVersion(): String {
-    return System.getProperty("jpackage.app-version")?:"-"
+    return System.getProperty("jpackage.app-version") ?: "-"
 }

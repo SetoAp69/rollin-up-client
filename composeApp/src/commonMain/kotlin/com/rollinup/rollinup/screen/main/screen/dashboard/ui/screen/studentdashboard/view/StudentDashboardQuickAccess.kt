@@ -13,10 +13,16 @@ import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.screen.dashboard.ui.component.DashBoardButton
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.studentdashboard.StudentDashboardQuickAccessCallback
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.uistate.StudentDashboardUiState
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_location_circled_bottom_line_24
 import rollin_up.composeapp.generated.resources.ic_mail_open_line_24
 import rollin_up.composeapp.generated.resources.ic_mail_plus_line_24
+import rollin_up.composeapp.generated.resources.label_attendance_history
+import rollin_up.composeapp.generated.resources.label_check_in
+import rollin_up.composeapp.generated.resources.label_create_permit
+import rollin_up.composeapp.generated.resources.label_permit
+import rollin_up.composeapp.generated.resources.label_quick_access
 
 @Composable
 fun StudentDashboardQuickAccess(
@@ -24,7 +30,7 @@ fun StudentDashboardQuickAccess(
     cb: StudentDashboardQuickAccessCallback,
 ) {
     TextFieldTitle(
-        title = "Quick Access",
+        title = stringResource(Res.string.label_quick_access),
         textStyle = Style.label
     ) {
         FlowRow(
@@ -34,25 +40,26 @@ fun StudentDashboardQuickAccess(
             itemVerticalAlignment = Alignment.CenterVertically,
         ) {
             DashBoardButton(
-                text = "Create Permit",
+                text = stringResource(Res.string.label_create_permit),
                 icon = Res.drawable.ic_mail_plus_line_24,
                 isEnabled = true,
                 onClick = cb.onCreatePermit
             )
             DashBoardButton(
-                text = "Permit",
+                text = stringResource(Res.string.label_permit),
                 icon = Res.drawable.ic_mail_open_line_24,
                 isEnabled = true,
                 onClick = cb.onGoToPermitHistory
             )
             DashBoardButton(
-                text = "Check In",
+                text = stringResource(Res.string.label_check_in),
                 icon = Res.drawable.ic_location_circled_bottom_line_24,
                 isEnabled = uiState.isLocationValid == true && uiState.currentStatus == AttendanceStatus.NO_DATA,
+//                isEnabled = true,
                 onClick = cb.onCheckIn
             )
             DashBoardButton(
-                text = "Attendance History",
+                text = stringResource(Res.string.label_attendance_history),
                 icon = Res.drawable.ic_location_circled_bottom_line_24,
                 isEnabled = true,
                 onClick = cb.onGoToAttendanceHistory

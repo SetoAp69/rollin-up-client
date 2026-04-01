@@ -55,21 +55,23 @@ fun <T : Any> PagingColumn(
             verticalArrangement = contentArrangement,
             modifier = Modifier.fillMaxHeight()
         ) {
-            if (pagingData.loadState.refresh is LoadState.Loading) {
-                repeat(5) {
-                    item { loadingContent() }
+            if (pagingData.loadState.refresh is LoadState.Loading && pagingData.itemCount == 0) {
+                items(5) {
+                    loadingContent()
                 }
-            } else {
-                if (pagingData.itemCount == 0) {
-                    item {
-                        EmptyRecord()
-                    }
-                } else {
-                    items(pagingData.itemCount) { index ->
-                        pagingData[index]?.let {
-                            itemContent(it)
-                        }
-                    }
+            }
+
+            if (pagingData.loadState.refresh is LoadState.NotLoading && pagingData.itemCount == 0) {
+                item {
+                    EmptyRecord()
+                }
+            }
+
+            items(
+                count = pagingData.itemCount,
+            ) { index ->
+                pagingData[index]?.let {
+                    itemContent(it)
                 }
             }
 

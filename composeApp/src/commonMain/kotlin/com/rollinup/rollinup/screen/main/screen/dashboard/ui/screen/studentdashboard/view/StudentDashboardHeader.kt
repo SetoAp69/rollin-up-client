@@ -1,4 +1,4 @@
-package com.rollinup.rollinup.screen.dashboard.ui.screen.studentdashboard.view
+package com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,6 +25,7 @@ import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.chip.Chip
 import com.rollinup.rollinup.component.loading.ShimmerEffect
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
@@ -35,9 +36,15 @@ import com.rollinup.rollinup.component.utils.isCompact
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.studentdashboard.uistate.StudentDashboardUiState
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_location_invalid_line_24
 import rollin_up.composeapp.generated.resources.ic_location_line_24
+import rollin_up.composeapp.generated.resources.label_absent
+import rollin_up.composeapp.generated.resources.label_excused
+import rollin_up.composeapp.generated.resources.label_late
+import rollin_up.composeapp.generated.resources.label_on_time
+import rollin_up.composeapp.generated.resources.msg_hello
 
 @Composable
 fun StudentDashboardHeader(
@@ -137,83 +144,50 @@ private fun HeaderContent(
     ) {
         UserInfoSection(
             userData = uiState.user ?: LoginEntity(),
-            attendanceStatus = uiState.currentStatus
+            attendanceStatus = uiState.currentStatus,
+            isLocationValid = uiState.isLocationValid
         )
         SummarySection(
             summary = uiState.summary,
-            isLocationValid = uiState.isLocationValid == true
         )
     }
 }
 
+
 @Composable
 fun SummarySection(
     summary: AttendanceSummaryEntity,
-    isLocationValid: Boolean?,
 ) {
-    val locationIcon: DrawableResource
-    val iconColor: Color
-
-    when (isLocationValid) {
-        true -> {
-            locationIcon = Res.drawable.ic_location_line_24
-            iconColor = theme.success
-        }
-
-        false -> {
-            locationIcon = Res.drawable.ic_location_invalid_line_24
-            iconColor = theme.danger
-        }
-
-        null -> {
-            locationIcon = Res.drawable.ic_location_invalid_line_24
-            iconColor = theme.chipDisabledBg
-        }
-    }
-
     Row(
         modifier = Modifier
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+            .fillMaxWidth()
+            .padding(itemGap8),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(
-            modifier = Modifier
-                .weight(1f)
-                .padding(itemGap8),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(itemGap8)
-        ) {
-            SummaryItem(
-                amount = summary.checkedIn.toString(),
-                title = "On Time",
-                severity = Severity.SUCCESS
-            )
-            CircleSpacer()
-            SummaryItem(
-                amount = summary.late.toString(),
-                title = "Late",
-                severity = Severity.WARNING
-            )
-            CircleSpacer()
-            SummaryItem(
-                amount = summary.excused.toString(),
-                title = "Excused",
-                severity = Severity.WARNING
-            )
-            CircleSpacer()
-            SummaryItem(
-                amount = summary.absent.toString(),
-                title = "Absent",
-                severity = Severity.DANGER
-            )
-        }
-        Icon(
-            modifier = Modifier.size(if (isCompact) 36.dp else 42.dp),
-            painter = painterResource(locationIcon),
-            contentDescription = null,
-            tint = iconColor
+        SummaryItem(
+            amount = summary.checkedIn.toString(),
+            title = stringResource(Res.string.label_on_time),
+            severity = Severity.SUCCESS
         )
-
+        CircleSpacer()
+        SummaryItem(
+            amount = summary.late.toString(),
+            title = stringResource(Res.string.label_late),
+            severity = Severity.WARNING
+        )
+        CircleSpacer()
+        SummaryItem(
+            amount = summary.excused.toString(),
+            title = stringResource(Res.string.label_excused),
+            severity = Severity.WARNING
+        )
+        CircleSpacer()
+        SummaryItem(
+            amount = summary.absent.toString(),
+            title = stringResource(Res.string.label_absent),
+            severity = Severity.DANGER
+        )
     }
 }
 
@@ -254,6 +228,7 @@ private fun SummaryItem(
 @Composable
 private fun UserInfoSection(
     userData: LoginEntity,
+    isLocationValid: Boolean?,
     attendanceStatus: AttendanceStatus,
 ) {
     Row(
@@ -274,7 +249,7 @@ private fun UserInfoSection(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = userData.firstName.take(1).ifBlank { "-" },
+                    text = userData.fullName.take(1).ifBlank { "-" },
                     style = Style.header,
                     color = Color.White
                 )
@@ -283,13 +258,13 @@ private fun UserInfoSection(
                 verticalArrangement = Arrangement.spacedBy(itemGap4)
             ) {
                 Text(
-                    text = "Hello",
+                    text = stringResource(Res.string.msg_hello),
                     color = theme.chipDisabledBg,
                     style = Style.body
                 )
 
                 Text(
-                    text = userData.fullName,
+                    text = userData.fullName.split(" ").firstOrNull()?:"-",
                     color = theme.bodyText,
                     style = Style.popupTitle
                 )
@@ -301,10 +276,50 @@ private fun UserInfoSection(
                 )
             }
         }
-        Chip(
-            text = attendanceStatus.label,
-            severity = attendanceStatus.severity
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(itemGap8)
+        ) {
+            Chip(
+                text = attendanceStatus.getLabel(),
+                severity = attendanceStatus.severity
+            )
+            LocationStatus(
+                isLocationValid = isLocationValid
+            )
+        }
 
     }
+}
+
+@Composable
+private fun LocationStatus(
+    isLocationValid: Boolean?,
+) {
+    val locationIcon: DrawableResource
+    val iconColor: Color
+
+    when (isLocationValid) {
+        true -> {
+            locationIcon = Res.drawable.ic_location_line_24
+            iconColor = theme.success
+        }
+
+        false -> {
+            locationIcon = Res.drawable.ic_location_invalid_line_24
+            iconColor = theme.danger
+        }
+
+        null -> {
+            locationIcon = Res.drawable.ic_location_invalid_line_24
+            iconColor = theme.chipDisabledBg
+        }
+    }
+    Icon(
+        modifier = Modifier.size(if (isCompact) 36.dp else 42.dp),
+        painter = painterResource(locationIcon),
+        contentDescription = null,
+        tint = iconColor
+    )
+
 }

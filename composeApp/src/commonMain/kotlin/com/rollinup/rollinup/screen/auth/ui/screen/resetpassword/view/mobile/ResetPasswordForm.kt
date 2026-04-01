@@ -20,6 +20,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.rollinup.rollinup.component.button.Button
+import com.rollinup.rollinup.component.password.PasswordErrorType
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
@@ -28,16 +29,27 @@ import com.rollinup.rollinup.component.textfield.PasswordTextField
 import com.rollinup.rollinup.component.textfield.TextField
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import com.rollinup.rollinup.component.time.TimeText
 import com.rollinup.rollinup.component.utils.Utils
 import com.rollinup.rollinup.screen.auth.model.resetpassword.ResetPasswordCallback
+import com.rollinup.rollinup.screen.auth.model.resetpassword.ResetPasswordErrorType
 import com.rollinup.rollinup.screen.auth.ui.screen.resetpassword.uistate.ResetPasswordUiState
 import com.rollinup.rollinup.screen.auth.ui.screen.resetpassword.view.OTPTextField
+import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_mail_line_24
 import rollin_up.composeapp.generated.resources.label_back_to_login
 import rollin_up.composeapp.generated.resources.label_email
+import rollin_up.composeapp.generated.resources.label_new_password
+import rollin_up.composeapp.generated.resources.label_reenter_email
+import rollin_up.composeapp.generated.resources.label_repeat_new_password
+import rollin_up.composeapp.generated.resources.label_resend_otp
+import rollin_up.composeapp.generated.resources.label_submit
+import rollin_up.composeapp.generated.resources.msg_otp_already_sent
 import rollin_up.composeapp.generated.resources.ph_email
+import rollin_up.composeapp.generated.resources.ph_new_password
+import rollin_up.composeapp.generated.resources.ph_reenter_new_password
 
 @Composable
 fun ResetPasswordForm(
@@ -58,7 +70,8 @@ fun ResetPasswordForm(
             SubmitOtpForm(
                 onSubmitOtp = cb.onSubmitOtp,
                 uiState = uiState,
-                onUpdateStep = cb.onUpdateStep
+                onUpdateStep = cb.onUpdateStep,
+                onResendOtp = cb.onSubmitEmail
             )
         }
 
@@ -79,7 +92,7 @@ fun SubmitEmailForm(
     onNavigateUp: () -> Unit,
 ) {
     var emailInput by remember { mutableStateOf("") }
-    var emailError: String? by remember { mutableStateOf(null) }
+    var emailError: ResetPasswordErrorType? by remember { mutableStateOf(null) }
 
     LaunchedEffect(uiState.step) {
         emailInput = ""
@@ -91,8 +104,6 @@ fun SubmitEmailForm(
         modifier = Modifier
             .fillMaxWidth()
             .padding(screenPaddingValues)
-
-
     ) {
         Column(
             verticalArrangement = Arrangement.SpaceBetween,
@@ -104,10 +115,7 @@ fun SubmitEmailForm(
                 onValueChange = { value ->
                     emailInput = value
                     if (value.contains(" ")) {
-                        emailError = "Email cannot contain spaces"
-                    }
-                    if (value.length < 5) {
-                        emailError = "Email cannot be less than 5 characters"
+                        emailError = ResetPasswordErrorType.EMAIL_CONTAIN_SPACE
                     }
                     if (value.isBlank()) {
                         emailError = null
@@ -116,15 +124,15 @@ fun SubmitEmailForm(
                 },
                 placeholder = stringResource(Res.string.ph_email),
                 isError = emailError != null,
-                errorMsg = emailError,
+                errorMsg = emailError?.getMessage(),
                 leadingIcon = Res.drawable.ic_mail_line_24,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             )
             Button(
-                text = "Submit",
+                text = stringResource(Res.string.label_submit),
                 onClick = {
                     if (emailInput.isBlank()) {
-                        emailError = "Email cannot be empty"
+                        emailError = ResetPasswordErrorType.EMAIL_EMPTY
                     } else {
                         onSubmitEmail(emailInput)
                     }
@@ -152,9 +160,9 @@ private fun NewPasswordForm(
     onSubmitNewPassword: (String) -> Unit,
 ) {
     var firstPassword: String by remember { mutableStateOf("") }
-    var firstPasswordError: String? by remember { mutableStateOf(null) }
+    var firstPasswordError: PasswordErrorType? by remember { mutableStateOf(null) }
     var secondPassword: String by remember { mutableStateOf("") }
-    var secondPasswordError: String? by remember { mutableStateOf(null) }
+    var secondPasswordError: PasswordErrorType? by remember { mutableStateOf(null) }
     var isBothError: Boolean by remember { mutableStateOf(false) }
 
     LaunchedEffect(uiState.step) {
@@ -184,10 +192,10 @@ private fun NewPasswordForm(
                     firstPassword = value
                     firstPasswordError = errorMessage
                 },
-                title = "New Password",
-                placeholder = "Enter new password",
+                title = stringResource(Res.string.label_new_password),
+                placeholder = stringResource(Res.string.ph_new_password),
                 isError = firstPasswordError != null || isBothError,
-                errorMsg = firstPasswordError
+                errorMsg = firstPasswordError?.getMessage()
             )
             Spacer(itemGap4)
             PasswordTextField(
@@ -199,25 +207,25 @@ private fun NewPasswordForm(
                     secondPassword = value
                     secondPasswordError = errorMessage
                 },
-                title = "Repeat New Password",
-                placeholder = "Re-Enter new password",
+                title = stringResource(Res.string.label_repeat_new_password),
+                placeholder = stringResource(Res.string.ph_reenter_new_password),
                 isError = secondPasswordError != null || isBothError,
-                errorMsg = secondPasswordError
+                errorMsg = secondPasswordError?.getMessage()
             )
         }
         Button(
             onClick = {
                 if (firstPassword.isBlank()) {
-                    firstPasswordError = "Password cannot be empty"
+                    firstPasswordError = PasswordErrorType.EMPTY
                     return@Button
                 }
                 if (secondPassword.isBlank()) {
-                    secondPasswordError = "Password cannot be empty"
+                    secondPasswordError = PasswordErrorType.EMPTY
                     return@Button
                 }
                 if (firstPassword != secondPassword) {
                     isBothError = true
-                    secondPasswordError = "Password does not match"
+                    secondPasswordError = PasswordErrorType.NOT_MATCH
                     return@Button
                 }
                 if (
@@ -229,7 +237,7 @@ private fun NewPasswordForm(
                     onSubmitNewPassword(firstPassword)
                 }
             },
-            text = "Submit",
+            text = stringResource(Res.string.label_submit),
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -240,9 +248,11 @@ private fun SubmitOtpForm(
     onSubmitOtp: (String) -> Unit,
     uiState: ResetPasswordUiState,
     onUpdateStep: (Int) -> Unit,
+    onResendOtp: (String) -> Unit,
 ) {
     var otpInput: String by remember { mutableStateOf("") }
-    var otpError: String? by remember { mutableStateOf(null) }
+    var otpError: ResetPasswordErrorType? by remember { mutableStateOf(null) }
+    val countdown = LocalTime.fromSecondOfDay(uiState.otpCountdown).toString()
 
     LaunchedEffect(uiState.step) {
         otpInput = ""
@@ -268,15 +278,15 @@ private fun SubmitOtpForm(
                     otpError = null
                 },
                 isError = otpError != null,
-                textError = otpError
+                textError = otpError?.getMessage()
             )
             Button(
-                text = "Submit",
+                text = stringResource(Res.string.label_submit),
                 onClick = {
                     if (otpInput.isBlank()) {
-                        otpError = "OTP cannot be empty"
+                        otpError = ResetPasswordErrorType.OTP_EMPTY
                     } else if (otpInput.length < 5) {
-                        otpError = "You need to fills all the digits"
+                        otpError = ResetPasswordErrorType.OTP_INVALID
                     } else {
                         onSubmitOtp(otpInput)
                     }
@@ -284,18 +294,35 @@ private fun SubmitOtpForm(
                 modifier = Modifier.fillMaxWidth()
             )
         }
-        uiState.actualEmail?.let {
+        if (uiState.otpStatus.email.isNotBlank()) {
             Spacer(14.dp)
             Text(
-                text = "We've already sent an OTP code to $it. You can request new otp after 5 minutes.",
+                text = stringResource(Res.string.msg_otp_already_sent, uiState.otpStatus.email),
                 color = theme.textPrimary,
                 textAlign = TextAlign.Center,
                 style = Style.body,
             )
+            Spacer(itemGap4)
+            if (uiState.otpCountdown > 0L) {
+                TimeText(
+                    value = LocalTime.fromSecondOfDay(uiState.otpCountdown),
+                    style = Style.body
+                )
+            } else {
+                Text(
+                    text = stringResource(Res.string.label_resend_otp),
+                    color = theme.textPrimary,
+                    style = Style.title,
+                    modifier = Modifier
+                        .clickable {
+                            onResendOtp(uiState.email)
+                        }
+                )
+            }
         }
         Spacer(itemGap8)
         Text(
-            text = "Re-enter email?",
+            text = stringResource(Res.string.label_reenter_email),
             color = theme.textPrimary,
             style = Style.title,
             modifier = Modifier

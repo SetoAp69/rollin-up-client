@@ -1,5 +1,6 @@
 package com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancebystudent.uistate
 
+import androidx.compose.runtime.Composable
 import com.rollinup.apiservice.data.source.network.model.request.attendance.GetAttendanceListByStudentQueryParams
 import com.rollinup.apiservice.model.attendance.AttendanceByStudentEntity
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
@@ -8,6 +9,7 @@ import com.rollinup.apiservice.model.attendance.AttendanceSummaryEntity
 import com.rollinup.apiservice.model.user.UserDetailEntity
 import com.rollinup.apiservice.utils.Utils.toJsonString
 import com.rollinup.common.model.OptionData
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.screen.main.screen.attendance.model.attendancebystudent.AttendanceByStudentFilterData
 
 data class AttendanceByStudentUiState(
@@ -32,7 +34,8 @@ data class AttendanceByStudentUiState(
         )
 
     val statusOptions
+        @Composable
         get() = AttendanceStatus.entries
             .filter { it != AttendanceStatus.NO_DATA }
-            .map { OptionData(it.label, it.value) }
+            .map { OptionData(it.getLabel(), it.value) }
 }

@@ -23,6 +23,12 @@ import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_absent
+import rollin_up.composeapp.generated.resources.label_excused
+import rollin_up.composeapp.generated.resources.label_late
+import rollin_up.composeapp.generated.resources.label_on_time
 
 @Composable
 fun AttendanceSummary(
@@ -47,14 +53,14 @@ private fun AttendanceSummaryContent(
         RowData(
             leftContent = {
                 AttendanceSummaryItem(
-                    title = "Checked In",
+                    title = stringResource(Res.string.label_on_time),
                     value = summary.checkedIn.toString(),
                     lineColor = theme.success
                 )
             },
             rightContent = {
                 AttendanceSummaryItem(
-                    title = "Excused",
+                    title = stringResource(Res.string.label_excused),
                     value = summary.excused.toString(),
                     lineColor = theme.danger
                 )
@@ -63,14 +69,14 @@ private fun AttendanceSummaryContent(
         RowData(
             leftContent = {
                 AttendanceSummaryItem(
-                    title = "Late",
+                    title = stringResource(Res.string.label_late),
                     value = summary.late.toString(),
                     lineColor = theme.warning
                 )
             },
             rightContent = {
                 AttendanceSummaryItem(
-                    title = "Absent",
+                    title = stringResource(Res.string.label_absent),
                     value = summary.absent.toString(),
                     lineColor = theme.danger
                 )

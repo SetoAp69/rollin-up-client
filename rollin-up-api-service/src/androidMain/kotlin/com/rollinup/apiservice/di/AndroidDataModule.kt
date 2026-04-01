@@ -1,8 +1,5 @@
 package com.rollinup.apiservice.di
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-
 object AndroidDataModule {
     operator fun invoke() = listOf(
         LocalDataStoreModule(),
@@ -11,6 +8,7 @@ object AndroidDataModule {
         RepositoryModule(),
         MapperModule(),
         DispatcherModule(),
-        DomainModule()
-    )
+        DomainModule(),
+
+        )
 }

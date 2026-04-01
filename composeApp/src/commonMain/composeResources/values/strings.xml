@@ -32,7 +32,7 @@
     <string name="msg_export_success">Success, data successfully exported</string>
     <string name="msg_export_error">Error, failed to export data, please try again</string>
     <string name="msg_unauthorized_device">Unauthorized Device detected, please login using your first device that is connected to this account</string>
-    <string name="msg_first_time_login">Unauthorized Device detected, please login using your first device that is connected to this account</string>
+    <string name="msg_first_time_login">First time login detected, please verify your account by updating your password</string>
     <string name="msg_forgot_password">I forgot my password</string>
     <string name="msg_email_send_success">Success, Email successfully sent.</string>
     <string name="msg_email_send_error">Error, failed to send email, please try again.</string>
@@ -40,7 +40,7 @@
     <string name="msg_otp_send_error">Error,failed to send Otp, please try again.</string>
     <string name="msg_password_update_success">Success, password successfully updated.</string>
     <string name="msg_password_update_error">Error, failed to update password please try again. </string>
-    <string name="msg_otp_already_sent">We've already sent an OTP code to your email. You can request new otp after 2 minutes.</string>
+    <string name="msg_otp_already_sent">We've already sent an OTP code to your email</string>
     <string name="msg_email_empty_error">Email can\'t be empty</string>
     <string name="msg_username_empty_error">Username can\'t be empty</string>
     <string name="msg_username_invalid_error">Username can\'t contain space</string>
@@ -55,7 +55,34 @@
     <string name="msg_approval_error">Error, failed to submit permit approval please try again</string>
     <string name="msg_approval_success">Success, permit approval successfully submitted</string>
     <string name="msg_permit_current_date_missing">Permit duration must include current date</string>
-
+    <string name="msg_permit_duration_error_empty">Permit duration cannot be empty</string>
+    <string name="msg_permit_reason_error_empty">Permit reason cannot be empty</string>
+    <string name="msg_permit_attachment_error_empty">Permit attachment cannot be empty</string>
+    <string name="msg_permit_note_max_char_120">Note cannot exceed 120 characters</string>
+    <string name="msg_cancel_permit_alert">Permit for %1$s will be cancelled</string>
+    <string name="msg_edit_permit_request_alert">Permit request will be edited with new data. Any overlapped permit will be cancelled</string>
+    <string name="msg_create_permit_request_alert">Permit request will be submitted. Any overlapped permit will be cancelled</string>
+    <string name="msg_cancel_permit_success">Success, permit request canceled successfully.</string>
+    <string name="msg_cancel_permit_error">Error, failed to cancel permit request. Please try again.</string>
+    <string name="msg_password_min_length">Password must be at least 8 digit length</string>
+    <string name="msg_password_must_include_lower_and_uppercase"> Password must include lower and uppercase</string>
+    <string name="msg_password_must_number">Password must include number</string>
+    <string name="msg_password_must_special_character">Password must include special character</string>
+    <string name="msg_password_empty_error">Password can't be empty</string>
+    <string name="msg_password_not_match">Password doesn't match</string>
+    <string name="msg_otp_empty_error">OTP code can't be empty</string>
+    <string name="msg_otp_invalid_error">OTP code is invalid</string>
+    <string name="msg_email_contain_space_error">Email can\'t contain space</string>
+    <string name="msg_password_number">Password must include number</string>
+    <string name="msg_password_special_character">Password must include special character</string>
+    <string name="msg_error_max_char">%1$s can\'t be more than %2$s characters</string>
+    <string name="msg_hello">Hello</string>
+    <string name="msg_global_setting_update_success">Success, global setting is successfully updated</string>
+    <string name="msg_global_setting_update_error">Error, failed to update global setting</string>
+    <string name="msg_stay_in_form">Stay in form</string>
+    <string name="msg_selector_field_incomplete_error">Please select all fields</string>
+    <string name="msg_mock_location_detected">Mock location detected. Please disable mock location services to proceed with check-in.</string>
+    <string name="msg_invalid_platform_error">Account with **%1$s** role have no access on **%2$s** platform, please login using another type of platform</string>
 
     <string name="label_cancel">Cancel</string>
     <string name="label_all">All</string>
@@ -85,7 +112,7 @@
     <string name="label_note">Note</string>
     <string name="label_select_all">Select All</string>
     <string name="label_edit_permit_request">Edit Permit Request</string>
-    <string name="label_create_permit_request">Crate Permit Request</string>
+    <string name="label_create_permit_request">Create Permit Request</string>
     <string name="label_select_permit_duration">Select permit duration</string>
     <string name="label_absent">Absent</string>
     <string name="label_dispensation">Dispensation</string>
@@ -136,12 +163,54 @@
     <string name="label_confirm_check_in">Confirm Check-In</string>
     <string name="label_select_attendance_status">Select Attendance Status</string>
     <string name="label_check_in_time">Check in time</string>
+    <string name="label_attendance">Attendance</string>
+    <string name="label_permit_request">Permit Request</string>
+    <string name="label_create_permit">Create Permit</string>
+    <string name="label_excused">Excused</string>
+    <string name="label_late">Late</string>
+    <string name="label_on_time">Present</string>
+    <string name="label_sick">Sick</string>
+    <string name="label_todays_attendance">Today's Attendance</string>
+    <string name="label_present">Present</string>
+    <string name="label_alpha">Alpha</string>
+    <string name="label_language">Language</string>
+    <string name="label_profile">Profile</string>
+    <string name="label_logout">Logout</string>
+    <string name="label_reenter_email">Re-enter email</string>
+    <string name="label_quick_access">Quick Access</string>
+    <string name="label_check_in">Check In</string>
+    <string name="label_attendance_history">Attendance History</string>
+    <string name="label_student_attendance">Student Attendance</string>
+    <string name="label_approval_pending">Approval Pending</string>
+    <string name="label_no_data">No Data</string>
+    <string name="label_male">Male</string>
+    <string name="label_female">Female</string>
+    <string name="label_teacher">Teacher</string>
+    <string name="label_admin">Admin</string>
+    <string name="label_unknown">Unknown</string>
+    <string name="label_global_setting">Global Setting</string>
+    <string name="label_time_setting">Time Setting</string>
+    <string name="label_attendance_period_start">Attendance Period Start</string>
+    <string name="label_attendance_period_end">Attendance Period End</string>
+    <string name="label_school_period_start">School Period Start</string>
+    <string name="label_school_period_end">School Period End</string>
+    <string name="label_other">Other</string>
+    <string name="label_detail">Detail</string>
+    <string name="label_edit_permit">Edit Permit</string>
+    <string name="label_approval">Approval</string>
+    <string name="label_attendance_by_student">Attendance by Student</string>
+    <string name="label_dashboard">Dashboard</string>
+    <string name="label_setting">Setting</string>
+    <string name="label_approved">Approved</string>
+    <string name="label_declined">Declined</string>
+    <string name="label_canceled">Canceled</string>
+    <string name="label_mock_location_detected">Mock Location Detected</string>
+    <string name="label_access_denied">Access Denied</string>
 
     <string name="ph_select_check_in_time">Select check-in time</string>
     <string name="ph_permit_note">Enter permit note</string>
     <string name="ph_permit_reason">Enter permit reason</string>
     <string name="ph_first_name">Enter first name</string>
-    <string name="ph_last_name">Enter last name</string>
     <string name="ph_select_birthday">Select birthday</string>
     <string name="ph_phone">Phone</string>
     <string name="ph_search">Enter keyword</string>
@@ -153,5 +222,8 @@
     <string name="ph_reenter_new_password">Re-enter new password</string>
     <string name="ph_email">Enter your email</string>
     <string name="ph_student_id">Enter student ID</string>
+    <string name="ph_full_Name">Enter full name</string>
+    <string name="ph_username">Enter username</string>
+
 
 </resources>

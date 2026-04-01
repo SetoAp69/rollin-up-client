@@ -9,16 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.rollinup.rollinup.component.button.Button
-import com.rollinup.rollinup.component.date.DateFormatter
 import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap4
@@ -27,12 +22,12 @@ import com.rollinup.rollinup.component.spacer.screenPaddingValues
 import com.rollinup.rollinup.component.textfield.PasswordTextField
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
+import com.rollinup.rollinup.component.time.TimeText
 import com.rollinup.rollinup.component.utils.Utils
 import com.rollinup.rollinup.screen.auth.model.updatepassword.UpdatePasswordCallback
 import com.rollinup.rollinup.screen.auth.model.updatepassword.UpdatePasswordFormData
 import com.rollinup.rollinup.screen.auth.ui.screen.resetpassword.view.OTPTextField
 import com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.uistate.VerifyAccountUiState
-import kotlinx.coroutines.delay
 import kotlinx.datetime.LocalTime
 import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
@@ -57,19 +52,8 @@ fun SubmitOtpForm(
     uiState: VerifyAccountUiState,
     onRequestOtp: () -> Unit,
 ) {
-    var timeInSecond by remember { mutableStateOf(LocalTime(0, 1, 20).toSecondOfDay()) }
-
     LaunchedEffect(uiState.currentStep) {
         cb.onResetOtp()
-    }
-
-    LaunchedEffect(uiState.startTimer) {
-        if (uiState.startTimer) {
-            while (timeInSecond > 0) {
-                delay(1000)
-                timeInSecond -= 1
-            }
-        }
     }
 
     Column(
@@ -90,10 +74,10 @@ fun SubmitOtpForm(
                     cb.onUpdateOtp(value)
                 },
                 isError = uiState.otpError != null,
-                textError = uiState.otpError
+                textError = uiState.otpError?.getMessage()
             )
             Button(
-                text = "Submit",
+                text = stringResource(Res.string.label_submit),
                 onClick = {
                     cb.onSubmitOtp(uiState.otp)
                 },
@@ -108,12 +92,12 @@ fun SubmitOtpForm(
             style = Style.body,
         )
         Spacer(itemGap8)
-        if (timeInSecond != 0) {
-            val time = LocalTime.fromSecondOfDay(timeInSecond)
-            Text(
-                text = DateFormatter.formatTimeMinuteSecond(time),
-                style = Style.body,
-                color = theme.textPrimary
+
+        if (uiState.countdown > 0) {
+            val countdown = LocalTime.fromSecondOfDay(uiState.countdown.toInt())
+            TimeText(
+                value = countdown,
+                style = Style.body
             )
         } else {
             Text(
@@ -158,7 +142,7 @@ fun UpdatePasswordForm(
                 title = stringResource(Res.string.label_new_password),
                 placeholder = stringResource(Res.string.ph_new_password),
                 isError = formData.passwordOneError != null,
-                errorMsg = formData.passwordOneError
+                errorMsg = formData.passwordOneError?.getMessage()
             )
             Spacer(itemGap4)
             PasswordTextField(
@@ -175,7 +159,7 @@ fun UpdatePasswordForm(
                 title = stringResource(Res.string.label_repeat_new_password),
                 placeholder = stringResource(Res.string.ph_reenter_new_password),
                 isError = formData.passwordTwoError != null,
-                errorMsg = formData.passwordTwoError
+                errorMsg = formData.passwordTwoError?.getMessage()
             )
         }
         Button(

@@ -4,7 +4,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.michaelflisar.lumberjack.core.L
 import com.rollinup.rollinup.component.theme.LocalAuthViewmodel
 import com.rollinup.rollinup.screen.auth.navigation.AuthNavigationRoute
 import com.rollinup.rollinup.screen.auth.navigation.authGraph
@@ -24,7 +23,7 @@ fun NavGraphBuilder.appGraph(
     }
 
     fun navigateUp() {
-        if(navController.previousBackStackEntry!=null){
+        if (navController.previousBackStackEntry != null) {
             navController.navigateUp()
         }
     }

@@ -12,6 +12,7 @@ import com.rollinup.apiservice.data.source.network.model.request.user.SubmitRese
 import com.rollinup.apiservice.data.source.network.model.request.user.SubmitVerificationOTPBody
 import com.rollinup.apiservice.data.source.network.model.request.user.UpdatePasswordAndVerificationBody
 import com.rollinup.apiservice.model.common.Result
+import com.rollinup.apiservice.model.user.OtpStatusEntity
 import com.rollinup.apiservice.model.user.UserDetailEntity
 import com.rollinup.apiservice.model.user.UserEntity
 import com.rollinup.apiservice.model.user.UserOptionEntity
@@ -106,7 +107,7 @@ class UserUseCaseTest {
     fun `CreateResetPasswordRequestUseCase should call repository`() {
         val useCase = CreateResetPasswordRequestUseCase(repository)
         val body = CreateResetPasswordRequestBody(email = "test@mail.com")
-        val expected = flowOf(Result.Success("email"))
+        val expected = flowOf(Result.Success(OtpStatusEntity(email="email")))
         every { repository.createResetPasswordRequest(body) } returns expected
 
         val result = useCase(body)
@@ -208,7 +209,7 @@ class UserUseCaseTest {
     @Test
     fun `ResendVerificationOtpUseCase should call repository`() {
         val useCase = ResendVerificationOtpUseCase(repository)
-        val expected = flowOf(Result.Success(Unit))
+        val expected = flowOf(Result.Success(OtpStatusEntity()))
         every { repository.resendVerificationOtp() } returns expected
 
         val result = useCase()

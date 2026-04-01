@@ -146,7 +146,7 @@ class AttendanceByStudentViewModelTest {
             AttendanceByStudentEntity(id = "124")
         )
 
-        val mockProfile = UserDetailEntity(id = id, firstName = "Jane", lastName = "Doe")
+        val mockProfile = UserDetailEntity(id = id, firstName = "Jane", fullName = "Doe")
 
         if (isMobile) {
             arrangeGetAttendancePagingUseCase(id, queryParams, listData)
@@ -196,7 +196,7 @@ class AttendanceByStudentViewModelTest {
             AttendanceByStudentEntity(id = "124")
         )
 
-        val mockProfile = UserDetailEntity(id = "id", firstName = "Jane", lastName = "Doe")
+        val mockProfile = UserDetailEntity(id = "id", firstName = "Jane", fullName = "Doe")
 
         arrangeGetAttendanceByStudentList(id, queryParams, Result.Success(listData))
 
@@ -235,7 +235,7 @@ class AttendanceByStudentViewModelTest {
             AttendanceByStudentEntity(id = "124")
         )
 
-        val mockProfile = UserDetailEntity(id = "id", firstName = "Jane", lastName = "Doe")
+        val mockProfile = UserDetailEntity(id = "id", firstName = "Jane", fullName = "Doe")
 
         arrangeGetAttendancePagingUseCase(id, queryParams, listData)
 

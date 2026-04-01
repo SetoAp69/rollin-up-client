@@ -226,7 +226,7 @@ class AttendanceByStudentViewModel(
     private fun fetchExportData(data: List<AttendanceByStudentEntity>): List<Pair<String, List<*>>> {
         return listOf(
             "Date" to data.map { d -> DateFormatter.formatDateShort(d.localDate, true) },
-            "Status" to data.map { d -> d.status.label },
+            "Status" to data.map { d -> d.status.labelString },
             "Check in at" to data.map { d ->
                 d.checkInTime?.let {
                     DateFormatter.formateDateTimeFromString(

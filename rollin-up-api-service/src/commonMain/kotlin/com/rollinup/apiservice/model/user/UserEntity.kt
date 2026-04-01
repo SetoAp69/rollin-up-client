@@ -1,6 +1,7 @@
 package com.rollinup.apiservice.model.user
 
 import com.rollinup.apiservice.model.common.Gender
+import com.rollinup.apiservice.model.common.Role
 
 data class UserEntity(
     val id: String = "",
@@ -11,5 +12,5 @@ data class UserEntity(
     val studentId: String = "",
     val address: String = "",
     val gender: Gender = Gender.MALE,
-    val role: String = "",
+    val role: Role = Role.UNKNOWN,
 )

@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import com.rollinup.apiservice.model.user.UserEntity
 import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.chip.Chip
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.table.Table
@@ -117,50 +118,50 @@ private fun TableHeaderContent(itemSelected: Int) {
 @Composable
 private fun getColumn(): List<TableColumn<UserEntity>> {
     return listOf(
-        TableColumn(stringResource(Res.string.label_username)) {
+        TableColumn(Res.string.label_username) {
             Text(
                 text = it.userName.ifBlank { "-" },
                 color = theme.bodyText,
                 style = Style.body
             )
         },
-        TableColumn(stringResource(Res.string.label_class), 0.7f) {
+        TableColumn(Res.string.label_class, 0.5f) {
             Text(
                 text = it.classX.ifBlank { "-" },
                 color = theme.bodyText,
                 style = Style.body
             )
         },
-        TableColumn(stringResource(Res.string.label_full_name)) {
+        TableColumn(Res.string.label_full_name) {
             Text(
                 text = it.fullName.ifBlank { "-" },
                 color = theme.bodyText,
                 style = Style.body
             )
         },
-        TableColumn(stringResource(Res.string.label_email)) {
+        TableColumn(Res.string.label_email) {
             Text(
                 text = it.email.ifBlank { "-" },
                 color = theme.bodyText,
                 style = Style.body
             )
         },
-        TableColumn(stringResource(Res.string.label_address)) {
+        TableColumn(Res.string.label_address) {
             Text(
                 text = it.address.ifBlank { "-" },
                 color = theme.bodyText,
                 style = Style.body
             )
         },
-        TableColumn(stringResource(Res.string.label_gender), 0.5f) {
+        TableColumn(Res.string.label_gender, 0.7f) {
             Chip(
-                text = it.gender.label.ifBlank { "-" },
+                text = it.gender.getLabel().ifBlank { "-" },
                 severity = Severity.SECONDARY
             )
         },
-        TableColumn(stringResource(Res.string.label_role), 0.5f) {
+        TableColumn(Res.string.label_role, 0.5f) {
             Chip(
-                text = it.role.ifBlank { "-" },
+                text = it.role.getLabel(),
                 severity = Severity.SECONDARY
             )
         }

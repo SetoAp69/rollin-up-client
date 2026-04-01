@@ -31,7 +31,7 @@ fun getDummyUsers(total: Int): List<UserEntity> {
             studentId = "SID${1000 + index}",
             address = "Street No. ${(1..200).random()} City",
             gender = genders.random(),
-            role = listOf("admin", "teacher", "student").random()
+//            role = listOf("admin", "teacher", "student").random()
         )
     }
 }
@@ -45,14 +45,13 @@ fun generateDummyUserDetail(): UserDetailEntity {
         id = id,
         userName = "${firstName.lowercase()}.${lastName.lowercase()}",
         firstName = firstName,
-        lastName = lastName,
+        fullName = lastName,
         classX = UserDetailEntity.Data(
             id = "class-${(1..12).random()}",
             name = "Class ${(1..12).random()}",
             key = (1..12).random()
         ),
         email = "$firstName.$lastName@example.com".lowercase(),
-        fullName = "$firstName $lastName",
         studentId = "SID${(1000..9999).random()}",
         address = "Street No. ${(1..200).random()} City",
         gender = listOf(Gender.MALE, Gender.FEMALE).random(),

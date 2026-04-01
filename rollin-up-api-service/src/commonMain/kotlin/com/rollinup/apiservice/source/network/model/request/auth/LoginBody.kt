@@ -8,5 +8,5 @@ data class LoginBody(
     @SerialName("username")
     val email: String = "",
     @SerialName("password")
-    val password: String = ""
+    val password: String = "",
 )

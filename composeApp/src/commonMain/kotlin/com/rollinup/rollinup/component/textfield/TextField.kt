@@ -28,7 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -460,7 +459,7 @@ fun PasswordTextField(
     placeholder: String,
     modifier: Modifier = Modifier,
     title: String = "",
-    layoutId:String = "input",
+    layoutId: String = "input",
     titleStyle: TextStyle = Style.body,
     isError: Boolean = false,
     errorMsg: String? = null,
@@ -582,7 +581,7 @@ fun TextField(
     trailingIcon: DrawableResource?? = null,
     keyboardActions: KeyboardActions? = null,
     keyboardOptions: KeyboardOptions? = null,
-    layoutId:String = "input",
+    layoutId: String = "input",
     visualTransformation: VisualTransformation = VisualTransformation.None,
 ) {
     val iconColor = when {
@@ -693,7 +692,7 @@ fun BaseTextField(
     trailingContent: @Composable (() -> Unit)? = null,
     isSingleLine: Boolean = true,
     keyboardActions: KeyboardActions? = null,
-    layoutId:String = "input",
+    layoutId: String = "input",
     keyboardOptions: KeyboardOptions? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
 ) {

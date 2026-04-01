@@ -13,6 +13,7 @@ import com.rollinup.apiservice.domain.attendance.GetAttendanceByIdUseCase
 import com.rollinup.apiservice.domain.attendance.GetExportAttendanceDataUseCase
 import com.rollinup.apiservice.domain.permit.CreatePermitUseCase
 import com.rollinup.apiservice.domain.permit.DoApprovalUseCase
+import com.rollinup.apiservice.domain.permit.EditPermitUseCase
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
@@ -27,6 +28,7 @@ import com.rollinup.common.utils.Utils.toEpochMilli
 import com.rollinup.rollinup.CoroutineTestRule
 import com.rollinup.rollinup.component.export.FileWriter
 import com.rollinup.rollinup.component.permitform.model.PermitFormData
+import com.rollinup.rollinup.component.permitform.model.PermitFormErrorType
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.EditAttendanceFormData
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardApprovalFormData
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardFilterData
@@ -35,6 +37,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -78,6 +81,9 @@ class TeacherDashboardViewModelTest {
 
     @MockK
     private lateinit var getExportAttendanceDataUseCase: GetExportAttendanceDataUseCase
+
+    @MockK
+    private lateinit var editPermitUseCase: EditPermitUseCase
 
     @MockK
     private lateinit var fileWriter: FileWriter
@@ -126,6 +132,7 @@ class TeacherDashboardViewModelTest {
             permitDoApprovalUseCase,
             createPermitUseCase,
             createAttendanceDataUseCase,
+            editPermitUseCase,
             editAttendanceDataUseCase,
             getExportAttendanceDataUseCase,
             fileWriter
@@ -383,13 +390,13 @@ class TeacherDashboardViewModelTest {
     @Test
     fun `validateEditForm() Permit validation - Non-Absence type with empty reason should be Valid`() {
         // Arrange
-        // Logic: if (formData.reason.isNullOrBlank() && formData.type == PermitType.ABSENCE)
-        // Here we test type = DISPENSATION (not ABSENCE), so empty reason should NOT trigger error.
         val permitData = PermitFormData(
             duration = listOf(1000L),
             type = PermitType.DISPENSATION,
-            reason = "" // Empty reason
+            reason = "",
+            attachment = mockk(relaxed = true)
         )
+
         val formData = EditAttendanceFormData(
             status = AttendanceStatus.EXCUSED,
             permitFormData = permitData
@@ -400,6 +407,7 @@ class TeacherDashboardViewModelTest {
         val isValid = cb.onValidateEditForm(formData, AttendanceStatus.NO_DATA)
 
         // Assert
+        println(viewModel.uiState.value.editAttendanceFormData)
         assertTrue("Should be valid because reason is only required for ABSENCE", isValid)
         assertNull(viewModel.uiState.value.editAttendanceFormData.permitFormData.reasonError)
     }
@@ -423,7 +431,7 @@ class TeacherDashboardViewModelTest {
         // Assert
         assertFalse(isValid)
         assertEquals(
-            "Duration can't be empty",
+            PermitFormErrorType.DURATION_EMPTY,
             viewModel.uiState.value.editAttendanceFormData.permitFormData.durationError
         )
     }
@@ -448,7 +456,7 @@ class TeacherDashboardViewModelTest {
         // Assert
         assertFalse(isValid)
         assertEquals(
-            "Please select a reason",
+            PermitFormErrorType.REASON_EMPTY,
             viewModel.uiState.value.editAttendanceFormData.permitFormData.reasonError
         )
     }
@@ -644,401 +652,470 @@ class TeacherDashboardViewModelTest {
                 it.studentUserId == "S1" && it.status == AttendanceStatus.LATE && it.approvedBy == "Teacher1"
             })
         }
-    }
-
-    @Test
-    fun `exportFile() error`() = runTest {
-        // Arrange
-        val user = LoginEntity(classKey = 101)
-        coEvery { getExportAttendanceDataUseCase(any()) } returns flowOf(Result.Error(NetworkError.RESPONSE_ERROR))
-
-        viewModel.init(user)
-        val cb = viewModel.getCallback()
-
-        // Act
-        cb.onExportFile("test.xlsx")
-        advanceUntilIdle()
-
-        // Assert
-        // Logic in VM sets exportState to true even on error (based on provided code snippet: isLoadingOverlay=false, exportState=true)
-        // This might be a bug in source, but test must match source logic
-        assertTrue(viewModel.uiState.value.exportState == false)
-        coVerify(exactly = 0) { fileWriter.writeExcel(any(), any()) }
-    }
-
-    @Test
-    fun `refresh() on mobile should reset selection and get paging data`() = runTest {
-        // Arrange
-        val user = LoginEntity(classKey = 1, id = "T1")
-        val itemSelected =
-            AttendanceByClassEntity(student = AttendanceByClassEntity.Student("1", "S1", "Name"))
-
-        // Setup initial state: Mobile, with an item selected
-        coEvery {
-            getAttendanceByClassPagingUseCase(
-                any(),
-                any()
+        @Test
+        fun `submitEditAttendance() - Case Edit Permit`() = runTest {
+            // Arrange
+            val permit = AttendanceDetailEntity.Permit(id = "Permit1")
+            val initialData = AttendanceDetailEntity(
+                id = "Att1",
+                status = AttendanceStatus.EXCUSED,
+                permit = permit,
+                student = AttendanceDetailEntity.User(id = "S1", studentId = "1", name = "S")
             )
-        } returns flowOf(PagingData.empty())
-        viewModel.init(user, isMobile = true)
-        viewModel.getCallback().onUpdateSelection(itemSelected) // Select an item
-
-        assertTrue(viewModel.uiState.value.itemSelected.isNotEmpty())
-
-        // Act
-        viewModel.getCallback().onRefresh()
-        advanceUntilIdle()
-
-        // Assert
-        assertTrue(viewModel.uiState.value.itemSelected.isEmpty()) // Selection reset
-        coVerify { getAttendanceByClassPagingUseCase(1, any()) }
-        coVerify(exactly = 0) { getAttendanceByClassListUseCase(any(), any()) }
-    }
-
-    @Test
-    fun `refresh() on desktop should reset selection and get list`() = runTest {
-        // Arrange
-        val user = LoginEntity(classKey = 1, id = "T1")
-        val itemSelected =
-            AttendanceByClassEntity(student = AttendanceByClassEntity.Student("1", "S1", "Name"))
-
-        // Setup initial state: Desktop, with an item selected
-        coEvery { getAttendanceByClassListUseCase(any(), any()) } returns flowOf(
-            Result.Success(
-                emptyList()
+            val permitData = PermitFormData(
+                reason = "Sick Update",
+                duration = listOf(100L),
+                type = PermitType.DISPENSATION,
+                note = "updated note"
             )
-        )
-        viewModel.init(user, isMobile = false)
-        viewModel.getCallback().onUpdateSelection(itemSelected)
-
-        assertTrue(viewModel.uiState.value.itemSelected.isNotEmpty())
-
-        // Act
-        viewModel.getCallback().onRefresh()
-        advanceUntilIdle()
-
-        // Assert
-        assertTrue(viewModel.uiState.value.itemSelected.isEmpty()) // Selection reset
-        coVerify { getAttendanceByClassListUseCase(1, any()) }
-        coVerify(exactly = 0) { getAttendanceByClassPagingUseCase(any(), any()) }
-    }
-
-
-    @Test
-    fun `resetMessageState() should clear submit states`() = runTest {
-        // Arrange: manually trigger a state where these are not null (mocking a previous submission)
-        // Since we can't set state directly, we rely on viewModel starting with nulls.
-        // Or we assume a flow that set them. Let's assume we need to verify they act as resetters.
-        // We can simulate a submission to set them to true/false first.
-        val user = LoginEntity(id = "T1")
-        viewModel.init(user)
-        coEvery { permitDoApprovalUseCase(any()) } returns flowOf(Result.Success(Unit))
-        viewModel.getCallback()
-            .onSubmitApproval(TeacherDashboardApprovalFormData(isApproved = true))
-        advanceUntilIdle()
-
-        // Pre-check: State should be set
-        assertTrue(viewModel.uiState.value.submitApprovalState != null)
-
-        // Act
-        viewModel.getCallback().onResetMessageState()
-
-        // Assert
-        assertNull(viewModel.uiState.value.submitApprovalState)
-        assertNull(viewModel.uiState.value.submitEditAttendanceState)
-    }
-
-
-    @Test
-    fun `updateFilter() should update state and trigger refresh`() = runTest {
-        // Arrange
-        val user = LoginEntity(classKey = 1)
-        viewModel.init(user, isMobile = false)
-        val newFilter =
-            TeacherDashboardFilterData(status = listOf(AttendanceStatus.APPROVAL_PENDING))
-        coEvery { getAttendanceByClassListUseCase(any(), any()) } returns flowOf(
-            Result.Success(
-                emptyList()
+            val formData = EditAttendanceFormData(
+                status = AttendanceStatus.EXCUSED,
+                permitFormData = permitData,
+                studentUserId = "S1"
             )
-        )
 
-        // Act
-        viewModel.getCallback().onUpdateFilter(newFilter)
-        advanceUntilIdle()
+            viewModel.init(LoginEntity(id = "Teacher1"))
+            coEvery { editPermitUseCase(any(), any()) } returns flowOf(Result.Success(Unit))
 
-        // Assert
-        assertEquals(newFilter, viewModel.uiState.value.filterData)
-        coVerify(atLeast = 2) {
-            getAttendanceByClassListUseCase(
-                1,
-                any()
+            // Populate attendanceDetail in uiState
+            arrangeGetDetail("Att1", Result.Success(initialData))
+            val cb = viewModel.getCallback()
+            cb.onGetDetail(
+                AttendanceByClassEntity(
+                    student = AttendanceByClassEntity.Student(
+                        "S1",
+                        "1",
+                        "S"
+                    ), attendance = AttendanceByClassEntity.Attendance("Att1")
+                )
             )
-        } // Once init, once updateFilter
-    }
+            advanceUntilIdle()
 
+            // Act
+            cb.onSubmitEditAttendance(initialData, formData)
+            advanceUntilIdle()
 
-    @Test
-    fun `updateApprovalForm() should update state`() {
-        // Arrange
-        val formData = TeacherDashboardApprovalFormData(note = "Approved")
+            // Assert
+            assertTrue(viewModel.uiState.value.submitEditAttendanceState == true)
+            coVerify {
+                editPermitUseCase("Permit1", match {
+                    it.studentId == "S1" && it.reason == "Sick Update" && it.note == "updated note" && it.type == PermitType.DISPENSATION && it.approvedBy == "Teacher1"
+                })
+            }
+        }
 
-        // Act
-        viewModel.getCallback().onUpdateApprovalForm(formData)
-
-        // Assert
-        assertEquals(formData, viewModel.uiState.value.approvalFormData)
-    }
-
-    @Test
-    fun `updateEditForm() should update state`() {
-        // Arrange
-        val formData = EditAttendanceFormData(status = AttendanceStatus.LATE)
-
-        // Act
-        viewModel.getCallback().onUpdateEditForm(formData)
-
-        // Assert
-        assertEquals(formData, viewModel.uiState.value.editAttendanceFormData)
-    }
-
-
-    @Test
-    fun `validateEditForm - CheckIn - Invalid (Null Time)`() {
-        // Arrange
-        val formData = EditAttendanceFormData(
-            status = AttendanceStatus.ON_TIME,
-            checkInTime = null // Invalid
-        )
-        val cb = viewModel.getCallback()
-
-        // Act
-        val result = cb.onValidateEditForm(formData, AttendanceStatus.NO_DATA)
-
-        // Assert
-        assertFalse(result)
-        assertEquals(
-            "Check in time can't be null",
-            viewModel.uiState.value.editAttendanceFormData.checkInTimeError
-        )
-    }
-
-    @Test
-    fun `validateEditForm - CheckIn - Valid`() {
-        // Arrange
-        val formData = EditAttendanceFormData(
-            status = AttendanceStatus.LATE,
-            checkInTime = 12
-        )
-        val cb = viewModel.getCallback()
-
-        // Act
-        val result = cb.onValidateEditForm(formData, AttendanceStatus.NO_DATA)
-
-        // Assert
-        assertTrue(result)
-        assertNull(viewModel.uiState.value.editAttendanceFormData.checkInTimeError)
-    }
-
-    @Test
-    fun `validateEditForm - Permit - Invalid (Empty Duration)`() {
-        // Arrange
-        val permitData = PermitFormData(
-            duration = emptyList(), // Invalid
-            type = PermitType.DISPENSATION
-        )
-        val formData = EditAttendanceFormData(
-            status = AttendanceStatus.EXCUSED,
-            permitFormData = permitData
-        )
-        val cb = viewModel.getCallback()
-
-        // Act
-        val result = cb.onValidateEditForm(formData, AttendanceStatus.NO_DATA)
-
-        // Assert
-        assertFalse(result)
-        assertEquals(
-            "Duration can't be empty",
-            viewModel.uiState.value.editAttendanceFormData.permitFormData.durationError
-        )
-    }
-
-    @Test
-    fun `validateEditForm - Permit - Invalid (Missing Reason for Absence)`() {
-        // Arrange
-        val permitData = PermitFormData(
-            duration = listOf(1000L),
-            type = PermitType.ABSENCE,
-            reason = ""
-        )
-        val formData = EditAttendanceFormData(
-            status = AttendanceStatus.ABSENT,
-            permitFormData = permitData
-        )
-        val cb = viewModel.getCallback()
-
-        // Act
-        val result = cb.onValidateEditForm(formData, AttendanceStatus.NO_DATA)
-
-        // Assert
-        assertFalse(result)
-        assertEquals(
-            "Please select a reason",
-            viewModel.uiState.value.editAttendanceFormData.permitFormData.reasonError
-        )
-    }
-
-    @Test
-    fun `validateEditForm - Permit - Valid`() {
-        // Arrange
-        val permitData = PermitFormData(
-            duration = listOf(1000L),
-            type = PermitType.ABSENCE,
-            reason = "Flu"
-        )
-        val formData = EditAttendanceFormData(
-            status = AttendanceStatus.EXCUSED,
-            permitFormData = permitData
-        )
-        val cb = viewModel.getCallback()
-
-        // Act
-        val result = cb.onValidateEditForm(formData, AttendanceStatus.NO_DATA)
-
-        // Assert
-        assertTrue(result)
-        assertNull(viewModel.uiState.value.editAttendanceFormData.permitFormData.durationError)
-        assertNull(viewModel.uiState.value.editAttendanceFormData.permitFormData.reasonError)
-    }
-
-    // 3. Other Statuses
-    @Test
-    fun `validateEditForm - NO_DATA or APPROVAL_PENDING should return true`() {
-        // Arrange
-        val formData = EditAttendanceFormData(status = AttendanceStatus.NO_DATA)
-        val cb = viewModel.getCallback()
-
-        // Act & Assert
-        assertTrue(
-            cb.onValidateEditForm(
-                formData.copy(status = AttendanceStatus.NO_DATA),
-                AttendanceStatus.NO_DATA
+        @Test
+        fun `exportFile() error`() = runTest {
+            // Arrange
+            val user = LoginEntity(classKey = 101)
+            coEvery { getExportAttendanceDataUseCase(any()) } returns flowOf(
+                Result.Error(
+                    NetworkError.RESPONSE_ERROR
+                )
             )
-        )
-        assertTrue(
-            cb.onValidateEditForm(
-                formData.copy(status = AttendanceStatus.APPROVAL_PENDING),
-                AttendanceStatus.NO_DATA
+
+            viewModel.init(user)
+            val cb = viewModel.getCallback()
+
+            // Act
+            cb.onExportFile("test.xlsx")
+            advanceUntilIdle()
+
+            // Assert
+            // Logic in VM sets exportState to true even on error (based on provided code snippet: isLoadingOverlay=false, exportState=true)
+            // This might be a bug in source, but test must match source logic
+            assertTrue(viewModel.uiState.value.exportState == false)
+            coVerify(exactly = 0) { fileWriter.writeExcel(any(), any()) }
+        }
+
+        @Test
+        fun `refresh() on mobile should reset selection and get paging data`() = runTest {
+            // Arrange
+            val user = LoginEntity(classKey = 1, id = "T1")
+            val itemSelected =
+                AttendanceByClassEntity(
+                    student = AttendanceByClassEntity.Student(
+                        "1",
+                        "S1",
+                        "Name"
+                    )
+                )
+
+            // Setup initial state: Mobile, with an item selected
+            coEvery {
+                getAttendanceByClassPagingUseCase(
+                    any(),
+                    any()
+                )
+            } returns flowOf(PagingData.empty())
+            viewModel.init(user, isMobile = true)
+            viewModel.getCallback().onUpdateSelection(itemSelected) // Select an item
+
+            assertTrue(viewModel.uiState.value.itemSelected.isNotEmpty())
+
+            // Act
+            viewModel.getCallback().onRefresh()
+            advanceUntilIdle()
+
+            // Assert
+            assertTrue(viewModel.uiState.value.itemSelected.isEmpty()) // Selection reset
+            coVerify { getAttendanceByClassPagingUseCase(1, any()) }
+            coVerify(exactly = 0) { getAttendanceByClassListUseCase(any(), any()) }
+        }
+
+        @Test
+        fun `refresh() on desktop should reset selection and get list`() = runTest {
+            // Arrange
+            val user = LoginEntity(classKey = 1, id = "T1")
+            val itemSelected =
+                AttendanceByClassEntity(
+                    student = AttendanceByClassEntity.Student(
+                        "1",
+                        "S1",
+                        "Name"
+                    )
+                )
+
+            // Setup initial state: Desktop, with an item selected
+            coEvery { getAttendanceByClassListUseCase(any(), any()) } returns flowOf(
+                Result.Success(
+                    emptyList()
+                )
             )
-        )
-    }
+            viewModel.init(user, isMobile = false)
+            viewModel.getCallback().onUpdateSelection(itemSelected)
 
-    @Test
-    fun `validateEditForm - Existing Attendance - calls isValid`() {
-        // Arrange
-        val formData = EditAttendanceFormData(
-            status = AttendanceStatus.ON_TIME,
-            checkInTime = 12L
-        )
-        val cb = viewModel.getCallback()
+            assertTrue(viewModel.uiState.value.itemSelected.isNotEmpty())
 
-        // Act
-        val result = cb.onValidateEditForm(formData, AttendanceStatus.ON_TIME)
+            // Act
+            viewModel.getCallback().onRefresh()
+            advanceUntilIdle()
 
-        // Assert
-        assertTrue(result)
-    }
+            // Assert
+            assertTrue(viewModel.uiState.value.itemSelected.isEmpty()) // Selection reset
+            coVerify { getAttendanceByClassListUseCase(1, any()) }
+            coVerify(exactly = 0) { getAttendanceByClassPagingUseCase(any(), any()) }
+        }
 
-    @Test
-    fun `resetEditForm() should set edit form data to default value`() {
-        //Arrange
-        val formData = EditAttendanceFormData(
-            checkInTime = 12L,
-        )
-        val cb = viewModel.getCallback()
-        cb.onUpdateEditForm(formData)
 
-        //Act
-        cb.onResetEditForm()
+        @Test
+        fun `resetMessageState() should clear submit states`() = runTest {
+            // Arrange: manually trigger a state where these are not null (mocking a previous submission)
+            // Since we can't set state directly, we rely on viewModel starting with nulls.
+            // Or we assume a flow that set them. Let's assume we need to verify they act as resetters.
+            // We can simulate a submission to set them to true/false first.
+            val user = LoginEntity(id = "T1")
+            viewModel.init(user)
+            coEvery { permitDoApprovalUseCase(any()) } returns flowOf(Result.Success(Unit))
+            viewModel.getCallback()
+                .onSubmitApproval(TeacherDashboardApprovalFormData(isApproved = true))
+            advanceUntilIdle()
 
-        //Assert
-        val state = viewModel.uiState.value
-        assertEquals(EditAttendanceFormData(), state.editAttendanceFormData)
-    }
+            // Pre-check: State should be set
+            assertTrue(viewModel.uiState.value.submitApprovalState != null)
 
-    @Test
-    fun `updateExportDateRange() should update exportDateRange to given value`() {
-        //Arrange
-        val dateRange = listOf(
-            LocalDate(2003, 8, 6),
-            LocalDate(2003, 4, 7),
-        )
+            // Act
+            viewModel.getCallback().onResetMessageState()
 
-        //Act
-        val cb = viewModel.getCallback()
-        cb.onUpdateExportDateRanges(dateRange)
+            // Assert
+            assertNull(viewModel.uiState.value.submitApprovalState)
+            assertNull(viewModel.uiState.value.submitEditAttendanceState)
+        }
 
-        //Assert
-        assertEquals(dateRange, viewModel.uiState.value.exportDateRanges)
-    }
 
-    @Test
-    fun `submitApproval() with invalid form should not call usecase`() = runTest {
-        // Arrange
-        // isApproved = null makes validateApprovalForm return false
-        val formData = TeacherDashboardApprovalFormData(isApproved = null)
-        val cb = viewModel.getCallback()
+        @Test
+        fun `updateFilter() should update state and trigger refresh`() = runTest {
+            // Arrange
+            val user = LoginEntity(classKey = 1)
+            viewModel.init(user, isMobile = false)
+            val newFilter =
+                TeacherDashboardFilterData(status = listOf(AttendanceStatus.APPROVAL_PENDING))
+            coEvery { getAttendanceByClassListUseCase(any(), any()) } returns flowOf(
+                Result.Success(
+                    emptyList()
+                )
+            )
 
-        // Act
-        cb.onSubmitApproval(formData)
+            // Act
+            viewModel.getCallback().onUpdateFilter(newFilter)
+            advanceUntilIdle()
 
-        // Assert
-        // Verify the guard clause worked and usecase was NOT called
-        coVerify(exactly = 0) { permitDoApprovalUseCase(any()) }
-        // Verify error state was set
-        assertEquals(
-            "Please select approval status",
-            viewModel.uiState.value.approvalFormData.isApprovedError
-        )
-    }
+            // Assert
+            assertEquals(newFilter, viewModel.uiState.value.filterData)
+            coVerify(atLeast = 2) {
+                getAttendanceByClassListUseCase(
+                    1,
+                    any()
+                )
+            } // Once init, once updateFilter
+        }
 
-    @Test
-    fun `submitEditAttendance() with NO_DATA target status should do nothing`() = runTest {
-        // Arrange
-        val initialData = AttendanceDetailEntity(
-            status = AttendanceStatus.NO_DATA,
-            student = AttendanceDetailEntity.User("S1", "1", "S")
-        )
-        // Trying to submit with status NO_DATA
-        val formData = EditAttendanceFormData(status = AttendanceStatus.NO_DATA)
-        val cb = viewModel.getCallback()
 
-        // Act
-        cb.onSubmitEditAttendance(initialData, formData)
+        @Test
+        fun `updateApprovalForm() should update state`() {
+            // Arrange
+            val formData = TeacherDashboardApprovalFormData(note = "Approved")
 
-        // Assert
-        coVerify(exactly = 0) { createAttendanceDataUseCase(any()) }
-        coVerify(exactly = 0) { createPermitUseCase(any()) }
-        coVerify(exactly = 0) { editAttendanceDataUseCase(any(), any()) }
-    }
+            // Act
+            viewModel.getCallback().onUpdateApprovalForm(formData)
 
-    @Test
-    fun `submitEditAttendance() with APPROVAL_PENDING target status should do nothing`() = runTest {
-        // Arrange
-        val initialData = AttendanceDetailEntity(
-            status = AttendanceStatus.NO_DATA,
-            student = AttendanceDetailEntity.User("S1", "1", "S")
-        )
-        // Trying to submit with status APPROVAL_PENDING
-        val formData = EditAttendanceFormData(status = AttendanceStatus.APPROVAL_PENDING)
-        val cb = viewModel.getCallback()
+            // Assert
+            assertEquals(formData, viewModel.uiState.value.approvalFormData)
+        }
 
-        // Act
-        cb.onSubmitEditAttendance(initialData, formData)
+        @Test
+        fun `updateEditForm() should update state`() {
+            // Arrange
+            val formData = EditAttendanceFormData(status = AttendanceStatus.LATE)
 
-        // Assert
-        coVerify(exactly = 0) { createAttendanceDataUseCase(any()) }
-        coVerify(exactly = 0) { createPermitUseCase(any()) }
-        coVerify(exactly = 0) { editAttendanceDataUseCase(any(), any()) }
+            // Act
+            viewModel.getCallback().onUpdateEditForm(formData)
+
+            // Assert
+            assertEquals(formData, viewModel.uiState.value.editAttendanceFormData)
+        }
+
+
+        @Test
+        fun `validateEditForm - CheckIn - Invalid (Null Time)`() {
+            // Arrange
+            val formData = EditAttendanceFormData(
+                status = AttendanceStatus.ON_TIME,
+                checkInTime = null // Invalid
+            )
+            val cb = viewModel.getCallback()
+
+            // Act
+            val result = cb.onValidateEditForm(formData, AttendanceStatus.NO_DATA)
+
+            // Assert
+            assertFalse(result)
+            assertEquals(
+                "Check in time can't be null",
+                viewModel.uiState.value.editAttendanceFormData.checkInTimeError
+            )
+        }
+
+        @Test
+        fun `validateEditForm - CheckIn - Valid`() {
+            // Arrange
+            val formData = EditAttendanceFormData(
+                status = AttendanceStatus.LATE,
+                checkInTime = 12
+            )
+            val cb = viewModel.getCallback()
+
+            // Act
+            val result = cb.onValidateEditForm(formData, AttendanceStatus.NO_DATA)
+
+            // Assert
+            assertTrue(result)
+            assertNull(viewModel.uiState.value.editAttendanceFormData.checkInTimeError)
+        }
+
+        @Test
+        fun `validateEditForm - Permit - Invalid (Empty Duration)`() {
+            // Arrange
+            val permitData = PermitFormData(
+                duration = emptyList(), // Invalid
+                type = PermitType.DISPENSATION
+            )
+            val formData = EditAttendanceFormData(
+                status = AttendanceStatus.EXCUSED,
+                permitFormData = permitData
+            )
+            val cb = viewModel.getCallback()
+
+            // Act
+            val result = cb.onValidateEditForm(formData, AttendanceStatus.NO_DATA)
+
+            // Assert
+            assertFalse(result)
+            assertEquals(
+                PermitFormErrorType.DURATION_EMPTY,
+                viewModel.uiState.value.editAttendanceFormData.permitFormData.durationError
+            )
+        }
+
+        @Test
+        fun `validateEditForm - Permit - Invalid (Missing Reason for Absence)`() {
+            // Arrange
+            val permitData = PermitFormData(
+                duration = listOf(1000L),
+                type = PermitType.ABSENCE,
+                reason = ""
+            )
+            val formData = EditAttendanceFormData(
+                status = AttendanceStatus.ABSENT,
+                permitFormData = permitData
+            )
+            val cb = viewModel.getCallback()
+
+            // Act
+            val result = cb.onValidateEditForm(formData, AttendanceStatus.NO_DATA)
+
+            // Assert
+            assertFalse(result)
+            assertEquals(
+                PermitFormErrorType.REASON_EMPTY,
+                viewModel.uiState.value.editAttendanceFormData.permitFormData.reasonError
+            )
+        }
+
+        @Test
+        fun `validateEditForm - Permit - Valid`() {
+            // Arrange
+            val permitData = PermitFormData(
+                duration = listOf(1000L),
+                type = PermitType.ABSENCE,
+                reason = "Flu",
+                attachment = mockk(relaxed = true)
+            )
+            val formData = EditAttendanceFormData(
+                status = AttendanceStatus.EXCUSED,
+                permitFormData = permitData,
+            )
+            val cb = viewModel.getCallback()
+
+            // Act
+            val result = cb.onValidateEditForm(formData, AttendanceStatus.NO_DATA)
+
+            // Assert
+            assertTrue(result)
+            assertNull(viewModel.uiState.value.editAttendanceFormData.permitFormData.durationError)
+            assertNull(viewModel.uiState.value.editAttendanceFormData.permitFormData.reasonError)
+        }
+
+        // 3. Other Statuses
+        @Test
+        fun `validateEditForm - NO_DATA or APPROVAL_PENDING should return true`() {
+            // Arrange
+            val formData = EditAttendanceFormData(status = AttendanceStatus.NO_DATA)
+            val cb = viewModel.getCallback()
+
+            // Act & Assert
+            assertTrue(
+                cb.onValidateEditForm(
+                    formData.copy(status = AttendanceStatus.NO_DATA),
+                    AttendanceStatus.NO_DATA
+                )
+            )
+            assertTrue(
+                cb.onValidateEditForm(
+                    formData.copy(status = AttendanceStatus.APPROVAL_PENDING),
+                    AttendanceStatus.NO_DATA
+                )
+            )
+        }
+
+        @Test
+        fun `validateEditForm - Existing Attendance - calls isValid`() {
+            // Arrange
+            val formData = EditAttendanceFormData(
+                status = AttendanceStatus.ON_TIME,
+                checkInTime = 12L
+            )
+            val cb = viewModel.getCallback()
+
+            // Act
+            val result = cb.onValidateEditForm(formData, AttendanceStatus.ON_TIME)
+
+            // Assert
+            assertTrue(result)
+        }
+
+        @Test
+        fun `resetEditForm() should set edit form data to default value`() {
+            //Arrange
+            val formData = EditAttendanceFormData(
+                checkInTime = 12L,
+            )
+            val cb = viewModel.getCallback()
+            cb.onUpdateEditForm(formData)
+
+            //Act
+            cb.onResetEditForm()
+
+            //Assert
+            val state = viewModel.uiState.value
+            assertEquals(EditAttendanceFormData(), state.editAttendanceFormData)
+        }
+
+        @Test
+        fun `updateExportDateRange() should update exportDateRange to given value`() {
+            //Arrange
+            val dateRange = listOf(
+                LocalDate(2003, 8, 6),
+                LocalDate(2003, 4, 7),
+            )
+
+            //Act
+            val cb = viewModel.getCallback()
+            cb.onUpdateExportDateRanges(dateRange)
+
+            //Assert
+            assertEquals(dateRange, viewModel.uiState.value.exportDateRanges)
+        }
+
+        @Test
+        fun `submitApproval() with invalid form should not call usecase`() = runTest {
+            // Arrange
+            // isApproved = null makes validateApprovalForm return false
+            val formData = TeacherDashboardApprovalFormData(isApproved = null)
+            val cb = viewModel.getCallback()
+
+            // Act
+            cb.onSubmitApproval(formData)
+
+            // Assert
+            // Verify the guard clause worked and usecase was NOT called
+            coVerify(exactly = 0) { permitDoApprovalUseCase(any()) }
+            // Verify error state was set
+            assertEquals(
+                "Please select approval status",
+                viewModel.uiState.value.approvalFormData.isApprovedError
+            )
+        }
+
+        @Test
+        fun `submitEditAttendance() with NO_DATA target status should do nothing`() = runTest {
+            // Arrange
+            val initialData = AttendanceDetailEntity(
+                status = AttendanceStatus.NO_DATA,
+                student = AttendanceDetailEntity.User("S1", "1", "S")
+            )
+            // Trying to submit with status NO_DATA
+            val formData = EditAttendanceFormData(status = AttendanceStatus.NO_DATA)
+            val cb = viewModel.getCallback()
+
+            // Act
+            cb.onSubmitEditAttendance(initialData, formData)
+
+            // Assert
+            coVerify(exactly = 0) { createAttendanceDataUseCase(any()) }
+            coVerify(exactly = 0) { createPermitUseCase(any()) }
+            coVerify(exactly = 0) { editAttendanceDataUseCase(any(), any()) }
+        }
+
+        @Test
+        fun `submitEditAttendance() with APPROVAL_PENDING target status should do nothing`() =
+            runTest {
+                // Arrange
+                val initialData = AttendanceDetailEntity(
+                    status = AttendanceStatus.NO_DATA,
+                    student = AttendanceDetailEntity.User("S1", "1", "S")
+                )
+                // Trying to submit with status APPROVAL_PENDING
+                val formData = EditAttendanceFormData(status = AttendanceStatus.APPROVAL_PENDING)
+                val cb = viewModel.getCallback()
+
+                // Act
+                cb.onSubmitEditAttendance(initialData, formData)
+
+                // Assert
+                coVerify(exactly = 0) { createAttendanceDataUseCase(any()) }
+                coVerify(exactly = 0) { createPermitUseCase(any()) }
+                coVerify(exactly = 0) { editAttendanceDataUseCase(any(), any()) }
+            }
     }
 }

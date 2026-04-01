@@ -16,7 +16,7 @@ import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.v
 import com.rollinup.rollinup.screen.main.screen.permit.ui.screen.teacherpermit.view.table.TeacherPermitTableFilter
 import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
-import rollin_up.composeapp.generated.resources.label_teacher_permit
+import rollin_up.composeapp.generated.resources.label_permit
 
 @Composable
 fun TeacherPermitDesktopContent(
@@ -31,7 +31,7 @@ fun TeacherPermitDesktopContent(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = stringResource(Res.string.label_teacher_permit),
+                text = stringResource(Res.string.label_permit),
                 style = Style.popupTitle,
                 color = theme.textPrimary
             )

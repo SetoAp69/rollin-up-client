@@ -6,7 +6,7 @@ import com.rollinup.apiservice.model.attendance.AttendanceStatus
 import com.rollinup.apiservice.model.attendance.AttendanceSummaryEntity
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.MultiPlatformFile
-import dev.jordond.compass.Location
+import com.rollinup.rollinup.component.location.Location
 
 data class StudentDashboardUiState(
     val isLoadingHeader: Boolean = false,
@@ -23,7 +23,7 @@ data class StudentDashboardUiState(
     val isLocationValid: Boolean? = null,
     val currentLocation: Location? = null,
     val selectedDateRange: List<Long> = emptyList(),
-    val tempPhoto: MultiPlatformFile? = null
+    val tempPhoto: MultiPlatformFile? = null,
 ) {
     val isLoadingRefresh
         get() = listOf(isLoadingHeader, isLoadingCalendar).any { it }

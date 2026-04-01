@@ -9,15 +9,19 @@ import com.rollinup.apiservice.domain.user.SubmitVerificationOtpUseCase
 import com.rollinup.apiservice.domain.user.UpdatePasswordAndVerificationUseCase
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.Result
+import com.rollinup.common.utils.Utils.now
 import com.rollinup.rollinup.screen.auth.model.updatepassword.UpdatePasswordCallback
+import com.rollinup.rollinup.screen.auth.model.updatepassword.UpdatePasswordErrorType
 import com.rollinup.rollinup.screen.auth.model.updatepassword.UpdatePasswordFormData
 import com.rollinup.rollinup.screen.auth.model.updatepassword.UpdatePasswordStep
 import com.rollinup.rollinup.screen.auth.ui.screen.updatepassword.uistate.VerifyAccountUiState
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalTime
 
 class VerifyAccountViewModel(
     private val updatePasswordAndVerificationUseCase: UpdatePasswordAndVerificationUseCase,
@@ -27,13 +31,15 @@ class VerifyAccountViewModel(
     private val _uiState = MutableStateFlow(VerifyAccountUiState())
     val uiState = _uiState.asStateFlow()
 
+    private var countDownJob: Job? = null
+
     fun init(user: LoginEntity?) {
         _uiState.update {
             it.copy(
                 user = user,
-                startTimer = true
             )
         }
+        resendOtp()
     }
 
     fun getCallback() =
@@ -60,6 +66,7 @@ class VerifyAccountViewModel(
         }
     }
 
+
     private fun updateOtp(otp: String) {
         _uiState.update { it.copy(otp = otp) }
     }
@@ -72,11 +79,46 @@ class VerifyAccountViewModel(
         _uiState.update { it.copy(isLoadingOverlay = true, requestOtpState = null) }
         viewModelScope.launch {
             resendVerificationOtpUseCase().collectLatest { result ->
+                when (result) {
+                    is Result.Success -> {
+                        _uiState.update {
+                            it.copy(
+                                isLoadingOverlay = false,
+                                requestOtpState = true,
+                            )
+                        }
+                        startCountdown(result.data.expiredAt)
+                    }
+
+                    is Result.Error -> {
+                        _uiState.update {
+                            it.copy(
+                                isLoadingOverlay = false,
+                                requestOtpState = false
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun startCountdown(
+        until: LocalTime,
+    ) {
+        countDownJob?.cancel()
+
+        val duration =
+            (until.toSecondOfDay() - LocalTime.now().toSecondOfDay()).coerceAtLeast(0)
+
+        _uiState.update { it.copy(countdown = duration) }
+
+        countDownJob = viewModelScope.launch {
+            while (_uiState.value.countdown > 0) {
+                kotlinx.coroutines.delay(1000)
                 _uiState.update {
                     it.copy(
-                        isLoadingOverlay = false,
-                        requestOtpState = result is Result.Success,
-                        startTimer = true
+                        countdown = (it.countdown - 1).coerceAtLeast(0)
                     )
                 }
             }
@@ -85,8 +127,8 @@ class VerifyAccountViewModel(
 
     private fun validateOtp(otp: String): Boolean {
         val otpError = when {
-            otp.isBlank() -> "OTP cannot be empty"
-            otp.length < 5 -> "You need to fills all the digits"
+            otp.isBlank() -> UpdatePasswordErrorType.OTP_EMPTY
+            otp.length < 5 -> UpdatePasswordErrorType.OTP_INVALID
             else -> null
         }
         _uiState.update {
@@ -103,7 +145,6 @@ class VerifyAccountViewModel(
             it.copy(
                 isLoadingOverlay = true,
                 submitOtpState = null,
-                startTimer = false
             )
         }
         viewModelScope.launch {
@@ -134,37 +175,10 @@ class VerifyAccountViewModel(
     }
 
     private fun submitUpdatePassword(formData: UpdatePasswordFormData) {
-
         _uiState.update {
             it.copy(isLoadingOverlay = true)
         }
-//        updatePasswordAndVerificationUseCase(
-//            UpdatePasswordAndVerificationBody(
-//                formData.passwordOne,
-//                formData.deviceId,
-//                _uiState.value.token
-//            )
-//        ).onEach { result ->
-//            when (result) {
-//                is Result.Success -> {
-//                    _uiState.update {
-//                        it.copy(
-//                            isLoadingOverlay = false,
-//                            updatePasswordState = true
-//                        )
-//                    }
-//                }
-//
-//                is Result.Error->{
-//                    _uiState.update {
-//                        it.copy(
-//                            isLoadingOverlay = false,
-//                            updatePasswordState = false
-//                        )
-//                    }
-//                }
-//            }
-//        }.launchIn(viewModelScope)
+
         viewModelScope.launch {
             _uiState.update { it.copy(updatePasswordState = null) }
             val body = UpdatePasswordAndVerificationBody(

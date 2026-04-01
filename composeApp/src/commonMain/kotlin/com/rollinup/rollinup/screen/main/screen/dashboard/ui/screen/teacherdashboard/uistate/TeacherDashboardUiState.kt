@@ -1,5 +1,6 @@
 package com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate
 
+import androidx.compose.runtime.Composable
 import com.rollinup.apiservice.model.attendance.AttendanceByClassEntity
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
@@ -7,6 +8,7 @@ import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.common.model.OptionData
 import com.rollinup.common.utils.Utils.parseToLocalDateTime
 import com.rollinup.common.utils.Utils.toEpochMillis
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.component.permitform.model.PermitFormData
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.EditAttendanceFormData
 import com.rollinup.rollinup.screen.main.screen.dashboard.model.teacherdashboard.TeacherDashboardApprovalFormData
@@ -34,8 +36,9 @@ data class TeacherDashboardUiState(
     val exportState: Boolean? = null,
 ) {
     val statusOptions
+        @Composable
         get() = AttendanceStatus.entries.map {
-            OptionData(it.label, it)
+            OptionData(it.getLabel(), it)
         }
 
     val classOption

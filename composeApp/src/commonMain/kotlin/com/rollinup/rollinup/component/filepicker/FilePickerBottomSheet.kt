@@ -6,12 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.rollinup.apiservice.model.common.MultiPlatformFile
-import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.bottomsheet.BottomSheet
 import com.rollinup.rollinup.component.button.ActionButton
 import com.rollinup.rollinup.component.camera.CameraView
-import com.rollinup.rollinup.component.chip.Chip
-import com.rollinup.rollinup.component.theme.Style
 import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_camera_line_24
@@ -19,7 +16,6 @@ import rollin_up.composeapp.generated.resources.ic_document_line_24
 import rollin_up.composeapp.generated.resources.label_open_camera
 import rollin_up.composeapp.generated.resources.label_open_file
 import rollin_up.composeapp.generated.resources.msg_camera_error_capture
-import rollin_up.composeapp.generated.resources.msg_camera_face_position
 
 /**
  * A bottom sheet dialog that presents options to either take a photo or pick a file.
@@ -65,13 +61,7 @@ fun FilePickerBottomSheet(
             showCamera = false
             onDismissRequest(false)
         },
-        notification = {
-            Chip(
-                text = stringResource(Res.string.msg_camera_face_position),
-                severity = Severity.SECONDARY,
-                textStyle = Style.body
-            )
-        },
+        notification = {},
         isShowCamera = showCamera,
         errorMsg = stringResource(Res.string.msg_camera_error_capture),
     )

@@ -23,6 +23,7 @@ import com.rollinup.rollinup.component.date.DateFormatter
 import com.rollinup.rollinup.component.date.DateText
 import com.rollinup.rollinup.component.date.PermitDateText
 import com.rollinup.rollinup.component.loading.ShimmerEffect
+import com.rollinup.rollinup.component.model.getLabel
 import com.rollinup.rollinup.component.spacer.itemGap4
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
@@ -51,7 +52,7 @@ fun AttendanceByStudentPagingItem(
                 },
                 rightContent = {
                     Chip(
-                        text = item.status.label,
+                        text = item.status.getLabel(),
                         severity = item.status.severity
                     )
                 }

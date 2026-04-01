@@ -2,7 +2,7 @@ package com.rollinup.rollinup.screen.main.screen.dashboard.model.studentdashboar
 
 import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.MultiPlatformFile
-import dev.jordond.compass.Location
+import com.rollinup.rollinup.component.location.Location
 
 data class StudentDashboardCallback(
     val onRefresh: () -> Unit = {},

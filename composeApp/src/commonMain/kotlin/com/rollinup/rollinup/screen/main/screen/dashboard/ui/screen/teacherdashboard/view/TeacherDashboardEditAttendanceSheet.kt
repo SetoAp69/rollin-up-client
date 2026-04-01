@@ -35,6 +35,8 @@ import com.rollinup.rollinup.component.handlestate.HandleState
 import com.rollinup.rollinup.component.loading.ShimmerEffect
 import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.component.model.Platform.Companion.isMobile
+import com.rollinup.rollinup.component.model.getLabel
+import com.rollinup.rollinup.component.permitform.model.PermitFormErrorType
 import com.rollinup.rollinup.component.permitform.view.PermitFormContent
 import com.rollinup.rollinup.component.selector.SingleSelector
 import com.rollinup.rollinup.component.spacer.screenPadding
@@ -55,13 +57,15 @@ import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_edit_line_24
+import rollin_up.composeapp.generated.resources.label_absent
+import rollin_up.composeapp.generated.resources.label_alpha
 import rollin_up.composeapp.generated.resources.label_check_in_time
+import rollin_up.composeapp.generated.resources.label_present
 import rollin_up.composeapp.generated.resources.label_select_attendance_status
 import rollin_up.composeapp.generated.resources.label_status
 import rollin_up.composeapp.generated.resources.label_submit
 import rollin_up.composeapp.generated.resources.msg_edit_attendance_error
 import rollin_up.composeapp.generated.resources.msg_edit_attendance_success
-import rollin_up.composeapp.generated.resources.msg_permit_current_date_missing
 import rollin_up.composeapp.generated.resources.ph_select_check_in_time
 
 @Composable
@@ -251,7 +255,7 @@ private fun Header(
         } else {
             Box {
                 Chip(
-                    text = formData.status.label,
+                    text = formData.status.getLabel(),
                     trailingIcon = Res.drawable.ic_edit_line_24,
                     onClick = {
                         showSelectStatus = true
@@ -259,7 +263,7 @@ private fun Header(
                     severity = formData.status.severity
                 )
                 SingleSelector(
-                    options = getEditStatusOptions(initialStatus),
+                    options = getEditStatusOptions(),
                     value = formData.status,
                     onDismissRequest = { showSelectStatus = it },
                     isShowSelector = showSelectStatus,
@@ -321,7 +325,6 @@ private fun PermitFormContent(
     formData: EditAttendanceFormData,
     onUpdateFormData: (EditAttendanceFormData) -> Unit,
 ) {
-    val durationError = stringResource(Res.string.msg_permit_current_date_missing)
     val duration = formData.permitFormData.duration
     LaunchedEffect(duration) {
         if (formData.permitFormData.type == PermitType.ABSENCE && duration.isNotEmpty()) {
@@ -334,7 +337,7 @@ private fun PermitFormContent(
                 onUpdateFormData(
                     formData.copy(
                         permitFormData = formData.permitFormData.copy(
-                            durationError = durationError
+                            durationError = PermitFormErrorType.DURATION_NEED_TO_INCLUDE_CURRENT_DATE
                         )
                     )
                 )
@@ -369,20 +372,15 @@ private fun EditAttendanceLoading() {
     }
 }
 
+@Composable
+private fun getEditStatusOptions(): List<OptionData<AttendanceStatus>> {
+    val labelAlpha = stringResource(Res.string.label_alpha)
+    val labelPresent = stringResource(Res.string.label_present)
+    val labelAbsent = stringResource(Res.string.label_absent)
+    return listOf(
+        OptionData(labelPresent, AttendanceStatus.ON_TIME),
+        OptionData(labelAlpha, AttendanceStatus.NO_DATA),
+        OptionData(labelAbsent, AttendanceStatus.ABSENT),
+    )
 
-private fun getEditStatusOptions(prevStatus: AttendanceStatus): List<OptionData<AttendanceStatus>> {
-    return AttendanceStatus.entries
-        .filter {
-            if (prevStatus == AttendanceStatus.ON_TIME || prevStatus == AttendanceStatus.LATE) {
-                it != AttendanceStatus.EXCUSED && it != AttendanceStatus.APPROVAL_PENDING
-            } else {
-                it != AttendanceStatus.APPROVAL_PENDING
-            }
-        }
-        .map {
-            OptionData(
-                value = it,
-                label = it.label
-            )
-        }
 }

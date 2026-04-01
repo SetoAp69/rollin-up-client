@@ -140,16 +140,15 @@ class PermitUseCaseTest {
     }
 
     @Test
-    fun `CancelPermitUseCase should call repository editPermit (as per current impl)`() {
+    fun `CancelPermitUseCase should call repository cancelPermit`() {
         val useCase = CancelPermitUseCase(repository)
         val id = "p1"
         val expected = flowOf(Result.Success(Unit))
-        // Current impl invokes repository.editPermit(id, CreateEditPermitBody())
-        every { repository.editPermit(id, any()) } returns expected
+        every { repository.cancelPermit(id) } returns expected
 
         val result = useCase(id)
 
         assertEquals(expected, result)
-        verify(exactly = 1) { repository.editPermit(id, any()) }
+        verify(exactly = 1) { repository.cancelPermit(id) }
     }
 }

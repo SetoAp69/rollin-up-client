@@ -9,13 +9,17 @@ import com.rollinup.apiservice.domain.user.CreateResetPasswordRequestUseCase
 import com.rollinup.apiservice.domain.user.SubmitResetOtpUseCase
 import com.rollinup.apiservice.domain.user.SubmitResetPasswordUseCase
 import com.rollinup.apiservice.model.common.Result
+import com.rollinup.common.utils.Utils.now
 import com.rollinup.rollinup.screen.auth.model.resetpassword.ResetPasswordCallback
 import com.rollinup.rollinup.screen.auth.ui.screen.resetpassword.uistate.ResetPasswordUiState
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalTime
 
 class ResetPasswordViewModel(
     private val createResetPasswordRequestUseCase: CreateResetPasswordRequestUseCase,
@@ -25,12 +29,14 @@ class ResetPasswordViewModel(
     private val _uiState = MutableStateFlow(ResetPasswordUiState())
     val uiState = _uiState.asStateFlow()
 
+    private var countDownJob: Job? = null
+
     fun getCallback() = ResetPasswordCallback(
         onSubmitEmail = ::submitEmail,
         onSubmitOtp = ::submitOtp,
         onResetMessageState = ::resetMessageState,
         onSubmitNewPassword = ::submitNewPassword,
-        onUpdateStep = ::updateStep
+        onUpdateStep = ::updateStep,
     )
 
     private fun submitEmail(email: String) {
@@ -55,10 +61,11 @@ class ResetPasswordViewModel(
                             isLoadingOverlay = false,
                             submitEmailState = true,
                             email = email,
-                            actualEmail = result.data,
-                            step = it.step + 1
+                            step = 1,
+                            otpStatus = result.data,
                         )
                     }
+                    startCountdown(result.data.expiredAt)
                 }
             }
         }.launchIn(viewModelScope)
@@ -149,6 +156,28 @@ class ResetPasswordViewModel(
             it.copy(
                 step = step
             )
+        }
+    }
+
+    private fun startCountdown(
+        until: LocalTime,
+    ) {
+        countDownJob?.cancel()
+
+        val duration =
+            (until.toSecondOfDay() - LocalTime.now().toSecondOfDay()).coerceAtLeast(0)
+
+        _uiState.update { it.copy(otpCountdown = duration) }
+
+        countDownJob = viewModelScope.launch {
+            while (_uiState.value.otpCountdown > 0) {
+                kotlinx.coroutines.delay(1000)
+                _uiState.update {
+                    it.copy(
+                        otpCountdown = (it.otpCountdown - 1).coerceAtLeast(0)
+                    )
+                }
+            }
         }
     }
 }

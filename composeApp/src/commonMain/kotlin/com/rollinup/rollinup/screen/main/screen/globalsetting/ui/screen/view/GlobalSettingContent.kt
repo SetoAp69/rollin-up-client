@@ -40,6 +40,17 @@ import com.rollinup.rollinup.screen.main.screen.globalsetting.model.GlobalSettin
 import com.rollinup.rollinup.screen.main.screen.globalsetting.model.GlobalSettingFormData
 import com.rollinup.rollinup.screen.main.screen.globalsetting.ui.screen.uistate.GlobalSettingUiState
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_apply
+import rollin_up.composeapp.generated.resources.label_attendance_period_end
+import rollin_up.composeapp.generated.resources.label_attendance_period_start
+import rollin_up.composeapp.generated.resources.label_global_setting
+import rollin_up.composeapp.generated.resources.label_school_period_end
+import rollin_up.composeapp.generated.resources.label_school_period_start
+import rollin_up.composeapp.generated.resources.label_time_setting
+import rollin_up.composeapp.generated.resources.msg_global_setting_update_error
+import rollin_up.composeapp.generated.resources.msg_global_setting_update_success
 
 @Composable
 fun GlobalSettingContent(
@@ -51,8 +62,8 @@ fun GlobalSettingContent(
     var isSuccess by remember { mutableStateOf(false) }
     HandleState(
         state = uiState.submitState,
-        successMsg = "Success, global setting is successfully updated",
-        errorMsg = "Error, failed to update global setting",
+        successMsg = stringResource(Res.string.msg_global_setting_update_success),
+        errorMsg = stringResource(Res.string.msg_global_setting_update_error),
         onDispose = cb.onResetMessageState,
         onShowSnackBar = { msg, success ->
             scope.launch {
@@ -69,7 +80,7 @@ fun GlobalSettingContent(
             modifier = Modifier.padding(24.dp)
         ) {
             Text(
-                text = "Global Setting",
+                text = stringResource(Res.string.label_global_setting),
                 color = theme.textPrimary,
                 style = Style.headerBold
             )
@@ -121,7 +132,7 @@ fun GlobalSettingTimeSection(
     onSubmit: (GlobalSettingFormData) -> Unit,
 ) {
     TextFieldTitle(
-        title = "Time Setting",
+        title = stringResource(Res.string.label_time_setting),
         textStyle = Style.title
     ) {
         if (isLoading) {
@@ -146,7 +157,7 @@ fun GlobalSettingTimeSectionContent(
         verticalArrangement = Arrangement.spacedBy(itemGap8),
     ) {
         TimePickerTextField(
-            title = "Attendance Period Start",
+            title = stringResource(Res.string.label_attendance_period_start),
             placeholder = "-",
             value = formData.attendanceStart,
             onValueChange = {
@@ -170,7 +181,7 @@ fun GlobalSettingTimeSectionContent(
         )
 
         TimePickerTextField(
-            title = "Attendance Period End",
+            title = stringResource(Res.string.label_attendance_period_end),
             placeholder = "-",
             value = formData.attendanceEnd,
             onValueChange = {
@@ -193,7 +204,7 @@ fun GlobalSettingTimeSectionContent(
             }
         )
         TimePickerTextField(
-            title = "School Period Start",
+            title = stringResource(Res.string.label_school_period_start),
             placeholder = "-",
             value = formData.schoolStart,
             onValueChange = {
@@ -216,7 +227,7 @@ fun GlobalSettingTimeSectionContent(
             }
         )
         TimePickerTextField(
-            title = "School Period End",
+            title = stringResource(Res.string.label_school_period_end),
             placeholder = "-",
             value = formData.schoolEnd,
             onValueChange = {
@@ -240,7 +251,7 @@ fun GlobalSettingTimeSectionContent(
         )
         Spacer(modifier = Modifier.weight(1f))
         Button(
-            text = "Apply",
+            text = stringResource(Res.string.label_apply),
             modifier = Modifier.fillMaxWidth()
         ) {
             onSubmit(formData)

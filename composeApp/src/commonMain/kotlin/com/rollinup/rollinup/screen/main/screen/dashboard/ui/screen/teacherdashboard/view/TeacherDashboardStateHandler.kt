@@ -6,10 +6,10 @@ import com.rollinup.rollinup.component.model.OnShowSnackBar
 import com.rollinup.rollinup.screen.main.screen.dashboard.ui.screen.teacherdashboard.uistate.TeacherDashboardUiState
 import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.msg_approval_error
+import rollin_up.composeapp.generated.resources.msg_approval_success
 import rollin_up.composeapp.generated.resources.msg_export_error
 import rollin_up.composeapp.generated.resources.msg_export_success
-import rollin_up.composeapp.generated.resources.msg_approval_success
-import rollin_up.composeapp.generated.resources.msg_approval_error
 
 @Composable
 fun TeacherDashboardStateHandler(

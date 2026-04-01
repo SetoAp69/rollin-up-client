@@ -77,8 +77,7 @@ class AuthRepositoryTest {
             deviceId = "dev1",
             userName = "john",
             email = "test@mail.com",
-            firstName = "John",
-            lastName = "Doe",
+            fullName = "John Doe",
             role = "student",
             gender = "Laki-laki",
             classX = "10A",
@@ -104,8 +103,7 @@ class AuthRepositoryTest {
             deviceId = "dev1",
             userName = "john",
             email = "test@mail.com",
-            firstName = "John",
-            lastName = "Doe",
+            fullName = "John Doe",
             role = Role.STUDENT, // Assuming mapped from "student"
             gender = Gender.MALE, // Assuming mapped from "Laki-laki"
             refreshToken = "refresh_token",
@@ -168,7 +166,7 @@ class AuthRepositoryTest {
         // Reuse similar mock structure
         val mockUser = LoginResponse.Data.UserData(
             id = "u1", deviceId = "dev1", userName = "john", email = "test@mail.com",
-            firstName = "John", lastName = "Doe", role = "student", gender = "Laki-laki",
+            fullName = "Doe", role = "student", gender = "Laki-laki",
             classX = "10A", classId = "c1", classKey = 101, isVerified = true
         )
         val mockResponseData = LoginResponse.Data(
@@ -178,7 +176,7 @@ class AuthRepositoryTest {
 
         val expectedEntity = LoginEntity(
             id = "u1", deviceId = "dev1", userName = "john", email = "test@mail.com",
-            firstName = "John", lastName = "Doe", role = Role.STUDENT, gender = Gender.MALE,
+             fullName = "Doe", role = Role.STUDENT, gender = Gender.MALE,
             refreshToken = "refresh", accessToken = "access",
             classX = "10A", classId = "c1", classKey = 101, isVerified = true
         )

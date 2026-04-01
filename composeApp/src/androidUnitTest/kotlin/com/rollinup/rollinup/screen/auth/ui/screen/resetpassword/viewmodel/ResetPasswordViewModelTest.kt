@@ -11,6 +11,8 @@ import com.rollinup.apiservice.domain.user.SubmitResetOtpUseCase
 import com.rollinup.apiservice.domain.user.SubmitResetPasswordUseCase
 import com.rollinup.apiservice.model.common.NetworkError
 import com.rollinup.apiservice.model.common.Result
+import com.rollinup.apiservice.model.user.OtpStatusEntity
+import com.rollinup.common.utils.Utils.now
 import com.rollinup.rollinup.CoroutineTestRule
 import com.rollinup.rollinup.screen.auth.model.resetpassword.ResetPasswordCallback
 import io.mockk.MockKAnnotations
@@ -22,6 +24,7 @@ import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.LocalTime
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -47,7 +50,7 @@ class ResetPasswordViewModelTest {
 
     private fun arrangeCreateRequestUseCase(
         body: CreateResetPasswordRequestBody,
-        result: Result<String, NetworkError>,
+        result: Result<OtpStatusEntity, NetworkError>,
     ) {
         coEvery {
             createResetPasswordRequestUseCase(body)
@@ -96,7 +99,10 @@ class ResetPasswordViewModelTest {
     fun `submitEmail() should return Result Success`() = runTest {
         //Arrange
         val email = "email"
-        val expectedResult = "actualEmail"
+        val expectedResult = OtpStatusEntity(
+            email = "email",
+            expiredAt = LocalTime.now(),
+        )
         val body = CreateResetPasswordRequestBody(email = email)
 
         arrangeCreateRequestUseCase(body, Result.Success(expectedResult))
@@ -111,7 +117,8 @@ class ResetPasswordViewModelTest {
 
         val state = viewModel.uiState.value
         assertEquals(state.submitEmailState, true)
-        assertEquals(state.actualEmail, expectedResult)
+        assertEquals(state.email, email)
+        assertEquals(state.otpStatus, expectedResult)
         assertEquals(state.isLoadingOverlay, false)
     }
 

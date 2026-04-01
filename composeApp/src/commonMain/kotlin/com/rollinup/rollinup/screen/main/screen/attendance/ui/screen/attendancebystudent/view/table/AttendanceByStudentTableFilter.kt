@@ -23,8 +23,11 @@ import com.rollinup.rollinup.component.selector.MultiDropDownSelector
 import com.rollinup.rollinup.screen.main.screen.attendance.model.attendancebystudent.AttendanceByStudentFilterData
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancebystudent.uistate.AttendanceByStudentUiState
 import com.rollinup.rollinup.screen.main.screen.attendance.ui.screen.attendancebystudent.view.AttendanceByStudentSummary
+import org.jetbrains.compose.resources.stringResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_print_line_24
+import rollin_up.composeapp.generated.resources.label_date_range
+import rollin_up.composeapp.generated.resources.label_status
 
 @Composable
 fun AttendanceByStudentTableFilter(
@@ -76,7 +79,7 @@ private fun AttendanceByStudentFilterRow(
     ) {
         Box(modifier = Modifier.width(150.dp)) {
             DesktopFilterDatePicker(
-                title = "Date",
+                title = stringResource(Res.string.label_date_range),
                 value = uiState.filterData.dateRange,
                 enabled = true,
                 onValueChange = { date ->
@@ -89,7 +92,7 @@ private fun AttendanceByStudentFilterRow(
             )
         }
         MultiDropDownSelector(
-            title = "Status",
+            title = stringResource(Res.string.label_status),
             options = uiState.statusOptions,
             value = uiState.filterData.status,
             onValueChange = { value ->

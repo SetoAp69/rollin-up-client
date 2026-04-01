@@ -1,6 +1,6 @@
 package com.rollinup.rollinup.component.model
 
 interface MultiPlatformFile {
-    val name:String
+    val name: String
     fun readBytes(): ByteArray
 }
