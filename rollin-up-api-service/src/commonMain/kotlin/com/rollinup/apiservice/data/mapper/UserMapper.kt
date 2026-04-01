@@ -22,7 +22,7 @@ class UserMapper {
                 userName = it.userName,
                 classX = it.classX ?: "",
                 email = it.email,
-                fullName = it.firstName + " " + it.lastName,
+                fullName = it.fullName,
                 studentId = it.studentId ?: "",
                 address = it.address,
                 role = Role.fromValue(it.role),

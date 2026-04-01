@@ -34,6 +34,8 @@ data class GetUserListResponse(
             val firstName: String = "",
             @SerialName("last_name")
             val lastName: String = "",
+            @SerialName("full_name")
+            val fullName: String = "",
             @SerialName("role")
             val role: String = "",
             @SerialName("gender")
