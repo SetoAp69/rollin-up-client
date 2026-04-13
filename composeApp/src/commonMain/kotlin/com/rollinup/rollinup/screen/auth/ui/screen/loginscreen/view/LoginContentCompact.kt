@@ -9,6 +9,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
@@ -16,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.rollinup.common.model.Severity
 import com.rollinup.rollinup.component.button.Button
 import com.rollinup.rollinup.component.button.ButtonType
+import com.rollinup.rollinup.component.camera.CameraView
 import com.rollinup.rollinup.component.spacer.Spacer
 import com.rollinup.rollinup.component.spacer.itemGap8
 import com.rollinup.rollinup.component.spacer.screenPaddingValues
@@ -131,6 +136,7 @@ private fun LoginForm(
                 .layoutId("btn_login")
                 .fillMaxWidth()
         )
+        Spacer(itemGap8)
     }
 }
 

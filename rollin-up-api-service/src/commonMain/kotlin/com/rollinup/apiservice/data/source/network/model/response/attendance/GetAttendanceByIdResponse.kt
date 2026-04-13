@@ -28,7 +28,8 @@ data class GetAttendanceByIdResponse(
         val createdAt: String = "",
         @SerialName("permit")
         val permit: Permit? = null,
-
+        @SerialName("attachment")
+        val attachment:String? = null
         ) {
         @Serializable
         data class User(

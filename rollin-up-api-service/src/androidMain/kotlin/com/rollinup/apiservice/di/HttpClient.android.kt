@@ -29,7 +29,7 @@ import kotlinx.serialization.json.Json
 import kotlin.time.Duration.Companion.seconds
 
 actual fun getHttpClient(localDataStore: LocalDataStore): HttpClient {
-    return HttpClient(Android){
+    return HttpClient(Android) {
         expectSuccess = true
 
         defaultRequest {
@@ -161,7 +161,7 @@ actual fun getSSEClient(localDataStore: LocalDataStore) = HttpClient(Android) {
     }
 
     install(SSE) {
-        maxReconnectionAttempts = 100
+        maxReconnectionAttempts = 1000
         reconnectionTime = 2.seconds
         bufferPolicy = SSEBufferPolicy.LastEvents(10)
     }

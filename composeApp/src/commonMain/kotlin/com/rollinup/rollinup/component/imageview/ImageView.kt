@@ -46,7 +46,9 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.ic_close_line_24
 import rollin_up.composeapp.generated.resources.ic_image_broken_fill_24
+import rollin_up.composeapp.generated.resources.label_close
 
 /**
  * A basic wrapper for displaying a [Painter] with standard sizing and corner clipping.
@@ -117,7 +119,6 @@ fun Image(
 
 }
 
-
 /**
  * A full-screen dialog for viewing an image fetched from a URL with authentication headers.
  *
@@ -163,7 +164,8 @@ fun ImageView(
         ) {
             BoxWithConstraints(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.TopEnd
             ) {
                 val transformableState = rememberTransformableState { zoomChange, panChange, _ ->
                     zoomScale = (zoomScale * zoomChange).coerceIn(1f, 5f)
@@ -179,7 +181,6 @@ fun ImageView(
                         y = (offset.y + panChange.y).coerceIn(-maxY, maxY)
                     )
                 }
-
                 AsyncImage(
                     modifier =
                         Modifier
@@ -193,6 +194,16 @@ fun ImageView(
                             .transformable(transformableState),
                     state = state,
                     painter = painter,
+                )
+                Icon(
+                    painter = painterResource(Res.drawable.ic_close_line_24),
+                    modifier = Modifier
+                        .padding(itemGap4)
+                        .size(28.dp)
+                        .clickable{
+                            onDismissRequests(false)
+                        },
+                    contentDescription = null
                 )
             }
         }

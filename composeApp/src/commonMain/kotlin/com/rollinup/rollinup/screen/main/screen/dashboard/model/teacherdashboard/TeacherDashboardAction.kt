@@ -4,8 +4,10 @@ import com.rollinup.apiservice.model.attendance.AttendanceStatus
 import org.jetbrains.compose.resources.DrawableResource
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_check_line_24
+import rollin_up.composeapp.generated.resources.ic_delete_line_24
 import rollin_up.composeapp.generated.resources.ic_document_line_24
 import rollin_up.composeapp.generated.resources.ic_edit_line_24
+import rollin_up.composeapp.generated.resources.ic_info_line_24
 
 enum class TeacherDashboardAction(
     val show: (List<AttendanceStatus?>) -> Boolean,
@@ -31,6 +33,6 @@ enum class TeacherDashboardAction(
             status.size == 1
         },
         label = "Detail",
-        icon = Res.drawable.ic_document_line_24,
+        icon = Res.drawable.ic_info_line_24,
     )
 }

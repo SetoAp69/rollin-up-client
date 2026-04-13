@@ -7,6 +7,7 @@ import com.rollinup.apiservice.model.auth.LoginEntity
 import com.rollinup.apiservice.model.common.GlobalSetting
 import com.rollinup.common.model.UiMode
 import com.rollinup.rollinup.AuthViewModel
+import com.rollinup.rollinup.GlobalSettingViewModel
 import com.rollinup.rollinup.LocaleViewModel
 import com.rollinup.rollinup.UiModeViewModel
 import kotlinx.datetime.LocalDate
@@ -34,6 +35,10 @@ val LocalGlobalSetting = compositionLocalOf<GlobalSetting> {
     error("General Setting not found")
 }
 
+val LocalGlobalSettingViewModel = compositionLocalOf<GlobalSettingViewModel> {
+    error("General Setting ViewModel not found")
+
+}
 val LocalHolidayProvider = compositionLocalOf<List<LocalDate>> {
     emptyList()
 }

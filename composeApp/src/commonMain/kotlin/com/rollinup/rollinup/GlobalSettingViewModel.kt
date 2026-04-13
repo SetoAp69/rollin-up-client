@@ -8,6 +8,7 @@ import com.rollinup.apiservice.domain.globalsetting.ListenGlobalSettingSSE
 import com.rollinup.apiservice.domain.globalsetting.UpdateCachedGlobalSettingUseCase
 import com.rollinup.apiservice.model.common.GlobalSetting
 import com.rollinup.apiservice.model.common.Result
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -25,6 +26,8 @@ class GlobalSettingViewModel(
 
     private var _initState = MutableStateFlow<Boolean?>(null)
     val initState = _initState.asStateFlow()
+
+    var sseJob : Job? = null
 
     fun init() {
         viewModelScope.launch {
@@ -47,7 +50,8 @@ class GlobalSettingViewModel(
     }
 
     fun listen() {
-        viewModelScope.launch {
+        sseJob?.cancel()
+        sseJob = viewModelScope.launch {
             listenGlobalSettingSSE().collect {
                 getGlobalSettingUseCase().collect { result ->
                     if (result is Result.Success) {

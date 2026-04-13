@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.michaelflisar.lumberjack.core.L
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
 import com.rollinup.apiservice.model.permit.PermitType
@@ -255,7 +256,6 @@ private fun AttachmentButton(
 ) {
     var showImage by remember { mutableStateOf(false) }
     val text = if (url.isBlank()) "-" else stringResource(Res.string.label_view_attachment)
-
     Text(
         text = text,
         color = theme.textPrimary,

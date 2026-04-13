@@ -24,6 +24,8 @@ import com.rollinup.rollinup.component.permitform.view.PermitForm
 import com.rollinup.rollinup.component.pullrefresh.PullRefresh
 import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.spacer.screenPaddingValues
+import com.rollinup.rollinup.component.theme.LocalGlobalSetting
+import com.rollinup.rollinup.component.theme.LocalGlobalSettingViewModel
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.screen.dashboard.ui.component.DashboardCalendar
 import com.rollinup.rollinup.screen.main.navigation.MainRoute
@@ -46,6 +48,7 @@ fun StudentDashboardContent(
     onNavigateTo: (String) -> Unit,
     onRefreshSetting: () -> Unit,
 ) {
+    val globalSetting = LocalGlobalSettingViewModel.current
     var showDetail: Boolean by remember { mutableStateOf(false) }
     var showPermitForm: Boolean by remember { mutableStateOf(false) }
     var showCamera: Boolean by remember { mutableStateOf(false) }
@@ -78,6 +81,8 @@ fun StudentDashboardContent(
             isRefreshing = uiState.isLoadingRefresh,
             onRefresh = {
                 cb.onRefresh()
+                globalSetting.init()
+                globalSetting.listen()
             }
         ) {
             Column(

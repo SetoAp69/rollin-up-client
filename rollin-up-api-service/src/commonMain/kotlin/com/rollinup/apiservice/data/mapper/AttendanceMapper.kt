@@ -111,6 +111,7 @@ class AttendanceMapper {
             checkedInAt = data.checkedInAt,
             updatedAt = data.updatedAt,
             createdAt = data.createdAt,
+            attachment = data.attachment?.getFileLink(),
             permit = data.permit?.let { p ->
                 AttendanceDetailEntity.Permit(
                     id = p.id,

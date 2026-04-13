@@ -1,6 +1,8 @@
 package com.rollinup.rollinup.component.camera
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
@@ -194,24 +196,20 @@ actual fun CameraPermissionHandler(
     onDenied: () -> Unit,
     onDismissRequest: (Boolean) -> Unit,
 ) {
-
     var permissionState by remember { mutableStateOf(PermissionState.NotDetermined) }
     var showDialog by remember { mutableStateOf(false) }
-
     val permissionFactory = rememberPermissionsControllerFactory()
     val permissionController = remember(permissionFactory) {
         permissionFactory.createPermissionsController()
     }
+    val activity = LocalContext.current.findActivity()
 
-    val activity = LocalActivity.current
-
-    activity?.let{
+    activity?.let {
         CompositionLocalProvider(
-            LocalContext provides it as ComponentActivity
+            LocalContext provides it
         ) {
             BindEffect(permissionController)
         }
-
         LaunchedEffect(Unit) {
             permissionState = permissionController.checkPermission()
             if (permissionState == PermissionState.Granted) {
@@ -257,4 +255,15 @@ private suspend fun PermissionsController.providePermission(): PermissionState {
 
 actual fun ByteArray.toImageBitmap(): ImageBitmap {
     return BitmapFactory.decodeByteArray(this, 0, size).asImageBitmap()
+}
+
+private fun Context.findActivity(): ComponentActivity? {
+    var currentContext = this
+    while (currentContext is ContextWrapper) {
+        if (currentContext is ComponentActivity) {
+            return currentContext
+        }
+        currentContext = currentContext.baseContext
+    }
+    return null
 }

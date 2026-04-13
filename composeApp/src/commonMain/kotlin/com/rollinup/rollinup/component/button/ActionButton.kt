@@ -41,7 +41,6 @@ fun ActionButton(
     onClick: () -> Unit,
 ) {
     val gap = if (isCompact) 12.dp else 16.dp
-
     CustomRipple {
         Row(
             modifier = Modifier
