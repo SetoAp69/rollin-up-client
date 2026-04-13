@@ -21,6 +21,8 @@
     <string name="msg_last_name_max_error">Nama belakang tidak boleh lebih dari 15 karakter</string>
     <string name="msg_student_id_contain_space_error">Nomor induk siswa tidak boleh mengandung spasi </string>
     <string name="msg_last_name_empty_error">Nama belakang tidak boleh kosong</string>
+    <string name="msg_full_name_empty_error">Nama lengkap tidak boleh kosong</string>
+    <string name="msg_full_name_max_error">Nama lengkap tidak boleh lebih dari 60 karakter</string>
     <string name="msg_birthday_error_empty">Kesalahan, tanggal lahir tidak boleh kosong</string>
     <string name="msg_phone_error_max">Nomor telepon tidak boleh lebih dari 16 karakter</string>
     <string name="msg_address_error_max">Alamat tidak boleh lebih dari 30 karakter</string>

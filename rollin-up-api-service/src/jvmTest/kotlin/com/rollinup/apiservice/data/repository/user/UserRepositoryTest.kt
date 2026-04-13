@@ -91,19 +91,19 @@ class UserRepositoryTest {
                 data = listOf(
                     GetUserListResponse.Data.UserData(
                         id = "u1",
-                        firstName = "John",
                         userName = "johndoe",
                         email = "john@mail.com",
                         role = "student",
                         studentId = "123",
-                        classX = "10A"
+                        classX = "10A",
+                        fullName = "John Doe"
                     )
                 )
             )
         )
         val expectedEntity = listOf(
             UserEntity(
-                id = "u1", fullName = "John ", userName = "johndoe", email = "john@mail.com",
+                id = "u1", fullName = "John Doe", userName = "johndoe", email = "john@mail.com",
                 role = Role.STUDENT, studentId = "123", classX = "10A"
             )
         )

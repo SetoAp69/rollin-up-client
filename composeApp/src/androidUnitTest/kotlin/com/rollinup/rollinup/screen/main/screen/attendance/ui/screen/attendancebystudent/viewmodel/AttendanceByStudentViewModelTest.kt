@@ -476,4 +476,82 @@ class AttendanceByStudentViewModelTest {
         assertEquals(false, state.exportState)
         assertFalse(state.isLoadingOverlay)
     }
+
+    @Test
+    fun `getDetail() should do nothing when id is blank`() {
+        //Arrange
+        val id = ""
+
+        //Act
+        val cb = viewModel.getCallback()
+        cb.onGetDetail(id)
+
+        //Assert
+        coVerify(exactly = 0) {
+            getAttendanceByIdUseCase(any())
+        }
+    }
+
+    @Test
+    fun `resetMessageState() should clear exportState`() {
+        //Arrange
+        val cb = viewModel.getCallback()
+
+        //Act
+        cb.onResetMessageState()
+
+        //Assert
+        val state = viewModel.uiState.value
+        assertEquals(null, state.exportState)
+    }
+
+    @Test
+    fun `refresh() on mobile should fetch paging data`() = runTest {
+        //Arrange
+        val id = "123"
+        val queryParams = GetAttendanceListByStudentQueryParams()
+        val summary = AttendanceSummaryEntity()
+        val mockData = listOf(AttendanceByStudentEntity(id = "123"))
+
+        arrangeGetAttendancePagingUseCase(id, queryParams, mockData)
+        arrangeGetSummary(id, emptyList(), Result.Success(summary))
+        arrangeGetUserByIdUseCase(id, Result.Success(UserDetailEntity()))
+
+        viewModel.init(id, true)
+        
+        //Act
+        val cb = viewModel.getCallback()
+        cb.onRefresh()
+        
+        //Assert
+        coVerify(atLeast = 2) {
+            getAttendanceByStudentPagingUseCase(id, queryParams)
+            getAttendanceByStudentSummaryUseCase(id, emptyList())
+        }
+    }
+
+    @Test
+    fun `refresh() on non-mobile should fetch list data`() = runTest {
+        //Arrange
+        val id = "123"
+        val queryParams = GetAttendanceListByStudentQueryParams()
+        val summary = AttendanceSummaryEntity()
+        val mockData = listOf(AttendanceByStudentEntity(id = "123"))
+
+        arrangeGetAttendanceByStudentList(id, queryParams, Result.Success(mockData))
+        arrangeGetSummary(id, emptyList(), Result.Success(summary))
+        arrangeGetUserByIdUseCase(id, Result.Success(UserDetailEntity()))
+
+        viewModel.init(id, false)
+        
+        //Act
+        val cb = viewModel.getCallback()
+        cb.onRefresh()
+        
+        //Assert
+        coVerify(atLeast = 2) {
+            getAttendanceByStudentListUseCase(id, queryParams)
+            getAttendanceByStudentSummaryUseCase(id, emptyList())
+        }
+    }
 }

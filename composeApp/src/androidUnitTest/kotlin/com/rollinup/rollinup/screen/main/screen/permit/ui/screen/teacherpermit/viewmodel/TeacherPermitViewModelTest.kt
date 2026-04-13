@@ -423,4 +423,139 @@ class TeacherPermitViewModelTest {
             getPermitByClassListUseCase(any(), any())
         }
     }
+
+    @Test
+    fun `exportFile() with null classKey should do nothing`() = runTest {
+        // Arrange
+        val user = LoginEntity(classKey = null)
+        val cb = viewModel.getCallback()
+        viewModel.init(user, false)
+
+        // Act
+        cb.onExportFile("test.xlsx")
+        advanceUntilIdle()
+
+        // Assert
+        coVerify(exactly = 0) {
+            getPermitByClassListUseCase(any(), any())
+            fileWriter.writeExcel(any(), any())
+        }
+    }
+
+    @Test
+    fun `refresh() with null classKey should do nothing`() = runTest {
+        // Arrange
+        val user = LoginEntity(classKey = null)
+        val cb = viewModel.getCallback()
+        viewModel.init(user, false)
+
+        // Act
+        cb.onRefresh()
+        advanceUntilIdle()
+
+        // Assert
+        coVerify(exactly = 0) {
+            getPermitByClassListUseCase(any(), any())
+            getPermitByClassPagingUseCase(any(), any())
+        }
+    }
+
+    @Test
+    fun `selectAll() on desktop when isAllSelected is true should deselect all items`() = runTest {
+        // Arrange
+        val user = LoginEntity(classKey = 4)
+        val permits = listOf(PermitByClassEntity(id = "1"))
+
+        arrangeGetPermitList(user.classKey!!, Result.Success(permits))
+
+        val cb = viewModel.getCallback()
+        viewModel.init(user, false)
+        advanceUntilIdle()
+        cb.onSelectAll() // First call selects all.
+        assertEquals(permits, viewModel.uiState.value.itemSelected)
+        assertTrue(viewModel.uiState.value.isAllSelected)
+
+        // Act
+        cb.onSelectAll() // Second call should deselect.
+
+        // Assert
+        assertTrue(viewModel.uiState.value.itemSelected.isEmpty())
+        assertFalse(viewModel.uiState.value.isAllSelected)
+    }
+
+    @Test
+    fun `selectAll() on mobile when isAllSelected is true should deselect all items`() = runTest {
+        // Arrange
+        val user = LoginEntity(classKey = 4)
+        val permits = listOf(PermitByClassEntity(id = "1"))
+        arrangeGetPermitPaging(classKey = 4, PagingData.from(permits))
+        arrangeGetPermitList(classKey = 4, result = Result.Success(permits))
+
+        viewModel.init(user, true)
+        val cb = viewModel.getCallback()
+        cb.onSelectAll() // selects all
+        assertTrue(viewModel.uiState.value.isAllSelected)
+
+        // Act
+        cb.onSelectAll()
+
+        // Assert
+        assertTrue(viewModel.uiState.value.itemSelected.isEmpty())
+        assertFalse(viewModel.uiState.value.isAllSelected)
+    }
+
+    @Test
+    fun `updateExportDateRange() should update exportDateRange`() {
+        // Arrange
+        val cb = viewModel.getCallback()
+        val date1 = kotlinx.datetime.LocalDate(2023, 1, 10)
+        val date2 = kotlinx.datetime.LocalDate(2023, 1, 1)
+
+        // Act
+        cb.onUpdateExportDateRange(listOf(date1, date2))
+
+        // Assert
+        val sortedList = listOf(date2, date1)
+        assertEquals(sortedList, viewModel.uiState.value.exportDateRange)
+    }
+
+    @Test
+    fun `refresh() explicit on mobile should fetch paging data`() = runTest {
+        // Arrange
+        val user = LoginEntity(classKey = 4)
+        val pagingData = PagingData.empty<PermitByClassEntity>()
+        arrangeGetPermitPaging(user.classKey!!, pagingData)
+        viewModel.init(user, true)
+
+        val cb = viewModel.getCallback()
+
+        // Act
+        cb.onRefresh()
+        advanceUntilIdle()
+
+        // Assert
+        coVerify(atLeast = 2) {
+            getPermitByClassPagingUseCase(user.classKey!!, any())
+        }
+    }
+
+    @Test
+    fun `refresh() explicit on non-mobile should fetch list data`() = runTest {
+        // Arrange
+        val user = LoginEntity(classKey = 4)
+        val permits = emptyList<PermitByClassEntity>()
+        arrangeGetPermitList(user.classKey!!, Result.Success(permits))
+        viewModel.init(user, false)
+
+        val cb = viewModel.getCallback()
+
+        // Act
+        cb.onRefresh()
+        advanceUntilIdle()
+
+        // Assert
+        coVerify(atLeast = 2) {
+            getPermitByClassListUseCase(user.classKey!!, any())
+        }
+    }
 }

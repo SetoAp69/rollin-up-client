@@ -48,7 +48,6 @@ import org.koin.compose.koinInject
 import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_close_line_24
 import rollin_up.composeapp.generated.resources.ic_image_broken_fill_24
-import rollin_up.composeapp.generated.resources.label_close
 
 /**
  * A basic wrapper for displaying a [Painter] with standard sizing and corner clipping.
@@ -200,7 +199,7 @@ fun ImageView(
                     modifier = Modifier
                         .padding(itemGap4)
                         .size(28.dp)
-                        .clickable{
+                        .clickable {
                             onDismissRequests(false)
                         },
                     contentDescription = null

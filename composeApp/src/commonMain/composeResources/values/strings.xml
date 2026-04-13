@@ -20,6 +20,8 @@
     <string name="msg_first_name_empty_error">First name can\'t be empty</string>
     <string name="msg_last_name_empty_error">Last name can\'t be empty</string>
     <string name="msg_last_name_max_error">First name can\'t be more than 15 characters</string>
+    <string name="msg_full_name_empty_error">Full name can\'t be empty</string>
+    <string name="msg_full_name_max_error">Full name can\'t be more than 60 characters</string>
     <string name="msg_birthday_error_empty">Error, birthday can\'t be empty</string>
     <string name="msg_student_id_contain_space_error">Student ID can\'t contain space</string>
     <string name="msg_email_invalid_error">Email format is invalid</string>
