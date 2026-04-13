@@ -9,6 +9,7 @@ import rollin_up.composeapp.generated.resources.Res
 import rollin_up.composeapp.generated.resources.ic_check_line_24
 import rollin_up.composeapp.generated.resources.ic_document_line_24
 import rollin_up.composeapp.generated.resources.ic_edit_line_24
+import rollin_up.composeapp.generated.resources.ic_info_line_24
 
 class TeacherDashboardActionTest {
 
@@ -31,7 +32,7 @@ class TeacherDashboardActionTest {
     fun `DETAIL properties should be correct`() {
         val action = TeacherDashboardAction.DETAIL
         assertEquals("Detail", action.label)
-        assertEquals(Res.drawable.ic_document_line_24, action.icon)
+        assertEquals(Res.drawable.ic_info_line_24, action.icon)
     }
 
     // 2. Test Logic: EDIT_DATA

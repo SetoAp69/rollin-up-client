@@ -125,7 +125,7 @@ class CreateEditUserViewModel(
         }
 
         if (!isEdit && formData.fullName.isNullOrBlank()) {
-            formData = formData.copy(lastNameError = CreateEditUserFormErrorType.LAST_NAME_EMPTY)
+            formData = formData.copy(lastNameError = CreateEditUserFormErrorType.FULL_NAME_EMPTY)
         }
 
         if (!isEdit && formData.studentId.isNullOrBlank() && isStudentRole) {

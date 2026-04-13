@@ -357,29 +357,31 @@ class UpdatePasswordViewModelTest {
         assertFalse(state.isLoadingOverlay)
     }
 
-//    @Test
-//    fun `resetMessageState() should reset message states to null`() {
-//        //Arrange
-//        val formData = UpdatePasswordFormData(
-//            passwordOne = "password",
-//            passwordTwo = "password",
-//        )
-//
-//        val body = UpdatePasswordAndVerificationBody(
-//            password = "password"
-//        )
-//
-//        arrangeUpdatePasswordAndVerificationUseCase(
-//            body = body,
-//            result = Result.Error(NetworkError.RESPONSE_ERROR)
-//        )
-//        cb.onSubmit(formData)
-//
-//        //Act
-//        cb.onResetMessageState()
-//
-//        //Assert
-//        val state = viewModel.uiState.value
-//        assertNull(state.updatePasswordState)
-//    }
+    @Test
+    fun `resetMessageState() should reset message states to null`() {
+        //Arrange
+        val formData = UpdatePasswordFormData(
+            passwordOne = "password",
+            passwordTwo = "password",
+        )
+
+        val body = UpdatePasswordAndVerificationBody(
+            password = "password"
+        )
+
+        arrangeUpdatePasswordAndVerificationUseCase(
+            body = body,
+            result = Result.Error(NetworkError.RESPONSE_ERROR)
+        )
+        cb.onSubmit(formData)
+
+        //Act
+        cb.onResetMessageState()
+
+        //Assert
+        val state = viewModel.uiState.value
+        assertEquals(null, state.updatePasswordState)
+        assertEquals(null, state.submitOtpState)
+        assertEquals(null, state.requestOtpState)
+    }
 }

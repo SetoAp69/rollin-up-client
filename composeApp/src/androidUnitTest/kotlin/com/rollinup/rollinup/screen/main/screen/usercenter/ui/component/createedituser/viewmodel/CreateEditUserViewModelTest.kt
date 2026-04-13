@@ -282,7 +282,7 @@ class CreateEditUserViewModelTest {
         assertFalse(result)
         val state = viewModel.uiState.value.formData
         assertEquals(CreateEditUserFormErrorType.USERNAME_EMPTY, state.userNameError)
-        assertEquals(CreateEditUserFormErrorType.LAST_NAME_EMPTY, state.lastNameError)
+        assertEquals(CreateEditUserFormErrorType.FULL_NAME_EMPTY, state.lastNameError)
         assertEquals(CreateEditUserFormErrorType.EMAIL_EMPTY, state.emailError)
         assertTrue(state.genderError)
         assertTrue(state.roleError)

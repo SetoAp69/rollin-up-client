@@ -35,6 +35,21 @@ import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.component.theme.theme
 import com.rollinup.rollinup.screen.main.screen.permit.model.getLabel
 import kotlinx.datetime.TimeZone
+import org.jetbrains.compose.resources.stringResource
+import rollin_up.composeapp.generated.resources.Res
+import rollin_up.composeapp.generated.resources.label_approval_note
+import rollin_up.composeapp.generated.resources.label_approved_at
+import rollin_up.composeapp.generated.resources.label_approved_by
+import rollin_up.composeapp.generated.resources.label_attachment
+import rollin_up.composeapp.generated.resources.label_class
+import rollin_up.composeapp.generated.resources.label_created_at
+import rollin_up.composeapp.generated.resources.label_duration
+import rollin_up.composeapp.generated.resources.label_name
+import rollin_up.composeapp.generated.resources.label_note
+import rollin_up.composeapp.generated.resources.label_reason
+import rollin_up.composeapp.generated.resources.label_status
+import rollin_up.composeapp.generated.resources.label_student_id
+import rollin_up.composeapp.generated.resources.label_view_attachment
 
 @Composable
 fun PermitDetailDialogContent(
@@ -92,19 +107,19 @@ private fun DataRecordSection(
         modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
         RecordField(
-            title = "Name",
+            title = stringResource(Res.string.label_name),
             content = detail.student.name
         )
         RecordField(
-            title = "Student Id",
+            title = stringResource(Res.string.label_student_id),
             content = detail.student.studentId ?: "-"
         )
         RecordField(
-            title = "Class",
+            title = stringResource(Res.string.label_class),
             content = detail.student.xClass ?: "-"
         )
         RecordField(
-            title = "Status",
+            title = stringResource(Res.string.label_status),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Chip(
@@ -114,21 +129,21 @@ private fun DataRecordSection(
         }
         detail.reason?.let {
             RecordField(
-                title = "Reason",
+                title = stringResource(Res.string.label_reason),
                 content = it
             )
         }
         RecordField(
-            title = "Duration",
+            title = stringResource(Res.string.label_duration),
             content = getDuration(detail)
         )
         RecordField(
-            title = "Note",
+            title = stringResource(Res.string.label_note),
             content = detail.note ?: "-"
         )
 
         RecordField(
-            title = "Created at",
+            title = stringResource(Res.string.label_created_at),
             content = {
                 DateText(
                     dateTime = detail.createdAt.parseToLocalDateTime(TimeZone.currentSystemDefault())
@@ -136,7 +151,7 @@ private fun DataRecordSection(
             }
         )
 
-        RecordField("Attachment") {
+        RecordField(stringResource(Res.string.label_attachment)) {
             AttachmentButton(
                 url = detail.attachment
             )
@@ -151,7 +166,7 @@ private fun ApprovalSection(
 ) {
     if (detail.approvalStatus != ApprovalStatus.APPROVAL_PENDING) {
         RecordField(
-            title = "Approved at",
+            title = stringResource(Res.string.label_approved_at),
         ) {
             detail.approvedAt?.let {
                 DateText(
@@ -165,11 +180,11 @@ private fun ApprovalSection(
             )
         }
         RecordField(
-            title = "Approved by",
+            title = stringResource(Res.string.label_approved_by),
             content = detail.approvedBy?.name ?: "-"
         )
         RecordField(
-            title = "Approval Note",
+            title = stringResource(Res.string.label_approval_note),
             content = detail.approvalNote ?: "-"
         )
     }
@@ -178,7 +193,7 @@ private fun ApprovalSection(
 @Composable
 private fun AttachmentButton(url: String) {
     var showImage by remember { mutableStateOf(false) }
-    val text = if (url.isBlank()) "-" else "View Attachment"
+    val text = if (url.isBlank()) "-" else stringResource(Res.string.label_view_attachment)
 
     Text(
         text = text,

@@ -24,7 +24,6 @@ import com.rollinup.rollinup.component.permitform.view.PermitForm
 import com.rollinup.rollinup.component.pullrefresh.PullRefresh
 import com.rollinup.rollinup.component.scaffold.Scaffold
 import com.rollinup.rollinup.component.spacer.screenPaddingValues
-import com.rollinup.rollinup.component.theme.LocalGlobalSetting
 import com.rollinup.rollinup.component.theme.LocalGlobalSettingViewModel
 import com.rollinup.rollinup.component.theme.Style
 import com.rollinup.rollinup.screen.dashboard.ui.component.DashboardCalendar

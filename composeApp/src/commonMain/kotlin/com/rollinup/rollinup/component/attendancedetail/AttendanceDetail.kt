@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.michaelflisar.lumberjack.core.L
 import com.rollinup.apiservice.model.attendance.AttendanceDetailEntity
 import com.rollinup.apiservice.model.attendance.AttendanceStatus
 import com.rollinup.apiservice.model.permit.PermitType
@@ -99,7 +98,7 @@ fun AttendanceDetailLoading() {
             ShimmerEffect(60.dp, 24.dp)
         }
         Spacer(itemGap8)
-        Column() {
+        Column{
             repeat(5) {
                 ShimmerEffect(200.dp, 18.dp)
                 Spacer(itemGap8)
