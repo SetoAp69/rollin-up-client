@@ -1,12 +1,14 @@
 package com.rollinup.rollinup.component.location
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.ContextWrapper
-import android.location.LocationListener
+import android.content.Intent
+import android.content.IntentFilter
 import android.location.LocationManager
 import android.os.Build
-import android.os.Bundle
+import android.os.Looper
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -17,6 +19,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import dev.icerock.moko.permissions.DeniedAlwaysException
 import dev.icerock.moko.permissions.PermissionState
 import dev.icerock.moko.permissions.PermissionsController
@@ -24,105 +31,66 @@ import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import dev.icerock.moko.permissions.location.LocationPermission
 
-private fun Context.findActivity(): ComponentActivity? {
-    var currentContext = this
-    while (currentContext is ContextWrapper) {
-        if (currentContext is ComponentActivity) {
-            return currentContext
-        }
-        currentContext = currentContext.baseContext
-    }
-    return null
-}
-
-@SuppressLint("MissingPermission")
 @Composable
 actual fun NativeLocationHandler(
     onLocationUpdate: (Location?) -> Unit,
     onMockLocationDetected: () -> Unit,
 ) {
+    NativeFusedLocationProviderWithSetting(
+        onLocationUpdate = onLocationUpdate,
+        onMockLocationDetected = onMockLocationDetected
+    )
+}
+
+@Suppress("DEPRECATION")
+@SuppressLint("MissingPermission")
+@Composable
+private fun NativeFusedLocationProviderWithSetting(
+    onLocationUpdate: (Location?) -> Unit,
+    onMockLocationDetected: () -> Unit
+) {
     val context = LocalContext.current
-    val locationManager = remember {
-        context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-    }
     var isPermissionGranted by remember { mutableStateOf(false) }
+    val provider = LocationServices.getFusedLocationProviderClient(context)
+    var isLocationEnabled by remember { mutableStateOf(checkLocationStatus(context)) }
 
-    LocationPermissionHandler { isPermissionGranted = true }
-
-    try {
-        locationManager.removeTestProvider(LocationManager.GPS_PROVIDER)
-    } catch (e: Exception) {
+    LocationPermissionHandler {
+        isPermissionGranted = true
     }
 
-    DisposableEffect(isPermissionGranted, locationManager) {
-        if(!isPermissionGranted) return@DisposableEffect onDispose {  }
-
-        val locationListener = object : LocationListener {
-            override fun onLocationChanged(location: android.location.Location) {
-                val isMock = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    location.isMock
-                } else {
-                    @Suppress("DEPRECATION")
-                    location.isFromMockProvider
-                }
-
-                if (isMock) {
-                    onLocationUpdate(null)
-                    onMockLocationDetected()
-                } else {
-                    val location = Location(
-                        latitude = location.latitude,
-                        longitude = location.longitude
-                    )
-                    onLocationUpdate(location)
+    DisposableEffect(Unit) {
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(p0: Context?, p1: Intent?) {
+                if (p1?.action == LocationManager.PROVIDERS_CHANGED_ACTION) {
+                    isLocationEnabled = checkLocationStatus(p0)
                 }
             }
-
-            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
-            override fun onProviderEnabled(provider: String) {}
-
-            override fun onProviderDisabled(provider: String) {
-                onLocationUpdate(null)
-            }
         }
-
-        val providers = locationManager.getProviders(true)
-
-        providers.forEach { provider ->
-            locationManager.requestLocationUpdates(
-                provider,
-                500L,
-                1f,
-                locationListener
-            )
-        }
-
-        val provider = LocationManager.GPS_PROVIDER
-        val initialLocation = locationManager.getLastKnownLocation(provider)
-            ?: providers.firstNotNullOfOrNull { locationManager.getLastKnownLocation(it) }
-
-        initialLocation?.let {
-            val isMock = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                it.isMock
-            } else {
-                @Suppress("DEPRECATION")
-                it.isFromMockProvider
-            }
-
-            if (isMock) {
-                onLocationUpdate(null)
-                onMockLocationDetected()
-            } else {
-                val location = Location(
-                    latitude = it.latitude,
-                    longitude = it.longitude
-                )
-                onLocationUpdate(location)
-            }
-        }
-
+        val filter = IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
+        context.registerReceiver(receiver, filter)
         onDispose {
-            locationManager.removeUpdates(locationListener)
+            context.unregisterReceiver(receiver)
+        }
+    }
+
+    DisposableEffect(isPermissionGranted, isLocationEnabled) {
+        if (isPermissionGranted && isLocationEnabled) {
+            val locationRequest = LocationRequest
+                .Builder(Priority.PRIORITY_HIGH_ACCURACY, 500L)
+                .build()
+            val locationCallback = getLocationCallback(onLocationUpdate, onMockLocationDetected)
+            provider.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.getMainLooper()
+            )
+        } else {
+            onLocationUpdate(null)
+        }
+        onDispose {
+            provider.removeLocationUpdates {
+                onLocationUpdate(null)
+            }
         }
     }
 }
@@ -174,6 +142,11 @@ actual fun LocationPermissionHandler(
     )
 }
 
+private fun checkLocationStatus(context: Context?): Boolean {
+    val locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
+    return locationManager?.isProviderEnabled(LocationManager.GPS_PROVIDER) ?: false
+}
+
 private suspend fun PermissionsController.checkPermission(): PermissionState {
     return this.getPermissionState(LocationPermission)
 }
@@ -182,9 +155,50 @@ private suspend fun PermissionsController.providePermission(): PermissionState {
     return try {
         providePermission(LocationPermission)
         PermissionState.Granted
-    } catch (e: DeniedAlwaysException) {
+    } catch (_: DeniedAlwaysException) {
         PermissionState.DeniedAlways
-    } catch (e: DeniedAlwaysException) {
+    } catch (_: DeniedAlwaysException) {
         PermissionState.Denied
+    }
+}
+
+private fun Context.findActivity(): ComponentActivity? {
+    var currentContext = this
+    while (currentContext is ContextWrapper) {
+        if (currentContext is ComponentActivity) {
+            return currentContext
+        }
+        currentContext = currentContext.baseContext
+    }
+    return null
+}
+
+@Suppress("DEPRECATION")
+private fun getLocationCallback(
+    onLocationUpdate: (Location?) -> Unit,
+    onMockLocationDetected: () -> Unit
+): LocationCallback {
+    return object : LocationCallback() {
+        override fun onLocationResult(p0: LocationResult) {
+            p0.lastLocation?.let { location ->
+                val isMock = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                    location.isFromMockProvider
+                } else {
+                    location.isMock
+                }
+
+                if (isMock) {
+                    onLocationUpdate(null)
+                    onMockLocationDetected()
+                } else {
+                    val location = Location(
+                        latitude = location.latitude,
+                        longitude = location.longitude
+                    )
+                    onLocationUpdate(location)
+                }
+
+            } ?: onLocationUpdate(null)
+        }
     }
 }

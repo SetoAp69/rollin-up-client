@@ -130,6 +130,9 @@ kotlin {
             implementation(libs.permission.gallery)
             implementation(libs.permission.location)
             api(libs.permission.compose)
+
+            //play services
+            implementation(libs.play.services.location)
         }
 
         commonMain.dependencies {

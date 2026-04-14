@@ -53,6 +53,7 @@ kover = "0.9.2"
 googleServices = "4.4.4"
 firebase = "34.7.0"
 crashlytics = "3.0.6"
+playServices = "21.3.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -89,6 +90,9 @@ skiko-awt-runtime-windows-x64 = { group = "org.jetbrains.skiko", name = "skiko-a
 
 #talsec
 talsec-security = { group = "com.aheaditec.talsec.security", name = "TalsecSecurity-Community", version.ref = "talsec" }
+
+#play services
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServices" }
 
 #coil
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
