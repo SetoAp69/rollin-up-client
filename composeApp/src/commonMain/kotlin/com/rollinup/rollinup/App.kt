@@ -48,7 +48,9 @@ fun App(
             generalSettingViewModel.fetchLocalSetting()
             generalSettingViewModel.listen()
         }
-        onDispose {}
+        onDispose {
+            generalSettingViewModel.stopListening()
+        }
     }
     val globalSetting = generalSettingViewModel.globalSetting.collectAsStateWithLifecycle().value
 

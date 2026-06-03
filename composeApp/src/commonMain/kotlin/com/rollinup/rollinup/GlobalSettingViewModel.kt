@@ -52,15 +52,45 @@ class GlobalSettingViewModel(
     fun listen() {
         sseJob?.cancel()
         sseJob = viewModelScope.launch {
-            listenGlobalSettingSSE().collect {
-                getGlobalSettingUseCase().collect { result ->
-                    if (result is Result.Success) {
-                        _globalSetting.value = result.data
-                        updateCachedGlobalSetting(result.data)
+            // Fallback polling loop: ensures we get updates even if SSE silently hangs (common on mobile)
+            launch {
+                while (true) {
+                    kotlinx.coroutines.delay(10000L)
+                    try {
+                        getGlobalSettingUseCase().collect { result ->
+                            if (result is Result.Success) {
+                                _globalSetting.value = result.data
+                                updateCachedGlobalSetting(result.data)
+                            }
+                        }
+                    } catch (e: Exception) {
+                        // Ignore polling errors
                     }
                 }
             }
+
+            // Primary SSE loop
+            while (true) {
+                try {
+                    listenGlobalSettingSSE().collect {
+                        getGlobalSettingUseCase().collect { result ->
+                            if (result is Result.Success) {
+                                _globalSetting.value = result.data
+                                updateCachedGlobalSetting(result.data)
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    // Ignore error and let it retry
+                }
+                kotlinx.coroutines.delay(5000L) // Wait 5 seconds before attempting to reconnect
+            }
         }
+    }
+
+    fun stopListening() {
+        sseJob?.cancel()
+        sseJob = null
     }
 
     private suspend fun updateCachedGlobalSetting(globalSetting: GlobalSetting) {

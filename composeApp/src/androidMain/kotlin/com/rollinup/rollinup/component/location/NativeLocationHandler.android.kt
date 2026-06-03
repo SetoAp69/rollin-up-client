@@ -74,22 +74,23 @@ private fun NativeFusedLocationProviderWithSetting(
     }
 
     DisposableEffect(isPermissionGranted, isLocationEnabled) {
+        var callback: LocationCallback? = null
         if (isPermissionGranted && isLocationEnabled) {
             val locationRequest = LocationRequest
                 .Builder(Priority.PRIORITY_HIGH_ACCURACY, 500L)
                 .build()
-            val locationCallback = getLocationCallback(onLocationUpdate, onMockLocationDetected)
+            callback = getLocationCallback(onLocationUpdate, onMockLocationDetected)
             provider.requestLocationUpdates(
                 locationRequest,
-                locationCallback,
+                callback,
                 Looper.getMainLooper()
             )
         } else {
             onLocationUpdate(null)
         }
         onDispose {
-            provider.removeLocationUpdates {
-                onLocationUpdate(null)
+            callback?.let {
+                provider.removeLocationUpdates(it)
             }
         }
     }
