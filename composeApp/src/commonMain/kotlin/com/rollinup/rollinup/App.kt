@@ -31,7 +31,7 @@ import rollin_up.composeapp.generated.resources.msg_multiple_security_alert
 @Composable
 fun App(
     authViewModel: AuthViewModel = koinViewModel(),
-    securityViewModel: SecurityViewModel = koinViewModel (),
+    securityViewModel: SecurityViewModel = koinViewModel(),
     onFinish: () -> Unit,
 ) {
     val generalSettingViewModel: GlobalSettingViewModel = koinViewModel()

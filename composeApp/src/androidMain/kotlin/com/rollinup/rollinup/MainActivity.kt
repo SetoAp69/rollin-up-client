@@ -29,7 +29,8 @@ class MainActivity() : ComponentActivity(), ThreatListener.ThreatDetected {
 
         setContent {
             AndroidApp(
-                authViewModel = authViewModel
+                authViewModel = authViewModel,
+                securityViewModel = securityViewModel,
             ) {
                 finishAndRemoveTask()
             }
@@ -62,7 +63,8 @@ class MainActivity() : ComponentActivity(), ThreatListener.ThreatDetected {
     private fun initViewModels() {
         val authViewmodel: AuthViewModel by viewModel()
         this.authViewModel = authViewmodel
-        counterViewModel = CounterViewModel()
+        val counterViewModel : CounterViewModel by viewModel()
+        this.counterViewModel = counterViewModel
         val securityViewModel: SecurityViewModel by viewModel()
         this.securityViewModel = securityViewModel
     }
@@ -120,6 +122,7 @@ class MainActivity() : ComponentActivity(), ThreatListener.ThreatDetected {
 @Composable
 fun AndroidApp(
     authViewModel: AuthViewModel,
+    securityViewModel: SecurityViewModel,
     onFinish: () -> Unit,
 ) {
     App(
