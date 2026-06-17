@@ -1,4 +1,4 @@
-package com.rollinup
+package com.rollinup.rollinup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -11,7 +11,6 @@ import com.michaelflisar.lumberjack.core.L
 import com.michaelflisar.lumberjack.implementation.LumberjackLogger
 import com.michaelflisar.lumberjack.implementation.plant
 import com.michaelflisar.lumberjack.loggers.console.ConsoleLogger
-import com.rollinup.CounterViewModel
 import com.rollinup.common.model.SecurityAlert
 import io.github.orioneee.Axer
 import org.koin.androidx.viewmodel.ext.android.viewModel

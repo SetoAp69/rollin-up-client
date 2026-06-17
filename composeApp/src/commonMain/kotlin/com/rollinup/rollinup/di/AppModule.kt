@@ -1,6 +1,7 @@
 package com.rollinup.rollinup.di
 
 import com.rollinup.rollinup.AuthViewModel
+import com.rollinup.rollinup.CounterViewModel
 import com.rollinup.rollinup.GlobalSettingViewModel
 import com.rollinup.rollinup.LocaleViewModel
 import com.rollinup.rollinup.SecurityViewModel
@@ -35,6 +36,7 @@ object AppModule {
             singleOf(::UiModeViewModel)
             viewModelOf(::LocaleViewModel)
             viewModelOf(::SecurityViewModel)
+            viewModelOf(::CounterViewModel)
         }
     )
 }
