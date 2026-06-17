@@ -6,6 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import com.aheaditec.talsec_security.security.api.SuspiciousAppInfo
+import com.aheaditec.talsec_security.security.api.Talsec
+import com.aheaditec.talsec_security.security.api.TalsecConfig
+import com.aheaditec.talsec_security.security.api.TalsecMode
 import com.aheaditec.talsec_security.security.api.ThreatListener
 import com.michaelflisar.lumberjack.core.L
 import com.michaelflisar.lumberjack.implementation.LumberjackLogger
@@ -24,6 +27,7 @@ class MainActivity() : ComponentActivity(), ThreatListener.ThreatDetected {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         initLogger()
+        initTalSec()
         initViewModels()
 
         setContent {
@@ -86,6 +90,15 @@ class MainActivity() : ComponentActivity(), ThreatListener.ThreatDetected {
         securityViewModel.securityAlert(SecurityAlert.ROOT)
     }
 
+    private fun initTalSec() {
+        val config =
+            TalsecConfig.Builder("com.rollinup.rollinup", arrayOf(BuildConfig.SIGNING_CERTIFICATE))
+                .prod(BuildConfig.IS_PROD)
+                .build()
+        ThreatListener(this, deviceStateListener).registerListener(this)
+        Talsec.start(this, config, TalsecMode.BACKGROUND)
+    }
+
     override fun onDebuggerDetected() {}
 
     override fun onEmulatorDetected() {}
@@ -118,6 +131,18 @@ class MainActivity() : ComponentActivity(), ThreatListener.ThreatDetected {
 }
 
 
+private val deviceStateListener = object : ThreatListener.DeviceState {
+    override fun onUnlockedDeviceDetected() {}
+
+    override fun onHardwareBackedKeystoreNotAvailableDetected() {}
+
+    override fun onDeveloperModeDetected() {}
+
+    override fun onADBEnabledDetected() {}
+
+    override fun onSystemVPNDetected() {}
+}
+
 @Composable
 fun AndroidApp(
     authViewModel: AuthViewModel,
@@ -125,6 +150,7 @@ fun AndroidApp(
     onFinish: () -> Unit,
 ) {
     App(
+        securityViewModel = securityViewModel,
         authViewModel = authViewModel,
         onFinish = onFinish
     )
